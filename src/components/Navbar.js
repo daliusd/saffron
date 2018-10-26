@@ -1,18 +1,25 @@
 // @flow
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Login from './Login.js';
 import Logout from './Logout.js';
 import { loginUser, logoutUser } from '../actions';
 
 type Props = {
-    dispatch: string => void,
+    loginUser: ({ username: string, password: string }) => void,
+    logoutUser: () => void,
     isAuthenticated: boolean,
-    errorMessage: string
+    errorMessage: string,
 };
 
-export default class Navbar extends Component<Props> {
+class Navbar extends Component<Props> {
     render() {
-        const { dispatch, isAuthenticated, errorMessage } = this.props;
+        const {
+            loginUser,
+            logoutUser,
+            isAuthenticated,
+            errorMessage,
+        } = this.props;
 
         return (
             <nav className="navbar navbar-default">
@@ -24,17 +31,13 @@ export default class Navbar extends Component<Props> {
                         {!isAuthenticated && (
                             <Login
                                 errorMessage={errorMessage}
-                                onLoginClick={creds =>
-                                    dispatch(loginUser(creds))
-                                }
+                                onLoginClick={creds => loginUser(creds)}
                             />
                         )}
 
                         {isAuthenticated && (
                             <div>
-                                <Logout
-                                    onLogoutClick={() => dispatch(logoutUser())}
-                                />
+                                <Logout onLogoutClick={() => logoutUser()} />
                             </div>
                         )}
                     </div>
@@ -43,3 +46,29 @@ export default class Navbar extends Component<Props> {
         );
     }
 }
+
+const mapStateToProps = state => {
+    const { auth } = state;
+    const { isAuthenticated, errorMessage } = auth;
+
+    return {
+        isAuthenticated,
+        errorMessage,
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        loginUser: creds => {
+            dispatch(loginUser(creds));
+        },
+        logoutUser: () => {
+            dispatch(logoutUser());
+        },
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Navbar);

@@ -7,7 +7,8 @@ import Navbar from './components/Navbar';
 import Quotes from './components/Quotes';
 
 type Props = {
-    dispatch: string => void,
+    fetchQuote: () => void,
+    fetchSecretQuote: () => void,
     quote: string,
     isAuthenticated: boolean,
     errorMessage: string,
@@ -17,23 +18,19 @@ type Props = {
 class App extends Component<Props> {
     render() {
         const {
-            dispatch,
+            fetchQuote,
+            fetchSecretQuote,
             quote,
             isAuthenticated,
-            errorMessage,
             isSecretQuote,
         } = this.props;
         return (
             <div className="App">
-                <Navbar
-                    isAuthenticated={isAuthenticated}
-                    errorMessage={errorMessage}
-                    dispatch={dispatch}
-                />
+                <Navbar isAuthenticated={isAuthenticated} />
                 <div className="container">
                     <Quotes
-                        onQuoteClick={() => dispatch(fetchQuote())}
-                        onSecretQuoteClick={() => dispatch(fetchSecretQuote())}
+                        onQuoteClick={() => fetchQuote()}
+                        onSecretQuoteClick={() => fetchSecretQuote()}
                         isAuthenticated={isAuthenticated}
                         quote={quote}
                         isSecretQuote={isSecretQuote}
@@ -44,9 +41,7 @@ class App extends Component<Props> {
     }
 }
 
-// These props come from the application's
-// state when it is started
-function mapStateToProps(state) {
+const mapStateToProps = state => {
     const { quotes, auth } = state;
     const { quote, authenticated } = quotes;
     const { isAuthenticated, errorMessage } = auth;
@@ -57,6 +52,20 @@ function mapStateToProps(state) {
         isAuthenticated,
         errorMessage,
     };
-}
+};
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchQuote: () => {
+            dispatch(fetchQuote());
+        },
+        fetchSecretQuote: () => {
+            dispatch(fetchSecretQuote());
+        },
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);
