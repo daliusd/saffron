@@ -62,16 +62,24 @@ function validateToken(token) {
     return valid;
 }
 
-function* getToken() {
+function* getToken(with_error_if_missing) {
     const token = yield call(getTokenFromStorage);
-    const token_valid = yield call(validateToken, token);
-    if (token_valid) return token;
+    if (token) {
+        const token_valid = yield call(validateToken, token);
+        if (token_valid) return token;
+    }
 
     const refresh_token = yield call(getRefreshTokenFromStorage);
+    if (!refresh_token) {
+        if (with_error_if_missing) throw new Error('Token not found.');
+        return null;
+    }
+
     const refresh_token_valid = yield call(validateToken, refresh_token);
     if (!refresh_token_valid) {
         yield put({ type: 'LOGOUT_REQUEST' });
-        throw new Error('Re-login required.');
+        if (with_error_if_missing) throw new Error('Token not found.');
+        return null;
     }
 
     const new_token = yield call(refreshToken, refresh_token);
@@ -107,6 +115,17 @@ function* logoutSaga() {
     yield takeLatest('LOGOUT_REQUEST', logout);
 }
 
+function* init() {
+    let token = yield call(getToken, false);
+    if (token) {
+        yield put({ type: 'LOGIN_SUCCESS' });
+    }
+}
+
+function* initSaga() {
+    yield takeLatest('INIT_REQUEST', init);
+}
+
 function getQuote(url, token) {
     let config = {};
     if (token) {
@@ -127,7 +146,7 @@ function getQuote(url, token) {
 
 function* quote(action) {
     try {
-        let token = action.auth ? yield call(getToken) : null;
+        let token = action.auth ? yield call(getToken, true) : null;
         const data = yield call(getQuote, action.url, token);
         yield put({
             type: 'QUOTE_SUCCESS',
@@ -153,5 +172,11 @@ function* loggerSaga() {
 }
 
 export function* rootSaga() {
-    yield all([loginSaga(), logoutSaga(), quoteSaga(), loggerSaga()]);
+    yield all([
+        loginSaga(),
+        logoutSaga(),
+        quoteSaga(),
+        loggerSaga(),
+        initSaga(),
+    ]);
 }

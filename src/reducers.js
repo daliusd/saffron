@@ -16,9 +16,8 @@ export type LoginAction =
 export type Action = LoginAction;
 
 function auth(
-    // FIXME: initialization shouldn't happen here.
     state: AuthState = {
-        isAuthenticated: localStorage.getItem('access_token') ? true : false,
+        isAuthenticated: false,
         user: '',
         errorMessage: '',
     },

@@ -15,6 +15,10 @@ type Props = {
 };
 
 class App extends Component<Props> {
+    componentDidMount() {
+        this.props.dispatch({ type: 'INIT_REQUEST' });
+    }
+
     render() {
         const { dispatch, quote, isAuthenticated, isSecretQuote } = this.props;
         return (
