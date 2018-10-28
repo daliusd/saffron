@@ -3,23 +3,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Login from './Login.js';
 import Logout from './Logout.js';
-import { loginUser, logoutUser } from '../actions';
 
 type Props = {
-    loginUser: ({ username: string, password: string }) => void,
-    logoutUser: () => void,
+    dispatch: any => any,
     isAuthenticated: boolean,
     errorMessage: string,
 };
 
 class Navbar extends Component<Props> {
     render() {
-        const {
-            loginUser,
-            logoutUser,
-            isAuthenticated,
-            errorMessage,
-        } = this.props;
+        const { dispatch, isAuthenticated, errorMessage } = this.props;
 
         return (
             <nav className="navbar navbar-default">
@@ -31,13 +24,19 @@ class Navbar extends Component<Props> {
                         {!isAuthenticated && (
                             <Login
                                 errorMessage={errorMessage}
-                                onLoginClick={creds => loginUser(creds)}
+                                onLoginClick={creds =>
+                                    dispatch({ type: 'LOGIN_REQUEST', creds })
+                                }
                             />
                         )}
 
                         {isAuthenticated && (
                             <div>
-                                <Logout onLogoutClick={() => logoutUser()} />
+                                <Logout
+                                    onLogoutClick={() =>
+                                        dispatch({ type: 'LOGOUT_REQUEST' })
+                                    }
+                                />
                             </div>
                         )}
                     </div>
@@ -57,18 +56,4 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        loginUser: creds => {
-            dispatch(loginUser(creds));
-        },
-        logoutUser: () => {
-            dispatch(logoutUser());
-        },
-    };
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Navbar);
+export default connect(mapStateToProps)(Navbar);

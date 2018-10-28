@@ -6,12 +6,12 @@ import * as serviceWorker from './serviceWorker';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import quotesApp from './reducers';
-import thunkMiddleware from 'redux-thunk';
-//import api from './middleware/api';
+import createSagaMiddleware from 'redux-saga';
+import { rootSaga } from './sagas';
 
-let createStoreWithMiddleware = applyMiddleware(thunkMiddleware)(createStore);
-
-let store = createStoreWithMiddleware(quotesApp);
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(quotesApp, applyMiddleware(sagaMiddleware));
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
     <Provider store={store}>

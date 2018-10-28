@@ -2,13 +2,11 @@
 import React, { Component } from 'react';
 import './App.css';
 import { connect } from 'react-redux';
-import { fetchQuote, fetchSecretQuote } from './actions';
 import Navbar from './components/Navbar';
 import Quotes from './components/Quotes';
 
 type Props = {
-    fetchQuote: () => void,
-    fetchSecretQuote: () => void,
+    dispatch: any => any,
     quote: string,
     isAuthenticated: boolean,
     errorMessage: string,
@@ -17,20 +15,26 @@ type Props = {
 
 class App extends Component<Props> {
     render() {
-        const {
-            fetchQuote,
-            fetchSecretQuote,
-            quote,
-            isAuthenticated,
-            isSecretQuote,
-        } = this.props;
+        const { dispatch, quote, isAuthenticated, isSecretQuote } = this.props;
         return (
             <div className="App">
                 <Navbar isAuthenticated={isAuthenticated} />
                 <div className="container">
                     <Quotes
-                        onQuoteClick={() => fetchQuote()}
-                        onSecretQuoteClick={() => fetchSecretQuote()}
+                        onQuoteClick={() =>
+                            dispatch({
+                                type: 'QUOTE_REQUEST',
+                                url: '/fortune',
+                                auth: false,
+                            })
+                        }
+                        onSecretQuoteClick={() =>
+                            dispatch({
+                                type: 'QUOTE_REQUEST',
+                                url: '/fortunedebian',
+                                auth: true,
+                            })
+                        }
                         isAuthenticated={isAuthenticated}
                         quote={quote}
                         isSecretQuote={isSecretQuote}
@@ -54,18 +58,4 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = dispatch => {
-    return {
-        fetchQuote: () => {
-            dispatch(fetchQuote());
-        },
-        fetchSecretQuote: () => {
-            dispatch(fetchSecretQuote());
-        },
-    };
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
+export default connect(mapStateToProps)(App);
