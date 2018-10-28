@@ -39,6 +39,10 @@ function saveTokens(data) {
     localStorage.setItem('refresh_token', data.refresh_token);
 }
 
+function saveAccessToken(access_token) {
+    localStorage.setItem('access_token', access_token);
+}
+
 function cleanTokens() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -71,6 +75,7 @@ function* getToken() {
     }
 
     const new_token = yield call(refreshToken, refresh_token);
+    yield call(saveAccessToken, new_token);
     return new_token;
 }
 
