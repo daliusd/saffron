@@ -4,9 +4,10 @@ import './App.css';
 import { connect } from 'react-redux';
 import Navbar from './components/Navbar';
 import Quotes from './components/Quotes';
+import Action from './reducers';
 
 type Props = {
-    dispatch: any => any,
+    dispatch: Action => any,
     quote: string,
     isAuthenticated: boolean,
     errorMessage: string,

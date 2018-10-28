@@ -1,16 +1,34 @@
+// @flow
 import { combineReducers } from 'redux';
 
+type AuthState = {
+    +isAuthenticated: boolean,
+    +errorMessage: string,
+    +user: string,
+};
+
+export type LoginAction =
+    | { type: 'LOGIN_REQUEST', creds: { username: string, password: string } }
+    | { type: 'LOGIN_SUCCESS' }
+    | { type: 'LOGIN_FAILURE', message: string }
+    | { type: 'LOGOUT_SUCCESS' };
+
+export type Action = LoginAction;
+
 function auth(
-    state = {
+    // FIXME: initialization shouldn't happen here.
+    state: AuthState = {
         isAuthenticated: localStorage.getItem('access_token') ? true : false,
+        user: '',
+        errorMessage: '',
     },
-    action
-) {
+    action: Action
+): AuthState {
     switch (action.type) {
         case 'LOGIN_REQUEST':
             return Object.assign({}, state, {
                 isAuthenticated: false,
-                user: action.creds,
+                user: action.creds.username,
             });
         case 'LOGIN_SUCCESS':
             return Object.assign({}, state, {

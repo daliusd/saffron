@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Login from './Login.js';
 import Logout from './Logout.js';
+import LoginAction from '../reducers';
 
 type Props = {
-    dispatch: any => any,
+    dispatch: LoginAction => any,
     isAuthenticated: boolean,
     errorMessage: string,
 };
