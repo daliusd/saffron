@@ -18,9 +18,11 @@ class Navbar extends Component<Props> {
         return (
             <nav className="navbar navbar-default">
                 <div className="container-fluid">
-                    <a className="navbar-brand" href="/#">
-                        Cardamon
-                    </a>
+                    <h1>
+                        <a className="navbar-brand" href="/#">
+                            Cardamon
+                        </a>
+                    </h1>
                     <div className="navbar-form">
                         {!isAuthenticated && (
                             <Login

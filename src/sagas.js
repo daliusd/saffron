@@ -1,17 +1,10 @@
-import {
-    all,
-    call,
-    put,
-    select,
-    takeEvery,
-    takeLatest,
-} from 'redux-saga/effects';
+import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
-function makeLogin(creds) {
+function getTokens(creds) {
     return axios
-        .post('/login', creds)
+        .post('/token', creds)
         .then(resp => {
             return resp.data;
         })
@@ -25,11 +18,41 @@ function refreshToken(refresh_token) {
         headers: { Authorization: `Bearer ${refresh_token}` },
     };
     return axios
-        .post('/token/refresh', {}, config)
+        .post('/token_access', {}, config)
         .then(resp => {
             return resp.data.access_token;
         })
         .catch(error => {
+            throw error;
+        });
+}
+
+function deleteAccessToken(token) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+    return axios
+        .delete('/token_access', config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            if (error.response.status === 401) return {};
+            throw error;
+        });
+}
+
+function deleteRefreshToken(token) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+    return axios
+        .delete('/token_refresh', config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            if (error.response.status === 401) return {};
             throw error;
         });
 }
@@ -49,11 +72,13 @@ function cleanTokens() {
 }
 
 function getTokenFromStorage() {
-    return localStorage.getItem('access_token') || null;
+    let token = localStorage.getItem('access_token') || null;
+    return token;
 }
 
 function getRefreshTokenFromStorage() {
-    return localStorage.getItem('refresh_token') || null;
+    let token = localStorage.getItem('refresh_token') || null;
+    return token;
 }
 
 function validateToken(token) {
@@ -89,7 +114,7 @@ function* getToken(with_error_if_missing) {
 
 function* login(action) {
     try {
-        const data = yield call(makeLogin, action.creds);
+        const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
         yield put({ type: 'LOGIN_SUCCESS' });
     } catch (e) {
@@ -103,8 +128,24 @@ function* loginSaga() {
 
 function* logout(action) {
     try {
-        //yield call(makeLogout, action.creds);
+        const token = yield call(getTokenFromStorage);
+        if (token) {
+            const token_valid = yield call(validateToken, token);
+            if (token_valid) {
+                yield call(deleteAccessToken, token);
+            }
+        }
+
+        const refresh_token = yield call(getRefreshTokenFromStorage);
+        if (refresh_token) {
+            const refresh_token_valid = yield call(validateToken, refresh_token);
+            if (refresh_token_valid) {
+                yield call(deleteRefreshToken, refresh_token);
+            }
+        }
+
         yield call(cleanTokens);
+
         yield put({ type: 'LOGOUT_SUCCESS' });
     } catch (e) {
         yield put({ type: 'LOGOUT_FAILURE', message: e.response.data.message });
@@ -172,11 +213,5 @@ function* loggerSaga() {
 }
 
 export function* rootSaga() {
-    yield all([
-        loginSaga(),
-        logoutSaga(),
-        quoteSaga(),
-        loggerSaga(),
-        initSaga(),
-    ]);
+    yield all([loginSaga(), logoutSaga(), quoteSaga(), loggerSaga(), initSaga()]);
 }
