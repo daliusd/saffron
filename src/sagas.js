@@ -2,7 +2,7 @@ import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effect
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 
-function getTokens(creds) {
+export function getTokens(creds) {
     return axios
         .post('/token', creds)
         .then(resp => {
@@ -57,7 +57,7 @@ function deleteRefreshToken(token) {
         });
 }
 
-function saveTokens(data) {
+export function saveTokens(data) {
     localStorage.setItem('access_token', data.access_token);
     localStorage.setItem('refresh_token', data.refresh_token);
 }
@@ -112,7 +112,7 @@ function* getToken(with_error_if_missing) {
     return new_token;
 }
 
-function* login(action) {
+export function* login(action) {
     try {
         const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
