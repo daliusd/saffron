@@ -2,15 +2,12 @@
 import React from 'react';
 
 type Props = {
-    onLogoutClick: () => void
+    onLogoutClick: () => void,
 };
 
 function Logout(props: Props) {
     return (
-        <button
-            onClick={() => props.onLogoutClick()}
-            className="btn btn-primary"
-        >
+        <button onClick={() => props.onLogoutClick()} className="btn btn-primary">
             Logout
         </button>
     );
