@@ -1,93 +1,19 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
-import axios from 'axios';
+import { refreshToken, getTokens, deleteAccessToken, deleteRefreshToken, getQuote } from './requests';
+import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import jwt_decode from 'jwt-decode';
 
-export function getTokens(creds) {
-    return axios
-        .post('/token', creds)
-        .then(resp => {
-            return resp.data;
-        })
-        .catch(error => {
-            throw error;
-        });
+export function validateToken(token) {
+    try {
+        const decoded = jwt_decode(token);
+        const valid = decoded.exp - new Date().getTime() / 1000 > 5;
+        return valid;
+    } catch (e) {
+        return false;
+    }
 }
 
-function refreshToken(refresh_token) {
-    let config = {
-        headers: { Authorization: `Bearer ${refresh_token}` },
-    };
-    return axios
-        .post('/token_access', {}, config)
-        .then(resp => {
-            return resp.data.access_token;
-        })
-        .catch(error => {
-            throw error;
-        });
-}
-
-function deleteAccessToken(token) {
-    let config = {
-        headers: { Authorization: `Bearer ${token}` },
-    };
-    return axios
-        .delete('/token_access', config)
-        .then(resp => {
-            return resp.data;
-        })
-        .catch(error => {
-            if (error.response.status === 401) return {};
-            throw error;
-        });
-}
-
-function deleteRefreshToken(token) {
-    let config = {
-        headers: { Authorization: `Bearer ${token}` },
-    };
-    return axios
-        .delete('/token_refresh', config)
-        .then(resp => {
-            return resp.data;
-        })
-        .catch(error => {
-            if (error.response.status === 401) return {};
-            throw error;
-        });
-}
-
-export function saveTokens(data) {
-    localStorage.setItem('access_token', data.access_token);
-    localStorage.setItem('refresh_token', data.refresh_token);
-}
-
-function saveAccessToken(access_token) {
-    localStorage.setItem('access_token', access_token);
-}
-
-function cleanTokens() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-}
-
-function getTokenFromStorage() {
-    let token = localStorage.getItem('access_token') || null;
-    return token;
-}
-
-function getRefreshTokenFromStorage() {
-    let token = localStorage.getItem('refresh_token') || null;
-    return token;
-}
-
-function validateToken(token) {
-    const decoded = jwt_decode(token);
-    const valid = decoded.exp - new Date().getTime() / 1000 > 5;
-    return valid;
-}
-
-function* getToken(with_error_if_missing) {
+export function* getToken(with_error_if_missing) {
     const token = yield call(getTokenFromStorage);
     if (token) {
         const token_valid = yield call(validateToken, token);
@@ -165,24 +91,6 @@ function* init() {
 
 function* initSaga() {
     yield takeLatest('INIT_REQUEST', init);
-}
-
-function getQuote(url, token) {
-    let config = {};
-    if (token) {
-        config = {
-            headers: { Authorization: `Bearer ${token}` },
-        };
-    }
-
-    return axios
-        .get(url, config)
-        .then(resp => {
-            return resp.data;
-        })
-        .catch(error => {
-            throw error;
-        });
 }
 
 function* quote(action) {

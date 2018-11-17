@@ -35,6 +35,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "jwt-simple": "^0.5.5",
     "prettier": "^1.14.3"
   }
 }
