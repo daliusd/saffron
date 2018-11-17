@@ -82,7 +82,7 @@ function* logoutSaga() {
     yield takeLatest('LOGOUT_REQUEST', logout);
 }
 
-function* init() {
+export function* init() {
     let token = yield call(getToken, false);
     if (token) {
         yield put({ type: 'LOGIN_SUCCESS' });

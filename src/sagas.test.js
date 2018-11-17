@@ -1,5 +1,5 @@
 import { call, put } from 'redux-saga/effects';
-import { login, logout, getToken, validateToken } from './sagas';
+import { init, login, logout, getToken, validateToken } from './sagas';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 import { getTokens, refreshToken, deleteAccessToken, deleteRefreshToken } from './requests';
 import { cloneableGenerator } from 'redux-saga/utils';
@@ -163,4 +163,19 @@ test('logout failure', () => {
         put({ type: 'LOGOUT_FAILURE', message: message }),
     );
     expect(gen.next().done).toBeTruthy();
+});
+
+test('init', () => {
+    const gen = cloneableGenerator(init)(true);
+
+    expect(gen.next().value).toEqual(call(getToken, false));
+
+    let clone = gen.clone();
+
+    const token = 'token';
+    expect(gen.next(token).value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+
+    expect(gen.next().done).toBeTruthy();
+
+    expect(clone.next(null).done).toBeTruthy();
 });
