@@ -52,7 +52,7 @@ function* loginSaga() {
     yield takeLatest('LOGIN_REQUEST', login);
 }
 
-function* logout(action) {
+export function* logout(action) {
     try {
         const token = yield call(getTokenFromStorage);
         if (token) {

@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
-import { login, getToken, validateToken } from './sagas';
-import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage } from './storage';
-import { getTokens, refreshToken } from './requests';
+import { login, logout, getToken, validateToken } from './sagas';
+import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
+import { getTokens, refreshToken, deleteAccessToken, deleteRefreshToken } from './requests';
 import { cloneableGenerator } from 'redux-saga/utils';
 import jwt from 'jwt-simple';
 
@@ -127,4 +127,40 @@ test('getToken with_error_if_missing=true', () => {
     next = gen.next();
     expect(next.done).toBeTruthy();
     expect(next.value).toEqual('new_token');
+});
+
+test('logout', () => {
+    const gen = cloneableGenerator(logout)(true);
+
+    expect(gen.next().value).toEqual(call(getTokenFromStorage));
+
+    let clone = gen.clone();
+
+    const token = 'token';
+    expect(clone.next(token).value).toEqual(call(validateToken, token));
+    expect(clone.next(true).value).toEqual(call(deleteAccessToken, token));
+
+    expect(gen.next(null).value).toEqual(call(getRefreshTokenFromStorage));
+
+    clone = gen.clone();
+
+    const refresh_token = 'refresh_token';
+    expect(clone.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
+    expect(clone.next(true).value).toEqual(call(deleteRefreshToken, refresh_token));
+
+    expect(gen.next(null).value).toEqual(call(cleanTokens));
+    expect(gen.next().value).toEqual(put({ type: 'LOGOUT_SUCCESS' }));
+    expect(gen.next().done).toBeTruthy();
+});
+
+test('logout failure', () => {
+    const gen = cloneableGenerator(logout)(true);
+
+    expect(gen.next().value).toEqual(call(getTokenFromStorage));
+
+    let message = 'oops';
+    expect(gen.throw({ response: { data: { message } } }).value).toEqual(
+        put({ type: 'LOGOUT_FAILURE', message: message }),
+    );
+    expect(gen.next().done).toBeTruthy();
 });
