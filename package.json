@@ -21,6 +21,7 @@
     "build": "react-scripts build",
     "postbuild": "rm -rf ../cardamon/static && mkdir ../cardamon/static && mv build/* ../cardamon/static/ && rmdir build",
     "test": "react-scripts test",
+    "coverage": "npm test -- --coverage --watch",
     "eject": "react-scripts eject",
     "flow": "flow"
   },
