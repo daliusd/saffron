@@ -7,21 +7,32 @@ type AuthState = {
     +user: string,
 };
 
+type QuoteState = {
+    +quote: string,
+    +authenticated: boolean,
+    +errorMessage: string,
+};
+
 export type LoginAction =
     | { type: 'LOGIN_REQUEST', creds: { username: string, password: string } }
     | { type: 'LOGIN_SUCCESS' }
     | { type: 'LOGIN_FAILURE', message: string }
     | { type: 'LOGOUT_SUCCESS' };
 
-export type Action = LoginAction;
+export type QuoteAction =
+    | { type: 'QUOTE_REQUEST' }
+    | { type: 'QUOTE_SUCCESS', quote: string, authenticated: boolean }
+    | { type: 'QUOTE_FAILURE', message: string };
 
-function auth(
+export type Action = LoginAction | QuoteAction;
+
+export function auth(
     state: AuthState = {
         isAuthenticated: false,
         user: '',
         errorMessage: '',
     },
-    action: Action
+    action: LoginAction,
 ): AuthState {
     switch (action.type) {
         case 'LOGIN_REQUEST':
@@ -48,7 +59,14 @@ function auth(
     }
 }
 
-function quotes(state = {}, action) {
+export function quotes(
+    state: QuoteState = {
+        quote: '',
+        authenticated: false,
+        errorMessage: '',
+    },
+    action: QuoteAction,
+) {
     switch (action.type) {
         case 'QUOTE_REQUEST':
             return state;
