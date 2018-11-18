@@ -1,10 +1,11 @@
+// @flow
 import React from 'react';
 import { shallow } from 'enzyme';
 import Logout from './Logout';
 
 describe('<Logout />', () => {
     it('Generates logout', () => {
-        const wrapper = shallow(<Logout />);
+        const wrapper = shallow(<Logout onLogoutClick={() => {}} />);
         expect(wrapper.find('button')).toHaveLength(1);
     });
 

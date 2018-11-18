@@ -11,7 +11,7 @@ type Props = {
     errorMessage: string,
 };
 
-class Navbar extends Component<Props> {
+export class NavbarC extends Component<Props> {
     render() {
         const { dispatch, isAuthenticated, errorMessage } = this.props;
 
@@ -27,19 +27,13 @@ class Navbar extends Component<Props> {
                         {!isAuthenticated && (
                             <Login
                                 errorMessage={errorMessage}
-                                onLoginClick={creds =>
-                                    dispatch({ type: 'LOGIN_REQUEST', creds })
-                                }
+                                onLoginClick={creds => dispatch({ type: 'LOGIN_REQUEST', creds })}
                             />
                         )}
 
                         {isAuthenticated && (
                             <div>
-                                <Logout
-                                    onLogoutClick={() =>
-                                        dispatch({ type: 'LOGOUT_REQUEST' })
-                                    }
-                                />
+                                <Logout onLogoutClick={() => dispatch({ type: 'LOGOUT_REQUEST' })} />
                             </div>
                         )}
                     </div>
@@ -59,4 +53,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(Navbar);
+export default connect(mapStateToProps)(NavbarC);
