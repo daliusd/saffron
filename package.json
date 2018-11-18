@@ -44,5 +44,13 @@
     "hooks": {
       "pre-commit": "eslint 'src/**/*.js' --fix --max-warnings=0"
     }
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/src/index.js",
+      "!<rootDir>/src/serviceWorker.js"
+    ]
   }
 }
