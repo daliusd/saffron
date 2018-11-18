@@ -6,7 +6,7 @@ import Login from './Login';
 
 describe('<Login />', () => {
     it('Generates Login', () => {
-        const wrapper = shallow(<Login onLoginClick={() => {}} errorMessage="" />);
+        const wrapper = shallow(<Login onLoginClick={() => {}} errorMessage="oops" />);
         expect(wrapper.find('button')).toHaveLength(1);
     });
 
