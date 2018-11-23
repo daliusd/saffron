@@ -12,7 +12,7 @@ describe('<Games />', () => {
 
     it('Generates Games', () => {
         const wrapper = shallow(
-            <Games onGameCreate={() => {}} isAuthenticated={true} gamelist={[{ id: 1, name: 'test', data: '' }]} />,
+            <Games onGameCreate={() => {}} isAuthenticated={true} gamelist={[{ id: 1, name: 'test' }]} />,
         );
         expect(wrapper.find('button')).toHaveLength(1);
     });

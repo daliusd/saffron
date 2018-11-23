@@ -4,7 +4,7 @@ import { combineReducers } from 'redux';
 export type GameType = {
     id: number,
     name: string,
-    data: string,
+    data?: string,
 };
 
 export type AuthState = {
