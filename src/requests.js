@@ -55,16 +55,26 @@ export function deleteRefreshToken(token) {
         });
 }
 
-export function getQuote(url, token) {
-    let config = {};
-    if (token) {
-        config = {
-            headers: { Authorization: `Bearer ${token}` },
-        };
-    }
-
+export function getRequest(url, token) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
     return axios
         .get(url, config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            throw error;
+        });
+}
+
+export function postRequest(url, token, data) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+    return axios
+        .post(url, data, config)
         .then(resp => {
             return resp.data;
         })

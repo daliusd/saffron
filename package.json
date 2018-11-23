@@ -50,6 +50,7 @@
       "src/**/*.{js,jsx}",
       "!<rootDir>/node_modules/",
       "!<rootDir>/src/index.js",
+      "!<rootDir>/src/actions.js",
       "!<rootDir>/src/serviceWorker.js"
     ]
   }

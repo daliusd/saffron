@@ -4,36 +4,32 @@ import './App.css';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { quoteRequest, secretQuoteRequest } from './actions';
-import Action from './reducers';
+import type { GameType, Action } from './reducers';
+import { gameCreateRequest, initRequest } from './actions';
+import Games from './components/Games';
 import Navbar from './components/Navbar';
-import Quotes from './components/Quotes';
 
 type Props = {
     dispatch: Action => any,
-    quote: string,
     isAuthenticated: boolean,
-    errorMessage: string,
-    isSecretQuote: boolean,
+    gamelist: Array<GameType>,
 };
 
-class App extends Component<Props> {
+export class AppComponent extends Component<Props> {
     componentDidMount() {
-        this.props.dispatch({ type: 'INIT_REQUEST' });
+        this.props.dispatch(initRequest());
     }
 
     render() {
-        const { dispatch, quote, isAuthenticated, isSecretQuote } = this.props;
+        const { dispatch, gamelist, isAuthenticated } = this.props;
         return (
             <div className="App">
                 <Navbar isAuthenticated={isAuthenticated} />
                 <div className="container">
-                    <Quotes
-                        onQuoteClick={() => dispatch(quoteRequest())}
-                        onSecretQuoteClick={() => dispatch(secretQuoteRequest())}
+                    <Games
+                        onGameCreate={gamename => dispatch(gameCreateRequest(gamename))}
                         isAuthenticated={isAuthenticated}
-                        quote={quote}
-                        isSecretQuote={isSecretQuote}
+                        gamelist={gamelist}
                     />
                 </div>
             </div>
@@ -42,16 +38,14 @@ class App extends Component<Props> {
 }
 
 const mapStateToProps = state => {
-    const { quotes, auth } = state;
-    const { quote, authenticated } = quotes;
-    const { isAuthenticated, errorMessage } = auth;
+    const { games, auth } = state;
+    const { gamelist } = games;
+    const { isAuthenticated } = auth;
 
     return {
-        quote,
-        isSecretQuote: authenticated,
+        gamelist,
         isAuthenticated,
-        errorMessage,
     };
 };
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(AppComponent);

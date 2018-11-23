@@ -1,7 +1,7 @@
 // @flow
 import axios from 'axios';
 
-import { deleteAccessToken, deleteRefreshToken, getQuote, getTokens, refreshToken } from './requests';
+import { deleteAccessToken, deleteRefreshToken, getRequest, getTokens, postRequest, refreshToken } from './requests';
 
 jest.mock('axios');
 
@@ -59,17 +59,22 @@ test('deleteRefreshToken attempt to delete with invalid token', async () => {
     expect(deleteRefreshToken('at')).resolves.toEqual({});
 });
 
-test('getQuote success', () => {
-    axios.get.mockResolvedValue({ data: 'quote' });
-    expect(getQuote('/ok', null)).resolves.toEqual('quote');
+test('getRequest success', () => {
+    axios.get.mockResolvedValue({ data: 'data' });
+    expect(getRequest('/ok', 'token')).resolves.toEqual('data');
 });
 
-test('getQuote success with token', () => {
-    axios.get.mockResolvedValue({ data: 'quote' });
-    expect(getQuote('/ok', 'token')).resolves.toEqual('quote');
-});
-
-test('getQuote failure', async () => {
+test('getRequest failure', async () => {
     axios.get.mockRejectedValue('error');
-    expect(getQuote('/ok', null)).rejects.toEqual('error');
+    expect(getRequest('/ok', 'token')).rejects.toEqual('error');
+});
+
+test('postRequest success', () => {
+    axios.post.mockResolvedValue({ data: 'data' });
+    expect(postRequest('/ok', 'token', {})).resolves.toEqual('data');
+});
+
+test('postRequest failure', async () => {
+    axios.post.mockRejectedValue('error');
+    expect(postRequest('/ok', 'token', {})).rejects.toEqual('error');
 });

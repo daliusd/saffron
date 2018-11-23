@@ -1,9 +1,23 @@
 import { call, put } from 'redux-saga/effects';
-import { init, login, logout, getToken, validateToken } from './sagas';
-import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
-import { getTokens, refreshToken, deleteAccessToken, deleteRefreshToken } from './requests';
 import { cloneableGenerator } from 'redux-saga/utils';
+
 import jwt from 'jwt-simple';
+
+import {
+    authorizedGetRequest,
+    authorizedPostRequest,
+    gameCreate,
+    gameList,
+    getToken,
+    init,
+    login,
+    logout,
+    logoutRefreshToken,
+    logoutToken,
+    validateToken,
+} from './sagas';
+import { deleteAccessToken, deleteRefreshToken, getRequest, getTokens, postRequest, refreshToken } from './requests';
+import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 
 test('validateToken', () => {
     expect(validateToken('random_string')).toBeFalsy();
@@ -132,23 +146,9 @@ test('getToken with_error_if_missing=true', () => {
 test('logout', () => {
     const gen = cloneableGenerator(logout)(true);
 
-    expect(gen.next().value).toEqual(call(getTokenFromStorage));
-
-    let clone = gen.clone();
-
-    const token = 'token';
-    expect(clone.next(token).value).toEqual(call(validateToken, token));
-    expect(clone.next(true).value).toEqual(call(deleteAccessToken, token));
-
-    expect(gen.next(null).value).toEqual(call(getRefreshTokenFromStorage));
-
-    clone = gen.clone();
-
-    const refresh_token = 'refresh_token';
-    expect(clone.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
-    expect(clone.next(true).value).toEqual(call(deleteRefreshToken, refresh_token));
-
-    expect(gen.next(null).value).toEqual(call(cleanTokens));
+    expect(gen.next().value).toEqual(call(logoutToken));
+    expect(gen.next().value).toEqual(call(logoutRefreshToken));
+    expect(gen.next().value).toEqual(call(cleanTokens));
     expect(gen.next().value).toEqual(put({ type: 'LOGOUT_SUCCESS' }));
     expect(gen.next().done).toBeTruthy();
 });
@@ -156,7 +156,7 @@ test('logout', () => {
 test('logout failure', () => {
     const gen = cloneableGenerator(logout)(true);
 
-    expect(gen.next().value).toEqual(call(getTokenFromStorage));
+    expect(gen.next().value).toEqual(call(logoutToken));
 
     let message = 'oops';
     expect(gen.throw({ response: { data: { message } } }).value).toEqual(
@@ -165,6 +165,43 @@ test('logout failure', () => {
     expect(gen.next().done).toBeTruthy();
 });
 
+test('logoutToken', () => {
+    const gen = cloneableGenerator(logoutToken)();
+
+    expect(gen.next().value).toEqual(call(getTokenFromStorage));
+
+    let clone = gen.clone();
+    expect(clone.next(null).done).toBeTruthy();
+
+    const token = 'token';
+    expect(gen.next(token).value).toEqual(call(validateToken, token));
+
+    clone = gen.clone();
+    expect(clone.next(null).done).toBeTruthy();
+
+    expect(gen.next(true).value).toEqual(call(deleteAccessToken, token));
+    expect(gen.next(null).done).toBeTruthy();
+});
+
+test('logoutRefreshToken', () => {
+    const gen = cloneableGenerator(logoutRefreshToken)();
+
+    expect(gen.next().value).toEqual(call(getRefreshTokenFromStorage));
+
+    let clone = gen.clone();
+    expect(clone.next(null).done).toBeTruthy();
+
+    const token = 'token';
+    expect(gen.next(token).value).toEqual(call(validateToken, token));
+
+    clone = gen.clone();
+    expect(clone.next(null).done).toBeTruthy();
+
+    expect(gen.next(true).value).toEqual(call(deleteRefreshToken, token));
+    expect(gen.next(null).done).toBeTruthy();
+});
+
+// Init
 test('init', () => {
     const gen = cloneableGenerator(init)(true);
 
@@ -178,4 +215,71 @@ test('init', () => {
     expect(gen.next().done).toBeTruthy();
 
     expect(clone.next(null).done).toBeTruthy();
+});
+
+// Authorized Requests
+test('authorizedGetRequest', () => {
+    const url = '/test';
+    const token = 'token';
+
+    const gen = authorizedGetRequest(url);
+
+    expect(gen.next().value).toEqual(call(getToken, true));
+    expect(gen.next(token).value).toEqual(call(getRequest, url, token));
+    expect(gen.next().done).toBeTruthy();
+});
+
+test('authorizedPostRequest', () => {
+    const url = '/test';
+    const data = 'data';
+    const token = 'token';
+
+    const gen = authorizedPostRequest(url, data);
+
+    expect(gen.next().value).toEqual(call(getToken, true));
+    expect(gen.next(token).value).toEqual(call(postRequest, url, token, data));
+    expect(gen.next().done).toBeTruthy();
+});
+
+// Game
+
+test('gameCreate', () => {
+    const action = { gamename: 'test' };
+    const gen = cloneableGenerator(gameCreate)(action);
+
+    expect(gen.next().value).toEqual(call(authorizedPostRequest, '/game', { name: 'test', data: '{}' }));
+
+    let clone = gen.clone();
+
+    // Successful request
+    expect(gen.next().value).toEqual(put({ type: 'GAME_CREATE_SUCCESS' }));
+    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ response: { data: { message } } }).value).toEqual(
+        put({ type: 'GAME_CREATE_FAILURE', message: message }),
+    );
+    expect(clone.next().done).toBeTruthy();
+});
+
+test('gameList', () => {
+    const gen = cloneableGenerator(gameList)();
+
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game'));
+
+    let clone = gen.clone();
+
+    // Successful request
+    let data = { games: [] };
+    expect(gen.next(data).value).toEqual(put({ type: 'GAME_LIST_SUCCESS', gamelist: [] }));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ response: { data: { message } } }).value).toEqual(
+        put({ type: 'GAME_LIST_FAILURE', message: message }),
+    );
+    expect(clone.next().done).toBeTruthy();
 });

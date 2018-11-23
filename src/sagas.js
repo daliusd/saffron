@@ -1,7 +1,8 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
-import { refreshToken, getTokens, deleteAccessToken, deleteRefreshToken, getQuote } from './requests';
-import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import jwt_decode from 'jwt-decode';
+
+import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
+import { refreshToken, getTokens, deleteAccessToken, deleteRefreshToken, getRequest, postRequest } from './requests';
 
 export function validateToken(token) {
     try {
@@ -52,24 +53,30 @@ function* loginSaga() {
     yield takeLatest('LOGIN_REQUEST', login);
 }
 
+export function* logoutToken() {
+    const token = yield call(getTokenFromStorage);
+    if (token) {
+        const token_valid = yield call(validateToken, token);
+        if (token_valid) {
+            yield call(deleteAccessToken, token);
+        }
+    }
+}
+
+export function* logoutRefreshToken() {
+    const refresh_token = yield call(getRefreshTokenFromStorage);
+    if (refresh_token) {
+        const refresh_token_valid = yield call(validateToken, refresh_token);
+        if (refresh_token_valid) {
+            yield call(deleteRefreshToken, refresh_token);
+        }
+    }
+}
+
 export function* logout(action) {
     try {
-        const token = yield call(getTokenFromStorage);
-        if (token) {
-            const token_valid = yield call(validateToken, token);
-            if (token_valid) {
-                yield call(deleteAccessToken, token);
-            }
-        }
-
-        const refresh_token = yield call(getRefreshTokenFromStorage);
-        if (refresh_token) {
-            const refresh_token_valid = yield call(validateToken, refresh_token);
-            if (refresh_token_valid) {
-                yield call(deleteRefreshToken, refresh_token);
-            }
-        }
-
+        yield call(logoutToken);
+        yield call(logoutRefreshToken);
         yield call(cleanTokens);
 
         yield put({ type: 'LOGOUT_SUCCESS' });
@@ -82,6 +89,7 @@ function* logoutSaga() {
     yield takeLatest('LOGOUT_REQUEST', logout);
 }
 
+// Init
 export function* init() {
     let token = yield call(getToken, false);
     if (token) {
@@ -93,24 +101,51 @@ function* initSaga() {
     yield takeLatest('INIT_REQUEST', init);
 }
 
-function* quote(action) {
+// Authorized Requests
+export function* authorizedGetRequest(url) {
+    const token = yield call(getToken, true);
+    return yield call(getRequest, url, token);
+}
+
+export function* authorizedPostRequest(url, data) {
+    const token = yield call(getToken, true);
+    return yield call(postRequest, url, token, data);
+}
+
+// Game
+export function* gameCreate(action) {
     try {
-        let token = action.auth ? yield call(getToken, true) : null;
-        const data = yield call(getQuote, action.url, token);
+        yield call(authorizedPostRequest, '/game', { name: action.gamename, data: '{}' });
         yield put({
-            type: 'QUOTE_SUCCESS',
-            quote: data.message,
-            authenticated: action.auth,
+            type: 'GAME_CREATE_SUCCESS',
         });
+        yield put({ type: 'GAME_LIST_REQUEST' });
     } catch (e) {
-        yield put({ type: 'QUOTE_FAILURE', message: e.response.data.message });
+        yield put({ type: 'GAME_CREATE_FAILURE', message: e.response.data.message });
     }
 }
 
-function* quoteSaga() {
-    yield takeLatest('QUOTE_REQUEST', quote);
+export function* gameList() {
+    try {
+        const data = yield call(authorizedGetRequest, '/game');
+        yield put({
+            type: 'GAME_LIST_SUCCESS',
+            gamelist: data.games,
+        });
+    } catch (e) {
+        yield put({ type: 'GAME_LIST_FAILURE', message: e.response.data.message });
+    }
 }
 
+function* gameCreateSaga() {
+    yield takeLatest('GAME_CREATE_REQUEST', gameCreate);
+}
+
+function* gameListSaga() {
+    yield takeLatest('GAME_LIST_REQUEST', gameList);
+}
+
+// Logger
 function* loggerSaga() {
     yield takeEvery('*', function* logger(action) {
         const state = yield select();
@@ -120,6 +155,7 @@ function* loggerSaga() {
     });
 }
 
+// All
 export function* rootSaga() {
-    yield all([loginSaga(), logoutSaga(), quoteSaga(), loggerSaga(), initSaga()]);
+    yield all([loginSaga(), logoutSaga(), gameCreateSaga(), gameListSaga(), loggerSaga(), initSaga()]);
 }

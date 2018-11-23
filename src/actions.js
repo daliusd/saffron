@@ -1,4 +1,12 @@
-export const loginRequest = creds => {
+// @flow
+
+import type { Credentials } from './reducers';
+
+export const initRequest = () => {
+    return { type: 'INIT_REQUEST' };
+};
+
+export const loginRequest = (creds: Credentials) => {
     return {
         type: 'LOGIN_REQUEST',
         creds: creds,
@@ -11,18 +19,15 @@ export const logoutRequest = () => {
     };
 };
 
-export const quoteRequest = () => {
+export const gameCreateRequest = (gamename: string) => {
     return {
-        type: 'QUOTE_REQUEST',
-        url: '/fortune',
-        auth: false,
+        type: 'GAME_CREATE_REQUEST',
+        gamename: gamename,
     };
 };
 
-export const secretQuoteRequest = () => {
+export const gameListRequest = () => {
     return {
-        type: 'QUOTE_REQUEST',
-        url: '/fortunedebian',
-        auth: true,
+        type: 'GAME_LIST_REQUEST',
     };
 };

@@ -1,30 +1,48 @@
 // @flow
 import { combineReducers } from 'redux';
 
-type AuthState = {
-    +isAuthenticated: boolean,
-    +errorMessage: string,
-    +user: string,
+export type GameType = {
+    id: number,
+    name: string,
+    data: string,
 };
 
-type QuoteState = {
-    +quote: string,
-    +authenticated: boolean,
+export type AuthState = {
+    +isAuthenticated: boolean,
+    +user: string,
     +errorMessage: string,
 };
+
+export type GameState = {
+    +gamelist: Array<GameType>,
+    +creating: boolean,
+    +listing: boolean,
+    +errorMessage: string,
+};
+
+export type Credentials = { username: string, password: string };
+
+export type InitAction = { type: 'INIT_REQUEST' };
 
 export type LoginAction =
-    | { type: 'LOGIN_REQUEST', creds: { username: string, password: string } }
+    | { type: 'LOGIN_REQUEST', creds: Credentials }
     | { type: 'LOGIN_SUCCESS' }
     | { type: 'LOGIN_FAILURE', message: string }
     | { type: 'LOGOUT_SUCCESS' };
 
-export type QuoteAction =
-    | { type: 'QUOTE_REQUEST' }
-    | { type: 'QUOTE_SUCCESS', quote: string, authenticated: boolean }
-    | { type: 'QUOTE_FAILURE', message: string };
+export type GameCreateAction =
+    | { type: 'GAME_CREATE_REQUEST', gamename: string }
+    | { type: 'GAME_CREATE_SUCCESS' }
+    | { type: 'GAME_CREATE_FAILURE', message: string };
 
-export type Action = LoginAction | QuoteAction;
+export type GameListAction =
+    | { type: 'GAME_LIST_REQUEST' }
+    | { type: 'GAME_LIST_SUCCESS', gamelist: Array<GameType> }
+    | { type: 'GAME_LIST_FAILURE', message: string };
+
+export type GameAction = GameCreateAction | GameListAction;
+
+export type Action = InitAction | LoginAction | GameAction;
 
 export function auth(
     state: AuthState = {
@@ -59,23 +77,38 @@ export function auth(
     }
 }
 
-export function quotes(
-    state: QuoteState = {
-        quote: '',
-        authenticated: false,
+export function games(
+    state: GameState = {
+        gamelist: [],
+        creating: false,
+        listing: false,
         errorMessage: '',
     },
-    action: QuoteAction,
-) {
+    action: GameAction,
+): GameState {
     switch (action.type) {
-        case 'QUOTE_REQUEST':
-            return state;
-        case 'QUOTE_SUCCESS':
+        case 'GAME_CREATE_REQUEST':
             return Object.assign({}, state, {
-                quote: action.quote,
-                authenticated: action.authenticated,
+                creating: true,
             });
-        case 'QUOTE_FAILURE':
+        case 'GAME_CREATE_SUCCESS':
+            return Object.assign({}, state, {
+                creating: false,
+            });
+        case 'GAME_CREATE_FAILURE':
+            return Object.assign({}, state, {
+                errorMessage: action.message,
+            });
+        case 'GAME_LIST_REQUEST':
+            return Object.assign({}, state, {
+                listing: true,
+            });
+        case 'GAME_LIST_SUCCESS':
+            return Object.assign({}, state, {
+                listing: false,
+                gamelist: action.gamelist,
+            });
+        case 'GAME_LIST_FAILURE':
             return Object.assign({}, state, {
                 errorMessage: action.message,
             });
@@ -84,9 +117,9 @@ export function quotes(
     }
 }
 
-const quotesApp = combineReducers({
+const reducers = combineReducers({
     auth,
-    quotes,
+    games,
 });
 
-export default quotesApp;
+export default reducers;
