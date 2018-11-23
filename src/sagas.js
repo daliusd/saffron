@@ -94,6 +94,7 @@ export function* init() {
     let token = yield call(getToken, false);
     if (token) {
         yield put({ type: 'LOGIN_SUCCESS' });
+        yield put({ type: 'GAME_LIST_REQUEST' });
     }
 }
 

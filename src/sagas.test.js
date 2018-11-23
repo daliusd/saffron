@@ -211,6 +211,7 @@ test('init', () => {
 
     const token = 'token';
     expect(gen.next(token).value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+    expect(gen.next(token).value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
 
     expect(gen.next().done).toBeTruthy();
 
