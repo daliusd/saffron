@@ -1,9 +1,11 @@
 // @flow
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
+
+import { loginRequest, logoutRequest } from '../actions';
 import Login from './Login.js';
-import Logout from './Logout.js';
 import LoginAction from '../reducers';
+import Logout from './Logout.js';
 
 type Props = {
     dispatch: LoginAction => any,
@@ -25,15 +27,12 @@ export class NavbarC extends Component<Props> {
                     </h1>
                     <div className="navbar-form">
                         {!isAuthenticated && (
-                            <Login
-                                errorMessage={errorMessage}
-                                onLoginClick={creds => dispatch({ type: 'LOGIN_REQUEST', creds })}
-                            />
+                            <Login errorMessage={errorMessage} onLoginClick={creds => dispatch(loginRequest(creds))} />
                         )}
 
                         {isAuthenticated && (
                             <div>
-                                <Logout onLogoutClick={() => dispatch({ type: 'LOGOUT_REQUEST' })} />
+                                <Logout onLogoutClick={() => dispatch(logoutRequest())} />
                             </div>
                         )}
                     </div>

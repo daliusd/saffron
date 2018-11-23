@@ -1,10 +1,13 @@
 // @flow
-import React, { Component } from 'react';
 import './App.css';
+
 import { connect } from 'react-redux';
+import React, { Component } from 'react';
+
+import { quoteRequest, secretQuoteRequest } from './actions';
+import Action from './reducers';
 import Navbar from './components/Navbar';
 import Quotes from './components/Quotes';
-import Action from './reducers';
 
 type Props = {
     dispatch: Action => any,
@@ -26,20 +29,8 @@ class App extends Component<Props> {
                 <Navbar isAuthenticated={isAuthenticated} />
                 <div className="container">
                     <Quotes
-                        onQuoteClick={() =>
-                            dispatch({
-                                type: 'QUOTE_REQUEST',
-                                url: '/fortune',
-                                auth: false,
-                            })
-                        }
-                        onSecretQuoteClick={() =>
-                            dispatch({
-                                type: 'QUOTE_REQUEST',
-                                url: '/fortunedebian',
-                                auth: true,
-                            })
-                        }
+                        onQuoteClick={() => dispatch(quoteRequest())}
+                        onSecretQuoteClick={() => dispatch(secretQuoteRequest())}
                         isAuthenticated={isAuthenticated}
                         quote={quote}
                         isSecretQuote={isSecretQuote}
