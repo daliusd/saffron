@@ -30,6 +30,11 @@ export type LoginAction =
     | { type: 'LOGIN_FAILURE', message: string }
     | { type: 'LOGOUT_SUCCESS' };
 
+export type SignUpAction =
+    | { type: 'SIGNUP_REQUEST', creds: Credentials }
+    | { type: 'SIGNUP_SUCCESS' }
+    | { type: 'SIGNUP_FAILURE', message: string };
+
 export type GameCreateAction =
     | { type: 'GAME_CREATE_REQUEST', gamename: string }
     | { type: 'GAME_CREATE_SUCCESS' }
@@ -42,7 +47,7 @@ export type GameListAction =
 
 export type GameAction = GameCreateAction | GameListAction;
 
-export type Action = InitAction | LoginAction | GameAction;
+export type Action = InitAction | LoginAction | SignUpAction | GameAction;
 
 export function auth(
     state: AuthState = {

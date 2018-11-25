@@ -1,4 +1,5 @@
 // @flow
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
@@ -21,9 +22,7 @@ export class NavbarC extends Component<Props> {
             <nav className="navbar navbar-default">
                 <div className="container-fluid">
                     <h1>
-                        <a className="navbar-brand" href="/#">
-                            Cardamon
-                        </a>
+                        <Link to="/">Cardamon</Link>
                     </h1>
                     <div className="navbar-form">
                         {!isAuthenticated && (
@@ -36,6 +35,7 @@ export class NavbarC extends Component<Props> {
                             </div>
                         )}
                     </div>
+                    <div>{!isAuthenticated && <Link to="/signup">Sign-up</Link>}</div>
                 </div>
             </nav>
         );

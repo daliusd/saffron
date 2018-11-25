@@ -19,6 +19,13 @@ export const logoutRequest = () => {
     };
 };
 
+export const signupRequest = (creds: Credentials) => {
+    return {
+        type: 'SIGNUP_REQUEST',
+        creds: creds,
+    };
+};
+
 export const gameCreateRequest = (gamename: string) => {
     return {
         type: 'GAME_CREATE_REQUEST',
