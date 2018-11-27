@@ -55,6 +55,17 @@ export function deleteRefreshToken(token) {
         });
 }
 
+export function registerUser(creds) {
+    return axios
+        .post('/user', creds)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            throw error;
+        });
+}
+
 export function getRequest(url, token) {
     let config = {
         headers: { Authorization: `Bearer ${token}` },

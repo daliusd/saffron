@@ -1,8 +1,16 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import jwt_decode from 'jwt-decode';
 
+import {
+    deleteAccessToken,
+    deleteRefreshToken,
+    getRequest,
+    getTokens,
+    postRequest,
+    refreshToken,
+    registerUser,
+} from './requests';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
-import { refreshToken, getTokens, deleteAccessToken, deleteRefreshToken, getRequest, postRequest } from './requests';
 
 export function validateToken(token) {
     try {
@@ -89,6 +97,23 @@ function* logoutSaga() {
     yield takeLatest('LOGOUT_REQUEST', logout);
 }
 
+// Sign-up
+
+export function* signup(action) {
+    try {
+        const data = yield call(registerUser, action.creds);
+        yield call(saveTokens, data);
+        yield put({ type: 'SIGNUP_SUCCESS' });
+        yield put({ type: 'LOGIN_SUCCESS' });
+    } catch (e) {
+        yield put({ type: 'SIGNUP_FAILURE', message: e.response.data.message });
+    }
+}
+
+function* signupSaga() {
+    yield takeLatest('SIGNUP_REQUEST', signup);
+}
+
 // Init
 export function* init() {
     let token = yield call(getToken, false);
@@ -158,5 +183,5 @@ function* loggerSaga() {
 
 // All
 export function* rootSaga() {
-    yield all([loginSaga(), logoutSaga(), gameCreateSaga(), gameListSaga(), loggerSaga(), initSaga()]);
+    yield all([loginSaga(), logoutSaga(), signupSaga(), gameCreateSaga(), gameListSaga(), loggerSaga(), initSaga()]);
 }

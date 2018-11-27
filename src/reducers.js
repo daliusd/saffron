@@ -13,6 +13,11 @@ export type AuthState = {
     +errorMessage: string,
 };
 
+export type SignUpState = {
+    +signingup: boolean,
+    +errorMessage: string,
+};
+
 export type GameState = {
     +gamelist: Array<GameType>,
     +creating: boolean,
@@ -31,7 +36,7 @@ export type LoginAction =
     | { type: 'LOGOUT_SUCCESS' };
 
 export type SignUpAction =
-    | { type: 'SIGNUP_REQUEST', creds: Credentials }
+    | { type: 'SIGNUP_REQUEST' }
     | { type: 'SIGNUP_SUCCESS' }
     | { type: 'SIGNUP_FAILURE', message: string };
 
@@ -82,6 +87,34 @@ export function auth(
     }
 }
 
+export function signup(
+    state: SignUpState = {
+        signingup: false,
+        errorMessage: '',
+    },
+    action: SignUpAction,
+): SignUpState {
+    switch (action.type) {
+        case 'SIGNUP_REQUEST':
+            return Object.assign({}, state, {
+                signingup: true,
+                errorMessage: '',
+            });
+        case 'SIGNUP_SUCCESS':
+            return Object.assign({}, state, {
+                signingup: false,
+                errorMessage: '',
+            });
+        case 'SIGNUP_FAILURE':
+            return Object.assign({}, state, {
+                signingup: false,
+                errorMessage: action.message,
+            });
+        default:
+            return state;
+    }
+}
+
 export function games(
     state: GameState = {
         gamelist: [],
@@ -124,6 +157,7 @@ export function games(
 
 const reducers = combineReducers({
     auth,
+    signup,
     games,
 });
 

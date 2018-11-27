@@ -1,7 +1,15 @@
 // @flow
 import axios from 'axios';
 
-import { deleteAccessToken, deleteRefreshToken, getRequest, getTokens, postRequest, refreshToken } from './requests';
+import {
+    deleteAccessToken,
+    deleteRefreshToken,
+    getRequest,
+    getTokens,
+    postRequest,
+    refreshToken,
+    registerUser,
+} from './requests';
 
 jest.mock('axios');
 
@@ -57,6 +65,16 @@ test('deleteRefreshToken attempt to delete with invalid token', async () => {
     let response = { status: 401 };
     axios.delete.mockRejectedValue({ response });
     expect(deleteRefreshToken('at')).resolves.toEqual({});
+});
+
+test('registerUser success', () => {
+    axios.post.mockResolvedValue({ data: 'ok' });
+    expect(registerUser({ username: 'username' })).resolves.toEqual('ok');
+});
+
+test('registerUser failure', async () => {
+    axios.post.mockRejectedValue('error');
+    expect(registerUser({ username: 'username' })).rejects.toEqual('error');
 });
 
 test('getRequest success', () => {

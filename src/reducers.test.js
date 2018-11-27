@@ -1,6 +1,5 @@
 // @flow
-import { auth, games } from './reducers';
-import type { AuthState, GameState } from './reducers';
+import { type AuthState, type GameState, type SignUpState, auth, games, signup } from './reducers';
 
 test('auth', () => {
     let username = 'test_user';
@@ -25,6 +24,24 @@ test('auth', () => {
 
     type = 'LOGOUT_SUCCESS';
     expect(auth(state, { type, creds, message })).toEqual({ isAuthenticated: false, user: '', errorMessage: '' });
+});
+
+test('signup', () => {
+    let type = 'SIGNUP_REQUEST';
+
+    let state: SignUpState = {
+        signingup: false,
+        errorMessage: '',
+    };
+
+    expect(signup(state, { type })).toEqual({ signingup: true, errorMessage: '' });
+
+    type = 'SIGNUP_SUCCESS';
+    expect(signup(state, { type })).toEqual({ signingup: false, errorMessage: '' });
+
+    type = 'SIGNUP_FAILURE';
+    let message = 'error message';
+    expect(signup(state, { type, message })).toEqual({ signingup: false, errorMessage: message });
 });
 
 test('game', () => {

@@ -14,9 +14,18 @@ import {
     logout,
     logoutRefreshToken,
     logoutToken,
+    signup,
     validateToken,
 } from './sagas';
-import { deleteAccessToken, deleteRefreshToken, getRequest, getTokens, postRequest, refreshToken } from './requests';
+import {
+    deleteAccessToken,
+    deleteRefreshToken,
+    getRequest,
+    getTokens,
+    postRequest,
+    refreshToken,
+    registerUser,
+} from './requests';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 
 test('validateToken', () => {
@@ -199,6 +208,30 @@ test('logoutRefreshToken', () => {
 
     expect(gen.next(true).value).toEqual(call(deleteRefreshToken, token));
     expect(gen.next(null).done).toBeTruthy();
+});
+
+// Signup
+test('signup', () => {
+    const creds = { username: 'username', password: 'password' };
+    const gen = cloneableGenerator(signup)({ creds });
+
+    expect(gen.next().value).toEqual(call(registerUser, creds));
+
+    // Success case
+    const clone = gen.clone();
+
+    const data = { access_token: 'test' };
+    expect(clone.next(data).value).toEqual(call(saveTokens, data));
+    expect(clone.next().value).toEqual(put({ type: 'SIGNUP_SUCCESS' }));
+    expect(clone.next().value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+    expect(clone.next().done).toBeTruthy();
+
+    // Failure case
+    let message = 'oops';
+    expect(gen.throw({ response: { data: { message } } }).value).toEqual(
+        put({ type: 'SIGNUP_FAILURE', message: message }),
+    );
+    expect(gen.next().done).toBeTruthy();
 });
 
 // Init
