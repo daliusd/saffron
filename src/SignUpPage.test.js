@@ -4,14 +4,14 @@ import { mount, shallow } from 'enzyme';
 import React from 'react';
 
 import { createAppStore } from './store';
-import SignUpPage, { SignUpPageComponent } from './SignUpPage';
+import ConnectedSignUpPage, { SignUpPage } from './SignUpPage';
 
 const store = createAppStore();
 
 it('renders without crashing', () => {
     mount(
         <Provider store={store}>
-            <SignUpPage />
+            <ConnectedSignUpPage />
         </Provider>,
     );
 });
@@ -19,7 +19,7 @@ it('renders without crashing', () => {
 describe('<App />', () => {
     it('Generates App', () => {
         const dispatch = jest.fn();
-        const wrapper = shallow(<SignUpPageComponent dispatch={dispatch} />);
+        const wrapper = shallow(<SignUpPage dispatch={dispatch} />);
         wrapper.find('SignUp').prop('onSignUpClick')('test');
         expect(dispatch.mock.calls.length).toBe(1);
     });

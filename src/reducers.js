@@ -33,6 +33,8 @@ export type LoginAction =
     | { type: 'LOGIN_REQUEST', creds: Credentials }
     | { type: 'LOGIN_SUCCESS' }
     | { type: 'LOGIN_FAILURE', message: string }
+    | { type: 'LOGOUT_REQUEST' }
+    | { type: 'LOGOUT_FAILURE' }
     | { type: 'LOGOUT_SUCCESS' };
 
 export type SignUpAction =

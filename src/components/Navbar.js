@@ -3,20 +3,18 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { loginRequest, logoutRequest } from '../actions';
-import Login from './Login.js';
-import LoginAction from '../reducers';
+import type { LoginAction } from '../reducers';
+import { logoutRequest } from '../actions';
 import Logout from './Logout.js';
 
 type Props = {
     dispatch: LoginAction => any,
     isAuthenticated: boolean,
-    errorMessage: string,
 };
 
-export class NavbarC extends Component<Props> {
+export class Navbar extends Component<Props> {
     render() {
-        const { dispatch, isAuthenticated, errorMessage } = this.props;
+        const { dispatch, isAuthenticated } = this.props;
 
         return (
             <nav className="navbar navbar-default">
@@ -24,17 +22,14 @@ export class NavbarC extends Component<Props> {
                     <h1>
                         <Link to="/">Cardamon</Link>
                     </h1>
-                    <div className="navbar-form">
-                        {!isAuthenticated && (
-                            <Login errorMessage={errorMessage} onLoginClick={creds => dispatch(loginRequest(creds))} />
-                        )}
-
+                    <div>
                         {isAuthenticated && (
                             <div>
                                 <Logout onLogoutClick={() => dispatch(logoutRequest())} />
                             </div>
                         )}
                     </div>
+                    <div>{!isAuthenticated && <Link to="/login">Login</Link>}</div>
                     <div>{!isAuthenticated && <Link to="/signup">Sign-up</Link>}</div>
                 </div>
             </nav>
@@ -44,12 +39,11 @@ export class NavbarC extends Component<Props> {
 
 const mapStateToProps = state => {
     const { auth } = state;
-    const { isAuthenticated, errorMessage } = auth;
+    const { isAuthenticated } = auth;
 
     return {
         isAuthenticated,
-        errorMessage,
     };
 };
 
-export default connect(mapStateToProps)(NavbarC);
+export default connect(mapStateToProps)(Navbar);

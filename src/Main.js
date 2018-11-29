@@ -12,7 +12,7 @@ type Props = {
     gamelist: Array<GameType>,
 };
 
-export class MainComponent extends Component<Props> {
+export class Main extends Component<Props> {
     componentDidMount() {
         this.props.dispatch(initRequest());
     }
@@ -44,4 +44,4 @@ const mapStateToProps = state => {
     };
 };
 
-export default connect(mapStateToProps)(MainComponent);
+export default connect(mapStateToProps)(Main);

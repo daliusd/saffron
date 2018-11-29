@@ -10,7 +10,7 @@ type Props = {
     dispatch: Action => any,
 };
 
-export class SignUpPageComponent extends Component<Props> {
+export class SignUpPage extends Component<Props> {
     render() {
         const { dispatch } = this.props;
         const errorMessage = ''; // FIXME
@@ -23,8 +23,4 @@ export class SignUpPageComponent extends Component<Props> {
     }
 }
 
-const mapStateToProps = state => {
-    return {};
-};
-
-export default connect(mapStateToProps)(SignUpPageComponent);
+export default connect()(SignUpPage);
