@@ -23,17 +23,17 @@ export default class SignUp extends Component<Props, State> {
     render() {
         return (
             <div>
-                <input type="text" ref="username" className="form-control" placeholder="Username" />
-                <input type="password" ref="password" className="form-control" placeholder="Password" />
-                <input
-                    type="password"
-                    ref="password_repeat"
-                    className="form-control"
-                    placeholder="Repeat password here"
-                />
-                <button onClick={event => this.handleClick(event)} className="btn btn-primary">
-                    Sign Up
-                </button>
+                <form onSubmit={event => this.handleClick(event)}>
+                    <input type="text" ref="username" className="form-control" placeholder="Username" />
+                    <input type="password" ref="password" className="form-control" placeholder="Password" />
+                    <input
+                        type="password"
+                        ref="password_repeat"
+                        className="form-control"
+                        placeholder="Repeat password here"
+                    />
+                    <input type="submit" value="Sign Up" />
+                </form>
 
                 {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
             </div>
@@ -54,5 +54,6 @@ export default class SignUp extends Component<Props, State> {
             };
             this.props.onSignUpClick(creds);
         }
+        event.preventDefault();
     }
 }

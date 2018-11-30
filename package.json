@@ -49,7 +49,7 @@
   },
   "lint-staged": {
     "*.js": [
-      "eslint --max-warnings 0 'src/**/*.js'"
+      "eslint --max-warnings 0"
     ]
   },
   "jest": {
