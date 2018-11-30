@@ -21,6 +21,6 @@ describe('<App />', () => {
         const dispatch = jest.fn();
         const wrapper = shallow(<Main isAuthenticated={true} gamelist={[]} dispatch={dispatch} />);
         wrapper.find('Games').prop('onGameCreate')('test');
-        expect(dispatch.mock.calls.length).toBe(2);
+        expect(dispatch.mock.calls.length).toBe(1);
     });
 });

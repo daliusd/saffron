@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import type { GameType, Action } from './reducers';
-import { gameCreateRequest, initRequest } from './actions';
+import { gameCreateRequest } from './actions';
 import Games from './components/Games';
 
 type Props = {
@@ -13,10 +13,6 @@ type Props = {
 };
 
 export class Main extends Component<Props> {
-    componentDidMount() {
-        this.props.dispatch(initRequest());
-    }
-
     render() {
         const { dispatch, gamelist, isAuthenticated } = this.props;
         return (

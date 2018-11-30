@@ -5,16 +5,23 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import type { Action } from './reducers';
+import { initRequest } from './actions';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import Navbar from './components/Navbar';
 import SignUpPage from './SignUpPage';
 
 type Props = {
+    dispatch: Action => null,
     isAuthenticated: boolean,
 };
 
 export class App extends Component<Props> {
+    componentDidMount() {
+        this.props.dispatch(initRequest());
+    }
+
     render() {
         const { isAuthenticated } = this.props;
         return (
