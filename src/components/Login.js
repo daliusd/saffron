@@ -12,18 +12,17 @@ export default class Login extends Component<Props> {
 
         return (
             <div>
-                <input type="text" ref="username" className="form-control" placeholder="Username" />
-                <input type="password" ref="password" className="form-control" placeholder="Password" />
-                <button onClick={event => this.handleClick(event)} className="btn btn-primary">
-                    Login
-                </button>
-
+                <form onSubmit={event => this.handleSubmit(event)}>
+                    <input type="text" ref="username" className="form-control" placeholder="Username" />
+                    <input type="password" ref="password" className="form-control" placeholder="Password" />
+                    <input type="submit" value="Login" />
+                </form>
                 {errorMessage && <p>{errorMessage}</p>}
             </div>
         );
     }
 
-    handleClick(event: SyntheticEvent<>) {
+    handleSubmit(event: SyntheticEvent<>) {
         const username = this.refs.username;
         const password = this.refs.password;
         const creds = {
@@ -31,5 +30,6 @@ export default class Login extends Component<Props> {
             password: password.value.trim(),
         };
         this.props.onLoginClick(creds);
+        event.preventDefault();
     }
 }
