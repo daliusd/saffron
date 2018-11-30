@@ -47,7 +47,7 @@ export function* getToken(with_error_if_missing) {
     return new_token;
 }
 
-export function* login(action) {
+export function* handleLoginRequest(action) {
     try {
         const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
@@ -57,8 +57,16 @@ export function* login(action) {
     }
 }
 
-function* loginSaga() {
-    yield takeLatest('LOGIN_REQUEST', login);
+function* loginRequestSaga() {
+    yield takeLatest('LOGIN_REQUEST', handleLoginRequest);
+}
+
+export function* handleLoginSuccess(action) {
+    yield put({ type: 'GAME_LIST_REQUEST' });
+}
+
+function* loginSuccessSaga() {
+    yield takeLatest('LOGIN_SUCCESS', handleLoginSuccess);
 }
 
 export function* logoutToken() {
@@ -81,7 +89,7 @@ export function* logoutRefreshToken() {
     }
 }
 
-export function* logout(action) {
+export function* handleLogoutRequest(action) {
     try {
         yield call(logoutToken);
         yield call(logoutRefreshToken);
@@ -93,8 +101,8 @@ export function* logout(action) {
     }
 }
 
-function* logoutSaga() {
-    yield takeLatest('LOGOUT_REQUEST', logout);
+function* logoutRequestSaga() {
+    yield takeLatest('LOGOUT_REQUEST', handleLogoutRequest);
 }
 
 // Sign-up
@@ -119,7 +127,6 @@ export function* init() {
     let token = yield call(getToken, false);
     if (token) {
         yield put({ type: 'LOGIN_SUCCESS' });
-        yield put({ type: 'GAME_LIST_REQUEST' });
     }
 }
 
@@ -183,5 +190,14 @@ function* loggerSaga() {
 
 // All
 export function* rootSaga() {
-    yield all([loginSaga(), logoutSaga(), signupSaga(), gameCreateSaga(), gameListSaga(), loggerSaga(), initSaga()]);
+    yield all([
+        loginRequestSaga(),
+        loginSuccessSaga(),
+        logoutRequestSaga(),
+        signupSaga(),
+        gameCreateSaga(),
+        gameListSaga(),
+        loggerSaga(),
+        initSaga(),
+    ]);
 }

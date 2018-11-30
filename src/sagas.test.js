@@ -9,9 +9,10 @@ import {
     gameCreate,
     gameList,
     getToken,
+    handleLoginRequest,
+    handleLoginSuccess,
+    handleLogoutRequest,
     init,
-    login,
-    logout,
     logoutRefreshToken,
     logoutToken,
     signup,
@@ -43,9 +44,9 @@ test('validateToken', () => {
     expect(validateToken(token)).toBeTruthy();
 });
 
-test('login', () => {
+test('handleLoginRequest', () => {
     const creds = { username: 'username', password: 'password' };
-    const gen = cloneableGenerator(login)({ creds });
+    const gen = cloneableGenerator(handleLoginRequest)({ creds });
 
     // Success case
     const clone = gen.clone();
@@ -64,6 +65,12 @@ test('login', () => {
         put({ type: 'LOGIN_FAILURE', message: message }),
     );
     expect(clone2.next().done).toBeTruthy();
+});
+
+test('handleLoginSuccess', () => {
+    const gen = handleLoginSuccess();
+    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
+    expect(gen.next().done).toBeTruthy();
 });
 
 test('getToken with_error_if_missing=false', () => {
@@ -152,8 +159,8 @@ test('getToken with_error_if_missing=true', () => {
     expect(next.value).toEqual('new_token');
 });
 
-test('logout', () => {
-    const gen = cloneableGenerator(logout)(true);
+test('handleLogoutRequest', () => {
+    const gen = cloneableGenerator(handleLogoutRequest)(true);
 
     expect(gen.next().value).toEqual(call(logoutToken));
     expect(gen.next().value).toEqual(call(logoutRefreshToken));
@@ -162,8 +169,8 @@ test('logout', () => {
     expect(gen.next().done).toBeTruthy();
 });
 
-test('logout failure', () => {
-    const gen = cloneableGenerator(logout)(true);
+test('handleLogoutRequest failure', () => {
+    const gen = cloneableGenerator(handleLogoutRequest)(true);
 
     expect(gen.next().value).toEqual(call(logoutToken));
 
@@ -244,7 +251,6 @@ test('init', () => {
 
     const token = 'token';
     expect(gen.next(token).value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
-    expect(gen.next(token).value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
 
     expect(gen.next().done).toBeTruthy();
 
