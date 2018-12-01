@@ -6,6 +6,7 @@ import {
     deleteRefreshToken,
     getRequest,
     getTokens,
+    handleAxiosError,
     postRequest,
     refreshToken,
     registerUser,
@@ -13,14 +14,23 @@ import {
 
 jest.mock('axios');
 
+test('handleAxiosError request error', () => {
+    expect(() => {
+        handleAxiosError({ request: 'error' });
+    }).toThrowError('error');
+    expect(() => {
+        handleAxiosError({});
+    }).toThrowError('Unknown error');
+});
+
 test('getTokens success', () => {
     axios.post.mockResolvedValue({ data: 'ok' });
     expect(getTokens({ username: 'username' })).resolves.toEqual('ok');
 });
 
 test('getTokens failure', async () => {
-    axios.post.mockRejectedValue('error');
-    expect(getTokens({ username: 'username' })).rejects.toEqual('error');
+    axios.post.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(getTokens({ username: 'username' })).rejects.toEqual(Error('error'));
 });
 
 test('refreshToken success', () => {
@@ -29,8 +39,8 @@ test('refreshToken success', () => {
 });
 
 test('refreshToken failure', async () => {
-    axios.post.mockRejectedValue('error');
-    expect(refreshToken('rt')).rejects.toEqual('error');
+    axios.post.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(refreshToken('rt')).rejects.toEqual(Error('error'));
 });
 
 test('deleteAccessToken success', () => {
@@ -39,9 +49,9 @@ test('deleteAccessToken success', () => {
 });
 
 test('deleteAccessToken failure', async () => {
-    let response = { status: 403 };
+    let response = { status: 403, data: { message: 'error' } };
     axios.delete.mockRejectedValue({ response });
-    expect(deleteAccessToken('at')).rejects.toEqual({ response });
+    expect(deleteAccessToken('at')).rejects.toEqual(Error('error'));
 });
 
 test('deleteAccessToken attempt to delete with invalid token', async () => {
@@ -56,9 +66,9 @@ test('deleteRefreshToken success', () => {
 });
 
 test('deleteRefreshToken failure', async () => {
-    let response = { status: 403 };
+    let response = { status: 403, data: { message: 'error' } };
     axios.delete.mockRejectedValue({ response });
-    expect(deleteRefreshToken('at')).rejects.toEqual({ response });
+    expect(deleteRefreshToken('at')).rejects.toEqual(Error('error'));
 });
 
 test('deleteRefreshToken attempt to delete with invalid token', async () => {
@@ -73,8 +83,8 @@ test('registerUser success', () => {
 });
 
 test('registerUser failure', async () => {
-    axios.post.mockRejectedValue('error');
-    expect(registerUser({ username: 'username' })).rejects.toEqual('error');
+    axios.post.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(registerUser({ username: 'username' })).rejects.toEqual(Error('error'));
 });
 
 test('getRequest success', () => {
@@ -83,8 +93,8 @@ test('getRequest success', () => {
 });
 
 test('getRequest failure', async () => {
-    axios.get.mockRejectedValue('error');
-    expect(getRequest('/ok', 'token')).rejects.toEqual('error');
+    axios.get.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(getRequest('/ok', 'token')).rejects.toEqual(Error('error'));
 });
 
 test('postRequest success', () => {
@@ -93,6 +103,6 @@ test('postRequest success', () => {
 });
 
 test('postRequest failure', async () => {
-    axios.post.mockRejectedValue('error');
-    expect(postRequest('/ok', 'token', {})).rejects.toEqual('error');
+    axios.post.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(postRequest('/ok', 'token', {})).rejects.toEqual(Error('error'));
 });

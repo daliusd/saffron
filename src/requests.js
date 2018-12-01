@@ -1,5 +1,19 @@
 import axios from 'axios';
 
+export function handleAxiosError(error) {
+    if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        // error.response.status);
+        throw new Error(error.response.data.message);
+    } else if (error.request) {
+        console.log(error.request);
+        throw new Error(error.request);
+    } else {
+        throw new Error('Unknown error :(');
+    }
+}
+
 export function getTokens(creds) {
     return axios
         .post('/token', creds)
@@ -7,7 +21,7 @@ export function getTokens(creds) {
             return resp.data;
         })
         .catch(error => {
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -21,7 +35,7 @@ export function refreshToken(refresh_token) {
             return resp.data.access_token;
         })
         .catch(error => {
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -36,7 +50,7 @@ export function deleteAccessToken(token) {
         })
         .catch(error => {
             if (error.response.status === 401) return {};
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -51,7 +65,7 @@ export function deleteRefreshToken(token) {
         })
         .catch(error => {
             if (error.response.status === 401) return {};
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -62,7 +76,7 @@ export function registerUser(creds) {
             return resp.data;
         })
         .catch(error => {
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -76,7 +90,7 @@ export function getRequest(url, token) {
             return resp.data;
         })
         .catch(error => {
-            throw error;
+            handleAxiosError(error);
         });
 }
 
@@ -90,6 +104,6 @@ export function postRequest(url, token, data) {
             return resp.data;
         })
         .catch(error => {
-            throw error;
+            handleAxiosError(error);
         });
 }

@@ -1,25 +1,15 @@
 // @flow
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import { type Dispatch, messageRequest } from '../actions';
+
 type Props = {
+    dispatch: Dispatch,
     onSignUpClick: ({ username: string, password: string }) => void,
-    errorMessage: string,
 };
 
-type State = {
-    errorMessage: string,
-};
-
-export default class SignUp extends Component<Props, State> {
-    state = {
-        errorMessage: '',
-    };
-
-    constructor(props: Props) {
-        super(props);
-        this.state.errorMessage = props.errorMessage;
-    }
-
+export class SignUp extends Component<Props> {
     render() {
         return (
             <div>
@@ -34,26 +24,27 @@ export default class SignUp extends Component<Props, State> {
                     />
                     <input type="submit" value="Sign Up" />
                 </form>
-
-                {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
             </div>
         );
     }
 
     handleClick(event: SyntheticEvent<>) {
+        const { dispatch, onSignUpClick } = this.props;
+
         const username = this.refs.username.value.trim();
         const password = this.refs.password.value.trim();
         const password_repeat = this.refs.password_repeat.value.trim();
 
         if (password !== password_repeat) {
-            this.setState({ errorMessage: 'Passwords do not match.' });
+            dispatch(messageRequest('error', 'Passwords do not match.'));
         } else {
             const creds = {
                 username: username,
                 password: password,
             };
-            this.props.onSignUpClick(creds);
+            onSignUpClick(creds);
         }
         event.preventDefault();
     }
 }
+export default connect()(SignUp);

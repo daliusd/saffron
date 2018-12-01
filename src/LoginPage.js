@@ -3,8 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { LoginAction } from './reducers';
-import { loginRequest } from './actions';
+import { type LoginAction, loginRequest } from './actions';
 import Login from './components/Login';
 
 type Props = {
@@ -15,12 +14,11 @@ type Props = {
 export class LoginPage extends Component<Props> {
     render() {
         const { dispatch, isAuthenticated } = this.props;
-        const errorMessage = ''; // FIXME
 
         return (
             <div className="App">
                 {!isAuthenticated && (
-                    <Login errorMessage={errorMessage} onLoginClick={creds => dispatch(loginRequest(creds))} />
+                    <Login onLoginClick={creds => dispatch(loginRequest(creds))} />
                 )}
                 {isAuthenticated && <Redirect to="/" />}
             </div>

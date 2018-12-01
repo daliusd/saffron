@@ -3,13 +3,10 @@ import React, { Component } from 'react';
 
 type Props = {
     onLoginClick: ({ username: string, password: string }) => void,
-    errorMessage: string,
 };
 
 export default class Login extends Component<Props> {
     render() {
-        const { errorMessage } = this.props;
-
         return (
             <div>
                 <form onSubmit={event => this.handleSubmit(event)}>
@@ -17,7 +14,6 @@ export default class Login extends Component<Props> {
                     <input type="password" ref="password" className="form-control" placeholder="Password" />
                     <input type="submit" value="Login" />
                 </form>
-                {errorMessage && <p>{errorMessage}</p>}
             </div>
         );
     }

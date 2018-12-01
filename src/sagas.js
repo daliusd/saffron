@@ -1,4 +1,5 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import jwt_decode from 'jwt-decode';
 
 import {
@@ -11,6 +12,24 @@ import {
     registerUser,
 } from './requests';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
+import { messageRequest } from './actions';
+
+// Messages
+export function* putError(message) {
+    yield put(messageRequest('error', message));
+}
+
+export function* onMessageDisplay(action) {
+    yield call(delay, 5000);
+    yield put({ type: 'MESSAGE_HIDE', message: action.message });
+}
+
+function* messageDisplaySaga() {
+    yield takeEvery('MESSAGE_DISPLAY', onMessageDisplay);
+}
+
+// Login & Signup
+// Token handling
 
 export function validateToken(token) {
     try {
@@ -47,13 +66,16 @@ export function* getToken(with_error_if_missing) {
     return new_token;
 }
 
+// Login
+
 export function* handleLoginRequest(action) {
     try {
         const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
         yield put({ type: 'LOGIN_SUCCESS' });
     } catch (e) {
-        yield put({ type: 'LOGIN_FAILURE', message: e.response.data.message });
+        yield put({ type: 'LOGIN_FAILURE' });
+        yield call(putError, e.message);
     }
 }
 
@@ -68,6 +90,8 @@ export function* handleLoginSuccess(action) {
 function* loginSuccessSaga() {
     yield takeLatest('LOGIN_SUCCESS', handleLoginSuccess);
 }
+
+// Logout
 
 export function* logoutToken() {
     const token = yield call(getTokenFromStorage);
@@ -97,7 +121,8 @@ export function* handleLogoutRequest(action) {
 
         yield put({ type: 'LOGOUT_SUCCESS' });
     } catch (e) {
-        yield put({ type: 'LOGOUT_FAILURE', message: e.response.data.message });
+        yield put({ type: 'LOGOUT_FAILURE' });
+        yield call(putError, e.message);
     }
 }
 
@@ -114,7 +139,8 @@ export function* signup(action) {
         yield put({ type: 'SIGNUP_SUCCESS' });
         yield put({ type: 'LOGIN_SUCCESS' });
     } catch (e) {
-        yield put({ type: 'SIGNUP_FAILURE', message: e.response.data.message });
+        yield put({ type: 'SIGNUP_FAILURE' });
+        yield call(putError, e.message);
     }
 }
 
@@ -154,7 +180,8 @@ export function* gameCreate(action) {
         });
         yield put({ type: 'GAME_LIST_REQUEST' });
     } catch (e) {
-        yield put({ type: 'GAME_CREATE_FAILURE', message: e.response.data.message });
+        yield put({ type: 'GAME_CREATE_FAILURE' });
+        yield call(putError, e.message);
     }
 }
 
@@ -166,7 +193,8 @@ export function* gameList() {
             gamelist: data.games,
         });
     } catch (e) {
-        yield put({ type: 'GAME_LIST_FAILURE', message: e.response.data.message });
+        yield put({ type: 'GAME_LIST_FAILURE' });
+        yield call(putError, e.message);
     }
 }
 
@@ -191,6 +219,7 @@ function* loggerSaga() {
 // All
 export function* rootSaga() {
     yield all([
+        messageDisplaySaga(),
         loginRequestSaga(),
         loginSuccessSaga(),
         logoutRequestSaga(),

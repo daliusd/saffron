@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { LoginAction } from '../reducers';
-import { logoutRequest } from '../actions';
+import { type LoginAction, type MessageType, logoutRequest } from '../actions';
 import Logout from './Logout.js';
 
 type Props = {
     dispatch: LoginAction => any,
     isAuthenticated: boolean,
+    messages: Array<MessageType>,
 };
 
 export class Navbar extends Component<Props> {
     render() {
-        const { dispatch, isAuthenticated } = this.props;
+        const { dispatch, isAuthenticated, messages } = this.props;
 
         return (
             <nav className="navbar navbar-default">
@@ -31,6 +31,14 @@ export class Navbar extends Component<Props> {
                     </div>
                     <div>{!isAuthenticated && <Link to="/login">Login</Link>}</div>
                     <div>{!isAuthenticated && <Link to="/signup">Sign-up</Link>}</div>
+
+                    <div>
+                        <ul>
+                            {messages.map(m => (
+                                <li key={m.id}>{m.text}</li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </nav>
         );
@@ -38,11 +46,9 @@ export class Navbar extends Component<Props> {
 }
 
 const mapStateToProps = state => {
-    const { auth } = state;
-    const { isAuthenticated } = auth;
-
     return {
-        isAuthenticated,
+        isAuthenticated: state.auth.isAuthenticated,
+        messages: state.message.messages,
     };
 };
 

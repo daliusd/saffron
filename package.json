@@ -15,7 +15,8 @@
     "react-scripts": "2.0.4",
     "react-test-renderer": "^16.6.0",
     "redux": "^4.0.1",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "shortid": "^2.2.14"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -19,8 +19,9 @@ it('renders without crashing', () => {
 describe('<App />', () => {
     it('Generates App', () => {
         const dispatch = jest.fn();
-        const wrapper = shallow(<SignUpPage dispatch={dispatch} />);
-        wrapper.find('SignUp').prop('onSignUpClick')('test');
+        const wrapper = shallow(<SignUpPage dispatch={dispatch} isAuthenticated={false} />);
+        expect(wrapper.find('Connect(SignUp)')).toHaveLength(1);
+        wrapper.find('Connect(SignUp)').simulate('signUpClick', 'test');
         expect(dispatch.mock.calls.length).toBe(1);
     });
 

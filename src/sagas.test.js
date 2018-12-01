@@ -1,5 +1,6 @@
 import { call, put } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
+import { delay } from 'redux-saga';
 
 import jwt from 'jwt-simple';
 
@@ -15,6 +16,8 @@ import {
     init,
     logoutRefreshToken,
     logoutToken,
+    onMessageDisplay,
+    putError,
     signup,
     validateToken,
 } from './sagas';
@@ -28,6 +31,18 @@ import {
     registerUser,
 } from './requests';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
+
+test('putError', () => {
+    putError('random error').next();
+});
+
+test('onMessageDisplay', () => {
+    const message = 'message';
+    let gen = onMessageDisplay({ message });
+    expect(gen.next().value).toEqual(call(delay, 5000));
+    expect(gen.next().value).toEqual(put({ type: 'MESSAGE_HIDE', message }));
+    expect(gen.next().done).toBeTruthy();
+});
 
 test('validateToken', () => {
     expect(validateToken('random_string')).toBeFalsy();
@@ -61,9 +76,8 @@ test('handleLoginRequest', () => {
     const clone2 = gen.clone();
     expect(clone2.next().value).toEqual(call(getTokens, creds));
     let message = 'oops';
-    expect(clone2.throw({ response: { data: { message } } }).value).toEqual(
-        put({ type: 'LOGIN_FAILURE', message: message }),
-    );
+    expect(clone2.throw({ message }).value).toEqual(put({ type: 'LOGIN_FAILURE' }));
+    expect(clone2.next().value).toEqual(call(putError, message));
     expect(clone2.next().done).toBeTruthy();
 });
 
@@ -175,9 +189,8 @@ test('handleLogoutRequest failure', () => {
     expect(gen.next().value).toEqual(call(logoutToken));
 
     let message = 'oops';
-    expect(gen.throw({ response: { data: { message } } }).value).toEqual(
-        put({ type: 'LOGOUT_FAILURE', message: message }),
-    );
+    expect(gen.throw({ message }).value).toEqual(put({ type: 'LOGOUT_FAILURE' }));
+    expect(gen.next().value).toEqual(call(putError, message));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -235,9 +248,8 @@ test('signup', () => {
 
     // Failure case
     let message = 'oops';
-    expect(gen.throw({ response: { data: { message } } }).value).toEqual(
-        put({ type: 'SIGNUP_FAILURE', message: message }),
-    );
+    expect(gen.throw({ message }).value).toEqual(put({ type: 'SIGNUP_FAILURE' }));
+    expect(gen.next().value).toEqual(call(putError, message));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -298,9 +310,8 @@ test('gameCreate', () => {
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ response: { data: { message } } }).value).toEqual(
-        put({ type: 'GAME_CREATE_FAILURE', message: message }),
-    );
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_CREATE_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
 
@@ -318,8 +329,7 @@ test('gameList', () => {
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ response: { data: { message } } }).value).toEqual(
-        put({ type: 'GAME_LIST_FAILURE', message: message }),
-    );
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_LIST_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
