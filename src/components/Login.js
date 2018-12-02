@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 
 type Props = {
-    onLoginClick: ({ username: string, password: string }) => void,
+    onLogin: ({ username: string, password: string }) => void,
 };
 
 export default class Login extends Component<Props> {
@@ -25,7 +25,7 @@ export default class Login extends Component<Props> {
             username: username.value.trim(),
             password: password.value.trim(),
         };
-        this.props.onLoginClick(creds);
+        this.props.onLogin(creds);
         event.preventDefault();
     }
 }

@@ -20,7 +20,7 @@ describe('<LoginPage />', () => {
     it('generates LoginPage', () => {
         const dispatch = jest.fn();
         const wrapper = shallow(<LoginPage dispatch={dispatch} isAuthenticated={false} />);
-        wrapper.find('Login').prop('onLoginClick')('test');
+        wrapper.find('Login').prop('onLogin')('test');
         expect(dispatch.mock.calls.length).toBe(1);
     });
 

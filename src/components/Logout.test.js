@@ -5,14 +5,14 @@ import Logout from './Logout';
 
 describe('<Logout />', () => {
     it('Generates logout', () => {
-        const wrapper = shallow(<Logout onLogoutClick={() => {}} />);
+        const wrapper = shallow(<Logout onLogout={() => {}} />);
         expect(wrapper.find('button')).toHaveLength(1);
     });
 
     it('simulates click event', () => {
-        const onButtonClick = jest.fn();
-        const wrapper = shallow(<Logout onLogoutClick={onButtonClick} />);
+        const onLogout = jest.fn();
+        const wrapper = shallow(<Logout onLogout={onLogout} />);
         wrapper.find('button').simulate('click');
-        expect(onButtonClick.mock.calls.length).toBe(1);
+        expect(onLogout.mock.calls.length).toBe(1);
     });
 });

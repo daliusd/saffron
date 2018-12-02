@@ -18,10 +18,10 @@ describe('<Navbar />', () => {
     });
 
     it('Generates Navbar isAuthenticated=true simulated logout click', () => {
-        const onLogoutClick = jest.fn();
-        const wrapper = shallow(<Navbar isAuthenticated={true} dispatch={onLogoutClick} messages={[]} />);
-        wrapper.find('Logout').simulate('logoutClick');
-        expect(onLogoutClick.mock.calls.length).toBe(1);
+        const onLogout = jest.fn();
+        const wrapper = shallow(<Navbar isAuthenticated={true} dispatch={onLogout} messages={[]} />);
+        wrapper.find('Logout').simulate('logout');
+        expect(onLogout.mock.calls.length).toBe(1);
     });
 
     it('Generates Navbar isAuthenticated=false with message', () => {

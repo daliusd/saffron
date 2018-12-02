@@ -25,7 +25,7 @@ export class Navbar extends Component<Props> {
                     <div>
                         {isAuthenticated && (
                             <div>
-                                <Logout onLogoutClick={() => dispatch(logoutRequest())} />
+                                <Logout onLogout={() => dispatch(logoutRequest())} />
                             </div>
                         )}
                     </div>

@@ -17,7 +17,7 @@ export class SignUpPage extends Component<Props> {
 
         return (
             <div className="App">
-                {!isAuthenticated && <SignUp onSignUpClick={creds => dispatch(signupRequest(creds))} />}
+                {!isAuthenticated && <SignUp onSignUp={creds => dispatch(signupRequest(creds))} />}
                 {isAuthenticated && <Redirect to="/" />}
             </div>
         );

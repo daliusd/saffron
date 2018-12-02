@@ -18,7 +18,7 @@ export class LoginPage extends Component<Props> {
         return (
             <div className="App">
                 {!isAuthenticated && (
-                    <Login onLoginClick={creds => dispatch(loginRequest(creds))} />
+                    <Login onLogin={creds => dispatch(loginRequest(creds))} />
                 )}
                 {isAuthenticated && <Redirect to="/" />}
             </div>

@@ -6,14 +6,14 @@ import { type Dispatch, messageRequest } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
-    onSignUpClick: ({ username: string, password: string }) => void,
+    onSignUp: ({ username: string, password: string }) => void,
 };
 
 export class SignUp extends Component<Props> {
     render() {
         return (
             <div>
-                <form onSubmit={event => this.handleClick(event)}>
+                <form onSubmit={event => this.handleSubmit(event)}>
                     <input type="text" ref="username" className="form-control" placeholder="Username" />
                     <input type="password" ref="password" className="form-control" placeholder="Password" />
                     <input
@@ -28,8 +28,8 @@ export class SignUp extends Component<Props> {
         );
     }
 
-    handleClick(event: SyntheticEvent<>) {
-        const { dispatch, onSignUpClick } = this.props;
+    handleSubmit(event: SyntheticEvent<>) {
+        const { dispatch, onSignUp } = this.props;
 
         const username = this.refs.username.value.trim();
         const password = this.refs.password.value.trim();
@@ -42,7 +42,7 @@ export class SignUp extends Component<Props> {
                 username: username,
                 password: password,
             };
-            onSignUpClick(creds);
+            onSignUp(creds);
         }
         event.preventDefault();
     }

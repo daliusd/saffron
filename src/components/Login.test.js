@@ -6,13 +6,13 @@ import Login from './Login';
 
 describe('<Login />', () => {
     it('Generates Login', () => {
-        shallow(<Login onLoginClick={() => {}} />);
+        shallow(<Login onLogin={() => {}} />);
     });
 
     it('simulates click event', () => {
-        const onLoginClick = jest.fn();
-        const wrapper = mount(<Login onLoginClick={onLoginClick} />);
+        const onLogin = jest.fn();
+        const wrapper = mount(<Login onLogin={onLogin} />);
         wrapper.find('form').simulate('submit');
-        expect(onLoginClick.mock.calls.length).toBe(1);
+        expect(onLogin.mock.calls.length).toBe(1);
     });
 });
