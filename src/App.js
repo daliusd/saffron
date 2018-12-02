@@ -5,15 +5,14 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { Action } from './reducers';
-import { initRequest } from './actions';
+import { type Dispatch, initRequest } from './actions';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import Navbar from './components/Navbar';
 import SignUpPage from './SignUpPage';
 
 type Props = {
-    dispatch: Action => null,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
 };
 

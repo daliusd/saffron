@@ -3,11 +3,11 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type SignUpAction, signupRequest } from './actions';
+import { type Dispatch, signupRequest } from './actions';
 import SignUp from './components/SignUp';
 
 type Props = {
-    dispatch: SignUpAction => any,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
 };
 

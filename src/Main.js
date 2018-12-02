@@ -2,12 +2,12 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { GameType, Action } from './reducers';
-import { gameCreateRequest } from './actions';
+import { type Dispatch, gameCreateRequest } from './actions';
+import type { GameType } from './reducers';
 import Games from './components/Games';
 
 type Props = {
-    dispatch: Action => any,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
     gamelist: Array<GameType>,
 };

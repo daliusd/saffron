@@ -3,11 +3,11 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type LoginAction, loginRequest } from './actions';
+import { type Dispatch, loginRequest } from './actions';
 import Login from './components/Login';
 
 type Props = {
-    dispatch: LoginAction => any,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
 };
 

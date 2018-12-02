@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type LoginAction, type MessageType, logoutRequest } from '../actions';
+import { type Dispatch, type MessageType, logoutRequest } from '../actions';
 import Logout from './Logout.js';
 
 type Props = {
-    dispatch: LoginAction => any,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
     messages: Array<MessageType>,
 };
