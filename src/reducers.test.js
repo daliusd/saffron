@@ -100,7 +100,7 @@ test('game', () => {
 
     type = 'GAME_LIST_SUCCESS';
     let gamelist = [{ id: 1, name: 'test', data: 'test' }];
-    expect(games(state, { type, gamelist })).toEqual({ creating: false, gamelist, listing: false });
+    expect(games(state, { type, games: gamelist })).toEqual({ creating: false, gamelist, listing: false });
 
     type = 'GAME_LIST_FAILURE';
     expect(games(state, { type, message })).toEqual({

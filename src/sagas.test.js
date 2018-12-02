@@ -7,18 +7,18 @@ import jwt from 'jwt-simple';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
-    gameCreate,
-    gameList,
     getToken,
+    handleGameCreateRequest,
+    handleGameListRequest,
+    handleInitRequest,
     handleLoginRequest,
     handleLoginSuccess,
     handleLogoutRequest,
-    init,
+    handleMessageDisplay,
+    handleSignupRequest,
     logoutRefreshToken,
     logoutToken,
-    onMessageDisplay,
     putError,
-    signup,
     validateToken,
 } from './sagas';
 import {
@@ -36,9 +36,9 @@ test('putError', () => {
     putError('random error').next();
 });
 
-test('onMessageDisplay', () => {
+test('handleMessageDisplay', () => {
     const message = 'message';
-    let gen = onMessageDisplay({ message });
+    let gen = handleMessageDisplay({ message });
     expect(gen.next().value).toEqual(call(delay, 5000));
     expect(gen.next().value).toEqual(put({ type: 'MESSAGE_HIDE', message }));
     expect(gen.next().done).toBeTruthy();
@@ -231,9 +231,9 @@ test('logoutRefreshToken', () => {
 });
 
 // Signup
-test('signup', () => {
+test('handleSignupRequest', () => {
     const creds = { username: 'username', password: 'password' };
-    const gen = cloneableGenerator(signup)({ creds });
+    const gen = cloneableGenerator(handleSignupRequest)({ creds });
 
     expect(gen.next().value).toEqual(call(registerUser, creds));
 
@@ -254,8 +254,8 @@ test('signup', () => {
 });
 
 // Init
-test('init', () => {
-    const gen = cloneableGenerator(init)(true);
+test('handleInitRequest', () => {
+    const gen = cloneableGenerator(handleInitRequest)(true);
 
     expect(gen.next().value).toEqual(call(getToken, false));
 
@@ -295,9 +295,9 @@ test('authorizedPostRequest', () => {
 
 // Game
 
-test('gameCreate', () => {
+test('handleGameCreateRequest', () => {
     const action = { gamename: 'test' };
-    const gen = cloneableGenerator(gameCreate)(action);
+    const gen = cloneableGenerator(handleGameCreateRequest)(action);
 
     expect(gen.next().value).toEqual(call(authorizedPostRequest, '/game', { name: 'test', data: '{}' }));
 
@@ -315,8 +315,8 @@ test('gameCreate', () => {
     expect(clone.next().done).toBeTruthy();
 });
 
-test('gameList', () => {
-    const gen = cloneableGenerator(gameList)();
+test('handleGameListRequest', () => {
+    const gen = cloneableGenerator(handleGameListRequest)();
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game'));
 
@@ -324,7 +324,7 @@ test('gameList', () => {
 
     // Successful request
     let data = { games: [] };
-    expect(gen.next(data).value).toEqual(put({ type: 'GAME_LIST_SUCCESS', gamelist: [] }));
+    expect(gen.next(data).value).toEqual(put({ type: 'GAME_LIST_SUCCESS', games: [] }));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request

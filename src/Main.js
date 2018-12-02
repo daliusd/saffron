@@ -2,8 +2,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type Dispatch, gameCreateRequest } from './actions';
-import type { GameType } from './reducers';
+import { type Dispatch, type GameType, gameCreateRequest } from './actions';
 import Games from './components/Games';
 
 type Props = {

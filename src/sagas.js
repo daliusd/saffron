@@ -19,13 +19,13 @@ export function* putError(message) {
     yield put(messageRequest('error', message));
 }
 
-export function* onMessageDisplay(action) {
+export function* handleMessageDisplay(action) {
     yield call(delay, 5000);
     yield put({ type: 'MESSAGE_HIDE', message: action.message });
 }
 
 function* messageDisplaySaga() {
-    yield takeEvery('MESSAGE_DISPLAY', onMessageDisplay);
+    yield takeEvery('MESSAGE_DISPLAY', handleMessageDisplay);
 }
 
 // Login & Signup
@@ -132,7 +132,7 @@ function* logoutRequestSaga() {
 
 // Sign-up
 
-export function* signup(action) {
+export function* handleSignupRequest(action) {
     try {
         const data = yield call(registerUser, action.creds);
         yield call(saveTokens, data);
@@ -145,11 +145,11 @@ export function* signup(action) {
 }
 
 function* signupSaga() {
-    yield takeLatest('SIGNUP_REQUEST', signup);
+    yield takeLatest('SIGNUP_REQUEST', handleSignupRequest);
 }
 
 // Init
-export function* init() {
+export function* handleInitRequest() {
     let token = yield call(getToken, false);
     if (token) {
         yield put({ type: 'LOGIN_SUCCESS' });
@@ -157,7 +157,7 @@ export function* init() {
 }
 
 function* initSaga() {
-    yield takeLatest('INIT_REQUEST', init);
+    yield takeLatest('INIT_REQUEST', handleInitRequest);
 }
 
 // Authorized Requests
@@ -172,7 +172,7 @@ export function* authorizedPostRequest(url, data) {
 }
 
 // Game
-export function* gameCreate(action) {
+export function* handleGameCreateRequest(action) {
     try {
         yield call(authorizedPostRequest, '/game', { name: action.gamename, data: '{}' });
         yield put({
@@ -185,12 +185,16 @@ export function* gameCreate(action) {
     }
 }
 
-export function* gameList() {
+function* gameCreateSaga() {
+    yield takeLatest('GAME_CREATE_REQUEST', handleGameCreateRequest);
+}
+
+export function* handleGameListRequest() {
     try {
         const data = yield call(authorizedGetRequest, '/game');
         yield put({
             type: 'GAME_LIST_SUCCESS',
-            gamelist: data.games,
+            games: data.games,
         });
     } catch (e) {
         yield put({ type: 'GAME_LIST_FAILURE' });
@@ -198,12 +202,8 @@ export function* gameList() {
     }
 }
 
-function* gameCreateSaga() {
-    yield takeLatest('GAME_CREATE_REQUEST', gameCreate);
-}
-
 function* gameListSaga() {
-    yield takeLatest('GAME_LIST_REQUEST', gameList);
+    yield takeLatest('GAME_LIST_REQUEST', handleGameListRequest);
 }
 
 // Logger

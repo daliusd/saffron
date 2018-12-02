@@ -120,7 +120,7 @@ export function games(
         case 'GAME_LIST_SUCCESS':
             return Object.assign({}, state, {
                 listing: false,
-                gamelist: action.gamelist,
+                gamelist: action.games,
             });
         default:
             return state;

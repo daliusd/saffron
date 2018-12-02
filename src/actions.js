@@ -39,7 +39,7 @@ export type GameCreateAction =
 
 export type GameListAction =
     | { type: 'GAME_LIST_REQUEST' }
-    | { type: 'GAME_LIST_SUCCESS', gamelist: Array<GameType> }
+    | { type: 'GAME_LIST_SUCCESS', games: Array<GameType> }
     | { type: 'GAME_LIST_FAILURE' };
 
 export type GameAction = GameCreateAction | GameListAction;
