@@ -1,7 +1,16 @@
 // @flow
 import { combineReducers } from 'redux';
 
-import type { GameAction, GameType, LoginAction, MessageAction, MessageType, SignUpAction } from './actions';
+import type {
+    CardSetAction,
+    CardSetType,
+    GameAction,
+    GameType,
+    LoginAction,
+    MessageAction,
+    MessageType,
+    SignUpAction,
+} from './actions';
 
 export type MessageState = {
     messages: Array<MessageType>,
@@ -20,6 +29,14 @@ export type GameState = {
     +gamelist: Array<GameType>,
     +creating: boolean,
     +listing: boolean,
+    +active: ?number,
+};
+
+export type CardSetState = {
+    +cardsetlist: Array<CardSetType>,
+    +creating: boolean,
+    +listing: boolean,
+    +active: ?number,
 };
 
 export function message(
@@ -101,6 +118,7 @@ export function games(
         gamelist: [],
         creating: false,
         listing: false,
+        active: null,
     },
     action: GameAction,
 ): GameState {
@@ -122,6 +140,42 @@ export function games(
                 listing: false,
                 gamelist: action.games,
             });
+        case 'GAME_SELECT_REQUEST':
+            return Object.assign({}, state, {
+                active: action.id,
+            });
+        default:
+            return state;
+    }
+}
+
+export function cardsets(
+    state: CardSetState = {
+        cardsetlist: [],
+        creating: false,
+        listing: false,
+        active: null,
+    },
+    action: CardSetAction,
+): CardSetState {
+    switch (action.type) {
+        case 'CARDSET_CREATE_REQUEST':
+            return Object.assign({}, state, {
+                creating: true,
+            });
+        case 'CARDSET_CREATE_SUCCESS':
+            return Object.assign({}, state, {
+                creating: false,
+            });
+        case 'CARDSET_LIST_REQUEST':
+            return Object.assign({}, state, {
+                listing: true,
+            });
+        case 'CARDSET_LIST_SUCCESS':
+            return Object.assign({}, state, {
+                listing: false,
+                cardsetlist: action.cardsets,
+            });
         default:
             return state;
     }
@@ -132,6 +186,7 @@ const reducers = combineReducers({
     auth,
     signup,
     games,
+    cardsets,
 });
 
 export default reducers;

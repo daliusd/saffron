@@ -11,8 +11,8 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
+import { gameSelectRequest, messageRequest } from './actions';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
-import { messageRequest } from './actions';
 
 // Messages
 export function* putError(message) {
@@ -174,7 +174,7 @@ export function* authorizedPostRequest(url, data) {
 // Game
 export function* handleGameCreateRequest(action) {
     try {
-        yield call(authorizedPostRequest, '/game', { name: action.gamename, data: '{}' });
+        yield call(authorizedPostRequest, '/game', { name: action.gamename });
         yield put({
             type: 'GAME_CREATE_SUCCESS',
         });
@@ -206,6 +206,50 @@ function* gameListSaga() {
     yield takeLatest('GAME_LIST_REQUEST', handleGameListRequest);
 }
 
+export function* handleGameSelectRequest(action) {
+    try {
+        const data = yield call(authorizedGetRequest, '/game/' + action.id);
+        yield put({
+            type: 'GAME_SELECT_SUCCESS',
+        });
+
+        yield put({
+            type: 'CARDSET_LIST_SUCCESS',
+            cardsets: data.cardsets,
+        });
+    } catch (e) {
+        yield put({ type: 'GAME_SELECT_FAILURE' });
+        yield call(putError, e.message);
+    }
+}
+
+function* gameSelectSaga() {
+    yield takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest);
+}
+
+// Card Set
+
+export function* handleCardSetCreateRequest(action) {
+    try {
+        yield call(authorizedPostRequest, '/cardset', {
+            name: action.cardsetname,
+            game_id: action.game_id,
+            data: '{}',
+        });
+        yield put({
+            type: 'CARDSET_CREATE_SUCCESS',
+        });
+        yield put(gameSelectRequest(action.game_id));
+    } catch (e) {
+        yield put({ type: 'CARDSET_CREATE_FAILURE' });
+        yield call(putError, e.message);
+    }
+}
+
+function* cardSetCreateSaga() {
+    yield takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest);
+}
+
 // Logger
 function* loggerSaga() {
     yield takeEvery('*', function* logger(action) {
@@ -226,6 +270,8 @@ export function* rootSaga() {
         signupSaga(),
         gameCreateSaga(),
         gameListSaga(),
+        gameSelectSaga(),
+        cardSetCreateSaga(),
         loggerSaga(),
         initSaga(),
     ]);

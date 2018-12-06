@@ -1,9 +1,11 @@
 // @flow
 import React, { Component } from 'react';
-import type { GameType } from '../reducers';
+
+import type { GameType } from '../actions';
 
 type Props = {
     onGameCreate: (gamename: string) => void,
+    onGameSelect: (id: number) => void,
     isAuthenticated: boolean,
     gamelist: Array<GameType>,
 };
@@ -14,10 +16,18 @@ export default class Games extends Component<Props> {
         this.props.onGameCreate(gamename.value.trim());
     }
 
+    handleGameSelect(event: SyntheticEvent<>, game_id: number) {
+        this.props.onGameSelect(game_id);
+    }
+
     render() {
         const { isAuthenticated, gamelist } = this.props;
 
-        const gameItems = gamelist.map(game => <li key={game.id.toString()}>{game.name}</li>);
+        const gameItems = gamelist.map(game => (
+            <li key={game.id.toString()} onClick={event => this.handleGameSelect(event, game.id)}>
+                {game.name}
+            </li>
+        ));
 
         return (
             isAuthenticated && (

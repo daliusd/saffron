@@ -299,7 +299,7 @@ test('handleGameCreateRequest', () => {
     const action = { gamename: 'test' };
     const gen = cloneableGenerator(handleGameCreateRequest)(action);
 
-    expect(gen.next().value).toEqual(call(authorizedPostRequest, '/game', { name: 'test', data: '{}' }));
+    expect(gen.next().value).toEqual(call(authorizedPostRequest, '/game', { name: 'test' }));
 
     let clone = gen.clone();
 

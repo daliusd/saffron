@@ -11,6 +11,11 @@ export type MessageType = {
 export type GameType = {
     id: number,
     name: string,
+};
+
+export type CardSetType = {
+    id: number,
+    name: string,
     data?: string,
 };
 
@@ -42,9 +47,26 @@ export type GameListAction =
     | { type: 'GAME_LIST_SUCCESS', games: Array<GameType> }
     | { type: 'GAME_LIST_FAILURE' };
 
-export type GameAction = GameCreateAction | GameListAction;
+export type GameSelectAction =
+    | { type: 'GAME_SELECT_REQUEST', id: number }
+    | { type: 'GAME_SELECT_SUCCESS' }
+    | { type: 'GAME_SELECT_FAILURE' };
 
-export type Action = InitAction | LoginAction | SignUpAction | GameAction | MessageAction;
+export type CardSetCreateAction =
+    | { type: 'CARDSET_CREATE_REQUEST', cardsetname: string, game_id: number }
+    | { type: 'CARDSET_CREATE_SUCCESS' }
+    | { type: 'CARDSET_CREATE_FAILURE' };
+
+export type CardSetListAction =
+    | { type: 'CARDSET_LIST_REQUEST' }
+    | { type: 'CARDSET_LIST_SUCCESS', cardsets: Array<CardSetType> }
+    | { type: 'CARDSET_LIST_FAILURE' };
+
+export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
+
+export type CardSetAction = CardSetCreateAction | CardSetListAction;
+
+export type Action = InitAction | LoginAction | SignUpAction | GameAction | CardSetAction | MessageAction;
 
 export type Dispatch = (action: Action) => any;
 
@@ -93,5 +115,20 @@ export const gameCreateRequest = (gamename: string): GameAction => {
 export const gameListRequest = (): GameAction => {
     return {
         type: 'GAME_LIST_REQUEST',
+    };
+};
+
+export const gameSelectRequest = (id: number): GameAction => {
+    return {
+        type: 'GAME_SELECT_REQUEST',
+        id,
+    };
+};
+
+export const cardSetCreateRequest = (cardsetname: string, game_id: number): CardSetAction => {
+    return {
+        type: 'CARDSET_CREATE_REQUEST',
+        cardsetname: cardsetname,
+        game_id,
     };
 };
