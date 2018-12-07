@@ -55,13 +55,16 @@ test('auth', () => {
 });
 
 test('signup', () => {
+    let username = 'test_user';
+    let password = 'test_pass';
+    let creds = { username, password };
     let type = 'SIGNUP_REQUEST';
 
     let state: SignUpState = {
         signingup: false,
     };
 
-    expect(signup(state, { type })).toEqual({ signingup: true });
+    expect(signup(state, { type, creds })).toEqual({ signingup: true });
 
     type = 'SIGNUP_SUCCESS';
     expect(signup(state, { type })).toEqual({ signingup: false });
@@ -280,7 +283,7 @@ test('CARDSET_LIST', () => {
     ).toEqual({ activity: ACTIVITY_LISTING, cardsetlist: [], active: null });
 
     type = 'CARDSET_LIST_SUCCESS';
-    let cardsetlist: Array<CardSetType> = [{ id: 1, name: 'test', data: 'test' }];
+    let cardsetlist: Array<CardSetType> = [{ id: 1, name: 'test', data: {} }];
     expect(
         cardsets(
             {
@@ -301,6 +304,54 @@ test('CARDSET_LIST', () => {
         cardsets(
             {
                 activity: ACTIVITY_LISTING,
+                cardsetlist: [],
+                active: null,
+            },
+            { type, message },
+        ),
+    ).toEqual({
+        activity: 0,
+        cardsetlist: [],
+        active: null,
+    });
+});
+
+test('CARDSET_SELECT', () => {
+    let message = 'error message';
+
+    let type = 'CARDSET_SELECT_REQUEST';
+    expect(
+        cardsets(
+            {
+                activity: 0,
+                cardsetlist: [],
+                active: null,
+            },
+            { type, id: 1 },
+        ),
+    ).toEqual({ activity: ACTIVITY_SELECTING, cardsetlist: [], active: 1 });
+
+    type = 'CARDSET_SELECT_SUCCESS';
+    expect(
+        cardsets(
+            {
+                activity: ACTIVITY_SELECTING,
+                cardsetlist: [],
+                active: null,
+            },
+            { type, id: 1, name: 'test', data: {} },
+        ),
+    ).toEqual({
+        activity: 0,
+        cardsetlist: [{ id: 1, name: 'test', data: {} }],
+        active: null,
+    });
+
+    type = 'CARDSET_SELECT_FAILURE';
+    expect(
+        cardsets(
+            {
+                activity: ACTIVITY_SELECTING,
                 cardsetlist: [],
                 active: null,
             },

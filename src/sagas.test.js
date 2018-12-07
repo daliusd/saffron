@@ -9,6 +9,7 @@ import {
     authorizedPostRequest,
     getToken,
     handleCardSetCreateRequest,
+    handleCardSetSelectRequest,
     handleGameCreateRequest,
     handleGameListRequest,
     handleGameSelectRequest,
@@ -376,6 +377,27 @@ test('handleCardSetCreateRequest', () => {
     // Failed request
     let message = 'message';
     expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_CREATE_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
+    expect(clone.next().done).toBeTruthy();
+});
+
+test('handleCardSetSelectRequest', () => {
+    const action = { id: 345 };
+    const gen = cloneableGenerator(handleCardSetSelectRequest)(action);
+
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/cardset/345'));
+
+    let clone = gen.clone();
+
+    // Successful request
+    expect(gen.next({ id: 345, name: 'test', data: '{}' }).value).toEqual(
+        put({ type: 'CARDSET_SELECT_SUCCESS', id: 345, name: 'test', data: {} }),
+    );
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_SELECT_FAILURE' }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });

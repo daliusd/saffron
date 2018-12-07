@@ -6,6 +6,7 @@ import jwt_decode from 'jwt-decode';
 import {
     type Action,
     type CardSetCreateRequest,
+    type CardSetSelectRequest,
     type GameCreateRequest,
     type GameListAction,
     type GameSelectRequest,
@@ -223,6 +224,21 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<
     }
 }
 
+export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<void> {
+    try {
+        const data = yield call(authorizedGetRequest, '/cardset/' + action.id);
+        yield put({
+            type: 'CARDSET_SELECT_SUCCESS',
+            id: data.id,
+            name: data.name,
+            data: JSON.parse(data.data),
+        });
+    } catch (e) {
+        yield put({ type: 'CARDSET_SELECT_FAILURE' });
+        yield call(putError, e.message);
+    }
+}
+
 // Logger
 function* handleEverything(action: Action) {
     const state = yield select();
@@ -243,6 +259,7 @@ export function* rootSaga(): Saga<void> {
         takeLatest('GAME_LIST_REQUEST', handleGameListRequest),
         takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest),
         takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest),
+        takeLatest('CARDSET_SELECT_REQUEST', handleCardSetSelectRequest),
         takeLatest('INIT_REQUEST', handleInitRequest),
         takeEvery('*', handleEverything),
     ]);

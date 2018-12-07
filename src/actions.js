@@ -16,7 +16,7 @@ export type GameType = {
 export type CardSetType = {
     id: number,
     name: string,
-    data?: string,
+    data?: Object,
 };
 
 export type Credentials = { username: string, password: string };
@@ -61,10 +61,9 @@ export type CardSetListAction =
     | { type: 'CARDSET_LIST_SUCCESS', cardsets: Array<CardSetType> }
     | { type: 'CARDSET_LIST_FAILURE' };
 
-export type CardSetSelectAction =
-    | { type: 'CARDSET_SELECT_REQUEST' }
-    | { type: 'CARDSET_SELECT_SUCCESS' }
-    | { type: 'CARDSET_SELECT_FAILURE' };
+export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: number };
+export type CardSetSelectSuccess = { type: 'CARDSET_SELECT_SUCCESS', id: number, name: string, data: Object };
+export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: 'CARDSET_SELECT_FAILURE' };
 
 export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 
@@ -137,7 +136,7 @@ export const cardSetCreateRequest = (cardsetname: string, game_id: number): Card
     };
 };
 
-export const cardSetSelectRequest = (id: number): CardSetAction => {
+export const cardSetSelectRequest = (id: number): CardSetSelectRequest => {
     return {
         type: 'CARDSET_SELECT_REQUEST',
         id,

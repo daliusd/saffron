@@ -201,6 +201,27 @@ export function cardsets(
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
             });
+        case 'CARDSET_SELECT_REQUEST':
+            return Object.assign({}, state, {
+                activity: state.activity | ACTIVITY_SELECTING,
+                active: action.id,
+            });
+        case 'CARDSET_SELECT_SUCCESS':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_SELECTING,
+                cardsetlist: [
+                    ...state.cardsetlist,
+                    {
+                        id: action.id,
+                        name: action.name,
+                        data: action.data,
+                    },
+                ],
+            });
+        case 'CARDSET_SELECT_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_SELECTING,
+            });
         default:
             return state;
     }
