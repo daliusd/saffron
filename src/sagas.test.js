@@ -183,6 +183,8 @@ test('handleLogoutRequest', () => {
     expect(gen.next().value).toEqual(call(logoutToken));
     expect(gen.next().value).toEqual(call(logoutRefreshToken));
     expect(gen.next().value).toEqual(call(cleanTokens));
+    expect(gen.next().value).toEqual(put({ type: 'CARDSET_LIST_RESET' }));
+    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_RESET' }));
     expect(gen.next().value).toEqual(put({ type: 'LOGOUT_SUCCESS' }));
     expect(gen.next().done).toBeTruthy();
 });

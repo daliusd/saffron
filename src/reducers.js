@@ -154,6 +154,12 @@ export function games(
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
             });
+        case 'GAME_LIST_RESET':
+            return Object.assign({}, state, {
+                activity: 0,
+                byId: {},
+                allIds: [],
+            });
         case 'GAME_SELECT_REQUEST':
             return Object.assign({}, state, {
                 activity: ACTIVITY_SELECTING,
@@ -203,6 +209,12 @@ export function cardsets(
                 activity: state.activity & ~ACTIVITY_LISTING,
                 byId: action.byId,
                 allIds: action.allIds,
+            });
+        case 'CARDSET_LIST_RESET':
+            return Object.assign({}, state, {
+                activity: 0,
+                byId: {},
+                allIds: [],
             });
         case 'CARDSET_LIST_FAILURE':
             return Object.assign({}, state, {

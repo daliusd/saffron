@@ -122,6 +122,8 @@ export function* handleLogoutRequest(action: LoginAction): Saga<void> {
         yield call(logoutRefreshToken);
         yield call(cleanTokens);
 
+        yield put({ type: 'CARDSET_LIST_RESET' });
+        yield put({ type: 'GAME_LIST_RESET' });
         yield put({ type: 'LOGOUT_SUCCESS' });
     } catch (e) {
         yield put({ type: 'LOGOUT_FAILURE' });

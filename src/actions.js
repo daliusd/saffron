@@ -53,10 +53,16 @@ export type GameCreateRequest = { type: 'GAME_CREATE_REQUEST', gamename: string 
 export type GameCreateAction = GameCreateRequest | { type: 'GAME_CREATE_SUCCESS' } | { type: 'GAME_CREATE_FAILURE' };
 
 export type GameListSuccess = { type: 'GAME_LIST_SUCCESS', byId: GamesCollection, allIds: IdsArray };
-export type GameListAction = { type: 'GAME_LIST_REQUEST' } | GameListSuccess | { type: 'GAME_LIST_FAILURE' };
+export type GameListAction =
+    | { type: 'GAME_LIST_REQUEST' }
+    | GameListSuccess
+    | { type: 'GAME_LIST_FAILURE' }
+    | { type: 'GAME_LIST_RESET' };
 
 export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number };
 export type GameSelectAction = GameSelectRequest | { type: 'GAME_SELECT_SUCCESS' } | { type: 'GAME_SELECT_FAILURE' };
+
+export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 
 export type CardSetCreateRequest = { type: 'CARDSET_CREATE_REQUEST', cardsetname: string, game_id: number };
 export type CardSetCreateAction =
@@ -68,13 +74,12 @@ export type CardSetListSuccess = { type: 'CARDSET_LIST_SUCCESS', byId: CardSetsC
 export type CardSetListAction =
     | { type: 'CARDSET_LIST_REQUEST' }
     | CardSetListSuccess
-    | { type: 'CARDSET_LIST_FAILURE' };
+    | { type: 'CARDSET_LIST_FAILURE' }
+    | { type: 'CARDSET_LIST_RESET' };
 
 export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: number };
 export type CardSetSelectSuccess = { type: 'CARDSET_SELECT_SUCCESS', id: number, name: string, data: Object };
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: 'CARDSET_SELECT_FAILURE' };
-
-export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 

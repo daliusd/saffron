@@ -180,6 +180,24 @@ test('GAME_LIST', () => {
         allIds: [],
         active: null,
     });
+
+    type = 'GAME_LIST_RESET';
+    expect(
+        games(
+            {
+                activity: ACTIVITY_LISTING,
+                byId,
+                allIds,
+                active: null,
+            },
+            { type },
+        ),
+    ).toEqual({
+        activity: 0,
+        byId: {},
+        allIds: [],
+        active: null,
+    });
 });
 
 test('GAME_SELECT', () => {
@@ -312,7 +330,7 @@ test('CARDSET_LIST', () => {
         cardsets(
             {
                 activity: ACTIVITY_LISTING,
-                byId: [],
+                byId: {},
                 allIds: [],
                 active: null,
             },
@@ -342,6 +360,25 @@ test('CARDSET_LIST', () => {
         allIds: [],
         active: null,
     });
+
+    type = 'CARDSET_LIST_RESET';
+    expect(
+        cardsets(
+            {
+                activity: ACTIVITY_LISTING,
+                byId,
+                allIds,
+                active: null,
+            },
+            { type },
+        ),
+    ).toEqual({
+        activity: 0,
+        byId: {},
+        allIds: [],
+        active: null,
+    });
+
 });
 
 test('CARDSET_SELECT', () => {
