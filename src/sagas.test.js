@@ -8,8 +8,10 @@ import {
     authorizedGetRequest,
     authorizedPostRequest,
     getToken,
+    handleCardSetCreateRequest,
     handleGameCreateRequest,
     handleGameListRequest,
+    handleGameSelectRequest,
     handleInitRequest,
     handleLoginRequest,
     handleLoginSuccess,
@@ -30,6 +32,7 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
+import { gameSelectRequest } from './actions';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 
 test('putError', () => {
@@ -330,6 +333,49 @@ test('handleGameListRequest', () => {
     // Failed request
     let message = 'message';
     expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_LIST_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
+    expect(clone.next().done).toBeTruthy();
+});
+
+test('handleGameSelectRequest', () => {
+    const action = { id: 123 };
+    const gen = cloneableGenerator(handleGameSelectRequest)(action);
+
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
+
+    let clone = gen.clone();
+
+    // Successful request
+    let data = { cardsets: [] };
+    expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS' }));
+    expect(gen.next().value).toEqual(put({ type: 'CARDSET_LIST_SUCCESS', cardsets: [] }));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_SELECT_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
+    expect(clone.next().done).toBeTruthy();
+});
+
+test('handleCardSetCreateRequest', () => {
+    const action = { cardsetname: 'test', game_id: 666 };
+    const gen = cloneableGenerator(handleCardSetCreateRequest)(action);
+
+    expect(gen.next().value).toEqual(
+        call(authorizedPostRequest, '/cardset', { name: 'test', game_id: 666, data: '{}' }),
+    );
+
+    let clone = gen.clone();
+
+    // Successful request
+    expect(gen.next().value).toEqual(put({ type: 'CARDSET_CREATE_SUCCESS' }));
+    expect(gen.next().value).toEqual(put(gameSelectRequest(666)));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_CREATE_FAILURE' }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });

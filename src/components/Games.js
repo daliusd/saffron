@@ -1,23 +1,27 @@
 // @flow
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { GameType } from '../actions';
+import { type Dispatch, type GameType, gameCreateRequest, gameSelectRequest } from '../actions';
 
 type Props = {
-    onGameCreate: (gamename: string) => void,
-    onGameSelect: (id: number) => void,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
     gamelist: Array<GameType>,
 };
 
-export default class Games extends Component<Props> {
+export class Games extends Component<Props> {
     handleCreateGameClick(event: SyntheticEvent<>) {
+        const { dispatch } = this.props;
+
         const gamename = this.refs.gamename;
-        this.props.onGameCreate(gamename.value.trim());
+        dispatch(gameCreateRequest(gamename.value.trim()));
     }
 
     handleGameSelect(event: SyntheticEvent<>, game_id: number) {
-        this.props.onGameSelect(game_id);
+        const { dispatch } = this.props;
+
+        dispatch(gameSelectRequest(game_id));
     }
 
     render() {
@@ -42,3 +46,12 @@ export default class Games extends Component<Props> {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        gamelist: state.games.gamelist,
+    };
+};
+
+export default connect(mapStateToProps)(Games);

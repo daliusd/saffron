@@ -62,9 +62,14 @@ export type CardSetListAction =
     | { type: 'CARDSET_LIST_SUCCESS', cardsets: Array<CardSetType> }
     | { type: 'CARDSET_LIST_FAILURE' };
 
+export type CardSetSelectAction =
+    | { type: 'CARDSET_SELECT_REQUEST' }
+    | { type: 'CARDSET_SELECT_SUCCESS' }
+    | { type: 'CARDSET_SELECT_FAILURE' };
+
 export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 
-export type CardSetAction = CardSetCreateAction | CardSetListAction;
+export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
 export type Action = InitAction | LoginAction | SignUpAction | GameAction | CardSetAction | MessageAction;
 
@@ -130,5 +135,12 @@ export const cardSetCreateRequest = (cardsetname: string, game_id: number): Card
         type: 'CARDSET_CREATE_REQUEST',
         cardsetname: cardsetname,
         game_id,
+    };
+};
+
+export const cardSetSelectRequest = (id: number): CardSetAction => {
+    return {
+        type: 'CARDSET_SELECT_REQUEST',
+        id,
     };
 };

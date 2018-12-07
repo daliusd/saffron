@@ -1,25 +1,39 @@
 // @flow
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import type { CardSetType } from '../actions';
+import { type CardSetType, type Dispatch, cardSetCreateRequest, cardSetSelectRequest } from '../actions';
 
 type Props = {
-    onCardSetCreate: (cardsetname: string) => void,
+    dispatch: Dispatch,
     isAuthenticated: boolean,
     cardsetlist: Array<CardSetType>,
-    activeGame: ?number,
+    activeGame: number,
 };
 
-export default class CardSets extends Component<Props> {
+export class CardSets extends Component<Props> {
     handleCreateCardSetClick(event: SyntheticEvent<>) {
+        const { dispatch, activeGame } = this.props;
+
         const cardsetname = this.refs.cardsetname;
-        this.props.onCardSetCreate(cardsetname.value.trim());
+
+        dispatch(cardSetCreateRequest(cardsetname.value.trim(), activeGame));
+    }
+
+    handleCardSetSelect(event: SyntheticEvent<>, cardset_id: number) {
+        const { dispatch } = this.props;
+
+        dispatch(cardSetSelectRequest(cardset_id));
     }
 
     render() {
         const { isAuthenticated, cardsetlist, activeGame } = this.props;
 
-        const cardsetItems = cardsetlist.map(cardset => <li key={cardset.id.toString()}>{cardset.name}</li>);
+        const cardsetItems = cardsetlist.map(cardset => (
+            <li key={cardset.id.toString()} onClick={event => this.handleCardSetSelect(event, cardset.id)}>
+                {cardset.name}
+            </li>
+        ));
 
         return (
             isAuthenticated &&
@@ -35,3 +49,13 @@ export default class CardSets extends Component<Props> {
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        cardsetlist: state.cardsets.cardsetlist,
+        activeGame: state.games.active,
+    };
+};
+
+export default connect(mapStateToProps)(CardSets);

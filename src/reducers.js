@@ -12,6 +12,10 @@ import type {
     SignUpAction,
 } from './actions';
 
+export const ACTIVITY_CREATING = 0x1;
+export const ACTIVITY_LISTING = 0x2;
+export const ACTIVITY_SELECTING = 0x4;
+
 export type MessageState = {
     messages: Array<MessageType>,
 };
@@ -27,15 +31,13 @@ export type SignUpState = {
 
 export type GameState = {
     +gamelist: Array<GameType>,
-    +creating: boolean,
-    +listing: boolean,
+    +activity: number,
     +active: ?number,
 };
 
 export type CardSetState = {
     +cardsetlist: Array<CardSetType>,
-    +creating: boolean,
-    +listing: boolean,
+    +activity: number,
     +active: ?number,
 };
 
@@ -116,8 +118,7 @@ export function signup(
 export function games(
     state: GameState = {
         gamelist: [],
-        creating: false,
-        listing: false,
+        activity: 0,
         active: null,
     },
     action: GameAction,
@@ -125,24 +126,41 @@ export function games(
     switch (action.type) {
         case 'GAME_CREATE_REQUEST':
             return Object.assign({}, state, {
-                creating: true,
+                activity: state.activity | ACTIVITY_CREATING,
             });
         case 'GAME_CREATE_SUCCESS':
             return Object.assign({}, state, {
-                creating: false,
+                activity: state.activity & ~ACTIVITY_CREATING,
+            });
+        case 'GAME_CREATE_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING,
             });
         case 'GAME_LIST_REQUEST':
             return Object.assign({}, state, {
-                listing: true,
+                activity: state.activity | ACTIVITY_LISTING,
             });
         case 'GAME_LIST_SUCCESS':
             return Object.assign({}, state, {
-                listing: false,
+                activity: state.activity & ~ACTIVITY_LISTING,
                 gamelist: action.games,
+            });
+        case 'GAME_LIST_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_LISTING,
             });
         case 'GAME_SELECT_REQUEST':
             return Object.assign({}, state, {
+                activity: ACTIVITY_SELECTING,
                 active: action.id,
+            });
+        case 'GAME_SELECT_SUCCESS':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_SELECTING,
+            });
+        case 'GAME_SELECT_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_SELECTING,
             });
         default:
             return state;
@@ -152,8 +170,7 @@ export function games(
 export function cardsets(
     state: CardSetState = {
         cardsetlist: [],
-        creating: false,
-        listing: false,
+        activity: 0,
         active: null,
     },
     action: CardSetAction,
@@ -161,20 +178,28 @@ export function cardsets(
     switch (action.type) {
         case 'CARDSET_CREATE_REQUEST':
             return Object.assign({}, state, {
-                creating: true,
+                activity: state.activity | ACTIVITY_CREATING,
             });
         case 'CARDSET_CREATE_SUCCESS':
             return Object.assign({}, state, {
-                creating: false,
+                activity: state.activity & ~ACTIVITY_CREATING,
+            });
+        case 'CARDSET_CREATE_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING,
             });
         case 'CARDSET_LIST_REQUEST':
             return Object.assign({}, state, {
-                listing: true,
+                activity: state.activity | ACTIVITY_LISTING,
             });
         case 'CARDSET_LIST_SUCCESS':
             return Object.assign({}, state, {
-                listing: false,
+                activity: state.activity & ~ACTIVITY_LISTING,
                 cardsetlist: action.cardsets,
+            });
+        case 'CARDSET_LIST_FAILURE':
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_LISTING,
             });
         default:
             return state;
