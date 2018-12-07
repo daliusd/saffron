@@ -12,7 +12,7 @@ import {
     message,
     signup,
 } from './reducers';
-import type { CardSetType, GamesCollection, IdsArray, MessageType } from './actions';
+import type { CardSetsCollection, GamesCollection, IdsArray, MessageType } from './actions';
 
 test('message', () => {
     const testMessage1: MessageType = { id: 'test2', type: 'error', text: 'text' };
@@ -243,13 +243,15 @@ test('CARDSET_CREATE', () => {
         cardsets(
             {
                 activity: 0,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, cardsetname: 'test', game_id: 1 },
         ),
     ).toEqual({
-        cardsetlist: [],
+        byId: {},
+        allIds: [],
         activity: ACTIVITY_CREATING,
         active: null,
     });
@@ -259,26 +261,29 @@ test('CARDSET_CREATE', () => {
         cardsets(
             {
                 activity: ACTIVITY_CREATING,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type },
         ),
-    ).toEqual({ activity: 0, cardsetlist: [], active: null });
+    ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
 
     type = 'CARDSET_CREATE_FAILURE';
     expect(
         cardsets(
             {
                 activity: ACTIVITY_CREATING,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        cardsetlist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });
@@ -291,27 +296,32 @@ test('CARDSET_LIST', () => {
         cardsets(
             {
                 activity: 0,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type },
         ),
-    ).toEqual({ activity: ACTIVITY_LISTING, cardsetlist: [], active: null });
+    ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
 
     type = 'CARDSET_LIST_SUCCESS';
-    let cardsetlist: Array<CardSetType> = [{ id: 1, name: 'test', data: {} }];
+    let byId: CardSetsCollection = { '1': { id: 1, name: 'test', data: {} } };
+    let allIds: IdsArray = [1];
+
     expect(
         cardsets(
             {
                 activity: ACTIVITY_LISTING,
-                cardsetlist: [],
+                byId: [],
+                allIds: [],
                 active: null,
             },
-            { type, cardsets: cardsetlist },
+            { type, byId, allIds },
         ),
     ).toEqual({
         activity: 0,
-        cardsetlist,
+        byId,
+        allIds,
         active: null,
     });
 
@@ -320,14 +330,16 @@ test('CARDSET_LIST', () => {
         cardsets(
             {
                 activity: ACTIVITY_LISTING,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        cardsetlist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });
@@ -340,26 +352,29 @@ test('CARDSET_SELECT', () => {
         cardsets(
             {
                 activity: 0,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, id: 1 },
         ),
-    ).toEqual({ activity: ACTIVITY_SELECTING, cardsetlist: [], active: 1 });
+    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: 1 });
 
     type = 'CARDSET_SELECT_SUCCESS';
     expect(
         cardsets(
             {
                 activity: ACTIVITY_SELECTING,
-                cardsetlist: [],
+                byId: { '1': { type, id: 1, name: 'test', data: {} } },
+                allIds: [1],
                 active: null,
             },
-            { type, id: 1, name: 'test', data: {} },
+            { type, id: 1, name: 'test2', data: { updated: {} } },
         ),
     ).toEqual({
         activity: 0,
-        cardsetlist: [{ id: 1, name: 'test', data: {} }],
+        byId: { '1': { id: 1, name: 'test2', data: { updated: {} } } },
+        allIds: [1],
         active: null,
     });
 
@@ -368,14 +383,16 @@ test('CARDSET_SELECT', () => {
         cardsets(
             {
                 activity: ACTIVITY_SELECTING,
-                cardsetlist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        cardsetlist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });

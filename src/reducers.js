@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 
 import type {
     CardSetAction,
-    CardSetType,
+    CardSetsCollection,
     GameAction,
     GamesCollection,
     IdsArray,
@@ -38,7 +38,8 @@ export type GameState = {
 };
 
 export type CardSetState = {
-    +cardsetlist: Array<CardSetType>,
+    +byId: CardSetsCollection,
+    +allIds: IdsArray,
     +activity: number,
     +active: ?number,
 };
@@ -173,7 +174,8 @@ export function games(
 
 export function cardsets(
     state: CardSetState = {
-        cardsetlist: [],
+        byId: {},
+        allIds: [],
         activity: 0,
         active: null,
     },
@@ -199,7 +201,8 @@ export function cardsets(
         case 'CARDSET_LIST_SUCCESS':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
-                cardsetlist: action.cardsets,
+                byId: action.byId,
+                allIds: action.allIds,
             });
         case 'CARDSET_LIST_FAILURE':
             return Object.assign({}, state, {
@@ -213,14 +216,13 @@ export function cardsets(
         case 'CARDSET_SELECT_SUCCESS':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
-                cardsetlist: [
-                    ...state.cardsetlist,
-                    {
+                byId: Object.assign({}, state.byId, {
+                    [action.id]: {
                         id: action.id,
                         name: action.name,
                         data: action.data,
                     },
-                ],
+                }),
             });
         case 'CARDSET_SELECT_FAILURE':
             return Object.assign({}, state, {

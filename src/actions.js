@@ -25,6 +25,10 @@ export type CardSetType = {
     data?: Object,
 };
 
+export type CardSetsCollection = {
+    [string]: CardSetType,
+};
+
 export type Credentials = { username: string, password: string };
 
 export type InitAction = { type: 'INIT_REQUEST' };
@@ -60,9 +64,10 @@ export type CardSetCreateAction =
     | { type: 'CARDSET_CREATE_SUCCESS' }
     | { type: 'CARDSET_CREATE_FAILURE' };
 
+export type CardSetListSuccess = { type: 'CARDSET_LIST_SUCCESS', byId: CardSetsCollection, allIds: IdsArray };
 export type CardSetListAction =
     | { type: 'CARDSET_LIST_REQUEST' }
-    | { type: 'CARDSET_LIST_SUCCESS', cardsets: Array<CardSetType> }
+    | CardSetListSuccess
     | { type: 'CARDSET_LIST_FAILURE' };
 
 export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: number };

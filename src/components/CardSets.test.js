@@ -7,7 +7,7 @@ import { CardSets } from './CardSets';
 describe('<CardSets />', () => {
     it('Generates CardSets', () => {
         const wrapper = shallow(
-            <CardSets dispatch={jest.fn()} isAuthenticated={true} cardsetlist={[]} activeGame={1} />,
+            <CardSets dispatch={jest.fn()} isAuthenticated={true} allIds={[]} byId={{}} activeGame={1} />,
         );
         expect(wrapper.find('button')).toHaveLength(1);
     });
@@ -17,7 +17,8 @@ describe('<CardSets />', () => {
             <CardSets
                 dispatch={jest.fn()}
                 isAuthenticated={true}
-                cardsetlist={[{ id: 1, name: 'test' }]}
+                allIds={[1]}
+                byId={{ '1': { id: 1, name: 'test' } }}
                 activeGame={1}
             />,
         );
@@ -27,7 +28,7 @@ describe('<CardSets />', () => {
     it('simulates create click event', () => {
         const cardsetCreate = jest.fn();
         const wrapper = mount(
-            <CardSets dispatch={cardsetCreate} isAuthenticated={true} cardsetlist={[]} activeGame={1} />,
+            <CardSets dispatch={cardsetCreate} isAuthenticated={true} allIds={[]} byId={{}} activeGame={1} />,
         );
         wrapper.find('button').simulate('click');
         expect(cardsetCreate.mock.calls.length).toBe(1);
@@ -39,7 +40,8 @@ describe('<CardSets />', () => {
             <CardSets
                 dispatch={cardsetCreate}
                 isAuthenticated={true}
-                cardsetlist={[{ id: 1, name: 'test' }]}
+                allIds={[1]}
+                byId={{ '1': { id: 1, name: 'test' } }}
                 activeGame={1}
             />,
         );

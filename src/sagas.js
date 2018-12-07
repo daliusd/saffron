@@ -204,9 +204,15 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
             type: 'GAME_SELECT_SUCCESS',
         });
 
+        const allIds = data.cardsets.map(g => g.id);
+        const byId = data.cardsets.reduce((obj, g) => {
+            obj[g.id] = g;
+            return obj;
+        }, {});
         yield put({
             type: 'CARDSET_LIST_SUCCESS',
-            cardsets: data.cardsets,
+            allIds,
+            byId,
         });
     } catch (e) {
         yield put({ type: 'GAME_SELECT_FAILURE' });

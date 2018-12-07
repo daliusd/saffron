@@ -4,6 +4,7 @@ import { delay } from 'redux-saga';
 
 import jwt from 'jwt-simple';
 
+import { type CardSetsCollection, type GamesCollection, gameSelectRequest } from './actions';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
@@ -33,7 +34,6 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
-import { gameSelectRequest } from './actions';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 
 test('putError', () => {
@@ -356,9 +356,21 @@ test('handleGameSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    let data = { cardsets: [] };
+    const data: CardSetsCollection = {
+        cardsets: [{ id: 2, name: 'test', data: { ok: 'test' } }, { id: 1, name: 'test2', data: { ok: 'test2' } }],
+    };
+
     expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS' }));
-    expect(gen.next().value).toEqual(put({ type: 'CARDSET_LIST_SUCCESS', cardsets: [] }));
+    expect(gen.next().value).toEqual(
+        put({
+            type: 'CARDSET_LIST_SUCCESS',
+            allIds: [2, 1],
+            byId: {
+                '1': { id: 1, name: 'test2', data: { ok: 'test2' } },
+                '2': { id: 2, name: 'test', data: { ok: 'test' } },
+            },
+        }),
+    );
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
