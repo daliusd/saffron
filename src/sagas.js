@@ -9,6 +9,7 @@ import {
     type CardSetSelectRequest,
     type GameCreateRequest,
     type GameListAction,
+    type GameListSuccess,
     type GameSelectRequest,
     type LoginAction,
     type LoginRequest,
@@ -178,10 +179,18 @@ export function* handleGameCreateRequest(action: GameCreateRequest): Saga<void> 
 export function* handleGameListRequest(): Saga<void> {
     try {
         const data = yield call(authorizedGetRequest, '/game');
-        yield put({
-            type: 'GAME_LIST_SUCCESS',
-            games: data.games,
-        });
+        const allIds = data.games.map(g => g.id);
+        const byId = data.games.reduce((obj, g) => {
+            obj[g.id] = g;
+            return obj;
+        }, {});
+        yield put(
+            ({
+                type: 'GAME_LIST_SUCCESS',
+                allIds,
+                byId,
+            }: GameListSuccess),
+        );
     } catch (e) {
         yield put({ type: 'GAME_LIST_FAILURE' });
         yield call(putError, e.message);

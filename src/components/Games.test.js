@@ -6,20 +6,20 @@ import { Games } from './Games';
 
 describe('<Games />', () => {
     it('Generates Games', () => {
-        const wrapper = shallow(<Games dispatch={jest.fn()} isAuthenticated={true} gamelist={[]} />);
+        const wrapper = shallow(<Games dispatch={jest.fn()} isAuthenticated={true} allIds={[]} byId={{}} />);
         expect(wrapper.find('button')).toHaveLength(1);
     });
 
     it('Generates Games with some info', () => {
         const wrapper = shallow(
-            <Games dispatch={jest.fn()} isAuthenticated={true} gamelist={[{ id: 1, name: 'test' }]} />,
+            <Games dispatch={jest.fn()} isAuthenticated={true} allIds={[1]} byId={{ '1': { id: 1, name: 'test' } }} />,
         );
         expect(wrapper.find('button')).toHaveLength(1);
     });
 
     it('simulates create click event', () => {
         const gameCreate = jest.fn();
-        const wrapper = mount(<Games dispatch={gameCreate} isAuthenticated={true} gamelist={[]} />);
+        const wrapper = mount(<Games dispatch={gameCreate} isAuthenticated={true} allIds={[]} byId={{}} />);
         wrapper.find('button').simulate('click');
         expect(gameCreate.mock.calls.length).toBe(1);
     });
@@ -27,7 +27,7 @@ describe('<Games />', () => {
     it('simulates select game event', () => {
         const gameSelect = jest.fn();
         const wrapper = mount(
-            <Games dispatch={gameSelect} isAuthenticated={true} gamelist={[{ id: 1, name: 'test' }]} />,
+            <Games dispatch={gameSelect} isAuthenticated={true} allIds={[1]} byId={{ '1': { id: 1, name: 'test' } }} />,
         );
         wrapper.find('li').simulate('click');
         expect(gameSelect.mock.calls.length).toBe(1);

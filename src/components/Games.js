@@ -2,12 +2,13 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type Dispatch, type GameType, gameCreateRequest, gameSelectRequest } from '../actions';
+import { type Dispatch, type GamesCollection, type IdsArray, gameCreateRequest, gameSelectRequest } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
     isAuthenticated: boolean,
-    gamelist: Array<GameType>,
+    allIds: IdsArray,
+    byId: GamesCollection,
 };
 
 export class Games extends Component<Props> {
@@ -25,9 +26,9 @@ export class Games extends Component<Props> {
     }
 
     render() {
-        const { isAuthenticated, gamelist } = this.props;
+        const { isAuthenticated, allIds, byId } = this.props;
 
-        const gameItems = gamelist.map(game => (
+        const gameItems = allIds.map(game_id => byId[game_id.toString()]).map(game => (
             <li key={game.id.toString()} onClick={event => this.handleGameSelect(event, game.id)}>
                 {game.name}
             </li>
@@ -50,7 +51,8 @@ export class Games extends Component<Props> {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        gamelist: state.games.gamelist,
+        allIds: state.games.allIds,
+        byId: state.games.byId,
     };
 };
 

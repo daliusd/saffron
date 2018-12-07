@@ -327,8 +327,17 @@ test('handleGameListRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    let data = { games: [] };
-    expect(gen.next(data).value).toEqual(put({ type: 'GAME_LIST_SUCCESS', games: [] }));
+    const data: GamesCollection = { games: [{ id: 2, name: 'test' }, { id: 1, name: 'test2' }] };
+    expect(gen.next(data).value).toEqual(
+        put({
+            type: 'GAME_LIST_SUCCESS',
+            allIds: [2, 1],
+            byId: {
+                '1': { id: 1, name: 'test2' },
+                '2': { id: 2, name: 'test' },
+            },
+        }),
+    );
     expect(gen.next().done).toBeTruthy();
 
     // Failed request

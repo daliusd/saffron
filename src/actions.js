@@ -2,6 +2,8 @@
 
 import shortid from 'shortid';
 
+export type IdsArray = Array<number>;
+
 export type MessageType = {
     id: string,
     type: string,
@@ -11,6 +13,10 @@ export type MessageType = {
 export type GameType = {
     id: number,
     name: string,
+};
+
+export type GamesCollection = {
+    [string]: GameType,
 };
 
 export type CardSetType = {
@@ -42,10 +48,8 @@ export type SignUpAction = SignUpRequest | { type: 'SIGNUP_SUCCESS' } | { type: 
 export type GameCreateRequest = { type: 'GAME_CREATE_REQUEST', gamename: string };
 export type GameCreateAction = GameCreateRequest | { type: 'GAME_CREATE_SUCCESS' } | { type: 'GAME_CREATE_FAILURE' };
 
-export type GameListAction =
-    | { type: 'GAME_LIST_REQUEST' }
-    | { type: 'GAME_LIST_SUCCESS', games: Array<GameType> }
-    | { type: 'GAME_LIST_FAILURE' };
+export type GameListSuccess = { type: 'GAME_LIST_SUCCESS', byId: GamesCollection, allIds: IdsArray };
+export type GameListAction = { type: 'GAME_LIST_REQUEST' } | GameListSuccess | { type: 'GAME_LIST_FAILURE' };
 
 export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number };
 export type GameSelectAction = GameSelectRequest | { type: 'GAME_SELECT_SUCCESS' } | { type: 'GAME_SELECT_FAILURE' };

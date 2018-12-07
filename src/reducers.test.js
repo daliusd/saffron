@@ -12,7 +12,7 @@ import {
     message,
     signup,
 } from './reducers';
-import type { CardSetType, GameType, MessageType } from './actions';
+import type { CardSetType, GamesCollection, IdsArray, MessageType } from './actions';
 
 test('message', () => {
     const testMessage1: MessageType = { id: 'test2', type: 'error', text: 'text' };
@@ -82,13 +82,15 @@ test('GAME_CREATE', () => {
         games(
             {
                 activity: 0,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, gamename: 'test' },
         ),
     ).toEqual({
-        gamelist: [],
+        byId: {},
+        allIds: [],
         activity: ACTIVITY_CREATING,
         active: null,
     });
@@ -98,26 +100,29 @@ test('GAME_CREATE', () => {
         games(
             {
                 activity: ACTIVITY_CREATING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type },
         ),
-    ).toEqual({ activity: 0, gamelist: [], active: null });
+    ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
 
     type = 'GAME_CREATE_FAILURE';
     expect(
         games(
             {
                 activity: ACTIVITY_CREATING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        gamelist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });
@@ -130,27 +135,31 @@ test('GAME_LIST', () => {
         games(
             {
                 activity: 0,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type },
         ),
-    ).toEqual({ activity: ACTIVITY_LISTING, gamelist: [], active: null });
+    ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
 
     type = 'GAME_LIST_SUCCESS';
-    let gamelist: Array<GameType> = [{ id: 1, name: 'test' }];
+    let byId: GamesCollection = { '1': { id: 1, name: 'test' } };
+    let allIds: IdsArray = [1];
     expect(
         games(
             {
                 activity: ACTIVITY_LISTING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
-            { type, games: gamelist },
+            { type, byId, allIds },
         ),
     ).toEqual({
         activity: 0,
-        gamelist,
+        byId,
+        allIds,
         active: null,
     });
 
@@ -159,14 +168,16 @@ test('GAME_LIST', () => {
         games(
             {
                 activity: ACTIVITY_LISTING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        gamelist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });
@@ -179,26 +190,29 @@ test('GAME_SELECT', () => {
         games(
             {
                 activity: 0,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, id: 1 },
         ),
-    ).toEqual({ activity: ACTIVITY_SELECTING, gamelist: [], active: 1 });
+    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: 1 });
 
     type = 'GAME_SELECT_SUCCESS';
     expect(
         games(
             {
                 activity: ACTIVITY_SELECTING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type },
         ),
     ).toEqual({
         activity: 0,
-        gamelist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 
@@ -207,14 +221,16 @@ test('GAME_SELECT', () => {
         games(
             {
                 activity: ACTIVITY_SELECTING,
-                gamelist: [],
+                byId: {},
+                allIds: [],
                 active: null,
             },
             { type, message },
         ),
     ).toEqual({
         activity: 0,
-        gamelist: [],
+        byId: {},
+        allIds: [],
         active: null,
     });
 });

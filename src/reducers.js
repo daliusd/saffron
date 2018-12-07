@@ -5,7 +5,8 @@ import type {
     CardSetAction,
     CardSetType,
     GameAction,
-    GameType,
+    GamesCollection,
+    IdsArray,
     LoginAction,
     MessageAction,
     MessageType,
@@ -30,7 +31,8 @@ export type SignUpState = {
 };
 
 export type GameState = {
-    +gamelist: Array<GameType>,
+    +byId: GamesCollection,
+    +allIds: IdsArray,
     +activity: number,
     +active: ?number,
 };
@@ -117,7 +119,8 @@ export function signup(
 
 export function games(
     state: GameState = {
-        gamelist: [],
+        byId: {},
+        allIds: [],
         activity: 0,
         active: null,
     },
@@ -143,7 +146,8 @@ export function games(
         case 'GAME_LIST_SUCCESS':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
-                gamelist: action.games,
+                byId: action.byId,
+                allIds: action.allIds,
             });
         case 'GAME_LIST_FAILURE':
             return Object.assign({}, state, {
