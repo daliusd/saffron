@@ -362,7 +362,7 @@ test('handleGameSelectRequest', () => {
         cardsets: [{ id: 2, name: 'test', data: { ok: 'test' } }, { id: 1, name: 'test2', data: { ok: 'test2' } }],
     };
 
-    expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS' }));
+    expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: 123 }));
     expect(gen.next().value).toEqual(
         put({
             type: 'CARDSET_LIST_SUCCESS',
@@ -387,7 +387,7 @@ test('handleGameSelectRequest with updateCardSets set to false', () => {
     const gen = handleGameSelectRequest(action);
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
-    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS' }));
+    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: 123 }));
     expect(gen.next().done).toBeTruthy();
 });
 

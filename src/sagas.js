@@ -204,6 +204,7 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
         const data = yield call(authorizedGetRequest, '/game/' + action.id);
         yield put({
             type: 'GAME_SELECT_SUCCESS',
+            id: action.id,
         });
 
         if (action.updateCardSets) {

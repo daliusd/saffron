@@ -22,7 +22,10 @@ export type GamesCollection = {
 export type CardSetType = {
     id: number,
     name: string,
-    data?: Object,
+    data?: {
+        template?: { texts?: any, images?: any },
+        cards?: Array<{ texts?: any, images?: any }>,
+    },
 };
 
 export type CardSetsCollection = {
@@ -60,7 +63,10 @@ export type GameListAction =
     | { type: 'GAME_LIST_RESET' };
 
 export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number, updateCardSets: boolean };
-export type GameSelectAction = GameSelectRequest | { type: 'GAME_SELECT_SUCCESS' } | { type: 'GAME_SELECT_FAILURE' };
+export type GameSelectAction =
+    | GameSelectRequest
+    | { type: 'GAME_SELECT_SUCCESS', id: number }
+    | { type: 'GAME_SELECT_FAILURE' };
 
 export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 

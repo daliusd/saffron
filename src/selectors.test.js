@@ -3,7 +3,7 @@ import { getActiveCardSet, getActiveGame } from './selectors';
 
 describe('getActiveGame', () => {
     it('runs getActiveGame with no active game defined', () => {
-        expect(getActiveGame({ games: {} })).toBeUndefined();
+        expect(getActiveGame({ games: {} })).toBeNull();
     });
 
     it('returns active game', () => {
@@ -13,7 +13,7 @@ describe('getActiveGame', () => {
 
 describe('getActiveCardSet', () => {
     it('runs getActiveCardSet with no active cardset defined', () => {
-        expect(getActiveCardSet({ cardsets: {} })).toBeUndefined();
+        expect(getActiveCardSet({ cardsets: {} })).toBeNull();
     });
 
     it('returns active cardset', () => {

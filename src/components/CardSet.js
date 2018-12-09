@@ -23,9 +23,20 @@ export class CardSet extends Component<Props> {
 
         return (
             isAuthenticated &&
-            activeCardSet !== null && (
+            activeCardSet && (
                 <div>
                     <div>CardSet placeholder</div>
+                    <div>
+                        <ul>
+                            {activeCardSet.data &&
+                                activeCardSet.data.cards &&
+                                activeCardSet.data.cards.map((card, index) => (
+                                    <li key={index}>
+                                        <div>Card here</div>
+                                    </li>
+                                ))}
+                        </ul>
+                    </div>
                     <div>
                         <button onClick={event => this.handleCreateCardClick(event)}>Create Card</button>
                     </div>

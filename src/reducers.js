@@ -163,11 +163,11 @@ export function games(
         case 'GAME_SELECT_REQUEST':
             return Object.assign({}, state, {
                 activity: ACTIVITY_SELECTING,
-                active: action.id,
             });
         case 'GAME_SELECT_SUCCESS':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
+                active: action.id,
             });
         case 'GAME_SELECT_FAILURE':
             return Object.assign({}, state, {
@@ -223,11 +223,11 @@ export function cardsets(
         case 'CARDSET_SELECT_REQUEST':
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_SELECTING,
-                active: action.id,
             });
         case 'CARDSET_SELECT_SUCCESS':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
+                active: action.id,
                 byId: Object.assign({}, state.byId, {
                     [action.id]: {
                         id: action.id,
@@ -245,10 +245,10 @@ export function cardsets(
             if (!('template' in cardset.data)) {
                 cardset.data['template'] = { texts: {}, images: {} };
             }
-            if (!('cards' in cardset.data)) {
-                cardset.data['cards'] = [];
+            if (!cardset.data.cards) {
+                cardset.data.cards = [];
             }
-            cardset.data['cards'].push({ texts: {}, images: {} });
+            cardset.data.cards.push({ texts: {}, images: {} });
 
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,

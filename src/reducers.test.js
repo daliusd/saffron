@@ -214,7 +214,7 @@ test('GAME_SELECT', () => {
             },
             { type, id: 1 },
         ),
-    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: 1 });
+    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
 
     type = 'GAME_SELECT_SUCCESS';
     expect(
@@ -225,13 +225,13 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type },
+            { type, id: 123 },
         ),
     ).toEqual({
         activity: 0,
         byId: {},
         allIds: [],
-        active: null,
+        active: 123,
     });
 
     type = 'GAME_SELECT_FAILURE';
@@ -394,7 +394,7 @@ test('CARDSET_SELECT', () => {
             },
             { type, id: 1 },
         ),
-    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: 1 });
+    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
 
     type = 'CARDSET_SELECT_SUCCESS';
     expect(
@@ -411,7 +411,7 @@ test('CARDSET_SELECT', () => {
         activity: 0,
         byId: { '1': { id: 1, name: 'test2', data: { updated: {} } } },
         allIds: [1],
-        active: null,
+        active: 1,
     });
 
     type = 'CARDSET_SELECT_FAILURE';

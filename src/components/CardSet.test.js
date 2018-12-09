@@ -39,4 +39,24 @@ describe('<CardSet />', () => {
         wrapper.find('button').simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
     });
+
+    it('Generates CardSet with cards', () => {
+        const dispatch = jest.fn();
+        const wrapper = shallow(
+            <CardSet
+                dispatch={dispatch}
+                isAuthenticated={true}
+                activeCardSet={{
+                    id: 1,
+                    name: 'test',
+                    data: {
+                        template: { texts: [], images: [] },
+                        cards: [{ texts: {}, images: {} }],
+                    },
+                }}
+            />,
+        );
+        wrapper.find('button').simulate('click');
+        expect(dispatch.mock.calls.length).toBe(1);
+    });
 });
