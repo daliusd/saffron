@@ -378,7 +378,6 @@ test('CARDSET_LIST', () => {
         allIds: [],
         active: null,
     });
-
 });
 
 test('CARDSET_SELECT', () => {
