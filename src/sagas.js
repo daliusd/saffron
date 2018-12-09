@@ -250,6 +250,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<
             name: data.name,
             data: JSON.parse(data.data),
         });
+        yield put(gameSelectRequest(data.game_id));
     } catch (e) {
         yield put({ type: 'CARDSET_SELECT_FAILURE' });
         yield call(putError, e.message);

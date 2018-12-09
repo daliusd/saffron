@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { type Dispatch, initRequest } from './actions';
+import CardSetPage from './CardSetPage';
 import GamePage from './GamePage';
 import LoginPage from './LoginPage';
 import Main from './Main';
@@ -32,6 +33,7 @@ export class App extends Component<Props> {
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/signup" component={SignUpPage} />
                     <Route exact path="/game/:id" component={GamePage} />
+                    <Route exact path="/cardset/:id" component={CardSetPage} />
                 </div>
             </Router>
         );

@@ -78,7 +78,13 @@ export type CardSetListAction =
     | { type: 'CARDSET_LIST_RESET' };
 
 export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: number };
-export type CardSetSelectSuccess = { type: 'CARDSET_SELECT_SUCCESS', id: number, name: string, data: Object };
+export type CardSetSelectSuccess = {
+    type: 'CARDSET_SELECT_SUCCESS',
+    id: number,
+    name: string,
+    data: Object,
+    game_id: number,
+};
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: 'CARDSET_SELECT_FAILURE' };
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;

@@ -54,19 +54,4 @@ describe('<CardSets />', () => {
         wrapper.find('button').simulate('click');
         expect(cardsetCreate.mock.calls.length).toBe(1);
     });
-
-    it('simulates select cardset event', () => {
-        const cardsetCreate = jest.fn();
-        const wrapper = mount(
-            <CardSets
-                dispatch={cardsetCreate}
-                isAuthenticated={true}
-                allIds={[1]}
-                byId={{ '1': { id: 1, name: 'test' } }}
-                activeGame={1}
-            />,
-        );
-        wrapper.find('li').simulate('click');
-        expect(cardsetCreate.mock.calls.length).toBe(1);
-    });
 });

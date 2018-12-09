@@ -405,7 +405,7 @@ test('CARDSET_SELECT', () => {
                 allIds: [1],
                 active: null,
             },
-            { type, id: 1, name: 'test2', data: { updated: {} } },
+            { type, id: 1, name: 'test2', data: { updated: {} }, game_id: 2 },
         ),
     ).toEqual({
         activity: 0,

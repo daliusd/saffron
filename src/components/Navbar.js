@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type Dispatch, type GameType, type MessageType, logoutRequest } from '../actions';
-import { getActiveGame } from '../selectors';
+import { type CardSetType, type Dispatch, type GameType, type MessageType, logoutRequest } from '../actions';
+import { getActiveCardSet, getActiveGame } from '../selectors';
 import Logout from './Logout.js';
 
 type Props = {
@@ -12,11 +12,12 @@ type Props = {
     isAuthenticated: boolean,
     messages: Array<MessageType>,
     activeGame: ?GameType,
+    activeCardSet: ?CardSetType,
 };
 
 export class Navbar extends Component<Props> {
     render() {
-        const { dispatch, isAuthenticated, messages, activeGame } = this.props;
+        const { dispatch, isAuthenticated, messages, activeGame, activeCardSet } = this.props;
 
         return (
             <nav className="navbar navbar-default">
@@ -28,6 +29,10 @@ export class Navbar extends Component<Props> {
                     <div>{isAuthenticated && <Link to="/">Main</Link>}</div>
                     <div>
                         {isAuthenticated && activeGame && <Link to={`/game/${activeGame.id}`}>{activeGame.name}</Link>}
+                    </div>
+                    <div>
+                        {isAuthenticated &&
+                            activeCardSet && <Link to={`/cardset/${activeCardSet.id}`}>{activeCardSet.name}</Link>}
                     </div>
 
                     <div>{!isAuthenticated && <Link to="/login">Login</Link>}</div>
@@ -51,6 +56,7 @@ const mapStateToProps = state => {
         isAuthenticated: state.auth.isAuthenticated,
         messages: state.message.messages,
         activeGame: getActiveGame(state),
+        activeCardSet: getActiveCardSet(state),
     };
 };
 

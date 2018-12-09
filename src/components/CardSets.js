@@ -1,14 +1,9 @@
 // @flow
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import {
-    type CardSetsCollection,
-    type Dispatch,
-    type IdsArray,
-    cardSetCreateRequest,
-    cardSetSelectRequest,
-} from '../actions';
+import { type CardSetsCollection, type Dispatch, type IdsArray, cardSetCreateRequest } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
@@ -27,18 +22,12 @@ export class CardSets extends Component<Props> {
         dispatch(cardSetCreateRequest(cardsetname.value.trim(), activeGame));
     }
 
-    handleCardSetSelect(event: SyntheticEvent<>, cardset_id: number) {
-        const { dispatch } = this.props;
-
-        dispatch(cardSetSelectRequest(cardset_id));
-    }
-
     render() {
         const { isAuthenticated, activeGame, allIds, byId } = this.props;
 
         const cardsetItems = allIds.map(game_id => byId[game_id.toString()]).map(cardset => (
-            <li key={cardset.id.toString()} onClick={event => this.handleCardSetSelect(event, cardset.id)}>
-                {cardset.name}
+            <li key={cardset.id.toString()}>
+                <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>
             </li>
         ));
 

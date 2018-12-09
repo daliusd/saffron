@@ -413,9 +413,10 @@ test('handleCardSetSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next({ id: 345, name: 'test', data: '{}' }).value).toEqual(
+    expect(gen.next({ id: 345, name: 'test', data: '{}', game_id: 666 }).value).toEqual(
         put({ type: 'CARDSET_SELECT_SUCCESS', id: 345, name: 'test', data: {} }),
     );
+    expect(gen.next().value).toEqual(put(gameSelectRequest(666)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request

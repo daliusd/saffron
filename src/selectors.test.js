@@ -1,5 +1,5 @@
 // @flow
-import { getActiveGame } from './selectors';
+import { getActiveCardSet, getActiveGame } from './selectors';
 
 describe('getActiveGame', () => {
     it('runs getActiveGame with no active game defined', () => {
@@ -8,5 +8,17 @@ describe('getActiveGame', () => {
 
     it('returns active game', () => {
         expect(getActiveGame({ games: { active: 1, byId: { '1': { name: 'test' } } } })).toEqual({ name: 'test' });
+    });
+});
+
+describe('getActiveCardSet', () => {
+    it('runs getActiveCardSet with no active cardset defined', () => {
+        expect(getActiveCardSet({ cardsets: {} })).toBeUndefined();
+    });
+
+    it('returns active cardset', () => {
+        expect(getActiveCardSet({ cardsets: { active: 1, byId: { '1': { name: 'test' } } } })).toEqual({
+            name: 'test',
+        });
     });
 });
