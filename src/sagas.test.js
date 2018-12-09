@@ -350,7 +350,7 @@ test('handleGameListRequest', () => {
 });
 
 test('handleGameSelectRequest', () => {
-    const action = { id: 123 };
+    const action = { id: 123, updateCardSets: true };
     const gen = cloneableGenerator(handleGameSelectRequest)(action);
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
@@ -382,6 +382,15 @@ test('handleGameSelectRequest', () => {
     expect(clone.next().done).toBeTruthy();
 });
 
+test('handleGameSelectRequest with updateCardSets set to false', () => {
+    const action = { id: 123, updateCardSets: false };
+    const gen = handleGameSelectRequest(action);
+
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
+    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS' }));
+    expect(gen.next().done).toBeTruthy();
+});
+
 test('handleCardSetCreateRequest', () => {
     const action = { cardsetname: 'test', game_id: 666 };
     const gen = cloneableGenerator(handleCardSetCreateRequest)(action);
@@ -394,7 +403,7 @@ test('handleCardSetCreateRequest', () => {
 
     // Successful request
     expect(gen.next().value).toEqual(put({ type: 'CARDSET_CREATE_SUCCESS' }));
-    expect(gen.next().value).toEqual(put(gameSelectRequest(666)));
+    expect(gen.next().value).toEqual(put(gameSelectRequest(666, true)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
@@ -416,7 +425,7 @@ test('handleCardSetSelectRequest', () => {
     expect(gen.next({ id: 345, name: 'test', data: '{}', game_id: 666 }).value).toEqual(
         put({ type: 'CARDSET_SELECT_SUCCESS', id: 345, name: 'test', data: {} }),
     );
-    expect(gen.next().value).toEqual(put(gameSelectRequest(666)));
+    expect(gen.next().value).toEqual(put(gameSelectRequest(666, false)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request

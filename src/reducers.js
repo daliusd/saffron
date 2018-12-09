@@ -240,6 +240,22 @@ export function cardsets(
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
             });
+        case 'CARDSET_CARD_CREATE':
+            let cardset = Object.assign({}, state.byId[action.cardset_id.toString()]);
+            if (!('template' in cardset.data)) {
+                cardset.data['template'] = { texts: {}, images: {} };
+            }
+            if (!('cards' in cardset.data)) {
+                cardset.data['cards'] = [];
+            }
+            cardset.data['cards'].push({ texts: {}, images: {} });
+
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_SELECTING,
+                byId: Object.assign({}, state.byId, {
+                    [action.cardset_id]: cardset,
+                }),
+            });
         default:
             return state;
     }

@@ -59,7 +59,7 @@ export type GameListAction =
     | { type: 'GAME_LIST_FAILURE' }
     | { type: 'GAME_LIST_RESET' };
 
-export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number };
+export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number, updateCardSets: boolean };
 export type GameSelectAction = GameSelectRequest | { type: 'GAME_SELECT_SUCCESS' } | { type: 'GAME_SELECT_FAILURE' };
 
 export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
@@ -87,7 +87,10 @@ export type CardSetSelectSuccess = {
 };
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: 'CARDSET_SELECT_FAILURE' };
 
-export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
+export type CardSetCardCreate = { type: 'CARDSET_CARD_CREATE', cardset_id: number };
+export type CardSetCardActions = CardSetCardCreate;
+
+export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction | CardSetCardActions;
 
 export type Action = InitAction | LoginAction | SignUpAction | GameAction | CardSetAction | MessageAction;
 
@@ -141,10 +144,11 @@ export const gameListRequest = (): GameAction => {
     };
 };
 
-export const gameSelectRequest = (id: number): GameAction => {
+export const gameSelectRequest = (id: number, updateCardSets: boolean): GameAction => {
     return {
         type: 'GAME_SELECT_REQUEST',
         id,
+        updateCardSets,
     };
 };
 
@@ -160,5 +164,12 @@ export const cardSetSelectRequest = (id: number): CardSetSelectRequest => {
     return {
         type: 'CARDSET_SELECT_REQUEST',
         id,
+    };
+};
+
+export const cardCreateRequest = (cardset_id: number): CardSetCardCreate => {
+    return {
+        type: 'CARDSET_CARD_CREATE',
+        cardset_id,
     };
 };

@@ -432,3 +432,95 @@ test('CARDSET_SELECT', () => {
         active: null,
     });
 });
+
+test('CARDSET_CARD_CREATE', () => {
+    let type = 'CARDSET_CARD_CREATE';
+    expect(
+        cardsets(
+            {
+                activity: 0,
+                byId: { '1': { id: 1, name: 'test', data: {} } },
+                allIds: [1],
+                active: 1,
+            },
+            { type, cardset_id: 1 },
+        ),
+    ).toEqual({
+        activity: 0,
+        byId: {
+            '1': {
+                id: 1,
+                name: 'test',
+                data: {
+                    cards: [
+                        {
+                            images: {},
+                            texts: {},
+                        },
+                    ],
+                    template: {
+                        images: {},
+                        texts: {},
+                    },
+                },
+            },
+        },
+        allIds: [1],
+        active: 1,
+    });
+
+    expect(
+        cardsets(
+            {
+                activity: 0,
+                byId: {
+                    '1': {
+                        id: 1,
+                        name: 'test',
+                        data: {
+                            cards: [
+                                {
+                                    images: {},
+                                    texts: {},
+                                },
+                            ],
+                            template: {
+                                images: {},
+                                texts: {},
+                            },
+                        },
+                    },
+                },
+                allIds: [1],
+                active: 1,
+            },
+            { type, cardset_id: 1 },
+        ),
+    ).toEqual({
+        activity: 0,
+        byId: {
+            '1': {
+                id: 1,
+                name: 'test',
+                data: {
+                    cards: [
+                        {
+                            images: {},
+                            texts: {},
+                        },
+                        {
+                            images: {},
+                            texts: {},
+                        },
+                    ],
+                    template: {
+                        images: {},
+                        texts: {},
+                    },
+                },
+            },
+        },
+        allIds: [1],
+        active: 1,
+    });
+});

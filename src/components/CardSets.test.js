@@ -4,10 +4,10 @@ import React from 'react';
 
 import configureMockStore from 'redux-mock-store';
 
-import ConnectedCardSet, { CardSets } from './CardSets';
+import ConnectedCardSets, { CardSets } from './CardSets';
 
 describe('<CardSets />', () => {
-    it('Generates ConnectedCardSet', () => {
+    it('Generates ConnectedCardSets', () => {
         const mockStore = configureMockStore();
 
         const state = {
@@ -23,7 +23,7 @@ describe('<CardSets />', () => {
             },
         };
         const store = mockStore(state);
-        shallow(<ConnectedCardSet store={store} />);
+        shallow(<ConnectedCardSets store={store} />);
     });
 
     it('Generates CardSets', () => {

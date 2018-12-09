@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { type Dispatch, cardSetSelectRequest } from './actions';
+import CardSet from './components/CardSet';
 
 type Props = {
     dispatch: Dispatch,
@@ -16,7 +17,7 @@ export class CardSetPage extends Component<Props> {
     }
 
     render() {
-        return <div />;
+        return <CardSet />;
     }
 }
 

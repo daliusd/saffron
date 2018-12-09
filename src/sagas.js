@@ -206,16 +206,18 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
             type: 'GAME_SELECT_SUCCESS',
         });
 
-        const allIds = data.cardsets.map(g => g.id);
-        const byId = data.cardsets.reduce((obj, g) => {
-            obj[g.id] = g;
-            return obj;
-        }, {});
-        yield put({
-            type: 'CARDSET_LIST_SUCCESS',
-            allIds,
-            byId,
-        });
+        if (action.updateCardSets) {
+            const allIds = data.cardsets.map(g => g.id);
+            const byId = data.cardsets.reduce((obj, g) => {
+                obj[g.id] = g;
+                return obj;
+            }, {});
+            yield put({
+                type: 'CARDSET_LIST_SUCCESS',
+                allIds,
+                byId,
+            });
+        }
     } catch (e) {
         yield put({ type: 'GAME_SELECT_FAILURE' });
         yield call(putError, e.message);
@@ -234,7 +236,7 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<
         yield put({
             type: 'CARDSET_CREATE_SUCCESS',
         });
-        yield put(gameSelectRequest(action.game_id));
+        yield put(gameSelectRequest(action.game_id, true));
     } catch (e) {
         yield put({ type: 'CARDSET_CREATE_FAILURE' });
         yield call(putError, e.message);
@@ -250,7 +252,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<
             name: data.name,
             data: JSON.parse(data.data),
         });
-        yield put(gameSelectRequest(data.game_id));
+        yield put(gameSelectRequest(data.game_id, false));
     } catch (e) {
         yield put({ type: 'CARDSET_SELECT_FAILURE' });
         yield call(putError, e.message);

@@ -13,7 +13,7 @@ type Props = {
 export class GamePage extends Component<Props> {
     componentDidMount() {
         const { dispatch, match } = this.props;
-        dispatch(gameSelectRequest(match.params.id));
+        dispatch(gameSelectRequest(match.params.id, true));
     }
 
     render() {
