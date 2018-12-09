@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import { type CardSetType, type Dispatch, cardCreateRequest } from '../actions';
 import { getActiveCardSet } from '../selectors';
+import Card from './Card';
 
 type Props = {
     dispatch: Dispatch,
@@ -32,7 +33,7 @@ export class CardSet extends Component<Props> {
                                 activeCardSet.data.cards &&
                                 activeCardSet.data.cards.map((card, index) => (
                                     <li key={index}>
-                                        <div>Card here</div>
+                                        <Card />
                                     </li>
                                 ))}
                         </ul>
