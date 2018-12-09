@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { type Dispatch, initRequest } from './actions';
+import GamePage from './GamePage';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import Navbar from './components/Navbar';
@@ -30,6 +31,7 @@ export class App extends Component<Props> {
                     <Route exact path="/" component={Main} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/signup" component={SignUpPage} />
+                    <Route exact path="/game/:id" component={GamePage} />
                 </div>
             </Router>
         );

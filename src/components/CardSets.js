@@ -46,11 +46,11 @@ export class CardSets extends Component<Props> {
             isAuthenticated &&
             activeGame !== null && (
                 <div>
+                    <ul>{cardsetItems}</ul>
                     <div>
                         <input type="text" ref="cardsetname" className="form-control" placeholder="Card Set name" />
                         <button onClick={event => this.handleCreateCardSetClick(event)}>Create Card Set</button>
                     </div>
-                    <ul>{cardsetItems}</ul>
                 </div>
             )
         );

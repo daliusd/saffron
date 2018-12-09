@@ -2,9 +2,30 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
 
-import { CardSets } from './CardSets';
+import configureMockStore from 'redux-mock-store';
+
+import ConnectedCardSet, { CardSets } from './CardSets';
 
 describe('<CardSets />', () => {
+    it('Generates ConnectedCardSet', () => {
+        const mockStore = configureMockStore();
+
+        const state = {
+            auth: {
+                isAuthenticated: false,
+            },
+            games: {
+                active: null,
+            },
+            cardsets: {
+                allIds: [],
+                byId: {},
+            },
+        };
+        const store = mockStore(state);
+        shallow(<ConnectedCardSet store={store} />);
+    });
+
     it('Generates CardSets', () => {
         const wrapper = shallow(
             <CardSets dispatch={jest.fn()} isAuthenticated={true} allIds={[]} byId={{}} activeGame={1} />,

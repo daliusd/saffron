@@ -23,13 +23,4 @@ describe('<Games />', () => {
         wrapper.find('button').simulate('click');
         expect(gameCreate.mock.calls.length).toBe(1);
     });
-
-    it('simulates select game event', () => {
-        const gameSelect = jest.fn();
-        const wrapper = mount(
-            <Games dispatch={gameSelect} isAuthenticated={true} allIds={[1]} byId={{ '1': { id: 1, name: 'test' } }} />,
-        );
-        wrapper.find('li').simulate('click');
-        expect(gameSelect.mock.calls.length).toBe(1);
-    });
 });
