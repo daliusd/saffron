@@ -34,7 +34,7 @@ export default class Card extends Component<Props, State> {
                 {({ measureRef }) => (
                     <div
                         ref={measureRef}
-                        style={{ width: '100px', height: `${width * 1.5}px`, border: '1px solid black' }}
+                        style={{ width: '5cm', height: `${width * 1.5}px`, border: '1px solid black' }}
                     >
                         Card here
                     </div>

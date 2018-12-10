@@ -433,8 +433,9 @@ test('CARDSET_SELECT', () => {
     });
 });
 
-test('CARDSET_CARD_CREATE', () => {
-    let type = 'CARDSET_CARD_CREATE';
+test('CARDSET_UPDATE_DATA', () => {
+    let type = 'CARDSET_UPDATE_DATA';
+
     expect(
         cardsets(
             {
@@ -443,81 +444,15 @@ test('CARDSET_CARD_CREATE', () => {
                 allIds: [1],
                 active: 1,
             },
-            { type, cardset_id: 1 },
+            { type, cardset: { id: 1, name: 'test2', data: { updated: true } } },
         ),
     ).toEqual({
         activity: 0,
         byId: {
             '1': {
                 id: 1,
-                name: 'test',
-                data: {
-                    cards: [
-                        {
-                            images: {},
-                            texts: {},
-                        },
-                    ],
-                    template: {
-                        images: {},
-                        texts: {},
-                    },
-                },
-            },
-        },
-        allIds: [1],
-        active: 1,
-    });
-
-    expect(
-        cardsets(
-            {
-                activity: 0,
-                byId: {
-                    '1': {
-                        id: 1,
-                        name: 'test',
-                        data: {
-                            cards: [
-                                {
-                                    images: {},
-                                    texts: {},
-                                },
-                            ],
-                            template: {
-                                images: {},
-                                texts: {},
-                            },
-                        },
-                    },
-                },
-                allIds: [1],
-                active: 1,
-            },
-            { type, cardset_id: 1 },
-        ),
-    ).toEqual({
-        activity: 0,
-        byId: {
-            '1': {
-                id: 1,
-                name: 'test',
-                data: {
-                    cards: [
-                        {
-                            images: {},
-                            texts: {},
-                        },
-                        {
-                            images: {},
-                            texts: {},
-                        },
-                    ],
-                    template: {
-                        images: {},
-                        texts: {},
-                    },
-                },
+                name: 'test2',
+                data: { updated: true },
             },
         },
         allIds: [1],
