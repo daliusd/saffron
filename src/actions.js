@@ -21,14 +21,14 @@ export type GamesCollection = {
 
 export type CardTemplateType = { texts?: any, images?: any };
 
-export type CardType = { id: string, texts?: any, images?: any };
+export type CardType = { id: string, count: number, texts?: any, images?: any };
 
 export type CardSetType = {
     id: number,
     name: string,
     data?: {
-        template?: CardTemplateType,
-        cards?: Array<CardType>,
+        template: CardTemplateType,
+        cards: Array<CardType>,
     },
 };
 

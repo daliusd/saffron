@@ -28,31 +28,41 @@ class Card extends Component<Props, State> {
         },
     };
 
-    handleRemoveCardClick(event: SyntheticEvent<>) {
+    handleRemoveCardClick = (event: SyntheticEvent<>) => {
         const { card, dispatch, activeCardSet } = this.props;
 
         let cardset = Object.assign({}, activeCardSet);
 
-        if (cardset.data.cards) {
-            cardset.data.cards = cardset.data.cards.filter(c => c.id !== card.id);
-        }
+        cardset.data.cards = cardset.data.cards.filter(c => c.id !== card.id);
 
         dispatch(cardSetUpdateData(cardset));
-    }
+    };
 
-    handleCloneCardClick(event: SyntheticEvent<>) {
+    handleCloneCardClick = (event: SyntheticEvent<>) => {
         const { card, dispatch, activeCardSet } = this.props;
 
         let cardset = Object.assign({}, activeCardSet);
 
-        if (cardset.data.cards) {
-            cardset.data.cards.push(Object.assign({}, card, { id: shortid.generate() }));
-        }
+        cardset.data.cards.splice(
+            cardset.data.cards.indexOf(card) + 1,
+            0,
+            Object.assign({}, card, { id: shortid.generate() }),
+        );
 
         dispatch(cardSetUpdateData(cardset));
-    }
+    };
+
+    handleCountChange = (event: SyntheticInputEvent<>) => {
+        const { card, dispatch, activeCardSet } = this.props;
+        let cardset = Object.assign({}, activeCardSet);
+
+        cardset.data.cards.filter(c => c.id === card.id)[0].count = parseInt(event.target.value);
+
+        dispatch(cardSetUpdateData(cardset));
+    };
 
     render() {
+        const { card } = this.props;
         const { width } = this.state.dimensions;
 
         return (
@@ -72,8 +82,9 @@ class Card extends Component<Props, State> {
                             Card here
                         </div>
 
-                        <button onClick={event => this.handleRemoveCardClick(event)}>Remove</button>
-                        <button onClick={event => this.handleCloneCardClick(event)}>Clone</button>
+                        <button onClick={this.handleRemoveCardClick}>Remove</button>
+                        <button onClick={this.handleCloneCardClick}>Clone</button>
+                        <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
                     </div>
                 )}
             </Measure>

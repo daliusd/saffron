@@ -25,7 +25,7 @@ export class CardSet extends Component<Props> {
         if (!cardset.data.cards) {
             cardset.data.cards = [];
         }
-        cardset.data.cards.push({ id: shortid.generate(), texts: {}, images: {} });
+        cardset.data.cards.push({ id: shortid.generate(), count: 1, texts: {}, images: {} });
 
         dispatch(cardSetUpdateData(cardset));
     }
