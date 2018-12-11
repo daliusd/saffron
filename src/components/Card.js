@@ -2,6 +2,7 @@
 import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
+import shortid from 'shortid';
 
 import { type CardSetType, type CardType, type Dispatch, cardSetUpdateData } from '../actions';
 import { getActiveCardSet } from '../selectors';
@@ -39,6 +40,18 @@ class Card extends Component<Props, State> {
         dispatch(cardSetUpdateData(cardset));
     }
 
+    handleCloneCardClick(event: SyntheticEvent<>) {
+        const { card, dispatch, activeCardSet } = this.props;
+
+        let cardset = Object.assign({}, activeCardSet);
+
+        if (cardset.data.cards) {
+            cardset.data.cards.push(Object.assign({}, card, { id: shortid.generate() }));
+        }
+
+        dispatch(cardSetUpdateData(cardset));
+    }
+
     render() {
         const { width } = this.state.dimensions;
 
@@ -60,6 +73,7 @@ class Card extends Component<Props, State> {
                         </div>
 
                         <button onClick={event => this.handleRemoveCardClick(event)}>Remove</button>
+                        <button onClick={event => this.handleCloneCardClick(event)}>Clone</button>
                     </div>
                 )}
             </Measure>
