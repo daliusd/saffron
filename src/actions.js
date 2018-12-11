@@ -19,9 +19,9 @@ export type GamesCollection = {
     [string]: GameType,
 };
 
-export type CardTemplateType = { texts?: any, images?: any };
+export type CardTemplateType = { texts: any, images: any };
 
-export type CardType = { id: string, count: number, texts?: any, images?: any };
+export type CardType = { id: string, count: number, texts: any, images: any };
 
 export type CardSetType = {
     id: number,

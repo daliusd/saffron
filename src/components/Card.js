@@ -61,8 +61,17 @@ class Card extends Component<Props, State> {
         dispatch(cardSetUpdateData(cardset));
     };
 
+    handleAddTextClick = () => {
+        const { dispatch, activeCardSet } = this.props;
+        let cardset = Object.assign({}, activeCardSet);
+
+        cardset.data.template.texts.push({ x: 10, y: 10, width: 50, height: 50 });
+
+        dispatch(cardSetUpdateData(cardset));
+    };
+
     render() {
-        const { card } = this.props;
+        const { activeCardSet, card } = this.props;
         const { width } = this.state.dimensions;
 
         return (
@@ -77,14 +86,33 @@ class Card extends Component<Props, State> {
                     <div>
                         <div
                             ref={measureRef}
-                            style={{ width: '5cm', height: `${width * 1.5}px`, border: '1px solid black' }}
+                            style={{
+                                width: '5cm',
+                                height: `${width * 1.5}px`,
+                                border: '1px solid black',
+                                position: 'relative',
+                            }}
                         >
-                            Card here
+                            {activeCardSet.data &&
+                                activeCardSet.data.template.texts.map(t => (
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            left: t.x,
+                                            top: t.y,
+                                            width: t.width,
+                                            height: t.height,
+                                        }}
+                                    >
+                                        Text
+                                    </div>
+                                ))}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>
                         <button onClick={this.handleCloneCardClick}>Clone</button>
                         <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
+                        <button onClick={this.handleAddTextClick}>Text</button>
                     </div>
                 )}
             </Measure>
