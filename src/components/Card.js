@@ -1,8 +1,16 @@
 // @flow
+import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
 
-type Props = {};
+import { type CardSetType, type CardType, type Dispatch, cardSetUpdateData } from '../actions';
+import { getActiveCardSet } from '../selectors';
+
+type Props = {
+    card: CardType,
+    dispatch: Dispatch,
+    activeCardSet: CardSetType,
+};
 
 type State = {
     dimensions: {
@@ -11,7 +19,7 @@ type State = {
     },
 };
 
-export default class Card extends Component<Props, State> {
+class Card extends Component<Props, State> {
     state = {
         dimensions: {
             width: -1,
@@ -19,9 +27,20 @@ export default class Card extends Component<Props, State> {
         },
     };
 
+    handleRemoveCardClick(event: SyntheticEvent<>) {
+        const { card, dispatch, activeCardSet } = this.props;
+
+        let cardset = Object.assign({}, activeCardSet);
+
+        if (cardset.data.cards) {
+            cardset.data.cards = cardset.data.cards.filter(c => c.id !== card.id);
+        }
+
+        dispatch(cardSetUpdateData(cardset));
+    }
+
     render() {
         const { width } = this.state.dimensions;
-        console.log(width);
 
         return (
             <Measure
@@ -32,14 +51,27 @@ export default class Card extends Component<Props, State> {
                 }}
             >
                 {({ measureRef }) => (
-                    <div
-                        ref={measureRef}
-                        style={{ width: '5cm', height: `${width * 1.5}px`, border: '1px solid black' }}
-                    >
-                        Card here
+                    <div>
+                        <div
+                            ref={measureRef}
+                            style={{ width: '5cm', height: `${width * 1.5}px`, border: '1px solid black' }}
+                        >
+                            Card here
+                        </div>
+
+                        <button onClick={event => this.handleRemoveCardClick(event)}>Remove</button>
                     </div>
                 )}
             </Measure>
         );
     }
 }
+
+const mapStateToProps = state => {
+    return {
+        isAuthenticated: state.auth.isAuthenticated,
+        activeCardSet: getActiveCardSet(state),
+    };
+};
+
+export default connect(mapStateToProps)(Card);

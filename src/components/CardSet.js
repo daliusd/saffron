@@ -1,6 +1,7 @@
 // @flow
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import shortid from 'shortid';
 
 import { type CardSetType, type Dispatch, cardSetUpdateData } from '../actions';
 import { getActiveCardSet } from '../selectors';
@@ -24,7 +25,7 @@ export class CardSet extends Component<Props> {
         if (!cardset.data.cards) {
             cardset.data.cards = [];
         }
-        cardset.data.cards.push({ texts: {}, images: {} });
+        cardset.data.cards.push({ id: shortid.generate(), texts: {}, images: {} });
 
         dispatch(cardSetUpdateData(cardset));
     }
@@ -41,9 +42,9 @@ export class CardSet extends Component<Props> {
                         <ul>
                             {activeCardSet.data &&
                                 activeCardSet.data.cards &&
-                                activeCardSet.data.cards.map((card, index) => (
-                                    <li key={index}>
-                                        <Card />
+                                activeCardSet.data.cards.map(card => (
+                                    <li key={card.id}>
+                                        <Card card={card} />
                                     </li>
                                 ))}
                         </ul>
