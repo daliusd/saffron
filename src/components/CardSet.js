@@ -19,8 +19,12 @@ export class CardSet extends Component<Props> {
 
         let cardset = Object.assign({}, activeCardSet);
 
+        if (!('data' in cardset)) {
+            cardset.data = {};
+        }
+
         if (!('template' in cardset.data)) {
-            cardset.data['template'] = { texts: [], images: [] };
+            cardset.data.template = { texts: {}, images: {} };
         }
         if (!cardset.data.cards) {
             cardset.data.cards = [];

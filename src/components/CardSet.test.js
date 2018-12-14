@@ -26,15 +26,13 @@ describe('<CardSet />', () => {
     });
 
     it('Generates CardSet', () => {
-        shallow(
-            <CardSet dispatch={jest.fn()} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test', data: {} }} />,
-        );
+        shallow(<CardSet dispatch={jest.fn()} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test' }} />);
     });
 
     it('Generates CardSet', () => {
         const dispatch = jest.fn();
         const wrapper = shallow(
-            <CardSet dispatch={dispatch} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test', data: {} }} />,
+            <CardSet dispatch={dispatch} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test' }} />,
         );
         wrapper.find('button').simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
@@ -50,8 +48,8 @@ describe('<CardSet />', () => {
                     id: 1,
                     name: 'test',
                     data: {
-                        template: { texts: [], images: [] },
-                        cards: [{ texts: {}, images: {} }],
+                        template: { texts: {}, images: {} },
+                        cards: [{ id: 'id', count: 1, texts: {}, images: {} }],
                     },
                 }}
             />,

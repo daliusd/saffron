@@ -212,7 +212,7 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, id: 1 },
+            { type, id: 1, updateCardSets: false },
         ),
     ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
 
@@ -323,7 +323,7 @@ test('CARDSET_LIST', () => {
     ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
 
     type = 'CARDSET_LIST_SUCCESS';
-    let byId: CardSetsCollection = { '1': { id: 1, name: 'test', data: {} } };
+    let byId: CardSetsCollection = { '1': { id: 1, name: 'test' } };
     let allIds: IdsArray = [1];
 
     expect(
@@ -401,7 +401,7 @@ test('CARDSET_SELECT', () => {
         cardsets(
             {
                 activity: ACTIVITY_SELECTING,
-                byId: { '1': { type, id: 1, name: 'test', data: {} } },
+                byId: { '1': { type, id: 1, name: 'test' } },
                 allIds: [1],
                 active: null,
             },
@@ -440,11 +440,11 @@ test('CARDSET_UPDATE_DATA', () => {
         cardsets(
             {
                 activity: 0,
-                byId: { '1': { id: 1, name: 'test', data: {} } },
+                byId: { '1': { id: 1, name: 'test' } },
                 allIds: [1],
                 active: 1,
             },
-            { type, cardset: { id: 1, name: 'test2', data: { updated: true } } },
+            { type, cardset: { id: 1, name: 'test2', data: { template: { texts: {}, images: {} }, cards: [] } } },
         ),
     ).toEqual({
         activity: 0,
@@ -452,7 +452,7 @@ test('CARDSET_UPDATE_DATA', () => {
             '1': {
                 id: 1,
                 name: 'test2',
-                data: { updated: true },
+                data: { template: { texts: {}, images: {} }, cards: [] },
             },
         },
         allIds: [1],

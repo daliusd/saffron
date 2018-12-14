@@ -19,7 +19,9 @@ export type GamesCollection = {
     [string]: GameType,
 };
 
-export type CardTemplateType = { texts: any, images: any };
+export type TextTemplateType = { id: string, x: number, y: number, width: number, height: number };
+export type TextTemplatesCollection = { [string]: TextTemplateType };
+export type CardTemplateType = { texts: TextTemplatesCollection, images: any };
 
 export type CardType = { id: string, count: number, texts: any, images: any };
 

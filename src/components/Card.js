@@ -4,8 +4,15 @@ import Measure from 'react-measure';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { type CardSetType, type CardType, type Dispatch, cardSetUpdateData } from '../actions';
+import {
+    type CardSetType,
+    type CardType,
+    type Dispatch,
+    type TextTemplatesCollection,
+    cardSetUpdateData,
+} from '../actions';
 import { getActiveCardSet } from '../selectors';
+import TextField from './TextField';
 
 type Props = {
     card: CardType,
@@ -65,7 +72,8 @@ class Card extends Component<Props, State> {
         const { dispatch, activeCardSet } = this.props;
         let cardset = Object.assign({}, activeCardSet);
 
-        cardset.data.template.texts.push({ x: 10, y: 10, width: 50, height: 50 });
+        const id = shortid.generate();
+        cardset.data.template.texts[id] = { id, x: 10, y: 10, width: 50, height: 50 };
 
         dispatch(cardSetUpdateData(cardset));
     };
@@ -73,6 +81,8 @@ class Card extends Component<Props, State> {
     render() {
         const { activeCardSet, card } = this.props;
         const { width } = this.state.dimensions;
+        const text_ids: Array<string> = activeCardSet.data ? Object.keys(activeCardSet.data.template.texts) : [];
+        const texts: TextTemplatesCollection = activeCardSet.data ? activeCardSet.data.template.texts : {};
 
         return (
             <Measure
@@ -91,22 +101,10 @@ class Card extends Component<Props, State> {
                                 height: `${width * 1.5}px`,
                                 border: '1px solid black',
                                 position: 'relative',
+                                overflow: 'hidden',
                             }}
                         >
-                            {activeCardSet.data &&
-                                activeCardSet.data.template.texts.map(t => (
-                                    <div
-                                        style={{
-                                            position: 'absolute',
-                                            left: t.x,
-                                            top: t.y,
-                                            width: t.width,
-                                            height: t.height,
-                                        }}
-                                    >
-                                        Text
-                                    </div>
-                                ))}
+                            {text_ids && text_ids.map(t => <TextField key={t} textTemplate={texts[t]} />)}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>
@@ -122,7 +120,6 @@ class Card extends Component<Props, State> {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.isAuthenticated,
         activeCardSet: getActiveCardSet(state),
     };
 };
