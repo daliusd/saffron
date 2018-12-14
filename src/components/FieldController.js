@@ -70,17 +70,23 @@ export default class FieldController extends React.Component<Props> {
         event.preventDefault();
     };
 
+    rotateVec = (x: number, y: number, a: number) => {
+        const sinA = Math.sin(a);
+        const cosA = Math.cos(a);
+        const rx = cosA * x - sinA * y;
+        const ry = sinA * x + cosA * y;
+
+        return { rx, ry };
+    };
+
     handleResizeMouseMove = (event: MouseEvent) => {
         const vx = event.clientX - this.startX;
         const vy = event.clientY - this.startY;
 
-        const sinA = Math.sin(-this.currentAngle);
-        const cosA = Math.cos(-this.currentAngle);
-        const rvx = cosA * vx - sinA * vy;
-        const rvy = sinA * vx + cosA * vy;
+        const { rx, ry } = this.rotateVec(vx, vy, -this.currentAngle);
 
-        const w = this.originalW + rvx;
-        const h = this.originalH + rvy;
+        const w = this.originalW + rx;
+        const h = this.originalH + ry;
         this.cDiv.current.style.width = w + 'px';
         this.cDiv.current.style.height = h + 'px';
 
