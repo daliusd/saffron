@@ -1,5 +1,7 @@
 // @flow
 import * as React from 'react';
+import resize from './resize.svg';
+import rotate from './rotate.svg';
 
 type Props = {
     x: number,
@@ -253,27 +255,28 @@ export default class FieldController extends React.Component<Props> {
                 }}
             >
                 {children}
-                <div
+                <img
+                    src={resize}
+                    alt="resize"
                     ref={this.resizeDiv}
                     style={{
                         position: 'absolute',
-                        right: 0,
-                        bottom: 0,
-                        cursor: 'se-resize',
+                        right: '-5mm',
+                        bottom: '-5mm',
+                        cursor: `url(${resize}), auto`,
                     }}
-                >
-                    ↘
-                </div>
-                <div
+                />
+                <img
+                    src={rotate}
+                    alt="rotate"
                     ref={this.rotateDiv}
                     style={{
                         position: 'absolute',
-                        left: 0,
-                        bottom: 0,
+                        left: '-5mm',
+                        bottom: '-5mm',
+                        cursor: `url(${rotate}), auto`,
                     }}
-                >
-                    ⤿
-                </div>
+                />
             </div>
         );
     }
