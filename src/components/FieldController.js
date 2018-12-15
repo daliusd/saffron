@@ -17,6 +17,8 @@ export default class FieldController extends React.Component<Props> {
     startY: number;
     originalW: number;
     originalH: number;
+    rotatedPointX: number;
+    rotatedPointY: number;
     centerX: number;
     centerY: number;
     originalAngle: number;
@@ -27,6 +29,15 @@ export default class FieldController extends React.Component<Props> {
         this.cDiv = React.createRef();
         this.currentAngle = 0;
     }
+
+    rotateVec = (x: number, y: number, a: number) => {
+        const sinA = Math.sin(a);
+        const cosA = Math.cos(a);
+        const rx = cosA * x - sinA * y;
+        const ry = sinA * x + cosA * y;
+
+        return { rx, ry };
+    };
 
     handleMouseDown = (event: SyntheticMouseEvent<>) => {
         this.relX = event.clientX - this.cDiv.current.offsetLeft;
@@ -55,6 +66,14 @@ export default class FieldController extends React.Component<Props> {
     handleResizeMouseDown = (event: SyntheticMouseEvent<>) => {
         this.originalW = this.cDiv.current.clientWidth;
         this.originalH = this.cDiv.current.clientHeight;
+
+        const dx = this.cDiv.current.clientWidth / 2;
+        const dy = this.cDiv.current.clientHeight / 2;
+        const { rx, ry } = this.rotateVec(-dx, -dy, this.currentAngle);
+
+        this.rotatedPointX = this.cDiv.current.offsetLeft + dx + rx;
+        this.rotatedPointY = this.cDiv.current.offsetTop + dy + ry;
+
         this.startX = event.clientX;
         this.startY = event.clientY;
 
@@ -70,15 +89,6 @@ export default class FieldController extends React.Component<Props> {
         event.preventDefault();
     };
 
-    rotateVec = (x: number, y: number, a: number) => {
-        const sinA = Math.sin(a);
-        const cosA = Math.cos(a);
-        const rx = cosA * x - sinA * y;
-        const ry = sinA * x + cosA * y;
-
-        return { rx, ry };
-    };
-
     handleResizeMouseMove = (event: MouseEvent) => {
         const vx = event.clientX - this.startX;
         const vy = event.clientY - this.startY;
@@ -90,13 +100,20 @@ export default class FieldController extends React.Component<Props> {
         this.cDiv.current.style.width = w + 'px';
         this.cDiv.current.style.height = h + 'px';
 
+        const rotatedV = this.rotateVec(w / 2, h / 2, this.currentAngle);
+        const nx = this.rotatedPointX + rotatedV.rx;
+        const ny = this.rotatedPointY + rotatedV.ry;
+
+        this.cDiv.current.style.left = nx - w / 2 + 'px';
+        this.cDiv.current.style.top = ny - h / 2 + 'px';
+
         event.preventDefault();
     };
 
     handleRotateMouseDown = (event: SyntheticMouseEvent<>) => {
         const rect = this.cDiv.current.getBoundingClientRect();
-        this.centerX = rect.x + rect.width / 2;
-        this.centerY = rect.y + rect.height / 2;
+        this.centerX = rect.x + this.cDiv.current.clientWidth / 2;
+        this.centerY = rect.y + this.cDiv.current.clientHeight / 2;
 
         this.originalAngle = Math.atan2(this.centerX - event.clientX, this.centerY - event.clientY) + this.currentAngle;
 
