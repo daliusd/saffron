@@ -11,6 +11,8 @@ type Props = {
 
 export default class FieldController extends React.Component<Props> {
     cDiv: React.ElementRef<any>;
+    resizeDiv: React.ElementRef<any>;
+    rotateDiv: React.ElementRef<any>;
     relX: number;
     relY: number;
     startX: number;
@@ -27,7 +29,18 @@ export default class FieldController extends React.Component<Props> {
     constructor() {
         super();
         this.cDiv = React.createRef();
+        this.resizeDiv = React.createRef();
+        this.rotateDiv = React.createRef();
         this.currentAngle = 0;
+    }
+
+    componentDidMount() {
+        this.cDiv.current.addEventListener('mousedown', this.handleMouseDown);
+        this.cDiv.current.addEventListener('touchstart', this.handleTouchStart);
+        this.resizeDiv.current.addEventListener('mousedown', this.handleResizeMouseDown);
+        this.resizeDiv.current.addEventListener('touchstart', this.handleResizeTouchStart);
+        this.rotateDiv.current.addEventListener('mousedown', this.handleRotateMouseDown);
+        this.rotateDiv.current.addEventListener('touchstart', this.handleRotateTouchStart);
     }
 
     rotateVec = (x: number, y: number, a: number) => {
@@ -41,7 +54,7 @@ export default class FieldController extends React.Component<Props> {
 
     // Dragging handling
 
-    handleMouseDown = (event: SyntheticMouseEvent<>) => {
+    handleMouseDown = (event: MouseEvent) => {
         this.handleDragStart(event);
 
         document.addEventListener('mousemove', this.handleMouseMove);
@@ -49,11 +62,11 @@ export default class FieldController extends React.Component<Props> {
         event.preventDefault();
     };
 
-    handleTouchStart = (event: SyntheticTouchEvent<>) => {
+    handleTouchStart = (event: TouchEvent) => {
         this.handleDragStart(event.changedTouches[0]);
 
-        document.addEventListener('touchmove', this.handleTouchMove);
-        document.addEventListener('touchend', this.handleTouchEnd);
+        document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
     };
 
     handleDragStart = (co: { clientX: number, clientY: number }) => {
@@ -70,6 +83,7 @@ export default class FieldController extends React.Component<Props> {
     handleTouchEnd = (event: TouchEvent) => {
         document.removeEventListener('touchmove', this.handleTouchMove);
         document.removeEventListener('touchend', this.handleTouchEnd);
+        event.preventDefault();
     };
 
     handleMouseMove = (event: MouseEvent) => {
@@ -79,6 +93,7 @@ export default class FieldController extends React.Component<Props> {
 
     handleTouchMove = (event: TouchEvent) => {
         this.handleDragMove(event.changedTouches[0]);
+        event.preventDefault();
     };
 
     handleDragMove = (co: { clientX: number, clientY: number }) => {
@@ -90,7 +105,7 @@ export default class FieldController extends React.Component<Props> {
 
     // Resize handling
 
-    handleResizeMouseDown = (event: SyntheticMouseEvent<>) => {
+    handleResizeMouseDown = (event: MouseEvent) => {
         this.handleResizeStart(event);
 
         document.addEventListener('mousemove', this.handleResizeMouseMove);
@@ -99,11 +114,11 @@ export default class FieldController extends React.Component<Props> {
         event.preventDefault();
     };
 
-    handleResizeTouchStart = (event: SyntheticTouchEvent<>) => {
+    handleResizeTouchStart = (event: TouchEvent) => {
         this.handleResizeStart(event.changedTouches[0]);
 
-        document.addEventListener('touchmove', this.handleResizeTouchMove);
-        document.addEventListener('touchend', this.handleResizeTouchEnd);
+        document.addEventListener('touchmove', this.handleResizeTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handleResizeTouchEnd, { passive: false });
         event.stopPropagation();
     };
 
@@ -131,6 +146,7 @@ export default class FieldController extends React.Component<Props> {
     handleResizeTouchEnd = (event: TouchEvent) => {
         document.removeEventListener('touchmove', this.handleResizeTouchMove);
         document.removeEventListener('touchend', this.handleResizeTouchEnd);
+        event.preventDefault();
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
@@ -140,6 +156,7 @@ export default class FieldController extends React.Component<Props> {
 
     handleResizeTouchMove = (event: TouchEvent) => {
         this.handleResizeMove(event.changedTouches[0]);
+        event.preventDefault();
     };
 
     handleResizeMove = (co: { clientX: number, clientY: number }) => {
@@ -163,7 +180,7 @@ export default class FieldController extends React.Component<Props> {
 
     // Rotation handling
 
-    handleRotateMouseDown = (event: SyntheticMouseEvent<>) => {
+    handleRotateMouseDown = (event: MouseEvent) => {
         this.handleRotateStart(event);
 
         document.addEventListener('mousemove', this.handleRotateMouseMove);
@@ -172,11 +189,11 @@ export default class FieldController extends React.Component<Props> {
         event.preventDefault();
     };
 
-    handleRotateTouchStart = (event: SyntheticTouchEvent<>) => {
+    handleRotateTouchStart = (event: TouchEvent) => {
         this.handleRotateStart(event.changedTouches[0]);
 
-        document.addEventListener('touchmove', this.handleRotateTouchMove);
-        document.addEventListener('touchend', this.handleRotateTouchEnd);
+        document.addEventListener('touchmove', this.handleRotateTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handleRotateTouchEnd, { passive: false });
         event.stopPropagation();
     };
 
@@ -197,6 +214,7 @@ export default class FieldController extends React.Component<Props> {
     handleRotateTouchEnd = (event: TouchEvent) => {
         document.removeEventListener('touchmove', this.handleRotateTouchMove);
         document.removeEventListener('touchend', this.handleRotateTouchEnd);
+        event.preventDefault();
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {
@@ -206,6 +224,7 @@ export default class FieldController extends React.Component<Props> {
 
     handleRotateTouchMove = (event: TouchEvent) => {
         this.handleRotateMove(event.changedTouches[0]);
+        event.preventDefault();
     };
 
     handleRotateMove = (co: { clientX: number, clientY: number }) => {
@@ -223,8 +242,6 @@ export default class FieldController extends React.Component<Props> {
         return (
             <div
                 ref={this.cDiv}
-                onMouseDown={this.handleMouseDown}
-                onTouchStart={this.handleTouchStart}
                 style={{
                     position: 'absolute',
                     left: x,
@@ -237,25 +254,23 @@ export default class FieldController extends React.Component<Props> {
             >
                 {children}
                 <div
+                    ref={this.resizeDiv}
                     style={{
                         position: 'absolute',
                         right: 0,
                         bottom: 0,
                         cursor: 'se-resize',
                     }}
-                    onMouseDown={this.handleResizeMouseDown}
-                    onTouchStart={this.handleResizeTouchStart}
                 >
                     ↘
                 </div>
                 <div
+                    ref={this.rotateDiv}
                     style={{
                         position: 'absolute',
                         left: 0,
                         bottom: 0,
                     }}
-                    onMouseDown={this.handleRotateMouseDown}
-                    onTouchStart={this.handleRotateTouchStart}
                 >
                     ⤿
                 </div>
