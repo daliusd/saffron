@@ -1,21 +1,44 @@
 // @flow
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import React, { type ElementRef, Component } from 'react';
 
-import { type CardSetType, type Dispatch, type TextTemplateType, cardSetUpdateData } from '../actions';
+import { type CardSetType, type CardType, type Dispatch, type TextTemplateType, cardSetUpdateData } from '../actions';
 import { getActiveCardSet } from '../selectors';
 import FieldController from './FieldController';
 
 type Props = {
-    card_id: string,
+    card: CardType,
     textTemplate: TextTemplateType,
     activeCardSet: CardSetType,
     dispatch: Dispatch,
 };
 
 class TextField extends Component<Props> {
+    editDiv: ElementRef<any>;
+    lastEditText: string;
+
+    constructor() {
+        super();
+        this.editDiv = React.createRef();
+    }
+
     handleSelect = () => {
-        console.log('select');
+        this.editDiv.current.contentEditable = 'true';
+        this.editDiv.current.focus();
+    };
+
+    handleContent = () => {
+        const { dispatch, activeCardSet, card, textTemplate } = this.props;
+
+        let cardset = { ...activeCardSet };
+
+        let editedCard: CardType = { ...card };
+
+        this.lastEditText = this.editDiv.current.innerText;
+        editedCard.texts[textTemplate.id] = this.lastEditText;
+        cardset.data.cardsById[card.id] = editedCard;
+
+        dispatch(cardSetUpdateData(cardset));
     };
 
     handleDrag = (x: number, y: number) => {
@@ -43,7 +66,7 @@ class TextField extends Component<Props> {
     handleRotate = (angle: number) => {
         const { dispatch, activeCardSet, textTemplate } = this.props;
 
-        let cardset = Object.assign({}, activeCardSet);
+        let cardset = { ...activeCardSet };
 
         cardset.data.template.texts[textTemplate.id].angle = angle;
 
@@ -51,7 +74,7 @@ class TextField extends Component<Props> {
     };
 
     render() {
-        const { textTemplate } = this.props;
+        const { card, textTemplate } = this.props;
 
         return (
             <FieldController
@@ -65,7 +88,16 @@ class TextField extends Component<Props> {
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
             >
-                Text
+                <div
+                    ref={this.editDiv}
+                    onBlur={this.handleContent}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                    }}
+                >
+                    {textTemplate.id in card.texts ? card.texts[textTemplate.id] : ''}
+                </div>
             </FieldController>
         );
     }

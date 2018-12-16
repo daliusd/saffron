@@ -104,8 +104,7 @@ class Card extends Component<Props, State> {
                                 overflow: 'hidden',
                             }}
                         >
-                            {text_ids &&
-                                text_ids.map(t => <TextField key={t} card_id={card.id} textTemplate={texts[t]} />)}
+                            {text_ids && text_ids.map(t => <TextField key={t} card={card} textTemplate={texts[t]} />)}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>
