@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type CardSetType, type Dispatch, type TextTemplateType } from '../actions';
+import { type CardSetType, type Dispatch, type TextTemplateType, cardSetUpdateData } from '../actions';
 import { getActiveCardSet } from '../selectors';
 import FieldController from './FieldController';
 
@@ -19,15 +19,35 @@ class TextField extends Component<Props> {
     };
 
     handleDrag = (x: number, y: number) => {
-        console.log(`drag ${y}:${x}`);
+        const { dispatch, activeCardSet, textTemplate } = this.props;
+
+        let cardset = Object.assign({}, activeCardSet);
+
+        cardset.data.template.texts[textTemplate.id].x = x;
+        cardset.data.template.texts[textTemplate.id].y = y;
+
+        dispatch(cardSetUpdateData(cardset));
     };
 
     handleResize = (width: number, height: number) => {
-        console.log(`resize ${width} ${height}`);
+        const { dispatch, activeCardSet, textTemplate } = this.props;
+
+        let cardset = Object.assign({}, activeCardSet);
+
+        cardset.data.template.texts[textTemplate.id].width = width;
+        cardset.data.template.texts[textTemplate.id].height = height;
+
+        dispatch(cardSetUpdateData(cardset));
     };
 
     handleRotate = (angle: number) => {
-        console.log(`rotate ${angle}`);
+        const { dispatch, activeCardSet, textTemplate } = this.props;
+
+        let cardset = Object.assign({}, activeCardSet);
+
+        cardset.data.template.texts[textTemplate.id].angle = angle;
+
+        dispatch(cardSetUpdateData(cardset));
     };
 
     render() {
@@ -39,6 +59,7 @@ class TextField extends Component<Props> {
                 y={textTemplate.y}
                 width={textTemplate.width}
                 height={textTemplate.height}
+                angle={textTemplate.angle}
                 onSelect={this.handleSelect}
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}

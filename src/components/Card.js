@@ -40,7 +40,8 @@ class Card extends Component<Props, State> {
 
         let cardset = Object.assign({}, activeCardSet);
 
-        cardset.data.cards = cardset.data.cards.filter(c => c.id !== card.id);
+        cardset.data.cardsAllIds = cardset.data.cardsAllIds.filter(id => id !== card.id);
+        delete cardset.data.cardsById[card.id];
 
         dispatch(cardSetUpdateData(cardset));
     };
@@ -50,11 +51,10 @@ class Card extends Component<Props, State> {
 
         let cardset = Object.assign({}, activeCardSet);
 
-        cardset.data.cards.splice(
-            cardset.data.cards.indexOf(card) + 1,
-            0,
-            Object.assign({}, card, { id: shortid.generate() }),
-        );
+        let newCard = Object.assign({}, card, { id: shortid.generate() });
+        cardset.data.cardsAllIds.splice(cardset.data.cardsAllIds.indexOf(card.id) + 1, 0, newCard.id);
+
+        cardset.data.cardsById[newCard.id] = newCard;
 
         dispatch(cardSetUpdateData(cardset));
     };
@@ -63,7 +63,7 @@ class Card extends Component<Props, State> {
         const { card, dispatch, activeCardSet } = this.props;
         let cardset = Object.assign({}, activeCardSet);
 
-        cardset.data.cards.filter(c => c.id === card.id)[0].count = parseInt(event.target.value);
+        cardset.data.cardsById[card.id].count = parseInt(event.target.value);
 
         dispatch(cardSetUpdateData(cardset));
     };
@@ -104,7 +104,8 @@ class Card extends Component<Props, State> {
                                 overflow: 'hidden',
                             }}
                         >
-                            {text_ids && text_ids.map(t => <TextField key={t} textTemplate={texts[t]} />)}
+                            {text_ids &&
+                                text_ids.map(t => <TextField key={t} card_id={card.id} textTemplate={texts[t]} />)}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>

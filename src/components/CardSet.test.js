@@ -49,7 +49,8 @@ describe('<CardSet />', () => {
                     name: 'test',
                     data: {
                         template: { texts: {}, images: {} },
-                        cards: [{ id: 'id', count: 1, texts: {}, images: {} }],
+                        cardsAllIds: ['id'],
+                        cardsById: { id: { id: 'id', count: 1, texts: {}, images: {} } },
                     },
                 }}
             />,

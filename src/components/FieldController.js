@@ -8,6 +8,7 @@ type Props = {
     y: number,
     width: number,
     height: number,
+    angle: number,
     children: React.Node,
     onSelect: () => mixed,
     onDrag: (x: number, y: number) => mixed,
@@ -290,7 +291,7 @@ export default class FieldController extends React.Component<Props> {
     // Rendering
 
     render() {
-        const { x, y, width, height, children } = this.props;
+        const { x, y, width, height, angle, children } = this.props;
 
         return (
             <div
@@ -303,6 +304,7 @@ export default class FieldController extends React.Component<Props> {
                     height: height,
                     border: '1px solid black',
                     cursor: 'grab',
+                    transform: `rotate(${angle}rad)`,
                 }}
             >
                 {children}

@@ -444,7 +444,18 @@ test('CARDSET_UPDATE_DATA', () => {
                 allIds: [1],
                 active: 1,
             },
-            { type, cardset: { id: 1, name: 'test2', data: { template: { texts: {}, images: {} }, cards: [] } } },
+            {
+                type,
+                cardset: {
+                    id: 1,
+                    name: 'test2',
+                    data: {
+                        template: { texts: {}, images: {} },
+                        cardsAllIds: [],
+                        cardsById: {},
+                    },
+                },
+            },
         ),
     ).toEqual({
         activity: 0,
@@ -452,7 +463,11 @@ test('CARDSET_UPDATE_DATA', () => {
             '1': {
                 id: 1,
                 name: 'test2',
-                data: { template: { texts: {}, images: {} }, cards: [] },
+                data: {
+                    template: { texts: {}, images: {} },
+                    cardsAllIds: [],
+                    cardsById: {},
+                },
             },
         },
         allIds: [1],

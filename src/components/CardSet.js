@@ -26,10 +26,13 @@ export class CardSet extends Component<Props> {
         if (!('template' in cardset.data)) {
             cardset.data.template = { texts: {}, images: {} };
         }
-        if (!cardset.data.cards) {
-            cardset.data.cards = [];
+        if (!cardset.data.cardsAllIds) {
+            cardset.data.cardsAllIds = [];
+            cardset.data.cardsById = {};
         }
-        cardset.data.cards.push({ id: shortid.generate(), count: 1, texts: {}, images: {} });
+        const newCard = { id: shortid.generate(), count: 1, texts: {}, images: {} };
+        cardset.data.cardsAllIds.push(newCard.id);
+        cardset.data.cardsById[newCard.id] = newCard;
 
         dispatch(cardSetUpdateData(cardset));
     }
@@ -45,10 +48,10 @@ export class CardSet extends Component<Props> {
                     <div>
                         <ul>
                             {activeCardSet.data &&
-                                activeCardSet.data.cards &&
-                                activeCardSet.data.cards.map(card => (
-                                    <li key={card.id}>
-                                        <Card card={card} />
+                                activeCardSet.data.cardsAllIds &&
+                                activeCardSet.data.cardsAllIds.map(card_id => (
+                                    <li key={card_id}>
+                                        <Card card={activeCardSet.data && activeCardSet.data.cardsById[card_id]} />
                                     </li>
                                 ))}
                         </ul>
