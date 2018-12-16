@@ -73,7 +73,7 @@ class Card extends Component<Props, State> {
         let cardset = Object.assign({}, activeCardSet);
 
         const id = shortid.generate();
-        cardset.data.template.texts[id] = { id, x: 10, y: 10, width: 50, height: 50 };
+        cardset.data.template.texts[id] = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
 
         dispatch(cardSetUpdateData(cardset));
     };

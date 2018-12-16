@@ -34,12 +34,12 @@ export default class FieldController extends React.Component<Props> {
     originalAngle: number;
     currentAngle: number;
 
-    constructor() {
+    constructor(props: Props) {
         super();
         this.cDiv = React.createRef();
         this.resizeDiv = React.createRef();
         this.rotateDiv = React.createRef();
-        this.currentAngle = 0;
+        this.currentAngle = props.angle;
         this.moving = false;
     }
 
@@ -50,6 +50,10 @@ export default class FieldController extends React.Component<Props> {
         this.resizeDiv.current.addEventListener('touchstart', this.handleResizeTouchStart);
         this.rotateDiv.current.addEventListener('mousedown', this.handleRotateMouseDown);
         this.rotateDiv.current.addEventListener('touchstart', this.handleRotateTouchStart);
+    }
+
+    componentDidUpdate() {
+        this.currentAngle = this.props.angle;
     }
 
     rotateVec = (x: number, y: number, a: number) => {
