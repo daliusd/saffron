@@ -9,9 +9,14 @@ type Props = {
     width: number,
     height: number,
     children: React.Node,
+    onSelect: () => mixed,
+    onDrag: (x: number, y: number) => mixed,
+    onResize: (width: number, height: number) => mixed,
+    onRotate: (angle: number) => mixed,
 };
 
 export default class FieldController extends React.Component<Props> {
+    moving: boolean;
     cDiv: React.ElementRef<any>;
     resizeDiv: React.ElementRef<any>;
     rotateDiv: React.ElementRef<any>;
@@ -34,6 +39,7 @@ export default class FieldController extends React.Component<Props> {
         this.resizeDiv = React.createRef();
         this.rotateDiv = React.createRef();
         this.currentAngle = 0;
+        this.moving = false;
     }
 
     componentDidMount() {
@@ -77,15 +83,28 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
+        this.handleComplete();
+
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
         event.preventDefault();
     };
 
     handleTouchEnd = (event: TouchEvent) => {
+        this.handleComplete();
+
         document.removeEventListener('touchmove', this.handleTouchMove);
         document.removeEventListener('touchend', this.handleTouchEnd);
         event.preventDefault();
+    };
+
+    handleComplete = () => {
+        if (this.moving) {
+            this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
+            this.moving = false;
+        } else {
+            this.props.onSelect();
+        }
     };
 
     handleMouseMove = (event: MouseEvent) => {
@@ -99,6 +118,8 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleDragMove = (co: { clientX: number, clientY: number }) => {
+        this.moving = true;
+
         const x = co.clientX - this.relX;
         const y = co.clientY - this.relY;
         this.cDiv.current.style.left = x + 'px';
@@ -140,15 +161,28 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleResizeMouseUp = (event: MouseEvent) => {
+        this.handleResizeComplete();
+
         document.removeEventListener('mousemove', this.handleResizeMouseMove);
         document.removeEventListener('mouseup', this.handleResizeMouseUp);
         event.preventDefault();
     };
 
     handleResizeTouchEnd = (event: TouchEvent) => {
+        this.handleResizeComplete();
+
         document.removeEventListener('touchmove', this.handleResizeTouchMove);
         document.removeEventListener('touchend', this.handleResizeTouchEnd);
         event.preventDefault();
+    };
+
+    handleResizeComplete = () => {
+        if (this.moving) {
+            this.props.onResize(this.cDiv.current.clientWidth, this.cDiv.current.clientHeight);
+            this.moving = false;
+        } else {
+            this.props.onSelect();
+        }
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
@@ -162,6 +196,8 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleResizeMove = (co: { clientX: number, clientY: number }) => {
+        this.moving = true;
+
         const vx = co.clientX - this.startX;
         const vy = co.clientY - this.startY;
 
@@ -208,15 +244,28 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleRotateMouseUp = (event: MouseEvent) => {
+        this.handleRotateComplete();
+
         document.removeEventListener('mousemove', this.handleRotateMouseMove);
         document.removeEventListener('mouseup', this.handleRotateMouseUp);
         event.preventDefault();
     };
 
     handleRotateTouchEnd = (event: TouchEvent) => {
+        this.handleRotateComplete();
+
         document.removeEventListener('touchmove', this.handleRotateTouchMove);
         document.removeEventListener('touchend', this.handleRotateTouchEnd);
         event.preventDefault();
+    };
+
+    handleRotateComplete = () => {
+        if (this.moving) {
+            this.props.onRotate(this.currentAngle);
+            this.moving = false;
+        } else {
+            this.props.onSelect();
+        }
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {
@@ -230,6 +279,8 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleRotateMove = (co: { clientX: number, clientY: number }) => {
+        this.moving = true;
+
         const angle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY);
         this.currentAngle = this.originalAngle - angle;
 
@@ -261,8 +312,8 @@ export default class FieldController extends React.Component<Props> {
                     ref={this.resizeDiv}
                     style={{
                         position: 'absolute',
-                        right: '-5mm',
-                        bottom: '-5mm',
+                        right: 0,
+                        bottom: 0,
                         cursor: `url(${resize}), auto`,
                     }}
                 />
@@ -272,8 +323,8 @@ export default class FieldController extends React.Component<Props> {
                     ref={this.rotateDiv}
                     style={{
                         position: 'absolute',
-                        left: '-5mm',
-                        bottom: '-5mm',
+                        left: 0,
+                        bottom: 0,
                         cursor: `url(${rotate}), auto`,
                     }}
                 />

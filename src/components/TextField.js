@@ -14,6 +14,22 @@ type Props = {
 };
 
 class TextField extends Component<Props> {
+    handleSelect = () => {
+        console.log('select');
+    };
+
+    handleDrag = (x: number, y: number) => {
+        console.log(`drag ${y}:${x}`);
+    };
+
+    handleResize = (width: number, height: number) => {
+        console.log(`resize ${width} ${height}`);
+    };
+
+    handleRotate = (angle: number) => {
+        console.log(`rotate ${angle}`);
+    };
+
     render() {
         const { textTemplate } = this.props;
 
@@ -23,6 +39,10 @@ class TextField extends Component<Props> {
                 y={textTemplate.y}
                 width={textTemplate.width}
                 height={textTemplate.height}
+                onSelect={this.handleSelect}
+                onDrag={this.handleDrag}
+                onResize={this.handleResize}
+                onRotate={this.handleRotate}
             >
                 Text
             </FieldController>
