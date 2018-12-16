@@ -7,8 +7,8 @@ import {
     type Action,
     type CardSetCreateRequest,
     type CardSetSelectRequest,
+    type CardSetUpdateData,
     type GameCreateRequest,
-    type GameListAction,
     type GameListSuccess,
     type GameSelectRequest,
     type LoginAction,
@@ -24,6 +24,7 @@ import {
     getRequest,
     getTokens,
     postRequest,
+    putRequest,
     refreshToken,
     registerUser,
 } from './requests';
@@ -90,7 +91,7 @@ export function* handleLoginRequest(action: LoginRequest): Saga<void> {
     }
 }
 
-export function* handleLoginSuccess(action: GameListAction): Saga<void> {
+export function* handleLoginSuccess(): Saga<void> {
     yield put({ type: 'GAME_LIST_REQUEST' });
 }
 
@@ -162,6 +163,11 @@ export function* authorizedGetRequest(url: string): Saga<Object> {
 export function* authorizedPostRequest(url: string, data: Object): Saga<Object> {
     const token = yield call(getToken, true);
     return yield call(postRequest, url, token, data);
+}
+
+export function* authorizedPutRequest(url: string, data: Object): Saga<Object> {
+    const token = yield call(getToken, true);
+    return yield call(putRequest, url, token, data);
 }
 
 // Game
@@ -260,6 +266,22 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<
     }
 }
 
+export function* handleCardSetUpdateData(action: CardSetUpdateData): Saga<void> {
+    try {
+        yield call(delay, 1000);
+        yield call(authorizedPutRequest, '/cardset/' + action.cardset.id, {
+            name: action.cardset.name,
+            data: JSON.stringify(action.cardset.data),
+        });
+        yield put({
+            type: 'CARDSET_UPDATE_DATA_SUCCESS',
+        });
+    } catch (e) {
+        yield put({ type: 'CARDSET_UPDATE_DATA_FAILURE' });
+        yield call(putError, e.message);
+    }
+}
+
 // Logger
 function* handleEverything(action: Action) {
     const state = yield select();
@@ -281,6 +303,7 @@ export function* rootSaga(): Saga<void> {
         takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest),
         takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest),
         takeLatest('CARDSET_SELECT_REQUEST', handleCardSetSelectRequest),
+        takeLatest('CARDSET_UPDATE_DATA', handleCardSetUpdateData),
         takeLatest('INIT_REQUEST', handleInitRequest),
         takeEvery('*', handleEverything),
     ]);

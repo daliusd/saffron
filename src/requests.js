@@ -107,3 +107,17 @@ export function postRequest(url, token, data) {
             handleAxiosError(error);
         });
 }
+
+export function putRequest(url, token, data) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+    return axios
+        .put(url, data, config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            handleAxiosError(error);
+        });
+}

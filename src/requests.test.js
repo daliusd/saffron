@@ -8,6 +8,7 @@ import {
     getTokens,
     handleAxiosError,
     postRequest,
+    putRequest,
     refreshToken,
     registerUser,
 } from './requests';
@@ -105,4 +106,14 @@ test('postRequest success', () => {
 test('postRequest failure', async () => {
     axios.post.mockRejectedValue({ response: { data: { message: 'error' } } });
     expect(postRequest('/ok', 'token', {})).rejects.toEqual(Error('error'));
+});
+
+test('putRequest success', () => {
+    axios.put.mockResolvedValue({ data: 'data' });
+    expect(putRequest('/ok', 'token', {})).resolves.toEqual('data');
+});
+
+test('putRequest failure', async () => {
+    axios.put.mockRejectedValue({ response: { data: { message: 'error' } } });
+    expect(putRequest('/ok', 'token', {})).rejects.toEqual(Error('error'));
 });

@@ -99,11 +99,15 @@ export type CardSetSelectSuccess = {
     game_id: number,
 };
 export type CardSetUpdateData = { type: 'CARDSET_UPDATE_DATA', cardset: CardSetType };
+export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
+export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
 export type CardSetSelectAction =
     | CardSetSelectRequest
     | CardSetSelectSuccess
     | { type: 'CARDSET_SELECT_FAILURE' }
-    | CardSetUpdateData;
+    | CardSetUpdateData
+    | CardSetUpdateDataSuccess
+    | CardSetUpdateDataFailure;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 

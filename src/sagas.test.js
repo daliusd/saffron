@@ -1,16 +1,25 @@
+// @flow
 import { call, put } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import { delay } from 'redux-saga';
 
 import jwt from 'jwt-simple';
 
-import { type CardSetsCollection, type GamesCollection, gameSelectRequest } from './actions';
+import {
+    type CardSetUpdateData,
+    type CardSetsCollection,
+    type GamesCollection,
+    gameSelectRequest,
+    messageRequest,
+} from './actions';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
+    authorizedPutRequest,
     getToken,
     handleCardSetCreateRequest,
     handleCardSetSelectRequest,
+    handleCardSetUpdateData,
     handleGameCreateRequest,
     handleGameListRequest,
     handleGameSelectRequest,
@@ -31,6 +40,7 @@ import {
     getRequest,
     getTokens,
     postRequest,
+    putRequest,
     refreshToken,
     registerUser,
 } from './requests';
@@ -41,10 +51,10 @@ test('putError', () => {
 });
 
 test('handleMessageDisplay', () => {
-    const message = 'message';
-    let gen = handleMessageDisplay({ message });
+    const message = messageRequest('error', 'message');
+    let gen = handleMessageDisplay(message);
     expect(gen.next().value).toEqual(call(delay, 5000));
-    expect(gen.next().value).toEqual(put({ type: 'MESSAGE_HIDE', message }));
+    expect(gen.next().value).toEqual(put({ type: 'MESSAGE_HIDE', message: message.message }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -289,13 +299,25 @@ test('authorizedGetRequest', () => {
 
 test('authorizedPostRequest', () => {
     const url = '/test';
-    const data = 'data';
+    const data = { data: 'data' };
     const token = 'token';
 
     const gen = authorizedPostRequest(url, data);
 
     expect(gen.next().value).toEqual(call(getToken, true));
     expect(gen.next(token).value).toEqual(call(postRequest, url, token, data));
+    expect(gen.next().done).toBeTruthy();
+});
+
+test('authorizedPutRequest', () => {
+    const url = '/test';
+    const data = { data: 'data' };
+    const token = 'token';
+
+    const gen = authorizedPutRequest(url, data);
+
+    expect(gen.next().value).toEqual(call(getToken, true));
+    expect(gen.next(token).value).toEqual(call(putRequest, url, token, data));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -431,6 +453,45 @@ test('handleCardSetSelectRequest', () => {
     // Failed request
     let message = 'message';
     expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_SELECT_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
+    expect(clone.next().done).toBeTruthy();
+});
+
+test('handleCardSetUpdateData', () => {
+    const action: CardSetUpdateData = {
+        type: 'CARDSET_UPDATE_DATA',
+        cardset: {
+            id: 123,
+            name: 'name',
+            data: {
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsAllIds: [],
+                cardsById: {},
+            },
+        },
+    };
+    const gen = cloneableGenerator(handleCardSetUpdateData)(action);
+
+    expect(gen.next().value).toEqual(call(delay, 1000));
+    expect(gen.next().value).toEqual(
+        call(authorizedPutRequest, '/cardset/123', {
+            data: '{"template":{"texts":{},"images":{}},"cardsAllIds":[],"cardsById":{}}',
+            name: 'name',
+        }),
+    );
+
+    let clone = gen.clone();
+
+    // Successful request
+    expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
