@@ -23,7 +23,8 @@ export type TextTemplateType = { id: string, x: number, y: number, width: number
 export type TextTemplatesCollection = { [string]: TextTemplateType };
 export type CardTemplateType = { texts: TextTemplatesCollection, images: any };
 
-export type CardType = { id: string, count: number, texts: { [string]: string }, images: any };
+export type TextInfo = { value: string, cursor: number };
+export type CardType = { id: string, count: number, texts: { [string]: TextInfo }, images: any };
 
 export type CardSetType = {
     id: number,
