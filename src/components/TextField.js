@@ -94,6 +94,7 @@ class TextField extends Component<Props> {
                     style={{
                         width: '100%',
                         height: '100%',
+                        overflow: 'hidden',
                     }}
                 >
                     {textTemplate.id in card.texts ? card.texts[textTemplate.id] : ''}
