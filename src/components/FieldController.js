@@ -183,6 +183,7 @@ export default class FieldController extends React.Component<Props> {
 
     handleResizeComplete = () => {
         if (this.moving) {
+            this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
             this.props.onResize(this.cDiv.current.clientWidth, this.cDiv.current.clientHeight);
             this.moving = false;
         } else {
