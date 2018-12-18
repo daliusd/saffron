@@ -262,7 +262,7 @@ export function cardsets(
                 },
                 cardsAllIds: state.cardsAllIds.concat(action.card.id),
             };
-        case 'CARDSET_CLONE_CARD':
+        case 'CARDSET_CLONE_CARD': {
             let newCard = { ...action.card, id: shortid.generate() };
 
             const index = state.cardsAllIds.indexOf(action.card.id) + 1;
@@ -276,6 +276,48 @@ export function cardsets(
                 },
                 cardsAllIds,
             };
+        }
+        case 'CARDSET_REMOVE_CARD': {
+            const card_id = action.card.id;
+            let cardsById = { ...state.cardsById };
+            delete cardsById[card_id];
+
+            const cardsAllIds = state.cardsAllIds.filter(id => id !== card_id);
+
+            return {
+                ...state,
+                cardsById,
+                cardsAllIds,
+            };
+        }
+        case 'CARDSET_UPDATE_CARD_COUNT': {
+            const card_id = action.card.id;
+            let card = { ...state.cardsById[card_id] };
+            card.count = action.count;
+
+            return {
+                ...state,
+                cardsById: {
+                    ...state.cardsById,
+                    card,
+                },
+            };
+        }
+        case 'CARDSET_ADD_TEMPLATE_TEXT': {
+            const id = shortid.generate();
+            const text = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
+
+            return {
+                ...state,
+                template: {
+                    ...state.template,
+                    texts: {
+                        ...state.template.texts,
+                        [id]: text,
+                    },
+                },
+            };
+        }
         default:
             return state;
     }

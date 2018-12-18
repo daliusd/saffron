@@ -102,6 +102,9 @@ export type CardSetSelectSuccess = {
 export type CardSetUpdateData = { type: 'CARDSET_UPDATE_DATA', cardset: CardSetType };
 export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };
 export type CardSetCloneCard = { type: 'CARDSET_CLONE_CARD', card: CardType };
+export type CardSetRemoveCard = { type: 'CARDSET_REMOVE_CARD', card: CardType };
+export type CardSetUpdateCardCount = { type: 'CARDSET_UPDATE_CARD_COUNT', card: CardType, count: number };
+export type CardSetAddTemplateText = { type: 'CARDSET_ADD_TEMPLATE_TEXT' };
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
 export type CardSetSelectAction =
@@ -112,7 +115,10 @@ export type CardSetSelectAction =
     | CardSetUpdateDataSuccess
     | CardSetUpdateDataFailure
     | CardSetCreateCard
-    | CardSetCloneCard;
+    | CardSetCloneCard
+    | CardSetRemoveCard
+    | CardSetUpdateCardCount
+    | CardSetAddTemplateText;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -209,5 +215,26 @@ export const cardSetCloneCard = (card: CardType): CardSetCreateCard => {
     return {
         type: 'CARDSET_CLONE_CARD',
         card,
+    };
+};
+
+export const cardSetRemoveCard = (card: CardType): CardSetRemoveCard => {
+    return {
+        type: 'CARDSET_REMOVE_CARD',
+        card,
+    };
+};
+
+export const cardSetUpdateCardCount = (card: CardType, count: number): CardSetUpdateCardCount => {
+    return {
+        type: 'CARDSET_UPDATE_CARD_COUNT',
+        card,
+        count,
+    };
+};
+
+export const cardSetAddTemplateText = (): CardSetAddTemplateText => {
+    return {
+        type: 'CARDSET_ADD_TEMPLATE_TEXT',
     };
 };

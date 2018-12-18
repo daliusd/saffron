@@ -2,15 +2,16 @@
 import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
-import shortid from 'shortid';
 
 import {
     type CardTemplateType,
     type CardType,
     type Dispatch,
     type TextTemplatesCollection,
-    cardSetUpdateData,
+    cardSetAddTemplateText,
     cardSetCloneCard,
+    cardSetRemoveCard,
+    cardSetUpdateCardCount,
 } from '../actions';
 import TextField from './TextField';
 
@@ -36,39 +37,23 @@ class Card extends Component<Props, State> {
     };
 
     handleRemoveCardClick = (event: SyntheticEvent<>) => {
-        const { card, dispatch, activeCardSet } = this.props;
-
-        let cardset = Object.assign({}, activeCardSet);
-
-        cardset.data.cardsAllIds = cardset.data.cardsAllIds.filter(id => id !== card.id);
-        delete cardset.data.cardsById[card.id];
-
-        dispatch(cardSetUpdateData(cardset));
+        const { card, dispatch } = this.props;
+        dispatch(cardSetRemoveCard(card));
     };
 
     handleCloneCardClick = (event: SyntheticEvent<>) => {
         const { card, dispatch } = this.props;
-
         dispatch(cardSetCloneCard(card));
     };
 
     handleCountChange = (event: SyntheticInputEvent<>) => {
-        const { card, dispatch, activeCardSet } = this.props;
-        let cardset = Object.assign({}, activeCardSet);
-
-        cardset.data.cardsById[card.id].count = parseInt(event.target.value);
-
-        dispatch(cardSetUpdateData(cardset));
+        const { card, dispatch } = this.props;
+        dispatch(cardSetUpdateCardCount(card, parseInt(event.target.value)));
     };
 
     handleAddTextClick = () => {
-        const { dispatch, activeCardSet } = this.props;
-        let cardset = Object.assign({}, activeCardSet);
-
-        const id = shortid.generate();
-        cardset.data.template.texts[id] = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
-
-        dispatch(cardSetUpdateData(cardset));
+        const { dispatch } = this.props;
+        dispatch(cardSetAddTemplateText());
     };
 
     render() {
