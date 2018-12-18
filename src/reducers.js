@@ -1,9 +1,11 @@
 // @flow
 import { combineReducers } from 'redux';
+import shortid from 'shortid';
 
 import type {
     CardSetAction,
     CardSetsCollection,
+    CardType,
     GameAction,
     GamesCollection,
     IdsArray,
@@ -42,6 +44,8 @@ export type CardSetState = {
     +allIds: IdsArray,
     +activity: number,
     +active: ?number,
+    +cardsAllIds: Array<string>,
+    +cardsById: { [string]: CardType },
 };
 
 export function message(
@@ -232,9 +236,11 @@ export function cardsets(
                     [action.id]: {
                         id: action.id,
                         name: action.name,
-                        data: action.data,
                     },
                 }),
+                cardsAllIds: action.data.cardsAllIds,
+                cardsById: action.data.cardsById,
+                template: action.data.template,
             });
         case 'CARDSET_SELECT_FAILURE':
             return Object.assign({}, state, {
@@ -247,6 +253,29 @@ export function cardsets(
                     [action.cardset.id]: action.cardset,
                 }),
             });
+        case 'CARDSET_CREATE_CARD':
+            return {
+                ...state,
+                cardsById: {
+                    ...state.cardsById,
+                    [action.card.id]: action.card,
+                },
+                cardsAllIds: state.cardsAllIds.concat(action.card.id),
+            };
+        case 'CARDSET_CLONE_CARD':
+            let newCard = { ...action.card, id: shortid.generate() };
+
+            const index = state.cardsAllIds.indexOf(action.card.id) + 1;
+            const cardsAllIds = [...state.cardsAllIds.slice(0, index), newCard.id, ...state.cardsAllIds.slice(index)];
+
+            return {
+                ...state,
+                cardsById: {
+                    ...state.cardsById,
+                    [newCard.id]: newCard,
+                },
+                cardsAllIds,
+            };
         default:
             return state;
     }

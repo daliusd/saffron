@@ -100,6 +100,8 @@ export type CardSetSelectSuccess = {
     game_id: number,
 };
 export type CardSetUpdateData = { type: 'CARDSET_UPDATE_DATA', cardset: CardSetType };
+export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };
+export type CardSetCloneCard = { type: 'CARDSET_CLONE_CARD', card: CardType };
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
 export type CardSetSelectAction =
@@ -108,7 +110,9 @@ export type CardSetSelectAction =
     | { type: 'CARDSET_SELECT_FAILURE' }
     | CardSetUpdateData
     | CardSetUpdateDataSuccess
-    | CardSetUpdateDataFailure;
+    | CardSetUpdateDataFailure
+    | CardSetCreateCard
+    | CardSetCloneCard;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -191,5 +195,19 @@ export const cardSetUpdateData = (cardset: CardSetType): CardSetUpdateData => {
     return {
         type: 'CARDSET_UPDATE_DATA',
         cardset,
+    };
+};
+
+export const cardSetCreateCard = (card: CardType): CardSetCreateCard => {
+    return {
+        type: 'CARDSET_CREATE_CARD',
+        card,
+    };
+};
+
+export const cardSetCloneCard = (card: CardType): CardSetCreateCard => {
+    return {
+        type: 'CARDSET_CLONE_CARD',
+        card,
     };
 };

@@ -303,7 +303,7 @@ export function* rootSaga(): Saga<void> {
         takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest),
         takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest),
         takeLatest('CARDSET_SELECT_REQUEST', handleCardSetSelectRequest),
-        takeLatest('CARDSET_UPDATE_DATA', handleCardSetUpdateData),
+        //takeLatest('CARDSET_UPDATE_DATA', handleCardSetUpdateData),
         takeLatest('INIT_REQUEST', handleInitRequest),
         takeEvery('*', handleEverything),
     ]);

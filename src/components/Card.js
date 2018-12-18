@@ -5,19 +5,19 @@ import React, { Component } from 'react';
 import shortid from 'shortid';
 
 import {
-    type CardSetType,
+    type CardTemplateType,
     type CardType,
     type Dispatch,
     type TextTemplatesCollection,
     cardSetUpdateData,
+    cardSetCloneCard,
 } from '../actions';
-import { getActiveCardSet } from '../selectors';
 import TextField from './TextField';
 
 type Props = {
     card: CardType,
     dispatch: Dispatch,
-    activeCardSet: CardSetType,
+    template: CardTemplateType,
 };
 
 type State = {
@@ -47,16 +47,9 @@ class Card extends Component<Props, State> {
     };
 
     handleCloneCardClick = (event: SyntheticEvent<>) => {
-        const { card, dispatch, activeCardSet } = this.props;
+        const { card, dispatch } = this.props;
 
-        let cardset = Object.assign({}, activeCardSet);
-
-        let newCard = Object.assign({}, card, { id: shortid.generate() });
-        cardset.data.cardsAllIds.splice(cardset.data.cardsAllIds.indexOf(card.id) + 1, 0, newCard.id);
-
-        cardset.data.cardsById[newCard.id] = newCard;
-
-        dispatch(cardSetUpdateData(cardset));
+        dispatch(cardSetCloneCard(card));
     };
 
     handleCountChange = (event: SyntheticInputEvent<>) => {
@@ -79,10 +72,11 @@ class Card extends Component<Props, State> {
     };
 
     render() {
-        const { activeCardSet, card } = this.props;
+        console.log('Card render');
+        const { template, card } = this.props;
         const { width } = this.state.dimensions;
-        const text_ids: Array<string> = activeCardSet.data ? Object.keys(activeCardSet.data.template.texts) : [];
-        const texts: TextTemplatesCollection = activeCardSet.data ? activeCardSet.data.template.texts : {};
+        const text_ids: Array<string> = Object.keys(template.texts);
+        const texts: TextTemplatesCollection = template.texts;
 
         return (
             <Measure
@@ -120,7 +114,7 @@ class Card extends Component<Props, State> {
 
 const mapStateToProps = state => {
     return {
-        activeCardSet: getActiveCardSet(state),
+        template: state.cardsets.template,
     };
 };
 

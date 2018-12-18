@@ -3,55 +3,37 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { type CardSetType, type Dispatch, cardSetUpdateData } from '../actions';
-import { getActiveCardSet } from '../selectors';
+import { type CardType, type Dispatch, cardSetCreateCard } from '../actions';
 import Card from './Card';
 
 type Props = {
     dispatch: Dispatch,
     isAuthenticated: boolean,
-    activeCardSet: CardSetType,
+    cardsAllIds: Array<string>,
+    cardsById: { [string]: CardType },
 };
 
 export class CardSet extends Component<Props> {
     handleCreateCardClick(event: SyntheticEvent<>) {
-        const { dispatch, activeCardSet } = this.props;
+        const { dispatch } = this.props;
 
-        let cardset = Object.assign({}, activeCardSet);
+        const newCard: CardType = { id: shortid.generate(), count: 1, texts: {}, images: {} };
 
-        if (!('data' in cardset)) {
-            cardset.data = {};
-        }
-
-        if (!('template' in cardset.data)) {
-            cardset.data.template = { texts: {}, images: {} };
-        }
-        if (!cardset.data.cardsAllIds) {
-            cardset.data.cardsAllIds = [];
-            cardset.data.cardsById = {};
-        }
-        const newCard = { id: shortid.generate(), count: 1, texts: {}, images: {} };
-        cardset.data.cardsAllIds.push(newCard.id);
-        cardset.data.cardsById[newCard.id] = newCard;
-
-        dispatch(cardSetUpdateData(cardset));
+        dispatch(cardSetCreateCard(newCard));
     }
 
     render() {
-        const { isAuthenticated, activeCardSet } = this.props;
+        const { isAuthenticated, cardsAllIds, cardsById } = this.props;
 
         return (
-            isAuthenticated &&
-            activeCardSet && (
+            isAuthenticated && (
                 <div>
-                    <div>CardSet placeholder</div>
                     <div>
                         <ul>
-                            {activeCardSet.data &&
-                                activeCardSet.data.cardsAllIds &&
-                                activeCardSet.data.cardsAllIds.map(card_id => (
+                            {cardsAllIds &&
+                                cardsAllIds.map(card_id => (
                                     <li key={card_id}>
-                                        <Card card={activeCardSet.data.cardsById[card_id]} />
+                                        <Card card={cardsById[card_id]} />
                                     </li>
                                 ))}
                         </ul>
@@ -68,7 +50,8 @@ export class CardSet extends Component<Props> {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activeCardSet: getActiveCardSet(state),
+        cardsAllIds: state.cardsets.cardsAllIds,
+        cardsById: state.cardsets.cardsById,
     };
 };
 

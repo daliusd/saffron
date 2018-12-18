@@ -1,9 +1,10 @@
 // @flow
 import { connect } from 'react-redux';
-import React, { type ElementRef, Component } from 'react';
+import React, { type ElementRef, PureComponent } from 'react';
 
 import { type CardSetType, type CardType, type Dispatch, type TextTemplateType, cardSetUpdateData } from '../actions';
 import { getActiveCardSet } from '../selectors';
+import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
 
 type Props = {
@@ -13,19 +14,19 @@ type Props = {
     dispatch: Dispatch,
 };
 
-class TextField extends Component<Props> {
-    editDiv: ElementRef<any>;
+class TextField extends PureComponent<Props> {
+    contentEditable: ElementRef<any>;
     cursorPos: number;
     currentText: string;
 
     constructor() {
         super();
-        this.editDiv = React.createRef();
+        this.contentEditable = React.createRef();
         this.cursorPos = 0;
         this.currentText = '';
     }
 
-    setCursorPosAndCurrentText = () => {
+    setCursorPosAndCurrentText = editDiv => {
         const { card, textTemplate } = this.props;
 
         this.cursorPos = 0;
@@ -37,8 +38,8 @@ class TextField extends Component<Props> {
 
             if (this.cursorPos) {
                 const range = document.createRange();
-                range.setStart(this.editDiv.current.childNodes[0], this.cursorPos);
-                range.setEnd(this.editDiv.current.childNodes[0], this.cursorPos);
+                range.setStart(editDiv.current.childNodes[0], this.cursorPos);
+                range.setEnd(editDiv.current.childNodes[0], this.cursorPos);
 
                 const selection = window.getSelection();
                 selection.removeAllRanges();
@@ -48,8 +49,7 @@ class TextField extends Component<Props> {
     };
 
     handleSelect = () => {
-        this.editDiv.current.contentEditable = 'true';
-        this.editDiv.current.focus();
+        this.contentEditable.current.makeEditable();
     };
 
     handleKeyUp = () => {
@@ -58,9 +58,7 @@ class TextField extends Component<Props> {
         this.cursorPos = range.startOffset;
     };
 
-    handleContent = () => {
-        const value = this.editDiv.current.innerText;
-
+    handleContent = value => {
         if (value !== this.currentText) {
             this.currentText = value;
 
@@ -110,6 +108,7 @@ class TextField extends Component<Props> {
     };
 
     render() {
+        console.log('TextField render');
         const { card, textTemplate } = this.props;
 
         return (
@@ -124,19 +123,16 @@ class TextField extends Component<Props> {
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
             >
-                <div
-                    ref={this.editDiv}
+                <ContentEditable
+                    key={textTemplate.id}
+                    ref={this.contentEditable}
+                    contentId={textTemplate.id}
                     onFocus={this.setCursorPosAndCurrentText}
                     onBlur={this.handleContent}
                     onKeyUp={this.handleKeyUp}
-                    style={{
-                        width: '100%',
-                        height: '100%',
-                        overflow: 'hidden',
-                    }}
-                >
-                    {textTemplate.id in card.texts ? card.texts[textTemplate.id].value : ''}
-                </div>
+                    onChange={this.handleContent}
+                    content={textTemplate.id in card.texts ? card.texts[textTemplate.id].value : ''}
+                />
             </FieldController>
         );
     }
