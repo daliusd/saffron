@@ -10,7 +10,6 @@ type Props = {
     height: number,
     angle: number,
     children: React.Node,
-    onSelect: () => mixed,
     onDrag: (x: number, y: number) => mixed,
     onResize: (width: number, height: number) => mixed,
     onRotate: (angle: number) => mixed,
@@ -80,6 +79,7 @@ export default class FieldController extends React.Component<Props> {
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+        event.stopPropagation();
     };
 
     handleDragStart = (co: { clientX: number, clientY: number }) => {
@@ -88,28 +88,25 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
-        this.handleComplete();
+        this.handleComplete(event);
 
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
-        event.preventDefault();
     };
 
     handleTouchEnd = (event: TouchEvent) => {
-        this.handleComplete();
+        this.handleComplete(event);
 
         document.removeEventListener('touchmove', this.handleTouchMove);
         document.removeEventListener('touchend', this.handleTouchEnd);
-        event.preventDefault();
     };
 
-    handleComplete = () => {
+    handleComplete = (event: Event) => {
         if (this.moving) {
             this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
             this.moving = false;
-        } else {
-            this.props.onSelect();
         }
+        event.preventDefault();
     };
 
     handleMouseMove = (event: MouseEvent) => {
@@ -166,29 +163,26 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleResizeMouseUp = (event: MouseEvent) => {
-        this.handleResizeComplete();
+        this.handleResizeComplete(event);
 
         document.removeEventListener('mousemove', this.handleResizeMouseMove);
         document.removeEventListener('mouseup', this.handleResizeMouseUp);
-        event.preventDefault();
     };
 
     handleResizeTouchEnd = (event: TouchEvent) => {
-        this.handleResizeComplete();
+        this.handleResizeComplete(event);
 
         document.removeEventListener('touchmove', this.handleResizeTouchMove);
         document.removeEventListener('touchend', this.handleResizeTouchEnd);
-        event.preventDefault();
     };
 
-    handleResizeComplete = () => {
+    handleResizeComplete = (event: Event) => {
         if (this.moving) {
             this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
             this.props.onResize(this.cDiv.current.clientWidth, this.cDiv.current.clientHeight);
             this.moving = false;
-        } else {
-            this.props.onSelect();
         }
+        event.preventDefault();
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
@@ -250,28 +244,25 @@ export default class FieldController extends React.Component<Props> {
     };
 
     handleRotateMouseUp = (event: MouseEvent) => {
-        this.handleRotateComplete();
+        this.handleRotateComplete(event);
 
         document.removeEventListener('mousemove', this.handleRotateMouseMove);
         document.removeEventListener('mouseup', this.handleRotateMouseUp);
-        event.preventDefault();
     };
 
     handleRotateTouchEnd = (event: TouchEvent) => {
-        this.handleRotateComplete();
+        this.handleRotateComplete(event);
 
         document.removeEventListener('touchmove', this.handleRotateTouchMove);
         document.removeEventListener('touchend', this.handleRotateTouchEnd);
-        event.preventDefault();
     };
 
-    handleRotateComplete = () => {
+    handleRotateComplete = (event: Event) => {
         if (this.moving) {
             this.props.onRotate(this.currentAngle);
             this.moving = false;
-        } else {
-            this.props.onSelect();
         }
+        event.preventDefault();
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {

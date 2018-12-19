@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import type {
     CardSetAction,
     CardSetsCollection,
+    CardTemplateType,
     CardType,
     GameAction,
     GamesCollection,
@@ -13,6 +14,7 @@ import type {
     MessageAction,
     MessageType,
     SignUpAction,
+    TextInfo,
 } from './actions';
 
 export const ACTIVITY_CREATING = 0x1;
@@ -46,6 +48,8 @@ export type CardSetState = {
     +active: ?number,
     +cardsAllIds: Array<string>,
     +cardsById: { [string]: CardType },
+    +template: CardTemplateType,
+    +texts: { [string]: TextInfo },
 };
 
 export function message(
@@ -188,6 +192,13 @@ export function cardsets(
         allIds: [],
         activity: 0,
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     },
     action: CardSetAction,
 ): CardSetState {
@@ -303,9 +314,9 @@ export function cardsets(
                 },
             };
         }
-        case 'CARDSET_ADD_TEMPLATE_TEXT': {
+        case 'CARDSET_ADD_TEXT_TEMPLATE': {
             const id = shortid.generate();
-            const text = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
+            const textTemplate = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
 
             return {
                 ...state,
@@ -313,8 +324,70 @@ export function cardsets(
                     ...state.template,
                     texts: {
                         ...state.template.texts,
-                        [id]: text,
+                        [id]: textTemplate,
                     },
+                },
+            };
+        }
+        case 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION': {
+            const textTemplate = {
+                ...state.template.texts[action.textTemplate.id],
+                x: action.x,
+                y: action.y,
+            };
+
+            return {
+                ...state,
+                template: {
+                    ...state.template,
+                    texts: {
+                        ...state.template.texts,
+                        [action.textTemplate.id]: textTemplate,
+                    },
+                },
+            };
+        }
+        case 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE': {
+            const textTemplate = {
+                ...state.template.texts[action.textTemplate.id],
+                width: action.width,
+                height: action.height,
+            };
+
+            return {
+                ...state,
+                template: {
+                    ...state.template,
+                    texts: {
+                        ...state.template.texts,
+                        [action.textTemplate.id]: textTemplate,
+                    },
+                },
+            };
+        }
+        case 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE': {
+            const textTemplate = {
+                ...state.template.texts[action.textTemplate.id],
+                angle: action.angle,
+            };
+
+            return {
+                ...state,
+                template: {
+                    ...state.template,
+                    texts: {
+                        ...state.template.texts,
+                        [action.textTemplate.id]: textTemplate,
+                    },
+                },
+            };
+        }
+        case 'CARDSET_CHANGE_TEXT': {
+            return {
+                ...state,
+                texts: {
+                    ...state.texts,
+                    [action.id]: action.textInfo,
                 },
             };
         }

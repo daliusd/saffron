@@ -8,7 +8,7 @@ import {
     type CardType,
     type Dispatch,
     type TextTemplatesCollection,
-    cardSetAddTemplateText,
+    cardSetAddTextTemplate,
     cardSetCloneCard,
     cardSetRemoveCard,
     cardSetUpdateCardCount,
@@ -53,15 +53,15 @@ class Card extends Component<Props, State> {
 
     handleAddTextClick = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetAddTemplateText());
+        dispatch(cardSetAddTextTemplate());
     };
 
     render() {
         console.log('Card render');
         const { template, card } = this.props;
         const { width } = this.state.dimensions;
-        const text_ids: Array<string> = Object.keys(template.texts);
-        const texts: TextTemplatesCollection = template.texts;
+        const textTemplatesIds: Array<string> = Object.keys(template.texts);
+        const textTemplates: TextTemplatesCollection = template.texts;
 
         return (
             <Measure
@@ -83,7 +83,10 @@ class Card extends Component<Props, State> {
                                 overflow: 'hidden',
                             }}
                         >
-                            {text_ids && text_ids.map(t => <TextField key={t} card={card} textTemplate={texts[t]} />)}
+                            {textTemplatesIds &&
+                                textTemplatesIds.map(t => (
+                                    <TextField key={t} cardId={card.id} textTemplate={textTemplates[t]} />
+                                ))}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>

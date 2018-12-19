@@ -104,7 +104,29 @@ export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };
 export type CardSetCloneCard = { type: 'CARDSET_CLONE_CARD', card: CardType };
 export type CardSetRemoveCard = { type: 'CARDSET_REMOVE_CARD', card: CardType };
 export type CardSetUpdateCardCount = { type: 'CARDSET_UPDATE_CARD_COUNT', card: CardType, count: number };
-export type CardSetAddTemplateText = { type: 'CARDSET_ADD_TEMPLATE_TEXT' };
+export type CardSetAddTextTemplate = { type: 'CARDSET_ADD_TEXT_TEMPLATE' };
+export type CardSetChangeTextTemplatePosition = {
+    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION',
+    textTemplate: TextTemplateType,
+    x: number,
+    y: number,
+};
+export type CardSetChangeTextTemplateSize = {
+    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE',
+    textTemplate: TextTemplateType,
+    width: number,
+    height: number,
+};
+export type CardSetChangeTextTemplateAngle = {
+    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE',
+    textTemplate: TextTemplateType,
+    angle: number,
+};
+export type CardSetChangeText = {
+    type: 'CARDSET_CHANGE_TEXT',
+    id: string,
+    textInfo: TextInfo,
+};
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
 export type CardSetSelectAction =
@@ -118,7 +140,11 @@ export type CardSetSelectAction =
     | CardSetCloneCard
     | CardSetRemoveCard
     | CardSetUpdateCardCount
-    | CardSetAddTemplateText;
+    | CardSetAddTextTemplate
+    | CardSetChangeTextTemplatePosition
+    | CardSetChangeTextTemplateSize
+    | CardSetChangeTextTemplateAngle
+    | CardSetChangeText;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -211,7 +237,7 @@ export const cardSetCreateCard = (card: CardType): CardSetCreateCard => {
     };
 };
 
-export const cardSetCloneCard = (card: CardType): CardSetCreateCard => {
+export const cardSetCloneCard = (card: CardType): CardSetCloneCard => {
     return {
         type: 'CARDSET_CLONE_CARD',
         card,
@@ -233,8 +259,53 @@ export const cardSetUpdateCardCount = (card: CardType, count: number): CardSetUp
     };
 };
 
-export const cardSetAddTemplateText = (): CardSetAddTemplateText => {
+export const cardSetAddTextTemplate = (): CardSetAddTextTemplate => {
     return {
-        type: 'CARDSET_ADD_TEMPLATE_TEXT',
+        type: 'CARDSET_ADD_TEXT_TEMPLATE',
+    };
+};
+
+export const cardSetChangeTextTemplatePosition = (
+    textTemplate: TextTemplateType,
+    x: number,
+    y: number,
+): CardSetChangeTextTemplatePosition => {
+    return {
+        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION',
+        textTemplate,
+        x,
+        y,
+    };
+};
+
+export const cardSetChangeTextTemplateSize = (
+    textTemplate: TextTemplateType,
+    width: number,
+    height: number,
+): CardSetChangeTextTemplateSize => {
+    return {
+        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE',
+        textTemplate,
+        width,
+        height,
+    };
+};
+
+export const cardSetChangeTextTemplateAngle = (
+    textTemplate: TextTemplateType,
+    angle: number,
+): CardSetChangeTextTemplateAngle => {
+    return {
+        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE',
+        textTemplate,
+        angle,
+    };
+};
+
+export const cardSetChangeText = (id: string, textInfo: TextInfo): CardSetChangeText => {
+    return {
+        type: 'CARDSET_CHANGE_TEXT',
+        id,
+        textInfo,
     };
 };
