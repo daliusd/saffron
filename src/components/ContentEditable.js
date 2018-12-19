@@ -1,6 +1,6 @@
 // @flow
 import { connect } from 'react-redux';
-import React, { type ElementRef, PureComponent } from 'react';
+import React, { type ElementRef, Component } from 'react';
 
 import { type Dispatch, type TextInfo, cardSetChangeText } from '../actions';
 
@@ -11,16 +11,18 @@ type Props = {
     textCursor: number,
 };
 
-class ContentEditable extends PureComponent<Props> {
+class ContentEditable extends Component<Props> {
     editDiv: ElementRef<any>;
-    cursorPos: number;
     currentText: string;
 
     constructor(props: Props) {
         super();
         this.editDiv = React.createRef();
-        this.cursorPos = 0;
         this.currentText = '';
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.textValue !== this.currentText;
     }
 
     onClick = () => {
@@ -30,21 +32,14 @@ class ContentEditable extends PureComponent<Props> {
     onFocus = () => {
         const { textValue, textCursor } = this.props;
         this.currentText = textValue;
-        this.cursorPos = textCursor;
-        if (this.cursorPos) {
+        if (textCursor) {
             const range = document.createRange();
-            range.setStart(this.editDiv.current.childNodes[0], this.cursorPos);
-            range.setEnd(this.editDiv.current.childNodes[0], this.cursorPos);
+            range.setStart(this.editDiv.current.childNodes[0], textCursor);
+            range.setEnd(this.editDiv.current.childNodes[0], textCursor);
             const selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
         }
-    };
-
-    onKeyUp = () => {
-        const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        this.cursorPos = range.startOffset;
     };
 
     onBlur = () => {
@@ -52,9 +47,15 @@ class ContentEditable extends PureComponent<Props> {
         if (value !== this.currentText) {
             const { dispatch, textId } = this.props;
 
-            const textInfo: TextInfo = { value, cursor: this.cursorPos };
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            const cursor = range.startOffset;
+
+            const textInfo: TextInfo = { value, cursor };
 
             dispatch(cardSetChangeText(textId, textInfo));
+
+            this.currentText = value;
         }
     };
 
@@ -67,7 +68,7 @@ class ContentEditable extends PureComponent<Props> {
                 onClick={this.onClick}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
-                onKeyUp={this.onKeyUp}
+                onInput={this.onBlur}
                 style={{
                     width: '100%',
                     height: '100%',
