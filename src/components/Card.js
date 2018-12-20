@@ -57,7 +57,6 @@ class Card extends Component<Props, State> {
     };
 
     render() {
-        console.log('Card render');
         const { template, card } = this.props;
         const { width } = this.state.dimensions;
         const textTemplatesIds: Array<string> = Object.keys(template.texts);
@@ -67,7 +66,6 @@ class Card extends Component<Props, State> {
             <Measure
                 client
                 onResize={contentRect => {
-                    console.log(contentRect);
                     this.setState({ dimensions: contentRect.client });
                 }}
             >

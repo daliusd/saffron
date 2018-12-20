@@ -21,6 +21,7 @@ class ContentEditable extends Component<Props> {
         super();
         this.editDiv = React.createRef();
         this.currentText = '';
+        this.currentCursor = 0;
         this.timeout = null;
     }
 
@@ -38,14 +39,15 @@ class ContentEditable extends Component<Props> {
         this.currentCursor = textCursor;
         if (textCursor) {
             const range = document.createRange();
-            const textContent = this.editDiv.current.childNodes[0].textContent;
+            const textContent =
+                this.editDiv.current.childNodes.length > 0 ? this.editDiv.current.childNodes[0].textContent : null;
             if (textContent && textContent.length >= textCursor) {
                 range.setStart(this.editDiv.current.childNodes[0], textCursor);
                 range.setEnd(this.editDiv.current.childNodes[0], textCursor);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
             }
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
         }
     };
 
@@ -55,12 +57,14 @@ class ContentEditable extends Component<Props> {
         return range.startOffset;
     };
 
-    onBlur = () => {
+    updateContent = () => {
         const value = this.editDiv.current.innerText;
-        const cursor = this.getCursor();
 
-        if (value !== this.currentText || cursor !== this.currentCursor) {
+        if (value !== this.currentText) {
+            const cursor = this.getCursor();
+
             this.currentText = value;
+            this.currentCursor = cursor;
 
             if (this.timeout) {
                 clearTimeout(this.timeout);
@@ -82,8 +86,8 @@ class ContentEditable extends Component<Props> {
                 contentEditable="true"
                 onClick={this.onClick}
                 onFocus={this.onFocus}
-                onBlur={this.onBlur}
-                onInput={this.onBlur}
+                onBlur={this.updateContent}
+                onInput={this.updateContent}
                 style={{
                     width: '100%',
                     height: '100%',

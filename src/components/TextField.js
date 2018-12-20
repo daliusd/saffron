@@ -35,7 +35,6 @@ class TextField extends PureComponent<Props> {
     };
 
     render() {
-        console.log('TextField render');
         const { textTemplate } = this.props;
         const textId = this.props.cardId + this.props.textTemplate.id;
 
