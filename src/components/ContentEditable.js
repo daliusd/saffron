@@ -14,11 +14,14 @@ type Props = {
 class ContentEditable extends Component<Props> {
     editDiv: ElementRef<any>;
     currentText: string;
+    currentCursor: number;
+    timeout: ?TimeoutID;
 
     constructor(props: Props) {
         super();
         this.editDiv = React.createRef();
         this.currentText = '';
+        this.timeout = null;
     }
 
     shouldComponentUpdate(nextProps) {
@@ -32,35 +35,47 @@ class ContentEditable extends Component<Props> {
     onFocus = () => {
         const { textValue, textCursor } = this.props;
         this.currentText = textValue;
+        this.currentCursor = textCursor;
         if (textCursor) {
             const range = document.createRange();
-            range.setStart(this.editDiv.current.childNodes[0], textCursor);
-            range.setEnd(this.editDiv.current.childNodes[0], textCursor);
+            const textContent = this.editDiv.current.childNodes[0].textContent;
+            if (textContent && textContent.length >= textCursor) {
+                range.setStart(this.editDiv.current.childNodes[0], textCursor);
+                range.setEnd(this.editDiv.current.childNodes[0], textCursor);
+            }
             const selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
         }
     };
 
+    getCursor = () => {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        return range.startOffset;
+    };
+
     onBlur = () => {
         const value = this.editDiv.current.innerText;
-        if (value !== this.currentText) {
-            const { dispatch, textId } = this.props;
+        const cursor = this.getCursor();
 
-            const selection = window.getSelection();
-            const range = selection.getRangeAt(0);
-            const cursor = range.startOffset;
-
-            const textInfo: TextInfo = { value, cursor };
-
-            dispatch(cardSetChangeText(textId, textInfo));
-
+        if (value !== this.currentText || cursor !== this.currentCursor) {
             this.currentText = value;
+
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+            }
+
+            this.timeout = setTimeout(() => {
+                const { dispatch, textId } = this.props;
+                const textInfo: TextInfo = { value, cursor };
+
+                dispatch(cardSetChangeText(textId, textInfo));
+            }, 500);
         }
     };
 
     render() {
-        console.log('ContentEditable render');
         return (
             <div
                 ref={this.editDiv}
