@@ -296,15 +296,15 @@ export function cardsets(
             };
         }
         case 'CARDSET_UPDATE_CARD_COUNT': {
-            const card_id = action.card.id;
-            let card = { ...state.cardsById[card_id] };
+            const cardId = action.card.id;
+            let card = { ...state.cardsById[cardId] };
             card.count = action.count;
 
             return {
                 ...state,
                 cardsById: {
                     ...state.cardsById,
-                    card,
+                    [cardId]: card,
                 },
             };
         }
