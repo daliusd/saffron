@@ -252,17 +252,11 @@ export function cardsets(
                 cardsAllIds: action.data.cardsAllIds,
                 cardsById: action.data.cardsById,
                 template: action.data.template,
+                texts: action.data.texts,
             });
         case 'CARDSET_SELECT_FAILURE':
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
-            });
-        case 'CARDSET_UPDATE_DATA':
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_SELECTING,
-                byId: Object.assign({}, state.byId, {
-                    [action.cardset.id]: action.cardset,
-                }),
             });
         case 'CARDSET_CREATE_CARD':
             return {

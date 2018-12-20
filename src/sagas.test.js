@@ -5,13 +5,7 @@ import { delay } from 'redux-saga';
 
 import jwt from 'jwt-simple';
 
-import {
-    type CardSetUpdateData,
-    type CardSetsCollection,
-    type GamesCollection,
-    gameSelectRequest,
-    messageRequest,
-} from './actions';
+import { type CardSetsCollection, type GamesCollection, gameSelectRequest, messageRequest } from './actions';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
@@ -19,7 +13,6 @@ import {
     getToken,
     handleCardSetCreateRequest,
     handleCardSetSelectRequest,
-    handleCardSetUpdateData,
     handleGameCreateRequest,
     handleGameListRequest,
     handleGameSelectRequest,
@@ -457,41 +450,41 @@ test('handleCardSetSelectRequest', () => {
     expect(clone.next().done).toBeTruthy();
 });
 
-test('handleCardSetUpdateData', () => {
-    const action: CardSetUpdateData = {
-        type: 'CARDSET_UPDATE_DATA',
-        cardset: {
-            id: 123,
-            name: 'name',
-            data: {
-                template: {
-                    texts: {},
-                    images: {},
-                },
-                cardsAllIds: [],
-                cardsById: {},
-            },
-        },
-    };
-    const gen = cloneableGenerator(handleCardSetUpdateData)(action);
-
-    expect(gen.next().value).toEqual(call(delay, 1000));
-    expect(gen.next().value).toEqual(
-        call(authorizedPutRequest, '/cardset/123', {
-            data: '{"template":{"texts":{},"images":{}},"cardsAllIds":[],"cardsById":{}}',
-            name: 'name',
-        }),
-    );
-
-    let clone = gen.clone();
-
-    // Successful request
-    expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
-    expect(gen.next().done).toBeTruthy();
-
-    // Failed request
-    let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
-    expect(clone.next().value).toEqual(call(putError, message));
-    expect(clone.next().done).toBeTruthy();
-});
+// test('handleCardSetUpdateData', () => {
+//     const action: CardSetUpdateData = {
+//         type: 'CARDSET_UPDATE_DATA',
+//         cardset: {
+//             id: 123,
+//             name: 'name',
+//             data: {
+//                 template: {
+//                     texts: {},
+//                     images: {},
+//                 },
+//                 cardsAllIds: [],
+//                 cardsById: {},
+//             },
+//         },
+//     };
+//     const gen = cloneableGenerator(handleCardSetUpdateData)(action);
+//
+//     expect(gen.next().value).toEqual(call(delay, 1000));
+//     expect(gen.next().value).toEqual(
+//         call(authorizedPutRequest, '/cardset/123', {
+//             data: '{"template":{"texts":{},"images":{}},"cardsAllIds":[],"cardsById":{}}',
+//             name: 'name',
+//         }),
+//     );
+//
+//     let clone = gen.clone();
+//
+//     // Successful request
+//     expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
+//     expect(gen.next().done).toBeTruthy();
+//
+//     // Failed request
+//     let message = 'message';
+//     expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
+//     expect(clone.next().value).toEqual(call(putError, message));
+//     expect(clone.next().done).toBeTruthy();
+// });

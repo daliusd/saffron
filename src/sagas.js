@@ -6,8 +6,8 @@ import jwt_decode from 'jwt-decode';
 import {
     type Action,
     type CardSetCreateRequest,
+    type CardSetSelectAction,
     type CardSetSelectRequest,
-    type CardSetUpdateData,
     type GameCreateRequest,
     type GameListSuccess,
     type GameSelectRequest,
@@ -266,12 +266,22 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<
     }
 }
 
-export function* handleCardSetUpdateData(action: CardSetUpdateData): Saga<void> {
+export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
     try {
         yield call(delay, 1000);
-        yield call(authorizedPutRequest, '/cardset/' + action.cardset.id, {
-            name: action.cardset.name,
-            data: JSON.stringify(action.cardset.data),
+        const state = yield select();
+
+        const cardsetId = state.cardsets.active;
+        const data = {
+            cardsAllIds: state.cardsets.cardsAllIds,
+            cardsById: state.cardsets.cardsById,
+            template: state.cardsets.template,
+            texts: state.cardsets.texts,
+        };
+
+        yield call(authorizedPutRequest, '/cardset/' + cardsetId, {
+            name: state.cardsets.byId[cardsetId].name,
+            data: JSON.stringify(data),
         });
         yield put({
             type: 'CARDSET_UPDATE_DATA_SUCCESS',
@@ -303,7 +313,17 @@ export function* rootSaga(): Saga<void> {
         takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest),
         takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest),
         takeLatest('CARDSET_SELECT_REQUEST', handleCardSetSelectRequest),
-        //takeLatest('CARDSET_UPDATE_DATA', handleCardSetUpdateData),
+
+        takeLatest('CARDSET_CREATE_CARD', handleCardSetChange),
+        takeLatest('CARDSET_CLONE_CARD', handleCardSetChange),
+        takeLatest('CARDSET_REMOVE_CARD', handleCardSetChange),
+        takeLatest('CARDSET_UPDATE_CARD_COUNT', handleCardSetChange),
+        takeLatest('CARDSET_ADD_TEXT_TEMPLATE', handleCardSetChange),
+        takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_POSITION', handleCardSetChange),
+        takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_SIZE', handleCardSetChange),
+        takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE', handleCardSetChange),
+        takeLatest('CARDSET_CHANGE_TEXT', handleCardSetChange),
+
         takeLatest('INIT_REQUEST', handleInitRequest),
         takeEvery('*', handleEverything),
     ]);
