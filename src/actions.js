@@ -24,16 +24,11 @@ export type TextTemplatesCollection = { [string]: TextTemplateType };
 export type CardTemplateType = { texts: TextTemplatesCollection, images: any };
 
 export type TextInfo = { value: string, cursor: number };
-export type CardType = { id: string, count: number, texts: { [string]: TextInfo }, images: any };
+export type CardType = { id: string, count: number };
 
 export type CardSetType = {
     id: number,
     name: string,
-    data: {
-        template: CardTemplateType,
-        cardsAllIds: Array<string>,
-        cardsById: { [string]: CardType },
-    },
 };
 
 export type CardSetsCollection = {
@@ -96,7 +91,14 @@ export type CardSetSelectSuccess = {
     type: 'CARDSET_SELECT_SUCCESS',
     id: number,
     name: string,
-    data: Object,
+    data: {
+        cardsAllIds: IdsArray,
+        cardsById: { [string]: CardType },
+        template: CardTemplateType,
+        texts: {
+            [string]: TextInfo,
+        },
+    },
     game_id: number,
 };
 export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };

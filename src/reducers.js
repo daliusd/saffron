@@ -46,7 +46,7 @@ export type CardSetState = {
     +allIds: IdsArray,
     +activity: number,
     +active: ?number,
-    +cardsAllIds: Array<string>,
+    +cardsAllIds: IdsArray,
     +cardsById: { [string]: CardType },
     +template: CardTemplateType,
     +texts: { [string]: TextInfo },

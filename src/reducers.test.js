@@ -391,27 +391,80 @@ test('CARDSET_SELECT', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type, id: 1 },
         ),
-    ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
+    ).toEqual({
+        activity: ACTIVITY_SELECTING,
+        byId: {},
+        allIds: [],
+        active: null,
+
+        cardsAllIds: [],
+        cardsById: {},
+        template: {
+            images: {},
+            texts: {},
+        },
+        texts: {},
+    });
 
     type = 'CARDSET_SELECT_SUCCESS';
     expect(
         cardsets(
             {
                 activity: ACTIVITY_SELECTING,
-                byId: { '1': { type, id: 1, name: 'test' } },
+                byId: { '1': { id: 1, name: 'test' } },
                 allIds: [1],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
-            { type, id: 1, name: 'test2', data: { updated: {} }, game_id: 2 },
+            {
+                type,
+                id: 1,
+                name: 'test2',
+                data: {
+                    cardsAllIds: [1],
+                    cardsById: { '1': { id: '1', count: 1 } },
+                    template: {
+                        texts: {},
+                        images: {},
+                    },
+                    texts: {},
+                },
+                game_id: 2,
+            },
         ),
     ).toEqual({
         activity: 0,
-        byId: { '1': { id: 1, name: 'test2', data: { updated: {} } } },
+        byId: { '1': { id: 1, name: 'test2' } },
         allIds: [1],
         active: 1,
+        cardsAllIds: [1],
+        cardsById: {
+            '1': {
+                count: 1,
+                id: '1',
+            },
+        },
+        template: {
+            images: {},
+            texts: {},
+        },
+        texts: {},
     });
 
     type = 'CARDSET_SELECT_FAILURE';
@@ -422,6 +475,13 @@ test('CARDSET_SELECT', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type, message },
         ),
@@ -430,5 +490,12 @@ test('CARDSET_SELECT', () => {
         byId: {},
         allIds: [],
         active: null,
+        cardsAllIds: [],
+        cardsById: {},
+        template: {
+            images: {},
+            texts: {},
+        },
+        texts: {},
     });
 });
