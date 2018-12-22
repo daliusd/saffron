@@ -17,7 +17,7 @@ export class CardSet extends Component<Props> {
     handleCreateCardClick(event: SyntheticEvent<>) {
         const { dispatch } = this.props;
 
-        const newCard: CardType = { id: shortid.generate(), count: 1, texts: {}, images: {} };
+        const newCard: CardType = { id: shortid.generate(), count: 1 };
 
         dispatch(cardSetCreateCard(newCard));
     }

@@ -1,16 +1,26 @@
 // @flow
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import { delay } from 'redux-saga';
+import shortid from 'shortid';
 
 import jwt from 'jwt-simple';
 
-import { type CardSetType, type GameType, gameSelectRequest, messageRequest } from './actions';
+import {
+    type CardSetSelectAction,
+    type CardSetType,
+    type CardType,
+    type GameType,
+    gameSelectRequest,
+    messageRequest,
+} from './actions';
+import type { CardSetState } from './reducers';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
     authorizedPutRequest,
     getToken,
+    handleCardSetChange,
     handleCardSetCreateRequest,
     handleCardSetSelectRequest,
     handleGameCreateRequest,
@@ -450,41 +460,50 @@ test('handleCardSetSelectRequest', () => {
     expect(clone.next().done).toBeTruthy();
 });
 
-// test('handleCardSetUpdateData', () => {
-//     const action: CardSetUpdateData = {
-//         type: 'CARDSET_UPDATE_DATA',
-//         cardset: {
-//             id: 123,
-//             name: 'name',
-//             data: {
-//                 template: {
-//                     texts: {},
-//                     images: {},
-//                 },
-//                 cardsAllIds: [],
-//                 cardsById: {},
-//             },
-//         },
-//     };
-//     const gen = cloneableGenerator(handleCardSetUpdateData)(action);
-//
-//     expect(gen.next().value).toEqual(call(delay, 1000));
-//     expect(gen.next().value).toEqual(
-//         call(authorizedPutRequest, '/cardset/123', {
-//             data: '{"template":{"texts":{},"images":{}},"cardsAllIds":[],"cardsById":{}}',
-//             name: 'name',
-//         }),
-//     );
-//
-//     let clone = gen.clone();
-//
-//     // Successful request
-//     expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
-//     expect(gen.next().done).toBeTruthy();
-//
-//     // Failed request
-//     let message = 'message';
-//     expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
-//     expect(clone.next().value).toEqual(call(putError, message));
-//     expect(clone.next().done).toBeTruthy();
-// });
+test('handleCardSetChange', () => {
+    const card: CardType = { id: shortid.generate(), count: 1 };
+
+    const action: CardSetSelectAction = {
+        type: 'CARDSET_REMOVE_CARD',
+        card,
+    };
+    const gen = cloneableGenerator(handleCardSetChange)(action);
+
+    expect(gen.next().value).toEqual(call(delay, 1000));
+
+    const state: { cardsets: CardSetState } = {
+        cardsets: {
+            byId: { '123': { id: '123', name: 'name' } },
+            allIds: [],
+            activity: 0,
+            active: '123',
+            template: {
+                texts: {},
+                images: {},
+            },
+            cardsById: {},
+            cardsAllIds: [],
+            texts: {},
+        },
+    };
+
+    expect(gen.next().value).toEqual(select());
+    expect(gen.next(state).value).toEqual(
+        call(authorizedPutRequest, '/cardset/123', {
+            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, template: { texts: {}, images: {} }, texts: {} }),
+            name: 'name',
+        }),
+    );
+
+    let clone = gen.clone();
+
+    // Successful request
+    expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
+    expect(gen.next().done).toBeTruthy();
+
+    // Failed request
+    let message = 'message';
+    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
+    expect(clone.next().value).toEqual(call(putError, message));
+    expect(clone.next().done).toBeTruthy();
+});
