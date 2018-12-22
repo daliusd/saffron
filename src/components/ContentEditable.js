@@ -2,18 +2,21 @@
 import { connect } from 'react-redux';
 import React, { type ElementRef, Component } from 'react';
 
-import { type Dispatch, type TextInfo, cardSetChangeText } from '../actions';
+import { type Dispatch, type TextInfo, cardSetActiveTemplate, cardSetChangeText } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
-    textId: string,
+    cardId: string,
+    templateId: string,
     textValue: string,
     textCursor: number,
+    align: string,
 };
 
 class ContentEditable extends Component<Props> {
     editDiv: ElementRef<any>;
     currentText: string;
+    currentAlign: string;
     currentCursor: number;
     timeout: ?TimeoutID;
 
@@ -21,21 +24,26 @@ class ContentEditable extends Component<Props> {
         super();
         this.editDiv = React.createRef();
         this.currentText = '';
+        this.currentAlign = '';
         this.currentCursor = 0;
         this.timeout = null;
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.textValue !== this.currentText;
+        return nextProps.textValue !== this.currentText || nextProps.align !== this.currentAlign;
     }
 
     onClick = () => {
+        const { dispatch, templateId } = this.props;
+
         this.editDiv.current.focus();
+        dispatch(cardSetActiveTemplate(templateId));
     };
 
     onFocus = () => {
-        const { textValue, textCursor } = this.props;
+        const { textValue, textCursor, align } = this.props;
         this.currentText = textValue;
+        this.currentAlign = align;
         this.currentCursor = textCursor;
         if (textCursor) {
             const range = document.createRange();
@@ -71,10 +79,10 @@ class ContentEditable extends Component<Props> {
             }
 
             this.timeout = setTimeout(() => {
-                const { dispatch, textId } = this.props;
+                const { dispatch, cardId, templateId } = this.props;
                 const textInfo: TextInfo = { value, cursor };
 
-                dispatch(cardSetChangeText(textId, textInfo));
+                dispatch(cardSetChangeText(cardId, templateId, textInfo));
             }, 500);
         }
     };
@@ -92,6 +100,7 @@ class ContentEditable extends Component<Props> {
                     width: '100%',
                     height: '100%',
                     overflow: 'hidden',
+                    textAlign: this.props.align || 'left',
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />
@@ -100,7 +109,10 @@ class ContentEditable extends Component<Props> {
 }
 
 const mapStateToProps = (state, props) => {
-    const textInfo = state.cardsets.texts[props.textId] || { value: '', cursor: 0 };
+    const textInfo =
+        state.cardsets.texts[props.cardId] && state.cardsets.texts[props.cardId][props.templateId]
+            ? state.cardsets.texts[props.cardId][props.templateId]
+            : { value: '', cursor: 0 };
     return {
         textValue: textInfo.value,
         textCursor: textInfo.cursor,

@@ -19,7 +19,15 @@ export type GamesCollection = {
     [string]: GameType,
 };
 
-export type TextTemplateType = { id: string, x: number, y: number, width: number, height: number, angle: number };
+export type TextTemplateType = {
+    id: string,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    angle: number,
+    align: string,
+};
 export type TextTemplatesCollection = { [string]: TextTemplateType };
 export type CardTemplateType = { texts: TextTemplatesCollection, images: any };
 
@@ -96,7 +104,9 @@ export type CardSetSelectSuccess = {
         cardsById: { [string]: CardType },
         template: CardTemplateType,
         texts: {
-            [string]: TextInfo,
+            [string]: {
+                [string]: TextInfo,
+            },
         },
     },
     game_id: string,
@@ -123,10 +133,19 @@ export type CardSetChangeTextTemplateAngle = {
     textTemplate: TextTemplateType,
     angle: number,
 };
+export type CardSetChangeActiveTextTemplateAlign = {
+    type: 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN',
+    align: string,
+};
 export type CardSetChangeText = {
     type: 'CARDSET_CHANGE_TEXT',
-    id: string,
+    cardId: string,
+    templateId: string,
     textInfo: TextInfo,
+};
+export type CardSetSetActiveTemplate = {
+    type: 'CARDSET_SET_ACTIVE_TEMPLATE',
+    templateId: string,
 };
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
@@ -144,7 +163,9 @@ export type CardSetSelectAction =
     | CardSetChangeTextTemplatePosition
     | CardSetChangeTextTemplateSize
     | CardSetChangeTextTemplateAngle
-    | CardSetChangeText;
+    | CardSetChangeActiveTextTemplateAlign
+    | CardSetChangeText
+    | CardSetSetActiveTemplate;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -295,10 +316,25 @@ export const cardSetChangeTextTemplateAngle = (
     };
 };
 
-export const cardSetChangeText = (id: string, textInfo: TextInfo): CardSetChangeText => {
+export const cardSetChangeActiveTextTemplateAlign = (align: string): CardSetChangeActiveTextTemplateAlign => {
+    return {
+        type: 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN',
+        align,
+    };
+};
+
+export const cardSetChangeText = (cardId: string, templateId: string, textInfo: TextInfo): CardSetChangeText => {
     return {
         type: 'CARDSET_CHANGE_TEXT',
-        id,
+        cardId,
+        templateId,
         textInfo,
+    };
+};
+
+export const cardSetActiveTemplate = (templateId: string): CardSetSetActiveTemplate => {
+    return {
+        type: 'CARDSET_SET_ACTIVE_TEMPLATE',
+        templateId,
     };
 };

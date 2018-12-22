@@ -270,6 +270,7 @@ test('CARDSET_CREATE', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, cardsetname: 'test', game_id: '1' },
@@ -285,6 +286,7 @@ test('CARDSET_CREATE', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 
@@ -302,6 +304,7 @@ test('CARDSET_CREATE', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type },
@@ -317,6 +320,7 @@ test('CARDSET_CREATE', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 
@@ -334,6 +338,7 @@ test('CARDSET_CREATE', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, message },
@@ -349,6 +354,7 @@ test('CARDSET_CREATE', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 });
@@ -370,6 +376,7 @@ test('CARDSET_LIST', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type },
@@ -385,6 +392,7 @@ test('CARDSET_LIST', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 
@@ -405,6 +413,7 @@ test('CARDSET_LIST', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, byId, allIds },
@@ -420,6 +429,7 @@ test('CARDSET_LIST', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 
@@ -437,6 +447,7 @@ test('CARDSET_LIST', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, message },
@@ -452,6 +463,7 @@ test('CARDSET_LIST', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 
@@ -469,6 +481,7 @@ test('CARDSET_LIST', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type },
@@ -484,6 +497,7 @@ test('CARDSET_LIST', () => {
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     });
 });
@@ -505,6 +519,7 @@ test('CARDSET_SELECT', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, id: '1' },
@@ -516,6 +531,7 @@ test('CARDSET_SELECT', () => {
         active: null,
 
         cardsAllIds: [],
+        activeTemplate: null,
         cardsById: {},
         template: {
             images: {},
@@ -538,6 +554,7 @@ test('CARDSET_SELECT', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             {
@@ -562,6 +579,7 @@ test('CARDSET_SELECT', () => {
         allIds: ['1'],
         active: '1',
         cardsAllIds: ['1'],
+        activeTemplate: null,
         cardsById: {
             '1': {
                 count: 1,
@@ -589,6 +607,7 @@ test('CARDSET_SELECT', () => {
                 },
                 cardsById: {},
                 cardsAllIds: [],
+                activeTemplate: null,
                 texts: {},
             },
             { type, message },
@@ -599,6 +618,7 @@ test('CARDSET_SELECT', () => {
         allIds: [],
         active: null,
         cardsAllIds: [],
+        activeTemplate: null,
         cardsById: {},
         template: {
             images: {},

@@ -9,6 +9,7 @@ import {
     type Dispatch,
     type TextTemplatesCollection,
     cardSetAddTextTemplate,
+    cardSetChangeActiveTextTemplateAlign,
     cardSetCloneCard,
     cardSetRemoveCard,
     cardSetUpdateCardCount,
@@ -56,6 +57,21 @@ class Card extends Component<Props, State> {
         dispatch(cardSetAddTextTemplate());
     };
 
+    handleSetTextAlignLeft = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeActiveTextTemplateAlign('left'));
+    };
+
+    handleSetTextAlignCenter = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeActiveTextTemplateAlign('center'));
+    };
+
+    handleSetTextAlignRight = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeActiveTextTemplateAlign('right'));
+    };
+
     render() {
         const { template, card } = this.props;
         const { width } = this.state.dimensions;
@@ -91,6 +107,9 @@ class Card extends Component<Props, State> {
                         <button onClick={this.handleCloneCardClick}>Clone</button>
                         <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
                         <button onClick={this.handleAddTextClick}>Text</button>
+                        <button onClick={this.handleSetTextAlignLeft}>L</button>
+                        <button onClick={this.handleSetTextAlignCenter}>C</button>
+                        <button onClick={this.handleSetTextAlignRight}>R</button>
                     </div>
                 )}
             </Measure>

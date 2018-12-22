@@ -483,6 +483,7 @@ test('handleCardSetChange', () => {
             },
             cardsById: {},
             cardsAllIds: [],
+            activeTemplate: null,
             texts: {},
         },
     };

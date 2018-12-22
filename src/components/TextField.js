@@ -36,7 +36,6 @@ class TextField extends PureComponent<Props> {
 
     render() {
         const { textTemplate } = this.props;
-        const textId = this.props.cardId + this.props.textTemplate.id;
 
         return (
             <FieldController
@@ -49,7 +48,11 @@ class TextField extends PureComponent<Props> {
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
             >
-                <ContentEditable key={textId} textId={textId} />
+                <ContentEditable
+                    cardId={this.props.cardId}
+                    templateId={textTemplate.id}
+                    align={textTemplate.align}
+                />
             </FieldController>
         );
     }

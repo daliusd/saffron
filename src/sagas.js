@@ -322,6 +322,7 @@ export function* rootSaga(): Saga<void> {
         takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_POSITION', handleCardSetChange),
         takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_SIZE', handleCardSetChange),
         takeLatest('CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE', handleCardSetChange),
+        takeLatest('CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN', handleCardSetChange),
         takeLatest('CARDSET_CHANGE_TEXT', handleCardSetChange),
 
         takeLatest('INIT_REQUEST', handleInitRequest),

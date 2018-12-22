@@ -48,8 +48,9 @@ export type CardSetState = {
     +active: ?string,
     +cardsAllIds: IdsArray,
     +cardsById: { [string]: CardType },
+    +activeTemplate: ?string,
     +template: CardTemplateType,
-    +texts: { [string]: TextInfo },
+    +texts: { [string]: { [string]: TextInfo } },
 };
 
 export function message(
@@ -198,6 +199,7 @@ export function cardsets(
         },
         cardsById: {},
         cardsAllIds: [],
+        activeTemplate: null,
         texts: {},
     },
     action: CardSetAction,
@@ -376,13 +378,46 @@ export function cardsets(
                 },
             };
         }
+        case 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN': {
+            if (state.activeTemplate) {
+                const textTemplate = {
+                    ...state.template.texts[state.activeTemplate],
+                    align: action.align,
+                };
+
+                return {
+                    ...state,
+                    template: {
+                        ...state.template,
+                        texts: {
+                            ...state.template.texts,
+                            [state.activeTemplate]: textTemplate,
+                        },
+                    },
+                };
+            } else {
+                return state;
+            }
+        }
         case 'CARDSET_CHANGE_TEXT': {
+            let templates_by_card = {};
+            if (action.cardId in state.texts) {
+                templates_by_card = { ...state.texts[action.cardId] };
+            }
+            templates_by_card[action.templateId] = action.textInfo;
+
             return {
                 ...state,
                 texts: {
                     ...state.texts,
-                    [action.id]: action.textInfo,
+                    [action.cardId]: templates_by_card,
                 },
+            };
+        }
+        case 'CARDSET_SET_ACTIVE_TEMPLATE': {
+            return {
+                ...state,
+                activeTemplate: action.templateId,
             };
         }
         default:
