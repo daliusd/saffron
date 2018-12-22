@@ -12,7 +12,12 @@ describe('<Games />', () => {
 
     it('Generates Games with some info', () => {
         const wrapper = shallow(
-            <Games dispatch={jest.fn()} isAuthenticated={true} allIds={[1]} byId={{ '1': { id: 1, name: 'test' } }} />,
+            <Games
+                dispatch={jest.fn()}
+                isAuthenticated={true}
+                allIds={['1']}
+                byId={{ '1': { id: '1', name: 'test' } }}
+            />,
         );
         expect(wrapper.find('button')).toHaveLength(1);
     });

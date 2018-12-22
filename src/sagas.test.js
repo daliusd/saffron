@@ -5,7 +5,7 @@ import { delay } from 'redux-saga';
 
 import jwt from 'jwt-simple';
 
-import { type CardSetsCollection, type GamesCollection, gameSelectRequest, messageRequest } from './actions';
+import { type CardSetType, type GameType, gameSelectRequest, messageRequest } from './actions';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
@@ -344,14 +344,14 @@ test('handleGameListRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    const data: GamesCollection = { games: [{ id: 2, name: 'test' }, { id: 1, name: 'test2' }] };
+    const data: { games: Array<GameType> } = { games: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }] };
     expect(gen.next(data).value).toEqual(
         put({
             type: 'GAME_LIST_SUCCESS',
-            allIds: [2, 1],
+            allIds: ['2', '1'],
             byId: {
-                '1': { id: 1, name: 'test2' },
-                '2': { id: 2, name: 'test' },
+                '1': { id: '1', name: 'test2' },
+                '2': { id: '2', name: 'test' },
             },
         }),
     );
@@ -373,18 +373,18 @@ test('handleGameSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    const data: CardSetsCollection = {
-        cardsets: [{ id: 2, name: 'test', data: { ok: 'test' } }, { id: 1, name: 'test2', data: { ok: 'test2' } }],
+    const data: { cardsets: Array<CardSetType> } = {
+        cardsets: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }],
     };
 
     expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: 123 }));
     expect(gen.next().value).toEqual(
         put({
             type: 'CARDSET_LIST_SUCCESS',
-            allIds: [2, 1],
+            allIds: ['2', '1'],
             byId: {
-                '1': { id: 1, name: 'test2', data: { ok: 'test2' } },
-                '2': { id: 2, name: 'test', data: { ok: 'test' } },
+                '1': { id: '1', name: 'test2' },
+                '2': { id: '2', name: 'test' },
             },
         }),
     );
@@ -398,27 +398,27 @@ test('handleGameSelectRequest', () => {
 });
 
 test('handleGameSelectRequest with updateCardSets set to false', () => {
-    const action = { id: 123, updateCardSets: false };
+    const action = { type: 'GAME_SELECT_REQUEST', id: '123', updateCardSets: false };
     const gen = handleGameSelectRequest(action);
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
-    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: 123 }));
+    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: '123' }));
     expect(gen.next().done).toBeTruthy();
 });
 
 test('handleCardSetCreateRequest', () => {
-    const action = { cardsetname: 'test', game_id: 666 };
+    const action = { cardsetname: 'test', game_id: '666' };
     const gen = cloneableGenerator(handleCardSetCreateRequest)(action);
 
     expect(gen.next().value).toEqual(
-        call(authorizedPostRequest, '/cardset', { name: 'test', game_id: 666, data: '{}' }),
+        call(authorizedPostRequest, '/cardset', { name: 'test', game_id: '666', data: '{}' }),
     );
 
     let clone = gen.clone();
 
     // Successful request
     expect(gen.next().value).toEqual(put({ type: 'CARDSET_CREATE_SUCCESS' }));
-    expect(gen.next().value).toEqual(put(gameSelectRequest(666, true)));
+    expect(gen.next().value).toEqual(put(gameSelectRequest('666', true)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
@@ -429,7 +429,7 @@ test('handleCardSetCreateRequest', () => {
 });
 
 test('handleCardSetSelectRequest', () => {
-    const action = { id: 345 };
+    const action = { id: '345' };
     const gen = cloneableGenerator(handleCardSetSelectRequest)(action);
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/cardset/345'));
@@ -437,10 +437,10 @@ test('handleCardSetSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next({ id: 345, name: 'test', data: '{}', game_id: 666 }).value).toEqual(
-        put({ type: 'CARDSET_SELECT_SUCCESS', id: 345, name: 'test', data: {} }),
+    expect(gen.next({ id: '345', name: 'test', data: '{}', game_id: '666' }).value).toEqual(
+        put({ type: 'CARDSET_SELECT_SUCCESS', id: '345', name: 'test', data: {} }),
     );
-    expect(gen.next().value).toEqual(put(gameSelectRequest(666, false)));
+    expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request

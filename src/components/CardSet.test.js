@@ -15,7 +15,7 @@ describe('<CardSet />', () => {
                 isAuthenticated: false,
             },
             cardsets: {
-                allIds: [1],
+                allIds: ['1'],
                 byId: { '1': { id: 1, name: 'test', data: {} } },
                 active: 1,
             },
@@ -26,13 +26,25 @@ describe('<CardSet />', () => {
     });
 
     it('Generates CardSet', () => {
-        shallow(<CardSet dispatch={jest.fn()} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test' }} />);
+        shallow(
+            <CardSet
+                dispatch={jest.fn()}
+                isAuthenticated={true}
+                cardsAllIds={['1']}
+                cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
+            />,
+        );
     });
 
     it('Generates CardSet', () => {
         const dispatch = jest.fn();
         const wrapper = shallow(
-            <CardSet dispatch={dispatch} isAuthenticated={true} activeCardSet={{ id: 1, name: 'test' }} />,
+            <CardSet
+                dispatch={dispatch}
+                isAuthenticated={true}
+                cardsAllIds={['1']}
+                cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
+            />,
         );
         wrapper.find('button').simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
@@ -44,15 +56,8 @@ describe('<CardSet />', () => {
             <CardSet
                 dispatch={dispatch}
                 isAuthenticated={true}
-                activeCardSet={{
-                    id: 1,
-                    name: 'test',
-                    data: {
-                        template: { texts: {}, images: {} },
-                        cardsAllIds: ['id'],
-                        cardsById: { id: { id: 'id', count: 1, texts: {}, images: {} } },
-                    },
-                }}
+                cardsAllIds={['1']}
+                cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
             />,
         );
         wrapper.find('button').simulate('click');

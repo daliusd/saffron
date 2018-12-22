@@ -144,8 +144,8 @@ test('GAME_LIST', () => {
     ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
 
     type = 'GAME_LIST_SUCCESS';
-    let byId: GamesCollection = { '1': { id: 1, name: 'test' } };
-    let allIds: IdsArray = [1];
+    let byId: GamesCollection = { '1': { id: '1', name: 'test' } };
+    let allIds: IdsArray = ['1'];
     expect(
         games(
             {
@@ -212,7 +212,7 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, id: 1, updateCardSets: false },
+            { type, id: '1', updateCardSets: false },
         ),
     ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
 
@@ -225,13 +225,13 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, id: 123 },
+            { type, id: '123' },
         ),
     ).toEqual({
         activity: 0,
         byId: {},
         allIds: [],
-        active: 123,
+        active: '123',
     });
 
     type = 'GAME_SELECT_FAILURE';
@@ -264,14 +264,28 @@ test('CARDSET_CREATE', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
-            { type, cardsetname: 'test', game_id: 1 },
+            { type, cardsetname: 'test', game_id: '1' },
         ),
     ).toEqual({
         byId: {},
         allIds: [],
         activity: ACTIVITY_CREATING,
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     });
 
     type = 'CARDSET_CREATE_SUCCESS';
@@ -282,10 +296,29 @@ test('CARDSET_CREATE', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type },
         ),
-    ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
+    ).toEqual({
+        activity: 0,
+        byId: {},
+        allIds: [],
+        active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
+    });
 
     type = 'CARDSET_CREATE_FAILURE';
     expect(
@@ -295,6 +328,13 @@ test('CARDSET_CREATE', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type, message },
         ),
@@ -303,6 +343,13 @@ test('CARDSET_CREATE', () => {
         byId: {},
         allIds: [],
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     });
 });
 
@@ -317,14 +364,33 @@ test('CARDSET_LIST', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type },
         ),
-    ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
+    ).toEqual({
+        activity: ACTIVITY_LISTING,
+        byId: {},
+        allIds: [],
+        active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
+    });
 
     type = 'CARDSET_LIST_SUCCESS';
-    let byId: CardSetsCollection = { '1': { id: 1, name: 'test' } };
-    let allIds: IdsArray = [1];
+    let byId: CardSetsCollection = { '1': { id: '1', name: 'test' } };
+    let allIds: IdsArray = ['1'];
 
     expect(
         cardsets(
@@ -333,6 +399,13 @@ test('CARDSET_LIST', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type, byId, allIds },
         ),
@@ -341,6 +414,13 @@ test('CARDSET_LIST', () => {
         byId,
         allIds,
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     });
 
     type = 'CARDSET_LIST_FAILURE';
@@ -351,6 +431,13 @@ test('CARDSET_LIST', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type, message },
         ),
@@ -359,6 +446,13 @@ test('CARDSET_LIST', () => {
         byId: {},
         allIds: [],
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     });
 
     type = 'CARDSET_LIST_RESET';
@@ -369,6 +463,13 @@ test('CARDSET_LIST', () => {
                 byId,
                 allIds,
                 active: null,
+                template: {
+                    texts: {},
+                    images: {},
+                },
+                cardsById: {},
+                cardsAllIds: [],
+                texts: {},
             },
             { type },
         ),
@@ -377,6 +478,13 @@ test('CARDSET_LIST', () => {
         byId: {},
         allIds: [],
         active: null,
+        template: {
+            texts: {},
+            images: {},
+        },
+        cardsById: {},
+        cardsAllIds: [],
+        texts: {},
     });
 });
 
@@ -399,7 +507,7 @@ test('CARDSET_SELECT', () => {
                 cardsAllIds: [],
                 texts: {},
             },
-            { type, id: 1 },
+            { type, id: '1' },
         ),
     ).toEqual({
         activity: ACTIVITY_SELECTING,
@@ -421,8 +529,8 @@ test('CARDSET_SELECT', () => {
         cardsets(
             {
                 activity: ACTIVITY_SELECTING,
-                byId: { '1': { id: 1, name: 'test' } },
-                allIds: [1],
+                byId: { '1': { id: '1', name: 'test' } },
+                allIds: ['1'],
                 active: null,
                 template: {
                     texts: {},
@@ -434,10 +542,10 @@ test('CARDSET_SELECT', () => {
             },
             {
                 type,
-                id: 1,
+                id: '1',
                 name: 'test2',
                 data: {
-                    cardsAllIds: [1],
+                    cardsAllIds: ['1'],
                     cardsById: { '1': { id: '1', count: 1 } },
                     template: {
                         texts: {},
@@ -445,15 +553,15 @@ test('CARDSET_SELECT', () => {
                     },
                     texts: {},
                 },
-                game_id: 2,
+                game_id: '2',
             },
         ),
     ).toEqual({
         activity: 0,
-        byId: { '1': { id: 1, name: 'test2' } },
-        allIds: [1],
-        active: 1,
-        cardsAllIds: [1],
+        byId: { '1': { id: '1', name: 'test2' } },
+        allIds: ['1'],
+        active: '1',
+        cardsAllIds: ['1'],
         cardsById: {
             '1': {
                 count: 1,

@@ -23,8 +23,8 @@ export class Games extends Component<Props> {
     render() {
         const { isAuthenticated, allIds, byId } = this.props;
 
-        const gameItems = allIds.map(game_id => byId[game_id.toString()]).map(game => (
-            <li key={game.id.toString()}>
+        const gameItems = allIds.map(game_id => byId[game_id]).map(game => (
+            <li key={game.id}>
                 <Link to={`/game/${game.id}`}>{game.name}</Link>
             </li>
         ));

@@ -8,7 +8,7 @@ import { type CardSetsCollection, type Dispatch, type IdsArray, cardSetCreateReq
 type Props = {
     dispatch: Dispatch,
     isAuthenticated: boolean,
-    activeGame: number,
+    activeGame: string,
     allIds: IdsArray,
     byId: CardSetsCollection,
 };
@@ -25,8 +25,8 @@ export class CardSets extends Component<Props> {
     render() {
         const { isAuthenticated, activeGame, allIds, byId } = this.props;
 
-        const cardsetItems = allIds.map(game_id => byId[game_id.toString()]).map(cardset => (
-            <li key={cardset.id.toString()}>
+        const cardsetItems = allIds.map(game_id => byId[game_id]).map(cardset => (
+            <li key={cardset.id}>
                 <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>
             </li>
         ));

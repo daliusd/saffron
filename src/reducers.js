@@ -38,14 +38,14 @@ export type GameState = {
     +byId: GamesCollection,
     +allIds: IdsArray,
     +activity: number,
-    +active: ?number,
+    +active: ?string,
 };
 
 export type CardSetState = {
     +byId: CardSetsCollection,
     +allIds: IdsArray,
     +activity: number,
-    +active: ?number,
+    +active: ?string,
     +cardsAllIds: IdsArray,
     +cardsById: { [string]: CardType },
     +template: CardTemplateType,

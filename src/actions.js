@@ -2,7 +2,7 @@
 
 import shortid from 'shortid';
 
-export type IdsArray = Array<number>;
+export type IdsArray = Array<string>;
 
 export type MessageType = {
     id: string,
@@ -11,7 +11,7 @@ export type MessageType = {
 };
 
 export type GameType = {
-    id: number,
+    id: string,
     name: string,
 };
 
@@ -27,7 +27,7 @@ export type TextInfo = { value: string, cursor: number };
 export type CardType = { id: string, count: number };
 
 export type CardSetType = {
-    id: number,
+    id: string,
     name: string,
 };
 
@@ -65,15 +65,15 @@ export type GameListAction =
     | { type: 'GAME_LIST_FAILURE' }
     | { type: 'GAME_LIST_RESET' };
 
-export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: number, updateCardSets: boolean };
+export type GameSelectRequest = { type: 'GAME_SELECT_REQUEST', id: string, updateCardSets: boolean };
 export type GameSelectAction =
     | GameSelectRequest
-    | { type: 'GAME_SELECT_SUCCESS', id: number }
+    | { type: 'GAME_SELECT_SUCCESS', id: string }
     | { type: 'GAME_SELECT_FAILURE' };
 
 export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 
-export type CardSetCreateRequest = { type: 'CARDSET_CREATE_REQUEST', cardsetname: string, game_id: number };
+export type CardSetCreateRequest = { type: 'CARDSET_CREATE_REQUEST', cardsetname: string, game_id: string };
 export type CardSetCreateAction =
     | CardSetCreateRequest
     | { type: 'CARDSET_CREATE_SUCCESS' }
@@ -86,10 +86,10 @@ export type CardSetListAction =
     | { type: 'CARDSET_LIST_FAILURE' }
     | { type: 'CARDSET_LIST_RESET' };
 
-export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: number };
+export type CardSetSelectRequest = { type: 'CARDSET_SELECT_REQUEST', id: string };
 export type CardSetSelectSuccess = {
     type: 'CARDSET_SELECT_SUCCESS',
-    id: number,
+    id: string,
     name: string,
     data: {
         cardsAllIds: IdsArray,
@@ -99,7 +99,7 @@ export type CardSetSelectSuccess = {
             [string]: TextInfo,
         },
     },
-    game_id: number,
+    game_id: string,
 };
 export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };
 export type CardSetCloneCard = { type: 'CARDSET_CLONE_CARD', card: CardType };
@@ -200,7 +200,7 @@ export const gameListRequest = (): GameAction => {
     };
 };
 
-export const gameSelectRequest = (id: number, updateCardSets: boolean): GameAction => {
+export const gameSelectRequest = (id: string, updateCardSets: boolean): GameAction => {
     return {
         type: 'GAME_SELECT_REQUEST',
         id,
@@ -208,7 +208,7 @@ export const gameSelectRequest = (id: number, updateCardSets: boolean): GameActi
     };
 };
 
-export const cardSetCreateRequest = (cardsetname: string, game_id: number): CardSetAction => {
+export const cardSetCreateRequest = (cardsetname: string, game_id: string): CardSetAction => {
     return {
         type: 'CARDSET_CREATE_REQUEST',
         cardsetname: cardsetname,
@@ -216,7 +216,7 @@ export const cardSetCreateRequest = (cardsetname: string, game_id: number): Card
     };
 };
 
-export const cardSetSelectRequest = (id: number): CardSetSelectRequest => {
+export const cardSetSelectRequest = (id: string): CardSetSelectRequest => {
     return {
         type: 'CARDSET_SELECT_REQUEST',
         id,

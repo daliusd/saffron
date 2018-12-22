@@ -49,7 +49,7 @@ describe('<Navbar />', () => {
                 isAuthenticated={true}
                 dispatch={jest.fn()}
                 messages={[]}
-                activeGame={{ id: 1, name: 'test' }}
+                activeGame={{ id: '1', name: 'test' }}
                 activeCardSet={null}
             />,
         );
@@ -61,8 +61,8 @@ describe('<Navbar />', () => {
                 isAuthenticated={true}
                 dispatch={jest.fn()}
                 messages={[]}
-                activeGame={{ id: 1, name: 'test' }}
-                activeCardSet={{ id: 1, name: 'test' }}
+                activeGame={{ id: '1', name: 'test' }}
+                activeCardSet={{ id: '1', name: 'test' }}
             />,
         );
     });
