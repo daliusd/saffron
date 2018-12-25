@@ -48,6 +48,7 @@ export type CardSetState = {
     +active: ?string,
     +cardsAllIds: IdsArray,
     +cardsById: { [string]: CardType },
+    +activeCard: ?string,
     +activeTemplate: ?string,
     +template: CardTemplateType,
     +texts: { [string]: { [string]: TextInfo } },
@@ -199,6 +200,7 @@ export function cardsets(
         },
         cardsById: {},
         cardsAllIds: [],
+        activeCard: null,
         activeTemplate: null,
         texts: {},
     },
@@ -417,6 +419,7 @@ export function cardsets(
         case 'CARDSET_SET_ACTIVE_TEMPLATE': {
             return {
                 ...state,
+                activeCard: action.cardId,
                 activeTemplate: action.templateId,
             };
         }

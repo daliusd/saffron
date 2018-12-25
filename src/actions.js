@@ -145,7 +145,8 @@ export type CardSetChangeText = {
 };
 export type CardSetSetActiveTemplate = {
     type: 'CARDSET_SET_ACTIVE_TEMPLATE',
-    templateId: string,
+    cardId: ?string,
+    templateId: ?string,
 };
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
@@ -332,9 +333,10 @@ export const cardSetChangeText = (cardId: string, templateId: string, textInfo: 
     };
 };
 
-export const cardSetActiveTemplate = (templateId: string): CardSetSetActiveTemplate => {
+export const cardSetActiveTemplate = (cardId: ?string, templateId: ?string): CardSetSetActiveTemplate => {
     return {
         type: 'CARDSET_SET_ACTIVE_TEMPLATE',
+        cardId,
         templateId,
     };
 };

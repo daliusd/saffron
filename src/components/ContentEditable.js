@@ -11,6 +11,7 @@ type Props = {
     textValue: string,
     textCursor: number,
     align: string,
+    isActive: boolean,
 };
 
 class ContentEditable extends Component<Props> {
@@ -19,6 +20,7 @@ class ContentEditable extends Component<Props> {
     currentAlign: string;
     currentCursor: number;
     timeout: ?TimeoutID;
+    wasMoved: boolean;
 
     constructor(props: Props) {
         super();
@@ -27,17 +29,65 @@ class ContentEditable extends Component<Props> {
         this.currentAlign = '';
         this.currentCursor = 0;
         this.timeout = null;
+        this.wasMoved = false;
+    }
+
+    componentDidMount() {
+        const { isActive } = this.props;
+
+        this.editDiv.current.addEventListener('mousedown', this.handleMouseDown);
+        this.editDiv.current.addEventListener('mousemove', this.handleMouseMove);
+        this.editDiv.current.addEventListener('mouseup', this.handleMouseUp);
+
+        if (isActive) {
+            this.editDiv.current.focus();
+        }
+    }
+
+    componentDidUpdate() {
+        const { isActive } = this.props;
+
+        if (isActive) {
+            this.editDiv.current.focus();
+        }
     }
 
     shouldComponentUpdate(nextProps) {
-        return nextProps.textValue !== this.currentText || nextProps.align !== this.currentAlign;
+        return (
+            nextProps.textValue !== this.currentText ||
+            nextProps.align !== this.currentAlign ||
+            this.props.isActive !== nextProps.isActive
+        );
     }
 
-    onClick = () => {
-        const { dispatch, templateId } = this.props;
+    handleMouseDown = (event: MouseEvent) => {
+        const { isActive } = this.props;
+        if (isActive) {
+            event.stopPropagation();
+        } else {
+            this.wasMoved = false;
+            event.preventDefault();
+        }
+    };
 
-        this.editDiv.current.focus();
-        dispatch(cardSetActiveTemplate(templateId));
+    handleMouseMove = (event: MouseEvent) => {
+        const { isActive } = this.props;
+        if (isActive) {
+            event.stopPropagation();
+        } else {
+            this.wasMoved = true;
+            event.preventDefault();
+        }
+    };
+
+    handleMouseUp = (event: MouseEvent) => {
+        const { dispatch, cardId, templateId, isActive } = this.props;
+        if (isActive) {
+            event.stopPropagation();
+        } else if (!this.wasMoved) {
+            event.preventDefault();
+            dispatch(cardSetActiveTemplate(cardId, templateId));
+        }
     };
 
     onFocus = () => {
@@ -65,7 +115,7 @@ class ContentEditable extends Component<Props> {
         return range.startOffset;
     };
 
-    updateContent = () => {
+    updateContent = timeout_in_miliseconds => {
         const value = this.editDiv.current.innerText;
 
         if (value !== this.currentText) {
@@ -83,8 +133,18 @@ class ContentEditable extends Component<Props> {
                 const textInfo: TextInfo = { value, cursor };
 
                 dispatch(cardSetChangeText(cardId, templateId, textInfo));
-            }, 500);
+            }, timeout_in_miliseconds);
         }
+    };
+
+    handleBlur = () => {
+        const { dispatch } = this.props;
+        this.updateContent(0);
+        dispatch(cardSetActiveTemplate(null, null));
+    };
+
+    handleInput = () => {
+        this.updateContent(500);
     };
 
     render() {
@@ -92,10 +152,9 @@ class ContentEditable extends Component<Props> {
             <div
                 ref={this.editDiv}
                 contentEditable="true"
-                onClick={this.onClick}
                 onFocus={this.onFocus}
-                onBlur={this.updateContent}
-                onInput={this.updateContent}
+                onBlur={this.handleBlur}
+                onInput={this.handleInput}
                 style={{
                     width: '100%',
                     height: '100%',
@@ -116,6 +175,7 @@ const mapStateToProps = (state, props) => {
     return {
         textValue: textInfo.value,
         textCursor: textInfo.cursor,
+        isActive: props.cardId === state.cardsets.activeCard && props.templateId === state.cardsets.activeTemplate,
     };
 };
 
