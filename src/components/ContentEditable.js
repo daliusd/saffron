@@ -2,7 +2,7 @@
 import { connect } from 'react-redux';
 import React, { type ElementRef, Component } from 'react';
 
-import { type Dispatch, type TextInfo, cardSetActiveTemplate, cardSetChangeText } from '../actions';
+import { type Dispatch, type TextInfo, cardSetActiveCardAndTemplate, cardSetChangeText } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
@@ -86,7 +86,7 @@ class ContentEditable extends Component<Props> {
             event.stopPropagation();
         } else if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveTemplate(cardId, templateId));
+            dispatch(cardSetActiveCardAndTemplate(cardId, templateId));
         }
     };
 
@@ -138,9 +138,7 @@ class ContentEditable extends Component<Props> {
     };
 
     handleBlur = () => {
-        const { dispatch } = this.props;
         this.updateContent(0);
-        dispatch(cardSetActiveTemplate(null, null));
     };
 
     handleInput = () => {

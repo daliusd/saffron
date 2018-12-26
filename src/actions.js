@@ -143,8 +143,8 @@ export type CardSetChangeText = {
     templateId: string,
     textInfo: TextInfo,
 };
-export type CardSetSetActiveTemplate = {
-    type: 'CARDSET_SET_ACTIVE_TEMPLATE',
+export type CardSetSetActiveCardAndTemplate = {
+    type: 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE',
     cardId: ?string,
     templateId: ?string,
 };
@@ -166,7 +166,7 @@ export type CardSetSelectAction =
     | CardSetChangeTextTemplateAngle
     | CardSetChangeActiveTextTemplateAlign
     | CardSetChangeText
-    | CardSetSetActiveTemplate;
+    | CardSetSetActiveCardAndTemplate;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -333,9 +333,9 @@ export const cardSetChangeText = (cardId: string, templateId: string, textInfo: 
     };
 };
 
-export const cardSetActiveTemplate = (cardId: ?string, templateId: ?string): CardSetSetActiveTemplate => {
+export const cardSetActiveCardAndTemplate = (cardId: ?string, templateId: ?string): CardSetSetActiveCardAndTemplate => {
     return {
-        type: 'CARDSET_SET_ACTIVE_TEMPLATE',
+        type: 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE',
         cardId,
         templateId,
     };

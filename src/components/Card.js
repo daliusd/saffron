@@ -8,6 +8,7 @@ import {
     type CardType,
     type Dispatch,
     type TextTemplatesCollection,
+    cardSetActiveCardAndTemplate,
     cardSetAddTextTemplate,
     cardSetChangeActiveTextTemplateAlign,
     cardSetCloneCard,
@@ -72,6 +73,11 @@ class Card extends Component<Props, State> {
         dispatch(cardSetChangeActiveTextTemplateAlign('right'));
     };
 
+    handleFieldDeselect = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetActiveCardAndTemplate(null, null));
+    };
+
     render() {
         const { template, card } = this.props;
         const { width } = this.state.dimensions;
@@ -96,6 +102,8 @@ class Card extends Component<Props, State> {
                                 position: 'relative',
                                 overflow: 'hidden',
                             }}
+                            onMouseDown={this.handleFieldDeselect}
+                            onTouchstart={this.handleFieldDeselect}
                         >
                             {textTemplatesIds &&
                                 textTemplatesIds.map(t => (

@@ -71,6 +71,7 @@ export default class FieldController extends React.Component<Props> {
 
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
+        event.stopPropagation();
     };
 
     handleTouchStart = (event: TouchEvent) => {
@@ -78,6 +79,7 @@ export default class FieldController extends React.Component<Props> {
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+        event.stopPropagation();
     };
 
     handleDragStart = (co: { clientX: number, clientY: number }) => {

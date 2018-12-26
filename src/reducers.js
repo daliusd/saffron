@@ -416,7 +416,7 @@ export function cardsets(
                 },
             };
         }
-        case 'CARDSET_SET_ACTIVE_TEMPLATE': {
+        case 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE': {
             return {
                 ...state,
                 activeCard: action.cardId,
