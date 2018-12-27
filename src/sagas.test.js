@@ -16,7 +16,7 @@ import {
     CARDSET_SELECT_SUCCESS,
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_SUCCESS,
-    type CardSetSelectAction,
+    type CardSetModifyAction,
     type CardSetType,
     type CardType,
     GAME_CREATE_FAILURE,
@@ -489,7 +489,7 @@ test('handleCardSetSelectRequest', () => {
 test('handleCardSetChange', () => {
     const card: CardType = { id: shortid.generate(), count: 1 };
 
-    const action: CardSetSelectAction = {
+    const action: CardSetModifyAction = {
         type: CARDSET_REMOVE_CARD,
         card,
     };

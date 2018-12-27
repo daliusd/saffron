@@ -202,14 +202,14 @@ export type CardSetSetActiveCardAndPlaceholder = {
     cardId: ?string,
     placeholderId: ?string,
 };
+
+export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
+
 export type CardSetUpdateDataSuccess = { type: typeof CARDSET_UPDATE_DATA_SUCCESS };
 export type CardSetUpdateDataFailure = { type: typeof CARDSET_UPDATE_DATA_FAILURE };
-export type CardSetSelectAction =
-    | CardSetSelectRequest
-    | CardSetSelectSuccess
-    | { type: typeof CARDSET_SELECT_FAILURE }
-    | CardSetUpdateDataSuccess
-    | CardSetUpdateDataFailure
+export type CardSetUpdateDataAction = CardSetUpdateDataSuccess | CardSetUpdateDataFailure;
+
+export type CardSetModifyAction =
     | CardSetCreateCard
     | CardSetCloneCard
     | CardSetRemoveCard
@@ -222,7 +222,12 @@ export type CardSetSelectAction =
     | CardSetChangeText
     | CardSetSetActiveCardAndPlaceholder;
 
-export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
+export type CardSetAction =
+    | CardSetCreateAction
+    | CardSetListAction
+    | CardSetSelectAction
+    | CardSetUpdateDataAction
+    | CardSetModifyAction;
 
 export type Action = InitAction | LoginAction | SignUpAction | GameAction | CardSetAction | MessageAction;
 
