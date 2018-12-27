@@ -1,5 +1,7 @@
 // @flow
+/** @jsx jsx */
 import * as React from 'react';
+import { jsx } from '@emotion/core';
 import resize from './resize.svg';
 import rotate from './rotate.svg';
 
@@ -52,6 +54,7 @@ export default class FieldController extends React.Component<Props> {
     }
 
     componentDidUpdate() {
+        this.cDiv.current.style = {};
         this.currentAngle = this.props.angle;
     }
 
@@ -178,8 +181,9 @@ export default class FieldController extends React.Component<Props> {
 
     handleResizeComplete = (event: Event) => {
         if (this.moving) {
-            this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
-            this.props.onResize(this.cDiv.current.clientWidth, this.cDiv.current.clientHeight);
+            const { offsetLeft, offsetTop, clientWidth, clientHeight } = this.cDiv.current;
+            this.props.onDrag(offsetLeft, offsetTop);
+            this.props.onResize(clientWidth, clientHeight);
             this.moving = false;
         }
         event.preventDefault();
@@ -292,15 +296,25 @@ export default class FieldController extends React.Component<Props> {
         return (
             <div
                 ref={this.cDiv}
-                style={{
+                css={{
                     position: 'absolute',
                     left: x,
                     top: y,
+                    margin: '1px',
                     width: width,
                     height: height,
-                    border: '1px solid black',
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
+                    '&:hover': {
+                        border: '1px dotted gray',
+                        margin: '0px',
+                    },
+                    img: {
+                        visibility: 'hidden',
+                    },
+                    '&:hover img': {
+                        visibility: 'visible',
+                    },
                 }}
             >
                 {children}
@@ -308,7 +322,7 @@ export default class FieldController extends React.Component<Props> {
                     src={resize}
                     alt="resize"
                     ref={this.resizeDiv}
-                    style={{
+                    css={{
                         position: 'absolute',
                         right: 0,
                         bottom: 0,
@@ -319,7 +333,7 @@ export default class FieldController extends React.Component<Props> {
                     src={rotate}
                     alt="rotate"
                     ref={this.rotateDiv}
-                    style={{
+                    css={{
                         position: 'absolute',
                         left: 0,
                         bottom: 0,

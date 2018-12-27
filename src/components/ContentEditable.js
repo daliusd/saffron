@@ -1,4 +1,6 @@
+/** @jsx jsx */
 // @flow
+import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import React, { type ElementRef, Component } from 'react';
 
@@ -153,7 +155,7 @@ class ContentEditable extends Component<Props> {
                 onFocus={this.onFocus}
                 onBlur={this.handleBlur}
                 onInput={this.handleInput}
-                style={{
+                css={{
                     width: '100%',
                     height: '100%',
                     overflow: 'hidden',
