@@ -4,54 +4,54 @@ import React, { PureComponent } from 'react';
 
 import {
     type Dispatch,
-    type TextTemplateType,
-    cardSetChangeTextTemplateAngle,
-    cardSetChangeTextTemplatePosition,
-    cardSetChangeTextTemplateSize,
+    type TextPlaceholderType,
+    cardSetChangeTextPlaceholderAngle,
+    cardSetChangeTextPlaceholderPosition,
+    cardSetChangeTextPlaceholderSize,
 } from '../actions';
 import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
 
 type Props = {
     cardId: string,
-    textTemplate: TextTemplateType,
+    textPlaceholder: TextPlaceholderType,
     dispatch: Dispatch,
 };
 
 class TextField extends PureComponent<Props> {
     handleDrag = (x: number, y: number) => {
-        const { dispatch, textTemplate } = this.props;
-        dispatch(cardSetChangeTextTemplatePosition(textTemplate, x, y));
+        const { dispatch, textPlaceholder } = this.props;
+        dispatch(cardSetChangeTextPlaceholderPosition(textPlaceholder, x, y));
     };
 
     handleResize = (width: number, height: number) => {
-        const { dispatch, textTemplate } = this.props;
-        dispatch(cardSetChangeTextTemplateSize(textTemplate, width, height));
+        const { dispatch, textPlaceholder } = this.props;
+        dispatch(cardSetChangeTextPlaceholderSize(textPlaceholder, width, height));
     };
 
     handleRotate = (angle: number) => {
-        const { dispatch, textTemplate } = this.props;
-        dispatch(cardSetChangeTextTemplateAngle(textTemplate, angle));
+        const { dispatch, textPlaceholder } = this.props;
+        dispatch(cardSetChangeTextPlaceholderAngle(textPlaceholder, angle));
     };
 
     render() {
-        const { textTemplate } = this.props;
+        const { textPlaceholder } = this.props;
 
         return (
             <FieldController
-                x={textTemplate.x}
-                y={textTemplate.y}
-                width={textTemplate.width}
-                height={textTemplate.height}
-                angle={textTemplate.angle}
+                x={textPlaceholder.x}
+                y={textPlaceholder.y}
+                width={textPlaceholder.width}
+                height={textPlaceholder.height}
+                angle={textPlaceholder.angle}
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
             >
                 <ContentEditable
                     cardId={this.props.cardId}
-                    templateId={textTemplate.id}
-                    align={textTemplate.align}
+                    placeholderId={textPlaceholder.id}
+                    align={textPlaceholder.align}
                 />
             </FieldController>
         );

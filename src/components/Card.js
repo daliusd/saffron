@@ -4,13 +4,12 @@ import Measure from 'react-measure';
 import React, { Component } from 'react';
 
 import {
-    type CardTemplateType,
+    type TemplateType,
     type CardType,
     type Dispatch,
-    type TextTemplatesCollection,
-    cardSetActiveCardAndTemplate,
-    cardSetAddTextTemplate,
-    cardSetChangeActiveTextTemplateAlign,
+    cardSetActiveCardAndPlaceholder,
+    cardSetAddTextPlaceholder,
+    cardSetChangeActiveTextPlaceholderAlign,
     cardSetCloneCard,
     cardSetRemoveCard,
     cardSetUpdateCardCount,
@@ -20,7 +19,7 @@ import TextField from './TextField';
 type Props = {
     card: CardType,
     dispatch: Dispatch,
-    template: CardTemplateType,
+    template: TemplateType,
 };
 
 type State = {
@@ -55,34 +54,33 @@ class Card extends Component<Props, State> {
 
     handleAddTextClick = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetAddTextTemplate());
+        dispatch(cardSetAddTextPlaceholder());
     };
 
     handleSetTextAlignLeft = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextTemplateAlign('left'));
+        dispatch(cardSetChangeActiveTextPlaceholderAlign('left'));
     };
 
     handleSetTextAlignCenter = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextTemplateAlign('center'));
+        dispatch(cardSetChangeActiveTextPlaceholderAlign('center'));
     };
 
     handleSetTextAlignRight = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextTemplateAlign('right'));
+        dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
     };
 
     handleFieldDeselect = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetActiveCardAndTemplate(null, null));
+        dispatch(cardSetActiveCardAndPlaceholder(null, null));
     };
 
     render() {
         const { template, card } = this.props;
         const { width } = this.state.dimensions;
-        const textTemplatesIds: Array<string> = Object.keys(template.texts);
-        const textTemplates: TextTemplatesCollection = template.texts;
+        const placeholderIds: Array<string> = template ? Object.keys(template) : [];
 
         return (
             <Measure
@@ -105,9 +103,9 @@ class Card extends Component<Props, State> {
                             onMouseDown={this.handleFieldDeselect}
                             onTouchstart={this.handleFieldDeselect}
                         >
-                            {textTemplatesIds &&
-                                textTemplatesIds.map(t => (
-                                    <TextField key={t} cardId={card.id} textTemplate={textTemplates[t]} />
+                            {placeholderIds &&
+                                placeholderIds.map(p => (
+                                    <TextField key={p} cardId={card.id} textPlaceholder={template[p]} />
                                 ))}
                         </div>
 

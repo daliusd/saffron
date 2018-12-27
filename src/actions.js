@@ -19,8 +19,9 @@ export type GamesCollection = {
     [string]: GameType,
 };
 
-export type TextTemplateType = {
+export type TextPlaceholderType = {
     id: string,
+    type: 'text',
     x: number,
     y: number,
     width: number,
@@ -28,8 +29,7 @@ export type TextTemplateType = {
     angle: number,
     align: string,
 };
-export type TextTemplatesCollection = { [string]: TextTemplateType };
-export type CardTemplateType = { texts: TextTemplatesCollection, images: any };
+export type TemplateType = { [string]: TextPlaceholderType };
 
 export type TextInfo = { value: string, cursor: number };
 export type CardType = { id: string, count: number };
@@ -102,7 +102,7 @@ export type CardSetSelectSuccess = {
     data: {
         cardsAllIds: IdsArray,
         cardsById: { [string]: CardType },
-        template: CardTemplateType,
+        template: TemplateType,
         texts: {
             [string]: {
                 [string]: TextInfo,
@@ -115,38 +115,38 @@ export type CardSetCreateCard = { type: 'CARDSET_CREATE_CARD', card: CardType };
 export type CardSetCloneCard = { type: 'CARDSET_CLONE_CARD', card: CardType };
 export type CardSetRemoveCard = { type: 'CARDSET_REMOVE_CARD', card: CardType };
 export type CardSetUpdateCardCount = { type: 'CARDSET_UPDATE_CARD_COUNT', card: CardType, count: number };
-export type CardSetAddTextTemplate = { type: 'CARDSET_ADD_TEXT_TEMPLATE' };
-export type CardSetChangeTextTemplatePosition = {
-    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION',
-    textTemplate: TextTemplateType,
+export type CardSetAddTextPlaceholder = { type: 'CARDSET_ADD_TEXT_PLACEHOLDER' };
+export type CardSetChangeTextPlaceholderPosition = {
+    type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION',
+    textPlaceholder: TextPlaceholderType,
     x: number,
     y: number,
 };
-export type CardSetChangeTextTemplateSize = {
-    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE',
-    textTemplate: TextTemplateType,
+export type CardSetChangeTextPlaceholderSize = {
+    type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE',
+    textPlaceholder: TextPlaceholderType,
     width: number,
     height: number,
 };
-export type CardSetChangeTextTemplateAngle = {
-    type: 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE',
-    textTemplate: TextTemplateType,
+export type CardSetChangeTextPlaceholderAngle = {
+    type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE',
+    textPlaceholder: TextPlaceholderType,
     angle: number,
 };
-export type CardSetChangeActiveTextTemplateAlign = {
-    type: 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN',
+export type CardSetChangeActiveTextPlaceholderAlign = {
+    type: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN',
     align: string,
 };
 export type CardSetChangeText = {
     type: 'CARDSET_CHANGE_TEXT',
     cardId: string,
-    templateId: string,
+    placeholderId: string,
     textInfo: TextInfo,
 };
-export type CardSetSetActiveCardAndTemplate = {
-    type: 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE',
+export type CardSetSetActiveCardAndPlaceholder = {
+    type: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER',
     cardId: ?string,
-    templateId: ?string,
+    placeholderId: ?string,
 };
 export type CardSetUpdateDataSuccess = { type: 'CARDSET_UPDATE_DATA_SUCCESS' };
 export type CardSetUpdateDataFailure = { type: 'CARDSET_UPDATE_DATA_FAILURE' };
@@ -160,13 +160,13 @@ export type CardSetSelectAction =
     | CardSetCloneCard
     | CardSetRemoveCard
     | CardSetUpdateCardCount
-    | CardSetAddTextTemplate
-    | CardSetChangeTextTemplatePosition
-    | CardSetChangeTextTemplateSize
-    | CardSetChangeTextTemplateAngle
-    | CardSetChangeActiveTextTemplateAlign
+    | CardSetAddTextPlaceholder
+    | CardSetChangeTextPlaceholderPosition
+    | CardSetChangeTextPlaceholderSize
+    | CardSetChangeTextPlaceholderAngle
+    | CardSetChangeActiveTextPlaceholderAlign
     | CardSetChangeText
-    | CardSetSetActiveCardAndTemplate;
+    | CardSetSetActiveCardAndPlaceholder;
 
 export type CardSetAction = CardSetCreateAction | CardSetListAction | CardSetSelectAction;
 
@@ -274,69 +274,72 @@ export const cardSetUpdateCardCount = (card: CardType, count: number): CardSetUp
     };
 };
 
-export const cardSetAddTextTemplate = (): CardSetAddTextTemplate => {
+export const cardSetAddTextPlaceholder = (): CardSetAddTextPlaceholder => {
     return {
-        type: 'CARDSET_ADD_TEXT_TEMPLATE',
+        type: 'CARDSET_ADD_TEXT_PLACEHOLDER',
     };
 };
 
-export const cardSetChangeTextTemplatePosition = (
-    textTemplate: TextTemplateType,
+export const cardSetChangeTextPlaceholderPosition = (
+    textPlaceholder: TextPlaceholderType,
     x: number,
     y: number,
-): CardSetChangeTextTemplatePosition => {
+): CardSetChangeTextPlaceholderPosition => {
     return {
-        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION',
-        textTemplate,
+        type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION',
+        textPlaceholder,
         x,
         y,
     };
 };
 
-export const cardSetChangeTextTemplateSize = (
-    textTemplate: TextTemplateType,
+export const cardSetChangeTextPlaceholderSize = (
+    textPlaceholder: TextPlaceholderType,
     width: number,
     height: number,
-): CardSetChangeTextTemplateSize => {
+): CardSetChangeTextPlaceholderSize => {
     return {
-        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE',
-        textTemplate,
+        type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE',
+        textPlaceholder,
         width,
         height,
     };
 };
 
-export const cardSetChangeTextTemplateAngle = (
-    textTemplate: TextTemplateType,
+export const cardSetChangeTextPlaceholderAngle = (
+    textPlaceholder: TextPlaceholderType,
     angle: number,
-): CardSetChangeTextTemplateAngle => {
+): CardSetChangeTextPlaceholderAngle => {
     return {
-        type: 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE',
-        textTemplate,
+        type: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE',
+        textPlaceholder,
         angle,
     };
 };
 
-export const cardSetChangeActiveTextTemplateAlign = (align: string): CardSetChangeActiveTextTemplateAlign => {
+export const cardSetChangeActiveTextPlaceholderAlign = (align: string): CardSetChangeActiveTextPlaceholderAlign => {
     return {
-        type: 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN',
+        type: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN',
         align,
     };
 };
 
-export const cardSetChangeText = (cardId: string, templateId: string, textInfo: TextInfo): CardSetChangeText => {
+export const cardSetChangeText = (cardId: string, placeholderId: string, textInfo: TextInfo): CardSetChangeText => {
     return {
         type: 'CARDSET_CHANGE_TEXT',
         cardId,
-        templateId,
+        placeholderId,
         textInfo,
     };
 };
 
-export const cardSetActiveCardAndTemplate = (cardId: ?string, templateId: ?string): CardSetSetActiveCardAndTemplate => {
+export const cardSetActiveCardAndPlaceholder = (
+    cardId: ?string,
+    placeholderId: ?string,
+): CardSetSetActiveCardAndPlaceholder => {
     return {
-        type: 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE',
+        type: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER',
         cardId,
-        templateId,
+        placeholderId,
     };
 };

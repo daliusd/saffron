@@ -477,14 +477,11 @@ test('handleCardSetChange', () => {
             allIds: [],
             activity: 0,
             active: '123',
-            template: {
-                texts: {},
-                images: {},
-            },
+            template: {},
             cardsById: {},
             cardsAllIds: [],
             activeCard: null,
-            activeTemplate: null,
+            activePlaceholder: null,
             texts: {},
         },
     };
@@ -492,7 +489,7 @@ test('handleCardSetChange', () => {
     expect(gen.next().value).toEqual(select());
     expect(gen.next(state).value).toEqual(
         call(authorizedPutRequest, '/cardset/123', {
-            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, template: { texts: {}, images: {} }, texts: {} }),
+            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, template: {}, texts: {} }),
             name: 'name',
         }),
     );

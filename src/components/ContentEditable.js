@@ -2,12 +2,12 @@
 import { connect } from 'react-redux';
 import React, { type ElementRef, Component } from 'react';
 
-import { type Dispatch, type TextInfo, cardSetActiveCardAndTemplate, cardSetChangeText } from '../actions';
+import { type Dispatch, type TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
     cardId: string,
-    templateId: string,
+    placeholderId: string,
     textValue: string,
     textCursor: number,
     align: string,
@@ -81,12 +81,12 @@ class ContentEditable extends Component<Props> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
-        const { dispatch, cardId, templateId, isActive } = this.props;
+        const { dispatch, cardId, placeholderId, isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
         } else if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndTemplate(cardId, templateId));
+            dispatch(cardSetActiveCardAndPlaceholder(cardId, placeholderId));
         }
     };
 
@@ -129,10 +129,10 @@ class ContentEditable extends Component<Props> {
             }
 
             this.timeout = setTimeout(() => {
-                const { dispatch, cardId, templateId } = this.props;
+                const { dispatch, cardId, placeholderId } = this.props;
                 const textInfo: TextInfo = { value, cursor };
 
-                dispatch(cardSetChangeText(cardId, templateId, textInfo));
+                dispatch(cardSetChangeText(cardId, placeholderId, textInfo));
             }, timeout_in_miliseconds);
         }
     };
@@ -167,13 +167,16 @@ class ContentEditable extends Component<Props> {
 
 const mapStateToProps = (state, props) => {
     const textInfo =
-        state.cardsets.texts[props.cardId] && state.cardsets.texts[props.cardId][props.templateId]
-            ? state.cardsets.texts[props.cardId][props.templateId]
+        state.cardsets.texts &&
+        state.cardsets.texts[props.cardId] &&
+        state.cardsets.texts[props.cardId][props.placeholderId]
+            ? state.cardsets.texts[props.cardId][props.placeholderId]
             : { value: '', cursor: 0 };
     return {
         textValue: textInfo.value,
         textCursor: textInfo.cursor,
-        isActive: props.cardId === state.cardsets.activeCard && props.templateId === state.cardsets.activeTemplate,
+        isActive:
+            props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
     };
 };
 

@@ -5,7 +5,7 @@ import shortid from 'shortid';
 import type {
     CardSetAction,
     CardSetsCollection,
-    CardTemplateType,
+    TemplateType,
     CardType,
     GameAction,
     GamesCollection,
@@ -49,8 +49,8 @@ export type CardSetState = {
     +cardsAllIds: IdsArray,
     +cardsById: { [string]: CardType },
     +activeCard: ?string,
-    +activeTemplate: ?string,
-    +template: CardTemplateType,
+    +activePlaceholder: ?string,
+    +template: TemplateType,
     +texts: { [string]: { [string]: TextInfo } },
 };
 
@@ -194,14 +194,11 @@ export function cardsets(
         allIds: [],
         activity: 0,
         active: null,
-        template: {
-            texts: {},
-            images: {},
-        },
+        template: {},
         cardsById: {},
         cardsAllIds: [],
         activeCard: null,
-        activeTemplate: null,
+        activePlaceholder: null,
         texts: {},
     },
     action: CardSetAction,
@@ -269,7 +266,7 @@ export function cardsets(
                     ...state.cardsById,
                     [action.card.id]: action.card,
                 },
-                cardsAllIds: state.cardsAllIds.concat(action.card.id),
+                cardsAllIds: state.cardsAllIds ? state.cardsAllIds.concat(action.card.id) : [action.card.id],
             };
         case 'CARDSET_CLONE_CARD': {
             let newCard = { ...action.card, id: shortid.generate() };
@@ -312,24 +309,21 @@ export function cardsets(
                 },
             };
         }
-        case 'CARDSET_ADD_TEXT_TEMPLATE': {
+        case 'CARDSET_ADD_TEXT_PLACEHOLDER': {
             const id = shortid.generate();
-            const textTemplate = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
+            const textPlaceholder = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
 
             return {
                 ...state,
                 template: {
                     ...state.template,
-                    texts: {
-                        ...state.template.texts,
-                        [id]: textTemplate,
-                    },
+                    [id]: textPlaceholder,
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_TEMPLATE_POSITION': {
-            const textTemplate = {
-                ...state.template.texts[action.textTemplate.id],
+        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION': {
+            const textPlaceholder = {
+                ...state.template[action.textPlaceholder.id],
                 x: action.x,
                 y: action.y,
             };
@@ -338,16 +332,13 @@ export function cardsets(
                 ...state,
                 template: {
                     ...state.template,
-                    texts: {
-                        ...state.template.texts,
-                        [action.textTemplate.id]: textTemplate,
-                    },
+                    [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_TEMPLATE_SIZE': {
-            const textTemplate = {
-                ...state.template.texts[action.textTemplate.id],
+        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE': {
+            const textPlaceholder = {
+                ...state.template[action.textPlaceholder.id],
                 width: action.width,
                 height: action.height,
             };
@@ -356,16 +347,13 @@ export function cardsets(
                 ...state,
                 template: {
                     ...state.template,
-                    texts: {
-                        ...state.template.texts,
-                        [action.textTemplate.id]: textTemplate,
-                    },
+                    [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_TEMPLATE_ANGLE': {
-            const textTemplate = {
-                ...state.template.texts[action.textTemplate.id],
+        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE': {
+            const textPlaceholder = {
+                ...state.template[action.textPlaceholder.id],
                 angle: action.angle,
             };
 
@@ -373,17 +361,14 @@ export function cardsets(
                 ...state,
                 template: {
                     ...state.template,
-                    texts: {
-                        ...state.template.texts,
-                        [action.textTemplate.id]: textTemplate,
-                    },
+                    [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
         }
-        case 'CARDSET_CHANGE_ACTIVE_TEXT_TEMPLATE_ALIGN': {
-            if (state.activeTemplate) {
-                const textTemplate = {
-                    ...state.template.texts[state.activeTemplate],
+        case 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN': {
+            if (state.activePlaceholder) {
+                const textPlaceholder = {
+                    ...state.template[state.activePlaceholder],
                     align: action.align,
                 };
 
@@ -391,10 +376,7 @@ export function cardsets(
                     ...state,
                     template: {
                         ...state.template,
-                        texts: {
-                            ...state.template.texts,
-                            [state.activeTemplate]: textTemplate,
-                        },
+                        [state.activePlaceholder]: textPlaceholder,
                     },
                 };
             } else {
@@ -402,25 +384,25 @@ export function cardsets(
             }
         }
         case 'CARDSET_CHANGE_TEXT': {
-            let templates_by_card = {};
-            if (action.cardId in state.texts) {
-                templates_by_card = { ...state.texts[action.cardId] };
+            let placeholdersByCard = {};
+            if (state.texts && action.cardId in state.texts) {
+                placeholdersByCard = { ...state.texts[action.cardId] };
             }
-            templates_by_card[action.templateId] = action.textInfo;
+            placeholdersByCard[action.placeholderId] = action.textInfo;
 
             return {
                 ...state,
                 texts: {
                     ...state.texts,
-                    [action.cardId]: templates_by_card,
+                    [action.cardId]: placeholdersByCard,
                 },
             };
         }
-        case 'CARDSET_SET_ACTIVE_CARD_AND_TEMPLATE': {
+        case 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER': {
             return {
                 ...state,
                 activeCard: action.cardId,
-                activeTemplate: action.templateId,
+                activePlaceholder: action.placeholderId,
             };
         }
         default:
