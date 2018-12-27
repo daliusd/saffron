@@ -52,6 +52,7 @@ class TextField extends PureComponent<Props> {
                     cardId={this.props.cardId}
                     placeholderId={textPlaceholder.id}
                     align={textPlaceholder.align}
+                    color={textPlaceholder.color}
                 />
             </FieldController>
         );

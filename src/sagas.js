@@ -7,6 +7,7 @@ import {
     type Action,
     CARDSET_ADD_TEXT_PLACEHOLDER,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     CARDSET_CHANGE_TEXT,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
@@ -365,6 +366,7 @@ export function* rootSaga(): Saga<void> {
         takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
 
         takeLatest(INIT_REQUEST, handleInitRequest),

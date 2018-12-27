@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import {
     CARDSET_ADD_TEXT_PLACEHOLDER,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     CARDSET_CHANGE_TEXT,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
@@ -408,6 +409,24 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
                     align: action.align,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: textPlaceholder,
+                    },
+                };
+            } else {
+                return state;
+            }
+        }
+        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: {
+            if (state.activePlaceholder) {
+                const textPlaceholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    color: action.color,
                 };
 
                 return {

@@ -11,8 +11,8 @@ type Props = {
     cardId: string,
     placeholderId: string,
     textValue: string,
-    textCursor: number,
     align: string,
+    color: string,
     isActive: boolean,
 };
 
@@ -20,7 +20,7 @@ class ContentEditable extends Component<Props> {
     editDiv: ElementRef<any>;
     currentText: string;
     currentAlign: string;
-    currentCursor: number;
+    currentColor: string;
     timeout: ?TimeoutID;
     wasMoved: boolean;
 
@@ -29,7 +29,7 @@ class ContentEditable extends Component<Props> {
         this.editDiv = React.createRef();
         this.currentText = '';
         this.currentAlign = '';
-        this.currentCursor = 0;
+        this.currentColor = '';
         this.timeout = null;
         this.wasMoved = false;
     }
@@ -58,6 +58,7 @@ class ContentEditable extends Component<Props> {
         return (
             nextProps.textValue !== this.currentText ||
             nextProps.align !== this.currentAlign ||
+            nextProps.color !== this.currentColor ||
             this.props.isActive !== nextProps.isActive
         );
     }
@@ -93,38 +94,24 @@ class ContentEditable extends Component<Props> {
     };
 
     onFocus = () => {
-        const { textValue, textCursor, align } = this.props;
+        const { textValue, align, color } = this.props;
         this.currentText = textValue;
         this.currentAlign = align;
-        this.currentCursor = textCursor;
-        if (textCursor) {
-            const range = document.createRange();
-            const textContent =
-                this.editDiv.current.childNodes.length > 0 ? this.editDiv.current.childNodes[0].textContent : null;
-            if (textContent && textContent.length >= textCursor) {
-                range.setStart(this.editDiv.current.childNodes[0], textCursor);
-                range.setEnd(this.editDiv.current.childNodes[0], textCursor);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
-    };
+        this.currentColor = color;
 
-    getCursor = () => {
+        const range = document.createRange();
+        range.selectNodeContents(this.editDiv.current);
+        range.collapse(false);
         const selection = window.getSelection();
-        const range = selection.getRangeAt(0);
-        return range.startOffset;
+        selection.removeAllRanges();
+        selection.addRange(range);
     };
 
     updateContent = timeout_in_miliseconds => {
-        const value = this.editDiv.current.innerText;
+        const value = this.editDiv.current.innerHTML;
 
         if (value !== this.currentText) {
-            const cursor = this.getCursor();
-
             this.currentText = value;
-            this.currentCursor = cursor;
 
             if (this.timeout) {
                 clearTimeout(this.timeout);
@@ -132,7 +119,7 @@ class ContentEditable extends Component<Props> {
 
             this.timeout = setTimeout(() => {
                 const { dispatch, cardId, placeholderId } = this.props;
-                const textInfo: TextInfo = { value, cursor };
+                const textInfo: TextInfo = { value };
 
                 dispatch(cardSetChangeText(cardId, placeholderId, textInfo));
             }, timeout_in_miliseconds);
@@ -160,6 +147,7 @@ class ContentEditable extends Component<Props> {
                     height: '100%',
                     overflow: 'hidden',
                     textAlign: this.props.align || 'left',
+                    color: this.props.color,
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />
@@ -173,10 +161,9 @@ const mapStateToProps = (state, props) => {
         state.cardsets.texts[props.cardId] &&
         state.cardsets.texts[props.cardId][props.placeholderId]
             ? state.cardsets.texts[props.cardId][props.placeholderId]
-            : { value: '', cursor: 0 };
+            : { value: '' };
     return {
         textValue: textInfo.value,
-        textCursor: textInfo.cursor,
         isActive:
             props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
     };

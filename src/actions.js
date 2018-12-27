@@ -46,6 +46,8 @@ export const CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE: 'CARDSET_CHANGE_TEXT_PLACEHO
     'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN' =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR' =
+    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR';
 export const CARDSET_CHANGE_TEXT: 'CARDSET_CHANGE_TEXT' = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER' =
     'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
@@ -79,10 +81,11 @@ export type TextPlaceholderType = {
     height: number,
     angle: number,
     align: string,
+    color: string,
 };
 export type PlaceholdersCollection = { [string]: TextPlaceholderType };
 
-export type TextInfo = { value: string, cursor: number };
+export type TextInfo = { value: string };
 export type CardType = { id: string, count: number };
 
 export type CardSetType = {
@@ -191,6 +194,10 @@ export type CardSetChangeActiveTextPlaceholderAlign = {
     type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     align: string,
 };
+export type CardSetChangeActiveTextPlaceholderColor = {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
+    color: string,
+};
 export type CardSetChangeText = {
     type: typeof CARDSET_CHANGE_TEXT,
     cardId: string,
@@ -219,6 +226,7 @@ export type CardSetModifyAction =
     | CardSetChangeTextPlaceholderSize
     | CardSetChangeTextPlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
+    | CardSetChangeActiveTextPlaceholderColor
     | CardSetChangeText
     | CardSetSetActiveCardAndPlaceholder;
 
@@ -380,6 +388,13 @@ export const cardSetChangeActiveTextPlaceholderAlign = (align: string): CardSetC
     return {
         type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
         align,
+    };
+};
+
+export const cardSetChangeActiveTextPlaceholderColor = (color: string): CardSetChangeActiveTextPlaceholderColor => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
+        color,
     };
 };
 
