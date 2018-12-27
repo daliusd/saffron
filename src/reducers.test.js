@@ -4,6 +4,7 @@ import {
     ACTIVITY_LISTING,
     ACTIVITY_SELECTING,
     type AuthState,
+    DefaultCardSetState,
     type MessageState,
     type SignUpState,
     auth,
@@ -257,93 +258,35 @@ test('CARDSET_CREATE', () => {
     let message = 'error message';
 
     let type = 'CARDSET_CREATE_REQUEST';
-    expect(
-        cardsets(
-            {
-                activity: 0,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
-            },
-            { type, cardsetname: 'test', game_id: '1' },
-        ),
-    ).toEqual({
-        byId: {},
-        allIds: [],
+    expect(cardsets(DefaultCardSetState, { type, cardsetname: 'test', game_id: '1' })).toEqual({
+        ...DefaultCardSetState,
         activity: ACTIVITY_CREATING,
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
     });
 
     type = 'CARDSET_CREATE_SUCCESS';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_CREATING,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type },
         ),
     ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
+        ...DefaultCardSetState,
     });
 
     type = 'CARDSET_CREATE_FAILURE';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_CREATING,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type, message },
         ),
     ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
+        ...DefaultCardSetState,
     });
 });
 
@@ -354,30 +297,13 @@ test('CARDSET_LIST', () => {
     expect(
         cardsets(
             {
-                activity: 0,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
+                ...DefaultCardSetState,
             },
             { type },
         ),
     ).toEqual({
+        ...DefaultCardSetState,
         activity: ACTIVITY_LISTING,
-        byId: {},
-        allIds: [],
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
     });
 
     type = 'CARDSET_LIST_SUCCESS';
@@ -387,90 +313,41 @@ test('CARDSET_LIST', () => {
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type, byId, allIds },
         ),
     ).toEqual({
-        activity: 0,
+        ...DefaultCardSetState,
         byId,
         allIds,
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
     });
 
     type = 'CARDSET_LIST_FAILURE';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type, message },
         ),
     ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
+        ...DefaultCardSetState,
     });
 
     type = 'CARDSET_LIST_RESET';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
-                byId,
-                allIds,
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type },
         ),
     ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
+        ...DefaultCardSetState,
     });
 });
 
@@ -481,47 +358,23 @@ test('CARDSET_SELECT', () => {
     expect(
         cardsets(
             {
-                activity: 0,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
+                ...DefaultCardSetState,
             },
             { type, id: '1' },
         ),
     ).toEqual({
+        ...DefaultCardSetState,
         activity: ACTIVITY_SELECTING,
-        byId: {},
-        allIds: [],
-        active: null,
-
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        cardsById: {},
-        template: {},
-        texts: {},
     });
 
     type = 'CARDSET_SELECT_SUCCESS';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_SELECTING,
                 byId: { '1': { id: '1', name: 'test' } },
                 allIds: ['1'],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             {
                 type,
@@ -537,50 +390,29 @@ test('CARDSET_SELECT', () => {
             },
         ),
     ).toEqual({
-        activity: 0,
+        ...DefaultCardSetState,
         byId: { '1': { id: '1', name: 'test2' } },
         allIds: ['1'],
         active: '1',
         cardsAllIds: ['1'],
-        activeCard: null,
-        activePlaceholder: null,
         cardsById: {
             '1': {
                 count: 1,
                 id: '1',
             },
         },
-        template: {},
-        texts: {},
     });
 
     type = 'CARDSET_SELECT_FAILURE';
     expect(
         cardsets(
             {
+                ...DefaultCardSetState,
                 activity: ACTIVITY_SELECTING,
-                byId: {},
-                allIds: [],
-                active: null,
-                template: {},
-                cardsById: {},
-                cardsAllIds: [],
-                activeCard: null,
-                activePlaceholder: null,
-                texts: {},
             },
             { type, message },
         ),
     ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        cardsById: {},
-        template: {},
-        texts: {},
+        ...DefaultCardSetState,
     });
 });

@@ -54,6 +54,18 @@ export type CardSetState = {
     +texts: { [string]: { [string]: TextInfo } },
 };
 
+export const DefaultCardSetState = {
+    byId: {},
+    allIds: [],
+    activity: 0,
+    active: null,
+    template: {},
+    cardsById: {},
+    cardsAllIds: [],
+    activeCard: null,
+    activePlaceholder: null,
+    texts: {},
+};
 export function message(
     state: MessageState = {
         messages: [],
@@ -188,21 +200,7 @@ export function games(
     }
 }
 
-export function cardsets(
-    state: CardSetState = {
-        byId: {},
-        allIds: [],
-        activity: 0,
-        active: null,
-        template: {},
-        cardsById: {},
-        cardsAllIds: [],
-        activeCard: null,
-        activePlaceholder: null,
-        texts: {},
-    },
-    action: CardSetAction,
-): CardSetState {
+export function cardsets(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
     switch (action.type) {
         case 'CARDSET_CREATE_REQUEST':
             return Object.assign({}, state, {

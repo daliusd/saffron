@@ -101,7 +101,7 @@ class Card extends Component<Props, State> {
                                 overflow: 'hidden',
                             }}
                             onMouseDown={this.handleFieldDeselect}
-                            onTouchstart={this.handleFieldDeselect}
+                            onTouchStart={this.handleFieldDeselect}
                         >
                             {placeholderIds &&
                                 placeholderIds.map(p => (
