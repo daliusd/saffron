@@ -15,6 +15,7 @@ import {
     cardSetUpdateCardCount,
 } from '../actions';
 import ColorButton from './ColorButton';
+import FontSelector from './FontSelector';
 import TextField from './TextField';
 
 type Props = {
@@ -118,6 +119,7 @@ class Card extends Component<Props, State> {
                         <button onClick={this.handleSetTextAlignCenter}>C</button>
                         <button onClick={this.handleSetTextAlignRight}>R</button>
                         <ColorButton />
+                        <FontSelector />
                     </div>
                 )}
             </Measure>

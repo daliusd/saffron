@@ -8,6 +8,9 @@ import {
     CARDSET_ADD_TEXT_PLACEHOLDER,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
     CARDSET_CHANGE_TEXT,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
@@ -72,6 +75,7 @@ import {
     registerUser,
 } from './requests';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
+import { loadFontsUsedInPlaceholders } from './fontLoader';
 
 // Messages
 export function* putError(message: string): Saga<void> {
@@ -296,11 +300,13 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<
 export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<void> {
     try {
         const data = yield call(authorizedGetRequest, '/cardset/' + action.id);
+        const parsedData = JSON.parse(data.data);
+        yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
             type: CARDSET_SELECT_SUCCESS,
             id: data.id,
             name: data.name,
-            data: JSON.parse(data.data),
+            data: parsedData,
         });
         yield put(gameSelectRequest(data.game_id, false));
     } catch (e) {
@@ -367,6 +373,9 @@ export function* rootSaga(): Saga<void> {
         takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
 
         takeLatest(INIT_REQUEST, handleInitRequest),

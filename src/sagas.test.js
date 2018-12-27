@@ -73,6 +73,7 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
+import { loadFontsUsedInPlaceholders } from './fontLoader';
 import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
 
 test('putError', () => {
@@ -474,8 +475,10 @@ test('handleCardSetSelectRequest', () => {
 
     // Successful request
     expect(gen.next({ id: '345', name: 'test', data: '{}', game_id: '666' }).value).toEqual(
-        put({ type: CARDSET_SELECT_SUCCESS, id: '345', name: 'test', data: {} }),
+        call(loadFontsUsedInPlaceholders, {}),
     );
+
+    expect(gen.next().value).toEqual(put({ type: CARDSET_SELECT_SUCCESS, id: '345', name: 'test', data: {} }));
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
     expect(gen.next().done).toBeTruthy();
 

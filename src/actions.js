@@ -48,6 +48,12 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: 'CARDSET_CHANGE_ACTIV
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR' =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY' =
+    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT' =
+    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT' =
+    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT';
 export const CARDSET_CHANGE_TEXT: 'CARDSET_CHANGE_TEXT' = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER' =
     'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
@@ -82,6 +88,8 @@ export type TextPlaceholderType = {
     angle: number,
     align: string,
     color: string,
+    fontFamily: string,
+    fontVariant: string,
 };
 export type PlaceholdersCollection = { [string]: TextPlaceholderType };
 
@@ -198,6 +206,19 @@ export type CardSetChangeActiveTextPlaceholderColor = {
     type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     color: string,
 };
+export type CardSetChangeActiveTextPlaceholderFontFamily = {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
+    fontFamily: string,
+};
+export type CardSetChangeActiveTextPlaceholderFontVariant = {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    fontVariant: string,
+};
+export type CardSetChangeActiveTextPlaceholderFontFamilyAndVariant = {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
+    fontFamily: string,
+    fontVariant: string,
+};
 export type CardSetChangeText = {
     type: typeof CARDSET_CHANGE_TEXT,
     cardId: string,
@@ -227,6 +248,9 @@ export type CardSetModifyAction =
     | CardSetChangeTextPlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
     | CardSetChangeActiveTextPlaceholderColor
+    | CardSetChangeActiveTextPlaceholderFontFamily
+    | CardSetChangeActiveTextPlaceholderFontVariant
+    | CardSetChangeActiveTextPlaceholderFontFamilyAndVariant
     | CardSetChangeText
     | CardSetSetActiveCardAndPlaceholder;
 
@@ -398,6 +422,34 @@ export const cardSetChangeActiveTextPlaceholderColor = (color: string): CardSetC
     };
 };
 
+export const cardSetChangeActiveTextPlaceholderFontFamily = (
+    fontFamily: string,
+): CardSetChangeActiveTextPlaceholderFontFamily => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
+        fontFamily,
+    };
+};
+
+export const cardSetChangeActiveTextPlaceholderFontVariant = (
+    fontVariant: string,
+): CardSetChangeActiveTextPlaceholderFontVariant => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+        fontVariant,
+    };
+};
+
+export const cardSetChangeActiveTextPlaceholderFontFamilyAndVariant = (
+    fontFamily: string,
+    fontVariant: string,
+): CardSetChangeActiveTextPlaceholderFontFamilyAndVariant => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
+        fontFamily,
+        fontVariant,
+    };
+};
 export const cardSetChangeText = (cardId: string, placeholderId: string, textInfo: TextInfo): CardSetChangeText => {
     return {
         type: CARDSET_CHANGE_TEXT,

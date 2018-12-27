@@ -4,6 +4,7 @@ import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import React, { type ElementRef, Component } from 'react';
 
+import { DEFAULT_FONT } from '../fontLoader';
 import { type Dispatch, type TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 
 type Props = {
@@ -13,6 +14,8 @@ type Props = {
     textValue: string,
     align: string,
     color: string,
+    fontFamily: string,
+    fontVariant: string,
     isActive: boolean,
 };
 
@@ -21,6 +24,8 @@ class ContentEditable extends Component<Props> {
     currentText: string;
     currentAlign: string;
     currentColor: string;
+    currentFontFamily: string;
+    currentFontVariant: string;
     timeout: ?TimeoutID;
     wasMoved: boolean;
 
@@ -30,6 +35,8 @@ class ContentEditable extends Component<Props> {
         this.currentText = '';
         this.currentAlign = '';
         this.currentColor = '';
+        this.currentFontFamily = '';
+        this.currentFontVariant = '';
         this.timeout = null;
         this.wasMoved = false;
     }
@@ -59,6 +66,8 @@ class ContentEditable extends Component<Props> {
             nextProps.textValue !== this.currentText ||
             nextProps.align !== this.currentAlign ||
             nextProps.color !== this.currentColor ||
+            nextProps.fontFamily !== this.currentFontFamily ||
+            nextProps.fontVariant !== this.currentFontVariant ||
             this.props.isActive !== nextProps.isActive
         );
     }
@@ -94,10 +103,12 @@ class ContentEditable extends Component<Props> {
     };
 
     onFocus = () => {
-        const { textValue, align, color } = this.props;
+        const { textValue, align, color, fontFamily, fontVariant } = this.props;
         this.currentText = textValue;
         this.currentAlign = align;
         this.currentColor = color;
+        this.currentFontFamily = fontFamily;
+        this.currentFontVariant = fontVariant;
 
         const range = document.createRange();
         range.selectNodeContents(this.editDiv.current);
@@ -135,6 +146,16 @@ class ContentEditable extends Component<Props> {
     };
 
     render() {
+        const { color, align, fontFamily, fontVariant } = this.props;
+        const isItalic = fontVariant && fontVariant.indexOf('italic') !== -1;
+        const fontWeight = isItalic
+            ? fontVariant === 'italic'
+                ? 400
+                : parseInt(fontVariant.slice(0, 3))
+            : fontVariant === 'regular'
+                ? 400
+                : parseInt(fontVariant);
+
         return (
             <div
                 ref={this.editDiv}
@@ -145,9 +166,11 @@ class ContentEditable extends Component<Props> {
                 css={{
                     width: '100%',
                     height: '100%',
-                    overflow: 'hidden',
-                    textAlign: this.props.align || 'left',
-                    color: this.props.color,
+                    textAlign: align || 'left',
+                    color: color,
+                    fontFamily: `'${fontFamily}'` || DEFAULT_FONT,
+                    fontStyle: isItalic ? 'italic' : 'normal',
+                    fontWeight,
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />
