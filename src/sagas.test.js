@@ -7,10 +7,36 @@ import shortid from 'shortid';
 import jwt from 'jwt-simple';
 
 import {
+    CARDSET_CREATE_FAILURE,
+    CARDSET_CREATE_SUCCESS,
+    CARDSET_LIST_RESET,
+    CARDSET_LIST_SUCCESS,
+    CARDSET_REMOVE_CARD,
+    CARDSET_SELECT_FAILURE,
+    CARDSET_SELECT_SUCCESS,
+    CARDSET_UPDATE_DATA_FAILURE,
+    CARDSET_UPDATE_DATA_SUCCESS,
     type CardSetSelectAction,
     type CardSetType,
     type CardType,
+    GAME_CREATE_FAILURE,
+    GAME_CREATE_SUCCESS,
+    GAME_LIST_FAILURE,
+    GAME_LIST_REQUEST,
+    GAME_LIST_RESET,
+    GAME_LIST_SUCCESS,
+    GAME_SELECT_FAILURE,
+    GAME_SELECT_REQUEST,
+    GAME_SELECT_SUCCESS,
     type GameType,
+    LOGIN_FAILURE,
+    LOGIN_SUCCESS,
+    LOGOUT_FAILURE,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCESS,
+    MESSAGE_HIDE,
+    SIGNUP_FAILURE,
+    SIGNUP_SUCCESS,
     gameSelectRequest,
     messageRequest,
 } from './actions';
@@ -57,7 +83,7 @@ test('handleMessageDisplay', () => {
     const message = messageRequest('error', 'message');
     let gen = handleMessageDisplay(message);
     expect(gen.next().value).toEqual(call(delay, 5000));
-    expect(gen.next().value).toEqual(put({ type: 'MESSAGE_HIDE', message: message.message }));
+    expect(gen.next().value).toEqual(put({ type: MESSAGE_HIDE, message: message.message }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -86,21 +112,21 @@ test('handleLoginRequest', () => {
     expect(clone.next().value).toEqual(call(getTokens, creds));
     const data = { access_token: 'test' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
-    expect(clone.next().value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
     expect(clone.next().done).toBeTruthy();
 
     // Failure case
     const clone2 = gen.clone();
     expect(clone2.next().value).toEqual(call(getTokens, creds));
     let message = 'oops';
-    expect(clone2.throw({ message }).value).toEqual(put({ type: 'LOGIN_FAILURE' }));
+    expect(clone2.throw({ message }).value).toEqual(put({ type: LOGIN_FAILURE }));
     expect(clone2.next().value).toEqual(call(putError, message));
     expect(clone2.next().done).toBeTruthy();
 });
 
 test('handleLoginSuccess', () => {
     const gen = handleLoginSuccess();
-    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
+    expect(gen.next().value).toEqual(put({ type: GAME_LIST_REQUEST }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -135,7 +161,7 @@ test('getToken with_error_if_missing=false', () => {
     expect(gen.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
 
     clone = gen.clone();
-    expect(clone.next(false).value).toEqual(put({ type: 'LOGOUT_REQUEST' }));
+    expect(clone.next(false).value).toEqual(put({ type: LOGOUT_REQUEST }));
     next = clone.next(null);
     expect(next.done).toBeTruthy();
     expect(next.value).toBeNull();
@@ -178,7 +204,7 @@ test('getToken with_error_if_missing=true', () => {
     expect(gen.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
 
     clone = gen.clone();
-    expect(clone.next(false).value).toEqual(put({ type: 'LOGOUT_REQUEST' }));
+    expect(clone.next(false).value).toEqual(put({ type: LOGOUT_REQUEST }));
     expect(() => {
         clone.next(null);
     }).toThrow();
@@ -196,9 +222,9 @@ test('handleLogoutRequest', () => {
     expect(gen.next().value).toEqual(call(logoutToken));
     expect(gen.next().value).toEqual(call(logoutRefreshToken));
     expect(gen.next().value).toEqual(call(cleanTokens));
-    expect(gen.next().value).toEqual(put({ type: 'CARDSET_LIST_RESET' }));
-    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_RESET' }));
-    expect(gen.next().value).toEqual(put({ type: 'LOGOUT_SUCCESS' }));
+    expect(gen.next().value).toEqual(put({ type: CARDSET_LIST_RESET }));
+    expect(gen.next().value).toEqual(put({ type: GAME_LIST_RESET }));
+    expect(gen.next().value).toEqual(put({ type: LOGOUT_SUCCESS }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -208,7 +234,7 @@ test('handleLogoutRequest failure', () => {
     expect(gen.next().value).toEqual(call(logoutToken));
 
     let message = 'oops';
-    expect(gen.throw({ message }).value).toEqual(put({ type: 'LOGOUT_FAILURE' }));
+    expect(gen.throw({ message }).value).toEqual(put({ type: LOGOUT_FAILURE }));
     expect(gen.next().value).toEqual(call(putError, message));
     expect(gen.next().done).toBeTruthy();
 });
@@ -261,13 +287,13 @@ test('handleSignupRequest', () => {
 
     const data = { access_token: 'test' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
-    expect(clone.next().value).toEqual(put({ type: 'SIGNUP_SUCCESS' }));
-    expect(clone.next().value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+    expect(clone.next().value).toEqual(put({ type: SIGNUP_SUCCESS }));
+    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
     expect(clone.next().done).toBeTruthy();
 
     // Failure case
     let message = 'oops';
-    expect(gen.throw({ message }).value).toEqual(put({ type: 'SIGNUP_FAILURE' }));
+    expect(gen.throw({ message }).value).toEqual(put({ type: SIGNUP_FAILURE }));
     expect(gen.next().value).toEqual(call(putError, message));
     expect(gen.next().done).toBeTruthy();
 });
@@ -281,7 +307,7 @@ test('handleInitRequest', () => {
     let clone = gen.clone();
 
     const token = 'token';
-    expect(gen.next(token).value).toEqual(put({ type: 'LOGIN_SUCCESS' }));
+    expect(gen.next(token).value).toEqual(put({ type: LOGIN_SUCCESS }));
 
     expect(gen.next().done).toBeTruthy();
 
@@ -335,13 +361,13 @@ test('handleGameCreateRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next().value).toEqual(put({ type: 'GAME_CREATE_SUCCESS' }));
-    expect(gen.next().value).toEqual(put({ type: 'GAME_LIST_REQUEST' }));
+    expect(gen.next().value).toEqual(put({ type: GAME_CREATE_SUCCESS }));
+    expect(gen.next().value).toEqual(put({ type: GAME_LIST_REQUEST }));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_CREATE_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: GAME_CREATE_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
@@ -357,7 +383,7 @@ test('handleGameListRequest', () => {
     const data: { games: Array<GameType> } = { games: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }] };
     expect(gen.next(data).value).toEqual(
         put({
-            type: 'GAME_LIST_SUCCESS',
+            type: GAME_LIST_SUCCESS,
             allIds: ['2', '1'],
             byId: {
                 '1': { id: '1', name: 'test2' },
@@ -369,7 +395,7 @@ test('handleGameListRequest', () => {
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_LIST_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: GAME_LIST_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
@@ -387,10 +413,10 @@ test('handleGameSelectRequest', () => {
         cardsets: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }],
     };
 
-    expect(gen.next(data).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: 123 }));
+    expect(gen.next(data).value).toEqual(put({ type: GAME_SELECT_SUCCESS, id: 123 }));
     expect(gen.next().value).toEqual(
         put({
-            type: 'CARDSET_LIST_SUCCESS',
+            type: CARDSET_LIST_SUCCESS,
             allIds: ['2', '1'],
             byId: {
                 '1': { id: '1', name: 'test2' },
@@ -402,17 +428,17 @@ test('handleGameSelectRequest', () => {
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'GAME_SELECT_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: GAME_SELECT_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
 
 test('handleGameSelectRequest with updateCardSets set to false', () => {
-    const action = { type: 'GAME_SELECT_REQUEST', id: '123', updateCardSets: false };
+    const action = { type: GAME_SELECT_REQUEST, id: '123', updateCardSets: false };
     const gen = handleGameSelectRequest(action);
 
     expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
-    expect(gen.next({}).value).toEqual(put({ type: 'GAME_SELECT_SUCCESS', id: '123' }));
+    expect(gen.next({}).value).toEqual(put({ type: GAME_SELECT_SUCCESS, id: '123' }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -427,13 +453,13 @@ test('handleCardSetCreateRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next().value).toEqual(put({ type: 'CARDSET_CREATE_SUCCESS' }));
+    expect(gen.next().value).toEqual(put({ type: CARDSET_CREATE_SUCCESS }));
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', true)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_CREATE_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: CARDSET_CREATE_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
@@ -448,14 +474,14 @@ test('handleCardSetSelectRequest', () => {
 
     // Successful request
     expect(gen.next({ id: '345', name: 'test', data: '{}', game_id: '666' }).value).toEqual(
-        put({ type: 'CARDSET_SELECT_SUCCESS', id: '345', name: 'test', data: {} }),
+        put({ type: CARDSET_SELECT_SUCCESS, id: '345', name: 'test', data: {} }),
     );
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_SELECT_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: CARDSET_SELECT_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });
@@ -464,7 +490,7 @@ test('handleCardSetChange', () => {
     const card: CardType = { id: shortid.generate(), count: 1 };
 
     const action: CardSetSelectAction = {
-        type: 'CARDSET_REMOVE_CARD',
+        type: CARDSET_REMOVE_CARD,
         card,
     };
     const gen = cloneableGenerator(handleCardSetChange)(action);
@@ -497,12 +523,12 @@ test('handleCardSetChange', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next().value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_SUCCESS' }));
+    expect(gen.next().value).toEqual(put({ type: CARDSET_UPDATE_DATA_SUCCESS }));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
     let message = 'message';
-    expect(clone.throw({ message }).value).toEqual(put({ type: 'CARDSET_UPDATE_DATA_FAILURE' }));
+    expect(clone.throw({ message }).value).toEqual(put({ type: CARDSET_UPDATE_DATA_FAILURE }));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });

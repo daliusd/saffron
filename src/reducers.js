@@ -2,19 +2,59 @@
 import { combineReducers } from 'redux';
 import shortid from 'shortid';
 
-import type {
-    CardSetAction,
-    CardSetsCollection,
-    TemplateType,
-    CardType,
-    GameAction,
-    GamesCollection,
-    IdsArray,
-    LoginAction,
-    MessageAction,
-    MessageType,
-    SignUpAction,
-    TextInfo,
+import {
+    CARDSET_ADD_TEXT_PLACEHOLDER,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
+    CARDSET_CHANGE_TEXT,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE,
+    CARDSET_CLONE_CARD,
+    CARDSET_CREATE_CARD,
+    CARDSET_CREATE_FAILURE,
+    CARDSET_CREATE_REQUEST,
+    CARDSET_CREATE_SUCCESS,
+    CARDSET_LIST_FAILURE,
+    CARDSET_LIST_REQUEST,
+    CARDSET_LIST_RESET,
+    CARDSET_LIST_SUCCESS,
+    CARDSET_REMOVE_CARD,
+    CARDSET_SELECT_FAILURE,
+    CARDSET_SELECT_REQUEST,
+    CARDSET_SELECT_SUCCESS,
+    CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
+    CARDSET_UPDATE_CARD_COUNT,
+    type CardSetAction,
+    type CardSetsCollection,
+    type CardType,
+    GAME_CREATE_FAILURE,
+    GAME_CREATE_REQUEST,
+    GAME_CREATE_SUCCESS,
+    GAME_LIST_FAILURE,
+    GAME_LIST_REQUEST,
+    GAME_LIST_RESET,
+    GAME_LIST_SUCCESS,
+    GAME_SELECT_FAILURE,
+    GAME_SELECT_REQUEST,
+    GAME_SELECT_SUCCESS,
+    type GameAction,
+    type GamesCollection,
+    type IdsArray,
+    LOGIN_FAILURE,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS,
+    type LoginAction,
+    MESSAGE_DISPLAY,
+    MESSAGE_HIDE,
+    type MessageAction,
+    type MessageType,
+    SIGNUP_FAILURE,
+    SIGNUP_REQUEST,
+    SIGNUP_SUCCESS,
+    type SignUpAction,
+    type TemplateType,
+    type TextInfo,
 } from './actions';
 
 export const ACTIVITY_CREATING = 0x1;
@@ -73,11 +113,11 @@ export function message(
     action: MessageAction,
 ): MessageState {
     switch (action.type) {
-        case 'MESSAGE_DISPLAY':
+        case MESSAGE_DISPLAY:
             return Object.assign({}, state, {
                 messages: state.messages.concat(action.message),
             });
-        case 'MESSAGE_HIDE':
+        case MESSAGE_HIDE:
             return Object.assign({}, state, {
                 messages: state.messages.filter(m => m.id !== action.message.id),
             });
@@ -94,20 +134,20 @@ export function auth(
     action: LoginAction,
 ): AuthState {
     switch (action.type) {
-        case 'LOGIN_REQUEST':
+        case LOGIN_REQUEST:
             return Object.assign({}, state, {
                 isAuthenticated: false,
                 user: action.creds.username,
             });
-        case 'LOGIN_SUCCESS':
+        case LOGIN_SUCCESS:
             return Object.assign({}, state, {
                 isAuthenticated: true,
             });
-        case 'LOGIN_FAILURE':
+        case LOGIN_FAILURE:
             return Object.assign({}, state, {
                 isAuthenticated: false,
             });
-        case 'LOGOUT_SUCCESS':
+        case LOGOUT_SUCCESS:
             return Object.assign({}, state, {
                 isAuthenticated: false,
             });
@@ -123,15 +163,15 @@ export function signup(
     action: SignUpAction,
 ): SignUpState {
     switch (action.type) {
-        case 'SIGNUP_REQUEST':
+        case SIGNUP_REQUEST:
             return Object.assign({}, state, {
                 signingup: true,
             });
-        case 'SIGNUP_SUCCESS':
+        case SIGNUP_SUCCESS:
             return Object.assign({}, state, {
                 signingup: false,
             });
-        case 'SIGNUP_FAILURE':
+        case SIGNUP_FAILURE:
             return Object.assign({}, state, {
                 signingup: false,
             });
@@ -150,48 +190,48 @@ export function games(
     action: GameAction,
 ): GameState {
     switch (action.type) {
-        case 'GAME_CREATE_REQUEST':
+        case GAME_CREATE_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_CREATING,
             });
-        case 'GAME_CREATE_SUCCESS':
+        case GAME_CREATE_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
-        case 'GAME_CREATE_FAILURE':
+        case GAME_CREATE_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
-        case 'GAME_LIST_REQUEST':
+        case GAME_LIST_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_LISTING,
             });
-        case 'GAME_LIST_SUCCESS':
+        case GAME_LIST_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
                 byId: action.byId,
                 allIds: action.allIds,
             });
-        case 'GAME_LIST_FAILURE':
+        case GAME_LIST_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
             });
-        case 'GAME_LIST_RESET':
+        case GAME_LIST_RESET:
             return Object.assign({}, state, {
                 activity: 0,
                 byId: {},
                 allIds: [],
             });
-        case 'GAME_SELECT_REQUEST':
+        case GAME_SELECT_REQUEST:
             return Object.assign({}, state, {
                 activity: ACTIVITY_SELECTING,
             });
-        case 'GAME_SELECT_SUCCESS':
+        case GAME_SELECT_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
                 active: action.id,
             });
-        case 'GAME_SELECT_FAILURE':
+        case GAME_SELECT_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
             });
@@ -202,43 +242,43 @@ export function games(
 
 export function cardsets(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
     switch (action.type) {
-        case 'CARDSET_CREATE_REQUEST':
+        case CARDSET_CREATE_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_CREATING,
             });
-        case 'CARDSET_CREATE_SUCCESS':
+        case CARDSET_CREATE_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
-        case 'CARDSET_CREATE_FAILURE':
+        case CARDSET_CREATE_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
-        case 'CARDSET_LIST_REQUEST':
+        case CARDSET_LIST_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_LISTING,
             });
-        case 'CARDSET_LIST_SUCCESS':
+        case CARDSET_LIST_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
                 byId: action.byId,
                 allIds: action.allIds,
             });
-        case 'CARDSET_LIST_RESET':
+        case CARDSET_LIST_RESET:
             return Object.assign({}, state, {
                 activity: 0,
                 byId: {},
                 allIds: [],
             });
-        case 'CARDSET_LIST_FAILURE':
+        case CARDSET_LIST_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_LISTING,
             });
-        case 'CARDSET_SELECT_REQUEST':
+        case CARDSET_SELECT_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_SELECTING,
             });
-        case 'CARDSET_SELECT_SUCCESS':
+        case CARDSET_SELECT_SUCCESS:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
                 active: action.id,
@@ -253,11 +293,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 template: action.data.template,
                 texts: action.data.texts,
             });
-        case 'CARDSET_SELECT_FAILURE':
+        case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
             });
-        case 'CARDSET_CREATE_CARD':
+        case CARDSET_CREATE_CARD:
             return {
                 ...state,
                 cardsById: {
@@ -266,7 +306,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
                 cardsAllIds: state.cardsAllIds ? state.cardsAllIds.concat(action.card.id) : [action.card.id],
             };
-        case 'CARDSET_CLONE_CARD': {
+        case CARDSET_CLONE_CARD: {
             let newCard = { ...action.card, id: shortid.generate() };
 
             const index = state.cardsAllIds.indexOf(action.card.id) + 1;
@@ -281,7 +321,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsAllIds,
             };
         }
-        case 'CARDSET_REMOVE_CARD': {
+        case CARDSET_REMOVE_CARD: {
             const card_id = action.card.id;
             let cardsById = { ...state.cardsById };
             delete cardsById[card_id];
@@ -294,7 +334,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsAllIds,
             };
         }
-        case 'CARDSET_UPDATE_CARD_COUNT': {
+        case CARDSET_UPDATE_CARD_COUNT: {
             const cardId = action.card.id;
             let card = { ...state.cardsById[cardId] };
             card.count = action.count;
@@ -307,7 +347,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_ADD_TEXT_PLACEHOLDER': {
+        case CARDSET_ADD_TEXT_PLACEHOLDER: {
             const id = shortid.generate();
             const textPlaceholder = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
 
@@ -319,7 +359,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION': {
+        case CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: {
             const textPlaceholder = {
                 ...state.template[action.textPlaceholder.id],
                 x: action.x,
@@ -334,7 +374,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE': {
+        case CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE: {
             const textPlaceholder = {
                 ...state.template[action.textPlaceholder.id],
                 width: action.width,
@@ -349,7 +389,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE': {
+        case CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE: {
             const textPlaceholder = {
                 ...state.template[action.textPlaceholder.id],
                 angle: action.angle,
@@ -363,7 +403,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN': {
+        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: {
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.template[state.activePlaceholder],
@@ -381,7 +421,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 return state;
             }
         }
-        case 'CARDSET_CHANGE_TEXT': {
+        case CARDSET_CHANGE_TEXT: {
             let placeholdersByCard = {};
             if (state.texts && action.cardId in state.texts) {
                 placeholdersByCard = { ...state.texts[action.cardId] };
@@ -396,7 +436,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER': {
+        case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
             return {
                 ...state,
                 activeCard: action.cardId,

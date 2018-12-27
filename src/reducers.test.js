@@ -13,7 +13,41 @@ import {
     message,
     signup,
 } from './reducers';
-import type { CardSetsCollection, GamesCollection, IdsArray, MessageType } from './actions';
+import {
+    CARDSET_CREATE_FAILURE,
+    CARDSET_CREATE_REQUEST,
+    CARDSET_CREATE_SUCCESS,
+    CARDSET_LIST_FAILURE,
+    CARDSET_LIST_REQUEST,
+    CARDSET_LIST_RESET,
+    CARDSET_LIST_SUCCESS,
+    CARDSET_SELECT_FAILURE,
+    CARDSET_SELECT_REQUEST,
+    CARDSET_SELECT_SUCCESS,
+    type CardSetsCollection,
+    GAME_CREATE_FAILURE,
+    GAME_CREATE_REQUEST,
+    GAME_CREATE_SUCCESS,
+    GAME_LIST_FAILURE,
+    GAME_LIST_REQUEST,
+    GAME_LIST_RESET,
+    GAME_LIST_SUCCESS,
+    GAME_SELECT_FAILURE,
+    GAME_SELECT_REQUEST,
+    GAME_SELECT_SUCCESS,
+    type GamesCollection,
+    type IdsArray,
+    LOGIN_FAILURE,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGOUT_SUCCESS,
+    MESSAGE_DISPLAY,
+    MESSAGE_HIDE,
+    type MessageType,
+    SIGNUP_FAILURE,
+    SIGNUP_REQUEST,
+    SIGNUP_SUCCESS,
+} from './actions';
 
 test('message', () => {
     const testMessage1: MessageType = { id: 'test2', type: 'error', text: 'text' };
@@ -23,62 +57,53 @@ test('message', () => {
         messages: [testMessage2],
     };
 
-    let type = 'MESSAGE_DISPLAY';
+    expect(message(state, { type: MESSAGE_DISPLAY, message: testMessage1 })).toEqual({
+        messages: [testMessage2, testMessage1],
+    });
 
-    expect(message(state, { type, message: testMessage1 })).toEqual({ messages: [testMessage2, testMessage1] });
-
-    type = 'MESSAGE_HIDE';
-    expect(message(state, { type, message: testMessage2 })).toEqual({ messages: [] });
+    expect(message(state, { type: MESSAGE_HIDE, message: testMessage2 })).toEqual({ messages: [] });
 });
 
 test('auth', () => {
     let username = 'test_user';
     let password = 'test_pass';
     let creds = { username, password };
-    let type = 'LOGIN_REQUEST';
 
     let state: AuthState = {
         user: '',
         isAuthenticated: false,
     };
 
-    expect(auth(state, { type, creds })).toEqual({ isAuthenticated: false, user: username });
+    expect(auth(state, { type: LOGIN_REQUEST, creds })).toEqual({ isAuthenticated: false, user: username });
 
-    type = 'LOGIN_SUCCESS';
-    expect(auth(state, { type, creds })).toEqual({ isAuthenticated: true, user: '' });
+    expect(auth(state, { type: LOGIN_SUCCESS, creds })).toEqual({ isAuthenticated: true, user: '' });
 
-    type = 'LOGIN_FAILURE';
     let message = 'error message';
-    expect(auth(state, { type, creds, message })).toEqual({ isAuthenticated: false, user: '' });
+    expect(auth(state, { type: LOGIN_FAILURE, creds, message })).toEqual({ isAuthenticated: false, user: '' });
 
-    type = 'LOGOUT_SUCCESS';
-    expect(auth(state, { type, creds, message })).toEqual({ isAuthenticated: false, user: '' });
+    expect(auth(state, { type: LOGOUT_SUCCESS, creds, message })).toEqual({ isAuthenticated: false, user: '' });
 });
 
 test('signup', () => {
     let username = 'test_user';
     let password = 'test_pass';
     let creds = { username, password };
-    let type = 'SIGNUP_REQUEST';
 
     let state: SignUpState = {
         signingup: false,
     };
 
-    expect(signup(state, { type, creds })).toEqual({ signingup: true });
+    expect(signup(state, { type: SIGNUP_REQUEST, creds })).toEqual({ signingup: true });
 
-    type = 'SIGNUP_SUCCESS';
-    expect(signup(state, { type })).toEqual({ signingup: false });
+    expect(signup(state, { type: SIGNUP_SUCCESS })).toEqual({ signingup: false });
 
-    type = 'SIGNUP_FAILURE';
     let message = 'error message';
-    expect(signup(state, { type, message })).toEqual({ signingup: false });
+    expect(signup(state, { type: SIGNUP_FAILURE, message })).toEqual({ signingup: false });
 });
 
 test('GAME_CREATE', () => {
     let message = 'error message';
 
-    let type = 'GAME_CREATE_REQUEST';
     expect(
         games(
             {
@@ -87,7 +112,7 @@ test('GAME_CREATE', () => {
                 allIds: [],
                 active: null,
             },
-            { type, gamename: 'test' },
+            { type: GAME_CREATE_REQUEST, gamename: 'test' },
         ),
     ).toEqual({
         byId: {},
@@ -96,7 +121,6 @@ test('GAME_CREATE', () => {
         active: null,
     });
 
-    type = 'GAME_CREATE_SUCCESS';
     expect(
         games(
             {
@@ -105,11 +129,10 @@ test('GAME_CREATE', () => {
                 allIds: [],
                 active: null,
             },
-            { type },
+            { type: GAME_CREATE_SUCCESS },
         ),
     ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
 
-    type = 'GAME_CREATE_FAILURE';
     expect(
         games(
             {
@@ -118,7 +141,7 @@ test('GAME_CREATE', () => {
                 allIds: [],
                 active: null,
             },
-            { type, message },
+            { type: GAME_CREATE_FAILURE, message },
         ),
     ).toEqual({
         activity: 0,
@@ -131,7 +154,6 @@ test('GAME_CREATE', () => {
 test('GAME_LIST', () => {
     let message = 'error message';
 
-    let type = 'GAME_LIST_REQUEST';
     expect(
         games(
             {
@@ -140,11 +162,10 @@ test('GAME_LIST', () => {
                 allIds: [],
                 active: null,
             },
-            { type },
+            { type: GAME_LIST_REQUEST },
         ),
     ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
 
-    type = 'GAME_LIST_SUCCESS';
     let byId: GamesCollection = { '1': { id: '1', name: 'test' } };
     let allIds: IdsArray = ['1'];
     expect(
@@ -155,7 +176,7 @@ test('GAME_LIST', () => {
                 allIds: [],
                 active: null,
             },
-            { type, byId, allIds },
+            { type: GAME_LIST_SUCCESS, byId, allIds },
         ),
     ).toEqual({
         activity: 0,
@@ -164,7 +185,6 @@ test('GAME_LIST', () => {
         active: null,
     });
 
-    type = 'GAME_LIST_FAILURE';
     expect(
         games(
             {
@@ -173,7 +193,7 @@ test('GAME_LIST', () => {
                 allIds: [],
                 active: null,
             },
-            { type, message },
+            { type: GAME_LIST_FAILURE, message },
         ),
     ).toEqual({
         activity: 0,
@@ -182,7 +202,6 @@ test('GAME_LIST', () => {
         active: null,
     });
 
-    type = 'GAME_LIST_RESET';
     expect(
         games(
             {
@@ -191,7 +210,7 @@ test('GAME_LIST', () => {
                 allIds,
                 active: null,
             },
-            { type },
+            { type: GAME_LIST_RESET },
         ),
     ).toEqual({
         activity: 0,
@@ -204,7 +223,6 @@ test('GAME_LIST', () => {
 test('GAME_SELECT', () => {
     let message = 'error message';
 
-    let type = 'GAME_SELECT_REQUEST';
     expect(
         games(
             {
@@ -213,11 +231,10 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, id: '1', updateCardSets: false },
+            { type: GAME_SELECT_REQUEST, id: '1', updateCardSets: false },
         ),
     ).toEqual({ activity: ACTIVITY_SELECTING, byId: {}, allIds: [], active: null });
 
-    type = 'GAME_SELECT_SUCCESS';
     expect(
         games(
             {
@@ -226,7 +243,7 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, id: '123' },
+            { type: GAME_SELECT_SUCCESS, id: '123' },
         ),
     ).toEqual({
         activity: 0,
@@ -235,7 +252,6 @@ test('GAME_SELECT', () => {
         active: '123',
     });
 
-    type = 'GAME_SELECT_FAILURE';
     expect(
         games(
             {
@@ -244,7 +260,7 @@ test('GAME_SELECT', () => {
                 allIds: [],
                 active: null,
             },
-            { type, message },
+            { type: GAME_SELECT_FAILURE, message },
         ),
     ).toEqual({
         activity: 0,
@@ -257,33 +273,30 @@ test('GAME_SELECT', () => {
 test('CARDSET_CREATE', () => {
     let message = 'error message';
 
-    let type = 'CARDSET_CREATE_REQUEST';
-    expect(cardsets(DefaultCardSetState, { type, cardsetname: 'test', game_id: '1' })).toEqual({
+    expect(cardsets(DefaultCardSetState, { type: CARDSET_CREATE_REQUEST, cardsetname: 'test', game_id: '1' })).toEqual({
         ...DefaultCardSetState,
         activity: ACTIVITY_CREATING,
     });
 
-    type = 'CARDSET_CREATE_SUCCESS';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_CREATING,
             },
-            { type },
+            { type: CARDSET_CREATE_SUCCESS },
         ),
     ).toEqual({
         ...DefaultCardSetState,
     });
 
-    type = 'CARDSET_CREATE_FAILURE';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_CREATING,
             },
-            { type, message },
+            { type: CARDSET_CREATE_FAILURE, message },
         ),
     ).toEqual({
         ...DefaultCardSetState,
@@ -293,20 +306,18 @@ test('CARDSET_CREATE', () => {
 test('CARDSET_LIST', () => {
     let message = 'error message';
 
-    let type = 'CARDSET_LIST_REQUEST';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
             },
-            { type },
+            { type: CARDSET_LIST_REQUEST },
         ),
     ).toEqual({
         ...DefaultCardSetState,
         activity: ACTIVITY_LISTING,
     });
 
-    type = 'CARDSET_LIST_SUCCESS';
     let byId: CardSetsCollection = { '1': { id: '1', name: 'test' } };
     let allIds: IdsArray = ['1'];
 
@@ -316,7 +327,7 @@ test('CARDSET_LIST', () => {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
             },
-            { type, byId, allIds },
+            { type: CARDSET_LIST_SUCCESS, byId, allIds },
         ),
     ).toEqual({
         ...DefaultCardSetState,
@@ -324,27 +335,25 @@ test('CARDSET_LIST', () => {
         allIds,
     });
 
-    type = 'CARDSET_LIST_FAILURE';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
             },
-            { type, message },
+            { type: CARDSET_LIST_FAILURE, message },
         ),
     ).toEqual({
         ...DefaultCardSetState,
     });
 
-    type = 'CARDSET_LIST_RESET';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_LISTING,
             },
-            { type },
+            { type: CARDSET_LIST_RESET },
         ),
     ).toEqual({
         ...DefaultCardSetState,
@@ -354,20 +363,18 @@ test('CARDSET_LIST', () => {
 test('CARDSET_SELECT', () => {
     let message = 'error message';
 
-    let type = 'CARDSET_SELECT_REQUEST';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
             },
-            { type, id: '1' },
+            { type: CARDSET_SELECT_REQUEST, id: '1' },
         ),
     ).toEqual({
         ...DefaultCardSetState,
         activity: ACTIVITY_SELECTING,
     });
 
-    type = 'CARDSET_SELECT_SUCCESS';
     expect(
         cardsets(
             {
@@ -377,7 +384,7 @@ test('CARDSET_SELECT', () => {
                 allIds: ['1'],
             },
             {
-                type,
+                type: CARDSET_SELECT_SUCCESS,
                 id: '1',
                 name: 'test2',
                 data: {
@@ -403,14 +410,13 @@ test('CARDSET_SELECT', () => {
         },
     });
 
-    type = 'CARDSET_SELECT_FAILURE';
     expect(
         cardsets(
             {
                 ...DefaultCardSetState,
                 activity: ACTIVITY_SELECTING,
             },
-            { type, message },
+            { type: CARDSET_SELECT_FAILURE, message },
         ),
     ).toEqual({
         ...DefaultCardSetState,

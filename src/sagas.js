@@ -5,15 +5,57 @@ import jwt_decode from 'jwt-decode';
 
 import {
     type Action,
+    CARDSET_ADD_TEXT_PLACEHOLDER,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
+    CARDSET_CHANGE_TEXT,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
+    CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE,
+    CARDSET_CLONE_CARD,
+    CARDSET_CREATE_CARD,
+    CARDSET_CREATE_FAILURE,
+    CARDSET_CREATE_REQUEST,
+    CARDSET_CREATE_SUCCESS,
+    CARDSET_LIST_RESET,
+    CARDSET_LIST_SUCCESS,
+    CARDSET_REMOVE_CARD,
+    CARDSET_SELECT_FAILURE,
+    CARDSET_SELECT_REQUEST,
+    CARDSET_SELECT_SUCCESS,
+    CARDSET_UPDATE_CARD_COUNT,
+    CARDSET_UPDATE_DATA_FAILURE,
+    CARDSET_UPDATE_DATA_SUCCESS,
     type CardSetCreateRequest,
     type CardSetSelectAction,
     type CardSetSelectRequest,
+    GAME_CREATE_FAILURE,
+    GAME_CREATE_REQUEST,
+    GAME_CREATE_SUCCESS,
+    GAME_LIST_FAILURE,
+    GAME_LIST_REQUEST,
+    GAME_LIST_RESET,
+    GAME_LIST_SUCCESS,
+    GAME_SELECT_FAILURE,
+    GAME_SELECT_REQUEST,
+    GAME_SELECT_SUCCESS,
     type GameCreateRequest,
     type GameListSuccess,
     type GameSelectRequest,
+    INIT_REQUEST,
+    LOGIN_FAILURE,
+    LOGIN_REQUEST,
+    LOGIN_SUCCESS,
+    LOGOUT_FAILURE,
+    LOGOUT_REQUEST,
+    LOGOUT_SUCCESS,
     type LoginAction,
     type LoginRequest,
+    MESSAGE_DISPLAY,
+    MESSAGE_HIDE,
     type MessageAction,
+    SIGNUP_FAILURE,
+    SIGNUP_REQUEST,
+    SIGNUP_SUCCESS,
     type SignUpRequest,
     gameSelectRequest,
     messageRequest,
@@ -37,7 +79,7 @@ export function* putError(message: string): Saga<void> {
 
 export function* handleMessageDisplay(action: MessageAction): Saga<void> {
     yield call(delay, 5000);
-    yield put({ type: 'MESSAGE_HIDE', message: action.message });
+    yield put({ type: MESSAGE_HIDE, message: action.message });
 }
 
 // Login & Signup
@@ -68,7 +110,7 @@ export function* getToken(with_error_if_missing: boolean): Saga<?string> {
 
     const refresh_token_valid = yield call(validateToken, refresh_token);
     if (!refresh_token_valid) {
-        yield put({ type: 'LOGOUT_REQUEST' });
+        yield put({ type: LOGOUT_REQUEST });
         if (with_error_if_missing) throw new Error('Token not found.');
         return null;
     }
@@ -84,15 +126,15 @@ export function* handleLoginRequest(action: LoginRequest): Saga<void> {
     try {
         const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
-        yield put({ type: 'LOGIN_SUCCESS' });
+        yield put({ type: LOGIN_SUCCESS });
     } catch (e) {
-        yield put({ type: 'LOGIN_FAILURE' });
+        yield put({ type: LOGIN_FAILURE });
         yield call(putError, e.message);
     }
 }
 
 export function* handleLoginSuccess(): Saga<void> {
-    yield put({ type: 'GAME_LIST_REQUEST' });
+    yield put({ type: GAME_LIST_REQUEST });
 }
 
 // Logout
@@ -123,11 +165,11 @@ export function* handleLogoutRequest(action: LoginAction): Saga<void> {
         yield call(logoutRefreshToken);
         yield call(cleanTokens);
 
-        yield put({ type: 'CARDSET_LIST_RESET' });
-        yield put({ type: 'GAME_LIST_RESET' });
-        yield put({ type: 'LOGOUT_SUCCESS' });
+        yield put({ type: CARDSET_LIST_RESET });
+        yield put({ type: GAME_LIST_RESET });
+        yield put({ type: LOGOUT_SUCCESS });
     } catch (e) {
-        yield put({ type: 'LOGOUT_FAILURE' });
+        yield put({ type: LOGOUT_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -138,10 +180,10 @@ export function* handleSignupRequest(action: SignUpRequest): Saga<void> {
     try {
         const data = yield call(registerUser, action.creds);
         yield call(saveTokens, data);
-        yield put({ type: 'SIGNUP_SUCCESS' });
-        yield put({ type: 'LOGIN_SUCCESS' });
+        yield put({ type: SIGNUP_SUCCESS });
+        yield put({ type: LOGIN_SUCCESS });
     } catch (e) {
-        yield put({ type: 'SIGNUP_FAILURE' });
+        yield put({ type: SIGNUP_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -150,7 +192,7 @@ export function* handleSignupRequest(action: SignUpRequest): Saga<void> {
 export function* handleInitRequest(): Saga<void> {
     let token = yield call(getToken, false);
     if (token) {
-        yield put({ type: 'LOGIN_SUCCESS' });
+        yield put({ type: LOGIN_SUCCESS });
     }
 }
 
@@ -175,11 +217,11 @@ export function* handleGameCreateRequest(action: GameCreateRequest): Saga<void> 
     try {
         yield call(authorizedPostRequest, '/game', { name: action.gamename });
         yield put({
-            type: 'GAME_CREATE_SUCCESS',
+            type: GAME_CREATE_SUCCESS,
         });
-        yield put({ type: 'GAME_LIST_REQUEST' });
+        yield put({ type: GAME_LIST_REQUEST });
     } catch (e) {
-        yield put({ type: 'GAME_CREATE_FAILURE' });
+        yield put({ type: GAME_CREATE_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -194,13 +236,13 @@ export function* handleGameListRequest(): Saga<void> {
         }, {});
         yield put(
             ({
-                type: 'GAME_LIST_SUCCESS',
+                type: GAME_LIST_SUCCESS,
                 allIds,
                 byId,
             }: GameListSuccess),
         );
     } catch (e) {
-        yield put({ type: 'GAME_LIST_FAILURE' });
+        yield put({ type: GAME_LIST_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -209,7 +251,7 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
     try {
         const data = yield call(authorizedGetRequest, '/game/' + action.id);
         yield put({
-            type: 'GAME_SELECT_SUCCESS',
+            type: GAME_SELECT_SUCCESS,
             id: action.id,
         });
 
@@ -220,13 +262,13 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
                 return obj;
             }, {});
             yield put({
-                type: 'CARDSET_LIST_SUCCESS',
+                type: CARDSET_LIST_SUCCESS,
                 allIds,
                 byId,
             });
         }
     } catch (e) {
-        yield put({ type: 'GAME_SELECT_FAILURE' });
+        yield put({ type: GAME_SELECT_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -241,11 +283,11 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<
             data: '{}',
         });
         yield put({
-            type: 'CARDSET_CREATE_SUCCESS',
+            type: CARDSET_CREATE_SUCCESS,
         });
         yield put(gameSelectRequest(action.game_id, true));
     } catch (e) {
-        yield put({ type: 'CARDSET_CREATE_FAILURE' });
+        yield put({ type: CARDSET_CREATE_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -254,14 +296,14 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<
     try {
         const data = yield call(authorizedGetRequest, '/cardset/' + action.id);
         yield put({
-            type: 'CARDSET_SELECT_SUCCESS',
+            type: CARDSET_SELECT_SUCCESS,
             id: data.id,
             name: data.name,
             data: JSON.parse(data.data),
         });
         yield put(gameSelectRequest(data.game_id, false));
     } catch (e) {
-        yield put({ type: 'CARDSET_SELECT_FAILURE' });
+        yield put({ type: CARDSET_SELECT_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -284,10 +326,10 @@ export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
             data: JSON.stringify(data),
         });
         yield put({
-            type: 'CARDSET_UPDATE_DATA_SUCCESS',
+            type: CARDSET_UPDATE_DATA_SUCCESS,
         });
     } catch (e) {
-        yield put({ type: 'CARDSET_UPDATE_DATA_FAILURE' });
+        yield put({ type: CARDSET_UPDATE_DATA_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -303,29 +345,29 @@ function* handleEverything(action: Action) {
 // All
 export function* rootSaga(): Saga<void> {
     yield all([
-        takeEvery('MESSAGE_DISPLAY', handleMessageDisplay),
-        takeLatest('LOGIN_REQUEST', handleLoginRequest),
-        takeLatest('LOGIN_SUCCESS', handleLoginSuccess),
-        takeLatest('LOGOUT_REQUEST', handleLogoutRequest),
-        takeLatest('SIGNUP_REQUEST', handleSignupRequest),
-        takeLatest('GAME_CREATE_REQUEST', handleGameCreateRequest),
-        takeLatest('GAME_LIST_REQUEST', handleGameListRequest),
-        takeLatest('GAME_SELECT_REQUEST', handleGameSelectRequest),
-        takeLatest('CARDSET_CREATE_REQUEST', handleCardSetCreateRequest),
-        takeLatest('CARDSET_SELECT_REQUEST', handleCardSetSelectRequest),
+        takeEvery(MESSAGE_DISPLAY, handleMessageDisplay),
+        takeLatest(LOGIN_REQUEST, handleLoginRequest),
+        takeLatest(LOGIN_SUCCESS, handleLoginSuccess),
+        takeLatest(LOGOUT_REQUEST, handleLogoutRequest),
+        takeLatest(SIGNUP_REQUEST, handleSignupRequest),
+        takeLatest(GAME_CREATE_REQUEST, handleGameCreateRequest),
+        takeLatest(GAME_LIST_REQUEST, handleGameListRequest),
+        takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
+        takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
+        takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
 
-        takeLatest('CARDSET_CREATE_CARD', handleCardSetChange),
-        takeLatest('CARDSET_CLONE_CARD', handleCardSetChange),
-        takeLatest('CARDSET_REMOVE_CARD', handleCardSetChange),
-        takeLatest('CARDSET_UPDATE_CARD_COUNT', handleCardSetChange),
-        takeLatest('CARDSET_ADD_TEXT_PLACEHOLDER', handleCardSetChange),
-        takeLatest('CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION', handleCardSetChange),
-        takeLatest('CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE', handleCardSetChange),
-        takeLatest('CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE', handleCardSetChange),
-        takeLatest('CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN', handleCardSetChange),
-        takeLatest('CARDSET_CHANGE_TEXT', handleCardSetChange),
+        takeLatest(CARDSET_CREATE_CARD, handleCardSetChange),
+        takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),
+        takeLatest(CARDSET_REMOVE_CARD, handleCardSetChange),
+        takeLatest(CARDSET_UPDATE_CARD_COUNT, handleCardSetChange),
+        takeLatest(CARDSET_ADD_TEXT_PLACEHOLDER, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
 
-        takeLatest('INIT_REQUEST', handleInitRequest),
+        takeLatest(INIT_REQUEST, handleInitRequest),
         takeEvery('*', handleEverything),
     ]);
 }
