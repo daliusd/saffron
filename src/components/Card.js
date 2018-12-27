@@ -4,9 +4,9 @@ import Measure from 'react-measure';
 import React, { Component } from 'react';
 
 import {
-    type TemplateType,
     type CardType,
     type Dispatch,
+    type PlaceholdersCollection,
     cardSetActiveCardAndPlaceholder,
     cardSetAddTextPlaceholder,
     cardSetChangeActiveTextPlaceholderAlign,
@@ -19,7 +19,7 @@ import TextField from './TextField';
 type Props = {
     card: CardType,
     dispatch: Dispatch,
-    template: TemplateType,
+    placeholders: PlaceholdersCollection,
 };
 
 type State = {
@@ -78,9 +78,9 @@ class Card extends Component<Props, State> {
     };
 
     render() {
-        const { template, card } = this.props;
+        const { placeholders, card } = this.props;
         const { width } = this.state.dimensions;
-        const placeholderIds: Array<string> = template ? Object.keys(template) : [];
+        const placeholderIds: Array<string> = placeholders ? Object.keys(placeholders) : [];
 
         return (
             <Measure
@@ -105,7 +105,7 @@ class Card extends Component<Props, State> {
                         >
                             {placeholderIds &&
                                 placeholderIds.map(p => (
-                                    <TextField key={p} cardId={card.id} textPlaceholder={template[p]} />
+                                    <TextField key={p} cardId={card.id} textPlaceholder={placeholders[p]} />
                                 ))}
                         </div>
 
@@ -125,7 +125,7 @@ class Card extends Component<Props, State> {
 
 const mapStateToProps = state => {
     return {
-        template: state.cardsets.template,
+        placeholders: state.cardsets.placeholders,
     };
 };
 

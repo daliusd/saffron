@@ -80,7 +80,7 @@ export type TextPlaceholderType = {
     angle: number,
     align: string,
 };
-export type TemplateType = { [string]: TextPlaceholderType };
+export type PlaceholdersCollection = { [string]: TextPlaceholderType };
 
 export type TextInfo = { value: string, cursor: number };
 export type CardType = { id: string, count: number };
@@ -156,7 +156,7 @@ export type CardSetSelectSuccess = {
     data: {
         cardsAllIds: IdsArray,
         cardsById: { [string]: CardType },
-        template: TemplateType,
+        placeholders: PlaceholdersCollection,
         texts: {
             [string]: {
                 [string]: TextInfo,

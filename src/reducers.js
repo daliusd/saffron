@@ -49,11 +49,11 @@ import {
     MESSAGE_HIDE,
     type MessageAction,
     type MessageType,
+    type PlaceholdersCollection,
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
     type SignUpAction,
-    type TemplateType,
     type TextInfo,
 } from './actions';
 
@@ -90,16 +90,16 @@ export type CardSetState = {
     +cardsById: { [string]: CardType },
     +activeCard: ?string,
     +activePlaceholder: ?string,
-    +template: TemplateType,
+    +placeholders: PlaceholdersCollection,
     +texts: { [string]: { [string]: TextInfo } },
 };
 
-export const DefaultCardSetState = {
+export const DefaultCardSetState: CardSetState = {
     byId: {},
     allIds: [],
     activity: 0,
     active: null,
-    template: {},
+    placeholders: {},
     cardsById: {},
     cardsAllIds: [],
     activeCard: null,
@@ -290,7 +290,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 }),
                 cardsAllIds: action.data.cardsAllIds,
                 cardsById: action.data.cardsById,
-                template: action.data.template,
+                placeholders: action.data.placeholders,
                 texts: action.data.texts,
             });
         case CARDSET_SELECT_FAILURE:
@@ -353,52 +353,52 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
 
             return {
                 ...state,
-                template: {
-                    ...state.template,
+                placeholders: {
+                    ...state.placeholders,
                     [id]: textPlaceholder,
                 },
             };
         }
         case CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: {
             const textPlaceholder = {
-                ...state.template[action.textPlaceholder.id],
+                ...state.placeholders[action.textPlaceholder.id],
                 x: action.x,
                 y: action.y,
             };
 
             return {
                 ...state,
-                template: {
-                    ...state.template,
+                placeholders: {
+                    ...state.placeholders,
                     [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
         }
         case CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE: {
             const textPlaceholder = {
-                ...state.template[action.textPlaceholder.id],
+                ...state.placeholders[action.textPlaceholder.id],
                 width: action.width,
                 height: action.height,
             };
 
             return {
                 ...state,
-                template: {
-                    ...state.template,
+                placeholders: {
+                    ...state.placeholders,
                     [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
         }
         case CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE: {
             const textPlaceholder = {
-                ...state.template[action.textPlaceholder.id],
+                ...state.placeholders[action.textPlaceholder.id],
                 angle: action.angle,
             };
 
             return {
                 ...state,
-                template: {
-                    ...state.template,
+                placeholders: {
+                    ...state.placeholders,
                     [action.textPlaceholder.id]: textPlaceholder,
                 },
             };
@@ -406,14 +406,14 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: {
             if (state.activePlaceholder) {
                 const textPlaceholder = {
-                    ...state.template[state.activePlaceholder],
+                    ...state.placeholders[state.activePlaceholder],
                     align: action.align,
                 };
 
                 return {
                     ...state,
-                    template: {
-                        ...state.template,
+                    placeholders: {
+                        ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
                 };

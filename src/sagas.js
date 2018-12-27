@@ -317,7 +317,7 @@ export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
         const data = {
             cardsAllIds: state.cardsets.cardsAllIds,
             cardsById: state.cardsets.cardsById,
-            template: state.cardsets.template,
+            placeholders: state.cardsets.placeholders,
             texts: state.cardsets.texts,
         };
 

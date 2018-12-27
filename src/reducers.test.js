@@ -390,7 +390,7 @@ test('CARDSET_SELECT', () => {
                 data: {
                     cardsAllIds: ['1'],
                     cardsById: { '1': { id: '1', count: 1 } },
-                    template: {},
+                    placeholders: {},
                     texts: {},
                 },
                 game_id: '2',

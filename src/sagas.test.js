@@ -40,7 +40,7 @@ import {
     gameSelectRequest,
     messageRequest,
 } from './actions';
-import type { CardSetState } from './reducers';
+import { type CardSetState, DefaultCardSetState } from './reducers';
 import {
     authorizedGetRequest,
     authorizedPostRequest,
@@ -499,23 +499,16 @@ test('handleCardSetChange', () => {
 
     const state: { cardsets: CardSetState } = {
         cardsets: {
+            ...DefaultCardSetState,
             byId: { '123': { id: '123', name: 'name' } },
-            allIds: [],
-            activity: 0,
             active: '123',
-            template: {},
-            cardsById: {},
-            cardsAllIds: [],
-            activeCard: null,
-            activePlaceholder: null,
-            texts: {},
         },
     };
 
     expect(gen.next().value).toEqual(select());
     expect(gen.next(state).value).toEqual(
         call(authorizedPutRequest, '/cardset/123', {
-            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, template: {}, texts: {} }),
+            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, placeholders: {}, texts: {} }),
             name: 'name',
         }),
     );
