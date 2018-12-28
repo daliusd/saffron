@@ -11,6 +11,7 @@ import {
     cardSetAddTextPlaceholder,
     cardSetChangeActiveTextPlaceholderAlign,
     cardSetCloneCard,
+    cardSetRemoveActiveTextPlaceholder,
     cardSetRemoveCard,
     cardSetUpdateCardCount,
 } from '../actions';
@@ -57,6 +58,11 @@ class Card extends Component<Props, State> {
     handleAddTextClick = () => {
         const { dispatch } = this.props;
         dispatch(cardSetAddTextPlaceholder());
+    };
+
+    handleRemoveTextClick = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetRemoveActiveTextPlaceholder());
     };
 
     handleSetTextAlignLeft = () => {
@@ -114,7 +120,8 @@ class Card extends Component<Props, State> {
                         <button onClick={this.handleRemoveCardClick}>Remove</button>
                         <button onClick={this.handleCloneCardClick}>Clone</button>
                         <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
-                        <button onClick={this.handleAddTextClick}>Text</button>
+                        <button onClick={this.handleAddTextClick}>+Text</button>
+                        <button onClick={this.handleRemoveTextClick}>-Text</button>
                         <button onClick={this.handleSetTextAlignLeft}>L</button>
                         <button onClick={this.handleSetTextAlignCenter}>C</button>
                         <button onClick={this.handleSetTextAlignRight}>R</button>

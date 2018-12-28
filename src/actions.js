@@ -38,6 +38,8 @@ export const CARDSET_CLONE_CARD: 'CARDSET_CLONE_CARD' = 'CARDSET_CLONE_CARD';
 export const CARDSET_REMOVE_CARD: 'CARDSET_REMOVE_CARD' = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT: 'CARDSET_UPDATE_CARD_COUNT' = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER: 'CARDSET_ADD_TEXT_PLACEHOLDER' = 'CARDSET_ADD_TEXT_PLACEHOLDER';
+export const CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER' =
+    'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER';
 export const CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION' =
     'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION';
 export const CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE' =
@@ -184,6 +186,9 @@ export type CardSetCloneCard = { type: typeof CARDSET_CLONE_CARD, card: CardType
 export type CardSetRemoveCard = { type: typeof CARDSET_REMOVE_CARD, card: CardType };
 export type CardSetUpdateCardCount = { type: typeof CARDSET_UPDATE_CARD_COUNT, card: CardType, count: number };
 export type CardSetAddTextPlaceholder = { type: typeof CARDSET_ADD_TEXT_PLACEHOLDER };
+export type CardSetRemoveActiveTextPlaceholder = {
+    type: typeof CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
+};
 export type CardSetChangeTextPlaceholderPosition = {
     type: typeof CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
     textPlaceholder: TextPlaceholderType,
@@ -250,6 +255,7 @@ export type CardSetModifyAction =
     | CardSetRemoveCard
     | CardSetUpdateCardCount
     | CardSetAddTextPlaceholder
+    | CardSetRemoveActiveTextPlaceholder
     | CardSetChangeTextPlaceholderPosition
     | CardSetChangeTextPlaceholderSize
     | CardSetChangeTextPlaceholderAngle
@@ -376,6 +382,12 @@ export const cardSetUpdateCardCount = (card: CardType, count: number): CardSetUp
 export const cardSetAddTextPlaceholder = (): CardSetAddTextPlaceholder => {
     return {
         type: CARDSET_ADD_TEXT_PLACEHOLDER,
+    };
+};
+
+export const cardSetRemoveActiveTextPlaceholder = (): CardSetRemoveActiveTextPlaceholder => {
+    return {
+        type: CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
     };
 };
 

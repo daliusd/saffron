@@ -23,6 +23,7 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
+    CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
@@ -369,6 +370,32 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     [id]: textPlaceholder,
                 },
             };
+        }
+        case CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER: {
+            const placeholderId = state.activePlaceholder;
+            if (placeholderId !== undefined && placeholderId !== null) {
+                let placeholders = { ...state.placeholders };
+                if (placeholderId in placeholders) {
+                    delete placeholders[placeholderId];
+                }
+
+                let texts = { ...state.texts };
+                for (const cardId in texts) {
+                    if (placeholderId in texts[cardId]) {
+                        let placeholderTexts = { ...texts[cardId] };
+                        delete placeholderTexts[placeholderId];
+                        texts[cardId] = placeholderTexts;
+                    }
+                }
+
+                return {
+                    ...state,
+                    placeholders,
+                    texts,
+                    activePlaceholder: null,
+                };
+            }
+            return state;
         }
         case CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: {
             const textPlaceholder = {
