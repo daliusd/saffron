@@ -324,6 +324,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     [newCard.id]: newCard,
                 },
                 cardsAllIds,
+                texts: {
+                    ...state.texts,
+                    [newCard.id]: {
+                        ...state.texts[action.card.id],
+                    },
+                },
             };
         }
         case CARDSET_REMOVE_CARD: {
