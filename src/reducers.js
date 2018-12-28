@@ -334,16 +334,25 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_REMOVE_CARD: {
-            const card_id = action.card.id;
+            const cardId = action.card.id;
             let cardsById = { ...state.cardsById };
-            delete cardsById[card_id];
+            delete cardsById[cardId];
 
-            const cardsAllIds = state.cardsAllIds.filter(id => id !== card_id);
+            let texts = { ...state.texts };
+            if (cardId in texts) {
+                delete texts[cardId];
+            }
+
+            let activeCard = state.activeCard === cardId ? null : state.activeCard;
+
+            const cardsAllIds = state.cardsAllIds.filter(id => id !== cardId);
 
             return {
                 ...state,
                 cardsById,
                 cardsAllIds,
+                texts,
+                activeCard,
             };
         }
         case CARDSET_UPDATE_CARD_COUNT: {
