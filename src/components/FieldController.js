@@ -1,11 +1,16 @@
 // @flow
 /** @jsx jsx */
-import * as React from 'react';
 import { jsx } from '@emotion/core';
+import { connect } from 'react-redux';
+import * as React from 'react';
+
 import resize from './resize.svg';
 import rotate from './rotate.svg';
 
 type Props = {
+    cardId: string,
+    placeholderId: string,
+    isActive: boolean,
     x: number,
     y: number,
     width: number,
@@ -17,7 +22,7 @@ type Props = {
     onRotate: (angle: number) => mixed,
 };
 
-export default class FieldController extends React.Component<Props> {
+class FieldController extends React.Component<Props> {
     moving: boolean;
     cDiv: React.ElementRef<any>;
     resizeDiv: React.ElementRef<any>;
@@ -291,7 +296,7 @@ export default class FieldController extends React.Component<Props> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, children } = this.props;
+        const { x, y, width, height, angle, children, isActive } = this.props;
 
         return (
             <div
@@ -304,6 +309,12 @@ export default class FieldController extends React.Component<Props> {
                     height: height,
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
+                    border: isActive ? '1px dotted hotpink' : '0px',
+                    padding: isActive ? '0px' : '1px',
+                    '&:hover': {
+                        border: isActive ? '1px dotted pink' : '1px dotted gray',
+                        padding: '0px',
+                    },
                     img: {
                         visibility: 'hidden',
                     },
@@ -339,3 +350,12 @@ export default class FieldController extends React.Component<Props> {
         );
     }
 }
+
+const mapStateToProps = (state, props) => {
+    return {
+        isActive:
+            props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
+    };
+};
+
+export default connect(mapStateToProps)(FieldController);

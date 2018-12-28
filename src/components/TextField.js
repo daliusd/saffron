@@ -39,6 +39,8 @@ class TextField extends PureComponent<Props> {
 
         return (
             <FieldController
+                cardId={this.props.cardId}
+                placeholderId={textPlaceholder.id}
                 x={textPlaceholder.x}
                 y={textPlaceholder.y}
                 width={textPlaceholder.width}
