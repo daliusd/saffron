@@ -151,7 +151,7 @@ class ContentEditable extends Component<Props> {
     };
 
     render() {
-        const { color, align, fontFamily, fontVariant, fontSize } = this.props;
+        const { color, align, fontFamily, fontVariant, fontSize, isActive } = this.props;
         const isItalic = fontVariant && fontVariant.indexOf('italic') !== -1;
         const fontWeight = isItalic
             ? fontVariant === 'italic'
@@ -177,6 +177,13 @@ class ContentEditable extends Component<Props> {
                     fontStyle: isItalic ? 'italic' : 'normal',
                     fontWeight,
                     fontSize: `${fontSize}px`,
+                    border: isActive ? '1px dotted hotpink' : '0px',
+                    padding: isActive ? '0px' : '1px',
+                    outline: 'none',
+                    '&:hover': {
+                        border: isActive ? '1px dotted pink' : '1px dotted gray',
+                        padding: '0px',
+                    },
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />

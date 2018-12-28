@@ -300,15 +300,10 @@ export default class FieldController extends React.Component<Props> {
                     position: 'absolute',
                     left: x,
                     top: y,
-                    margin: '1px',
                     width: width,
                     height: height,
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
-                    '&:hover': {
-                        border: '1px dotted gray',
-                        margin: '0px',
-                    },
                     img: {
                         visibility: 'hidden',
                     },
