@@ -2,6 +2,7 @@ import WebFont from 'webfontloader';
 
 export const DEFAULT_FONT = 'Roboto';
 export const DEFAULT_FONT_VARIANT = 'regular';
+export const DEFAULT_FONT_SIZE = '16';
 
 const webFontsLoadPromise = config =>
     new Promise((resolve, reject) => {

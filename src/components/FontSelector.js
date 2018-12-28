@@ -4,10 +4,11 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import WebFont from 'webfontloader';
 
-import { DEFAULT_FONT, DEFAULT_FONT_VARIANT } from '../fontLoader';
+import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from '../fontLoader';
 import {
     type Dispatch,
     cardSetChangeActiveTextPlaceholderFontFamilyAndVariant,
+    cardSetChangeActiveTextPlaceholderFontSize,
     cardSetChangeActiveTextPlaceholderFontVariant,
 } from '../actions';
 import webfonts from './webfonts';
@@ -22,6 +23,7 @@ type Props = {
     dispatch: Dispatch,
     activeFont: string,
     activeFontVariant: string,
+    activeFontSize: string,
 };
 
 class FontSelector extends Component<Props> {
@@ -64,6 +66,11 @@ class FontSelector extends Component<Props> {
         });
     };
 
+    handleFontSizeChange = (event: SyntheticInputEvent<>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeActiveTextPlaceholderFontSize(event.target.value));
+    };
+
     render() {
         const selectedFontFamily = options.find(f => f.value === this.props.activeFont);
 
@@ -85,6 +92,9 @@ class FontSelector extends Component<Props> {
                         options={fontVariantOptions}
                     />
                 </div>
+                <div style={{ width: 20, display: 'inline-block' }}>
+                    <input type="number" value={this.props.activeFontSize} onChange={this.handleFontSizeChange} />
+                </div>
             </div>
         );
     }
@@ -99,9 +109,14 @@ const mapStateToProps = (state, props) => {
         state.cardsets.placeholders && state.cardsets.activePlaceholder
             ? state.cardsets.placeholders[state.cardsets.activePlaceholder].fontVariant || DEFAULT_FONT_VARIANT
             : DEFAULT_FONT_VARIANT;
+    const activeFontSize =
+        state.cardsets.placeholders && state.cardsets.activePlaceholder
+            ? state.cardsets.placeholders[state.cardsets.activePlaceholder].fontSize || DEFAULT_FONT_SIZE
+            : DEFAULT_FONT_SIZE;
     return {
         activeFont,
         activeFontVariant,
+        activeFontSize,
     };
 };
 

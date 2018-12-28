@@ -8,6 +8,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
     CARDSET_CHANGE_TEXT,
     CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
@@ -485,6 +486,24 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     ...state.placeholders[state.activePlaceholder],
                     fontFamily: action.fontFamily,
                     fontVariant: action.fontVariant,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: textPlaceholder,
+                    },
+                };
+            } else {
+                return state;
+            }
+        }
+        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE: {
+            if (state.activePlaceholder) {
+                const textPlaceholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    fontSize: action.fontSize,
                 };
 
                 return {

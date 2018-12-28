@@ -54,6 +54,8 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT: 'CARDSET_CHANG
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT' =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE' =
+    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE';
 export const CARDSET_CHANGE_TEXT: 'CARDSET_CHANGE_TEXT' = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER' =
     'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
@@ -90,6 +92,7 @@ export type TextPlaceholderType = {
     color: string,
     fontFamily: string,
     fontVariant: string,
+    fontSize: string,
 };
 export type PlaceholdersCollection = { [string]: TextPlaceholderType };
 
@@ -219,6 +222,10 @@ export type CardSetChangeActiveTextPlaceholderFontFamilyAndVariant = {
     fontFamily: string,
     fontVariant: string,
 };
+export type CardSetChangeActiveTextPlaceholderFontSize = {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
+    fontSize: string,
+};
 export type CardSetChangeText = {
     type: typeof CARDSET_CHANGE_TEXT,
     cardId: string,
@@ -251,6 +258,7 @@ export type CardSetModifyAction =
     | CardSetChangeActiveTextPlaceholderFontFamily
     | CardSetChangeActiveTextPlaceholderFontVariant
     | CardSetChangeActiveTextPlaceholderFontFamilyAndVariant
+    | CardSetChangeActiveTextPlaceholderFontSize
     | CardSetChangeText
     | CardSetSetActiveCardAndPlaceholder;
 
@@ -450,6 +458,16 @@ export const cardSetChangeActiveTextPlaceholderFontFamilyAndVariant = (
         fontVariant,
     };
 };
+
+export const cardSetChangeActiveTextPlaceholderFontSize = (
+    fontSize: string,
+): CardSetChangeActiveTextPlaceholderFontSize => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
+        fontSize,
+    };
+};
+
 export const cardSetChangeText = (cardId: string, placeholderId: string, textInfo: TextInfo): CardSetChangeText => {
     return {
         type: CARDSET_CHANGE_TEXT,
