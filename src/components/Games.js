@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type Dispatch, type GamesCollection, type IdsArray, gameCreateRequest } from '../actions';
+import { type Dispatch, type GamesCollection, type IdsArray, gameCreateRequest, messageRequest } from '../actions';
 
 type Props = {
     dispatch: Dispatch,
@@ -16,8 +16,12 @@ export class Games extends Component<Props> {
     handleCreateGameClick(event: SyntheticEvent<>) {
         const { dispatch } = this.props;
 
-        const gamename = this.refs.gamename;
-        dispatch(gameCreateRequest(gamename.value.trim()));
+        const gamename = this.refs.gamename.value.trim();
+        if (gamename) {
+            dispatch(gameCreateRequest(gamename));
+        } else {
+            dispatch(messageRequest('error', 'Game name should be non empty.'));
+        }
     }
 
     render() {

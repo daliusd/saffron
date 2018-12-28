@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { type CardSetsCollection, type Dispatch, type IdsArray, cardSetCreateRequest } from '../actions';
+import {
+    type CardSetsCollection,
+    type Dispatch,
+    type IdsArray,
+    cardSetCreateRequest,
+    messageRequest,
+} from '../actions';
 
 type Props = {
     dispatch: Dispatch,
@@ -17,9 +23,13 @@ export class CardSets extends Component<Props> {
     handleCreateCardSetClick(event: SyntheticEvent<>) {
         const { dispatch, activeGame } = this.props;
 
-        const cardsetname = this.refs.cardsetname;
+        const cardsetname = this.refs.cardsetname.value.trim();
 
-        dispatch(cardSetCreateRequest(cardsetname.value.trim(), activeGame));
+        if (cardsetname) {
+            dispatch(cardSetCreateRequest(cardsetname, activeGame));
+        } else {
+            dispatch(messageRequest('error', 'Card Set name should be non empty.'));
+        }
     }
 
     render() {
