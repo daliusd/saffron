@@ -1,0 +1,172 @@
++ Login on enter
+
++ Sign up on enter
+
++ Single place to show errors
+
+    Idea here: https://stackoverflow.com/questions/35411423/how-to-dispatch-a-redux-action-with-a-timeout
+
+    + Make all errors return message. E.g. axios errors.
+
++ onLogin, onSignUp vs onLoginClick...
+
++ Use Dispatch in type definitions
+
++ Refactor sagas
+
+    + use handle
+
+    + use actions creators in sagas
+
++ Client: card set crud
+
+    + Create
+
+    + List
+
++ Routes
+
+    + Games
+
+    + Card Sets
+
+- Card control
+
+    + Create simple cards
+
+    + Remove card
+
+    + Clone card
+
+    + Specify how many copies of card to make
+
+    - Create some cards templates
+
+- Draggable, Resizable, Rotateble controller
+
+    + Implementation
+
+    + Mobile support
+
+    + SVG icons
+
+    + Events: select, drag and others
+
+    + State update
+
+    - Mouse cursor by current controller state
+
++ Fix tests and flow errors, refactor code
+
++ Text field
+
+    + Add text field
+
+    + Double-click and etc should work.
+
+    + Change size
+
+    + Rotate
+
+    + Alignment: left, center, right
+
+    + Rename template to placeholder
+
+    + Make action ids constants
+
+    + Split card set select type
+
+    + Change template to placeholder collection
+
+    + Hide borders, show selected
+
+        + Time to use emotion ?
+
+    + Change color
+
+    + Change font
+
+    + Bold (or maybe we could be smarter than that and ask for specific weight?)
+
+    + Italic
+
+    + Change font size
+
+    + Remove text field
+
++ Show active selection
+
++ Clone texts on card clone
+
++ Remove texts on card remove
+
++ Auto-save Card Sets
+
++ Do not allow empty Game and Card Set name
+
++ Move to seperate git repo
+
+- Update CRA
+
+- Cards can have two sides
+
+- Image field
+
+    - Add image field / change position
+
+        - Use icons from collection
+
+            - Allow changing image's color if it is from
+            collection
+
+        - Allow uploading custom images
+
+    - Change size
+
+    - Rotate
+
+    - Find more icons or give instructions to users where to
+    get them. https://thenounproject.com/developers/ looks
+    like an option but it is not free.
+
+    - Generate list with authors of icons
+
+- Background control
+
+    - Use color for background
+
+    - Use image for background
+
+        - Allow uploading images
+
+    - Apply background to all cards
+
+- Repeated image control or images in text control
+
+    - Allow assigning letters to user images
+
+    - Change size, should work like text
+
+- Card Sets
+
+    - Specify card size when creating new card set
+
+    - Delete Card Set
+
+    - Rename Card Set
+
+- Game Delete
+
+- Game Rename
+
+- Generate PDF
+
+- Export / Import data as JSON
+
+- Export / Import data as CSV
+
+- Help page
+
+- UI
+
+    - https://react-kawaii.now.sh/
