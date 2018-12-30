@@ -16,7 +16,7 @@ export function handleAxiosError(error) {
 
 export function getTokens(creds) {
     return axios
-        .post('/token', creds)
+        .post('/api/tokens', creds)
         .then(resp => {
             return resp.data;
         })
@@ -30,7 +30,7 @@ export function refreshToken(refresh_token) {
         headers: { Authorization: `Bearer ${refresh_token}` },
     };
     return axios
-        .post('/token_access', {}, config)
+        .post('/api/access_tokens', {}, config)
         .then(resp => {
             return resp.data.access_token;
         })
@@ -44,7 +44,7 @@ export function deleteAccessToken(token) {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
-        .delete('/token_access', config)
+        .delete('/api/access_tokens', config)
         .then(resp => {
             return resp.data;
         })
@@ -59,7 +59,7 @@ export function deleteRefreshToken(token) {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
-        .delete('/token_refresh', config)
+        .delete('/api/refresh_tokens', config)
         .then(resp => {
             return resp.data;
         })
@@ -71,7 +71,7 @@ export function deleteRefreshToken(token) {
 
 export function registerUser(creds) {
     return axios
-        .post('/user', creds)
+        .post('/api/users', creds)
         .then(resp => {
             return resp.data;
         })

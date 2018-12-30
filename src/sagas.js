@@ -197,10 +197,12 @@ export function* handleSignupRequest(action: SignUpRequest): Saga<void> {
 
 // Init
 export function* handleInitRequest(): Saga<void> {
-    let token = yield call(getToken, false);
-    if (token) {
-        yield put({ type: LOGIN_SUCCESS });
-    }
+    try {
+        let token = yield call(getToken, false);
+        if (token) {
+            yield put({ type: LOGIN_SUCCESS });
+        }
+    } catch (e) {}
 }
 
 // Authorized Requests
@@ -222,7 +224,7 @@ export function* authorizedPutRequest(url: string, data: Object): Saga<Object> {
 // Game
 export function* handleGameCreateRequest(action: GameCreateRequest): Saga<void> {
     try {
-        yield call(authorizedPostRequest, '/game', { name: action.gamename });
+        yield call(authorizedPostRequest, '/api/games', { name: action.gamename });
         yield put({
             type: GAME_CREATE_SUCCESS,
         });
@@ -235,7 +237,7 @@ export function* handleGameCreateRequest(action: GameCreateRequest): Saga<void> 
 
 export function* handleGameListRequest(): Saga<void> {
     try {
-        const data = yield call(authorizedGetRequest, '/game');
+        const data = yield call(authorizedGetRequest, '/api/games');
         const allIds = data.games.map(g => g.id);
         const byId = data.games.reduce((obj, g) => {
             obj[g.id] = g;
@@ -256,7 +258,7 @@ export function* handleGameListRequest(): Saga<void> {
 
 export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> {
     try {
-        const data = yield call(authorizedGetRequest, '/game/' + action.id);
+        const data = yield call(authorizedGetRequest, '/api/games/' + action.id);
         yield put({
             type: GAME_SELECT_SUCCESS,
             id: action.id,
@@ -284,7 +286,7 @@ export function* handleGameSelectRequest(action: GameSelectRequest): Saga<void> 
 
 export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<void> {
     try {
-        yield call(authorizedPostRequest, '/cardset', {
+        yield call(authorizedPostRequest, '/api/cardsets', {
             name: action.cardsetname,
             game_id: action.game_id,
             data: '{}',
@@ -301,7 +303,7 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): Saga<
 
 export function* handleCardSetSelectRequest(action: CardSetSelectRequest): Saga<void> {
     try {
-        const data = yield call(authorizedGetRequest, '/cardset/' + action.id);
+        const data = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
         const parsedData = JSON.parse(data.data);
         yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
@@ -330,7 +332,7 @@ export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
             texts: state.cardsets.texts,
         };
 
-        yield call(authorizedPutRequest, '/cardset/' + cardsetId, {
+        yield call(authorizedPutRequest, '/api/cardsets/' + cardsetId, {
             name: state.cardsets.byId[cardsetId].name,
             data: JSON.stringify(data),
         });

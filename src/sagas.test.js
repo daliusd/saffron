@@ -357,7 +357,7 @@ test('handleGameCreateRequest', () => {
     const action = { gamename: 'test' };
     const gen = cloneableGenerator(handleGameCreateRequest)(action);
 
-    expect(gen.next().value).toEqual(call(authorizedPostRequest, '/game', { name: 'test' }));
+    expect(gen.next().value).toEqual(call(authorizedPostRequest, '/api/games', { name: 'test' }));
 
     let clone = gen.clone();
 
@@ -376,7 +376,7 @@ test('handleGameCreateRequest', () => {
 test('handleGameListRequest', () => {
     const gen = cloneableGenerator(handleGameListRequest)();
 
-    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game'));
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/api/games'));
 
     let clone = gen.clone();
 
@@ -405,7 +405,7 @@ test('handleGameSelectRequest', () => {
     const action = { id: 123, updateCardSets: true };
     const gen = cloneableGenerator(handleGameSelectRequest)(action);
 
-    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/api/games/123'));
 
     let clone = gen.clone();
 
@@ -438,7 +438,7 @@ test('handleGameSelectRequest with updateCardSets set to false', () => {
     const action = { type: GAME_SELECT_REQUEST, id: '123', updateCardSets: false };
     const gen = handleGameSelectRequest(action);
 
-    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/game/123'));
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/api/games/123'));
     expect(gen.next({}).value).toEqual(put({ type: GAME_SELECT_SUCCESS, id: '123' }));
     expect(gen.next().done).toBeTruthy();
 });
@@ -448,7 +448,7 @@ test('handleCardSetCreateRequest', () => {
     const gen = cloneableGenerator(handleCardSetCreateRequest)(action);
 
     expect(gen.next().value).toEqual(
-        call(authorizedPostRequest, '/cardset', { name: 'test', game_id: '666', data: '{}' }),
+        call(authorizedPostRequest, '/api/cardsets', { name: 'test', game_id: '666', data: '{}' }),
     );
 
     let clone = gen.clone();
@@ -469,7 +469,7 @@ test('handleCardSetSelectRequest', () => {
     const action = { id: '345' };
     const gen = cloneableGenerator(handleCardSetSelectRequest)(action);
 
-    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/cardset/345'));
+    expect(gen.next().value).toEqual(call(authorizedGetRequest, '/api/cardsets/345'));
 
     let clone = gen.clone();
 
@@ -510,7 +510,7 @@ test('handleCardSetChange', () => {
 
     expect(gen.next().value).toEqual(select());
     expect(gen.next(state).value).toEqual(
-        call(authorizedPutRequest, '/cardset/123', {
+        call(authorizedPutRequest, '/api/cardsets/123', {
             data: JSON.stringify({ cardsAllIds: [], cardsById: {}, placeholders: {}, texts: {} }),
             name: 'name',
         }),
