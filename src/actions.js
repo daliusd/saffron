@@ -39,10 +39,8 @@ export const CARDSET_REMOVE_CARD: 'CARDSET_REMOVE_CARD' = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT: 'CARDSET_UPDATE_CARD_COUNT' = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER: 'CARDSET_ADD_TEXT_PLACEHOLDER' = 'CARDSET_ADD_TEXT_PLACEHOLDER';
 export const CARDSET_ADD_IMAGE_PLACEHOLDER: 'CARDSET_ADD_IMAGE_PLACEHOLDER' = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
-export const CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER' =
-    'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER';
-export const CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER' =
-    'CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER';
+export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER' =
+    'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION: 'CARDSET_CHANGE_PLACEHOLDER_POSITION' =
     'CARDSET_CHANGE_PLACEHOLDER_POSITION';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE: 'CARDSET_CHANGE_PLACEHOLDER_SIZE' = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
@@ -202,11 +200,8 @@ export type CardSetRemoveCard = { type: typeof CARDSET_REMOVE_CARD, card: CardTy
 export type CardSetUpdateCardCount = { type: typeof CARDSET_UPDATE_CARD_COUNT, card: CardType, count: number };
 export type CardSetAddTextPlaceholder = { type: typeof CARDSET_ADD_TEXT_PLACEHOLDER };
 export type CardSetAddImagePlaceholder = { type: typeof CARDSET_ADD_IMAGE_PLACEHOLDER };
-export type CardSetRemoveActiveTextPlaceholder = {
-    type: typeof CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
-};
-export type CardSetRemoveActiveImagePlaceholder = {
-    type: typeof CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
+export type CardSetRemoveActivePlaceholder = {
+    type: typeof CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
 };
 export type CardSetChangePlaceholderPosition = {
     type: typeof CARDSET_CHANGE_PLACEHOLDER_POSITION,
@@ -275,8 +270,7 @@ export type CardSetModifyAction =
     | CardSetUpdateCardCount
     | CardSetAddTextPlaceholder
     | CardSetAddImagePlaceholder
-    | CardSetRemoveActiveTextPlaceholder
-    | CardSetRemoveActiveImagePlaceholder
+    | CardSetRemoveActivePlaceholder
     | CardSetChangePlaceholderPosition
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
@@ -412,15 +406,9 @@ export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
     };
 };
 
-export const cardSetRemoveActiveTextPlaceholder = (): CardSetRemoveActiveTextPlaceholder => {
+export const cardSetRemoveActivePlaceholder = (): CardSetRemoveActivePlaceholder => {
     return {
-        type: CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
-    };
-};
-
-export const cardSetRemoveActiveImagePlaceholder = (): CardSetRemoveActiveImagePlaceholder => {
-    return {
-        type: CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
+        type: CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     };
 };
 

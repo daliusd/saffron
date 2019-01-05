@@ -24,8 +24,7 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
-    CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
-    CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
+    CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
@@ -425,7 +424,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
-        case CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER: {
+        case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
             const placeholderId = state.activePlaceholder;
             if (placeholderId !== undefined && placeholderId !== null) {
                 let placeholders = { ...state.placeholders };
@@ -446,22 +445,6 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     ...state,
                     placeholders,
                     texts,
-                    activePlaceholder: null,
-                };
-            }
-            return state;
-        }
-        case CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER: {
-            const placeholderId = state.activePlaceholder;
-            if (placeholderId !== undefined && placeholderId !== null) {
-                let placeholders = { ...state.placeholders };
-                if (placeholderId in placeholders) {
-                    delete placeholders[placeholderId];
-                }
-
-                return {
-                    ...state,
-                    placeholders,
                     activePlaceholder: null,
                 };
             }
