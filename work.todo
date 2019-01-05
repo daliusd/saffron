@@ -118,7 +118,11 @@
 
     + Remove Image
 
-    - Use icons from collection
+    + Use icons from collection
+
+    - Remove url from image placeholder
+
+    - Think: maybe we should use ImageInfo like TextInfo for forward compatibility
 
     - Allow changing image's color if it is from collection
 

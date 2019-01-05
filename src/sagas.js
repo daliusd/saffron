@@ -13,6 +13,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
@@ -48,7 +49,12 @@ import {
     type GameCreateRequest,
     type GameListSuccess,
     type GameSelectRequest,
+    IMAGE_LIST_FAILURE,
+    IMAGE_LIST_REQUEST,
+    IMAGE_LIST_SUCCESS,
     INIT_REQUEST,
+    type ImageListRequest,
+    type ImageListSuccess,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -331,6 +337,7 @@ export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
             cardsById: state.cardsets.cardsById,
             placeholders: state.cardsets.placeholders,
             texts: state.cardsets.texts,
+            images: state.cardsets.images,
         };
 
         yield call(authorizedPutRequest, '/api/cardsets/' + cardsetId, {
@@ -342,6 +349,24 @@ export function* handleCardSetChange(action: CardSetSelectAction): Saga<void> {
         });
     } catch (e) {
         yield put({ type: CARDSET_UPDATE_DATA_FAILURE });
+        yield call(putError, e.message);
+    }
+}
+
+// Images
+export function* handleImageListRequest(action: ImageListRequest): Saga<void> {
+    try {
+        yield call(delay, 200);
+        const data = yield call(authorizedGetRequest, '/api/images?name=' + action.filter);
+        const images = data.images;
+        yield put(
+            ({
+                type: IMAGE_LIST_SUCCESS,
+                images,
+            }: ImageListSuccess),
+        );
+    } catch (e) {
+        yield put({ type: IMAGE_LIST_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -385,6 +410,9 @@ export function* rootSaga(): Saga<void> {
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_IMAGE, handleCardSetChange),
+
+        takeLatest(IMAGE_LIST_REQUEST, handleImageListRequest),
 
         takeLatest(INIT_REQUEST, handleInitRequest),
         takeEvery('*', handleEverything),

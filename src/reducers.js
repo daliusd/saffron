@@ -11,6 +11,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
@@ -46,7 +47,12 @@ import {
     GAME_SELECT_SUCCESS,
     type GameAction,
     type GamesCollection,
+    IMAGE_LIST_FAILURE,
+    IMAGE_LIST_REQUEST,
+    IMAGE_LIST_SUCCESS,
     type IdsArray,
+    type ImageArray,
+    type ImageListAction,
     type ImagePlaceholderType,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
@@ -102,6 +108,13 @@ export type CardSetState = {
     +activePlaceholder: ?string,
     +placeholders: PlaceholdersCollection,
     +texts: { [string]: { [string]: TextInfo } },
+    +images: { [string]: { [string]: string } },
+};
+
+export type ImageState = {
+    +activity: number,
+    +filter: string,
+    +images: ImageArray,
 };
 
 export const DefaultCardSetState: CardSetState = {
@@ -115,6 +128,7 @@ export const DefaultCardSetState: CardSetState = {
     activeCard: null,
     activePlaceholder: null,
     texts: {},
+    images: {},
 };
 export function message(
     state: MessageState = {
@@ -302,6 +316,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsById: action.data.cardsById,
                 placeholders: action.data.placeholders,
                 texts: action.data.texts,
+                images: action.data.images,
             });
         case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {
@@ -335,6 +350,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.texts[action.card.id],
                     },
                 },
+                images: {
+                    ...state.images,
+                    [newCard.id]: {
+                        ...state.images[action.card.id],
+                    },
+                },
             };
         }
         case CARDSET_REMOVE_CARD: {
@@ -345,6 +366,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             let texts = { ...state.texts };
             if (cardId in texts) {
                 delete texts[cardId];
+            }
+
+            let images = { ...state.images };
+            if (cardId in images) {
+                delete images[cardId];
             }
 
             let activeCard = state.activeCard === cardId ? null : state.activeCard;
@@ -362,6 +388,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsAllIds,
                 placeholders,
                 texts,
+                images,
                 activeCard,
             };
         }
@@ -441,10 +468,20 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     }
                 }
 
+                let images = { ...state.images };
+                for (const cardId in images) {
+                    if (placeholderId in images[cardId]) {
+                        let placeholderImages = { ...images[cardId] };
+                        delete placeholderImages[placeholderId];
+                        images[cardId] = placeholderImages;
+                    }
+                }
+
                 return {
                     ...state,
                     placeholders,
                     texts,
+                    images,
                     activePlaceholder: null,
                 };
             }
@@ -618,6 +655,21 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 },
             };
         }
+        case CARDSET_CHANGE_IMAGE: {
+            let placeholdersByCard = {};
+            if (state.images && action.cardId in state.images) {
+                placeholdersByCard = { ...state.images[action.cardId] };
+            }
+            placeholdersByCard[action.placeholderId] = action.url;
+
+            return {
+                ...state,
+                images: {
+                    ...state.images,
+                    [action.cardId]: placeholdersByCard,
+                },
+            };
+        }
         case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
             return {
                 ...state,
@@ -630,12 +682,41 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
     }
 }
 
+export function images(
+    state: ImageState = {
+        activity: 0,
+        filter: '',
+        images: [],
+    },
+    action: ImageListAction,
+): ImageState {
+    switch (action.type) {
+        case IMAGE_LIST_REQUEST:
+            return Object.assign({}, state, {
+                filter: action.filter,
+                activity: state.activity | ACTIVITY_LISTING,
+            });
+        case IMAGE_LIST_SUCCESS:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_LISTING,
+                images: action.images,
+            });
+        case IMAGE_LIST_FAILURE:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_LISTING,
+            });
+        default:
+            return state;
+    }
+}
+
 const reducers = combineReducers({
     message,
     auth,
     signup,
     games,
     cardsets,
+    images,
 });
 
 export default reducers;

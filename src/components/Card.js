@@ -87,9 +87,11 @@ class Card extends Component<Props, State> {
         dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
     };
 
-    handleFieldDeselect = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetActiveCardAndPlaceholder(null, null));
+    handleFieldDeselect = event => {
+        const { dispatch, card } = this.props;
+        if (event.target.getAttribute('id') === `card_${card.id}`) {
+            dispatch(cardSetActiveCardAndPlaceholder(null, null));
+        }
     };
 
     render() {
@@ -107,6 +109,7 @@ class Card extends Component<Props, State> {
                 {({ measureRef }) => (
                     <div>
                         <div
+                            id={`card_${card.id}`}
                             ref={measureRef}
                             style={{
                                 width: '5cm',

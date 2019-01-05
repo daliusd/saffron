@@ -511,7 +511,7 @@ test('handleCardSetChange', () => {
     expect(gen.next().value).toEqual(select());
     expect(gen.next(state).value).toEqual(
         call(authorizedPutRequest, '/api/cardsets/123', {
-            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, placeholders: {}, texts: {} }),
+            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, placeholders: {}, texts: {}, images: {} }),
             name: 'name',
         }),
     );

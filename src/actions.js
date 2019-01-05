@@ -58,11 +58,17 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT: 'CA
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE' =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE';
 export const CARDSET_CHANGE_TEXT: 'CARDSET_CHANGE_TEXT' = 'CARDSET_CHANGE_TEXT';
+export const CARDSET_CHANGE_IMAGE: 'CARDSET_CHANGE_IMAGE' = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER' =
     'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
 export const CARDSET_UPDATE_DATA_SUCCESS: 'CARDSET_UPDATE_DATA_SUCCESS' = 'CARDSET_UPDATE_DATA_SUCCESS';
 export const CARDSET_UPDATE_DATA_FAILURE: 'CARDSET_UPDATE_DATA_FAILURE' = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE: 'CARDSET_SELECT_FAILURE' = 'CARDSET_SELECT_FAILURE';
+export const IMAGE_LIST_REQUEST: 'IMAGE_LIST_REQUEST' = 'IMAGE_LIST_REQUEST';
+export const IMAGE_LIST_SUCCESS: 'IMAGE_LIST_SUCCESS' = 'IMAGE_LIST_SUCCESS';
+export const IMAGE_LIST_FAILURE: 'IMAGE_LIST_FAILURE' = 'IMAGE_LIST_FAILURE';
+
+// Data types
 
 export type IdsArray = Array<string>;
 
@@ -124,6 +130,10 @@ export type CardSetsCollection = {
 };
 
 export type Credentials = { username: string, password: string };
+
+export type ImageArray = Array<{ id: number, name: string }>;
+
+// Actions
 
 export type InitAction = { type: typeof INIT_REQUEST };
 
@@ -191,6 +201,11 @@ export type CardSetSelectSuccess = {
                 [string]: TextInfo,
             },
         },
+        images: {
+            [string]: {
+                [string]: string,
+            },
+        },
     },
     game_id: string,
 };
@@ -251,6 +266,12 @@ export type CardSetChangeText = {
     placeholderId: string,
     textInfo: TextInfo,
 };
+export type CardSetChangeImage = {
+    type: typeof CARDSET_CHANGE_IMAGE,
+    cardId: string,
+    placeholderId: string,
+    url: string,
+};
 export type CardSetSetActiveCardAndPlaceholder = {
     type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
     cardId: ?string,
@@ -281,6 +302,7 @@ export type CardSetModifyAction =
     | CardSetChangeActiveTextPlaceholderFontFamilyAndVariant
     | CardSetChangeActiveTextPlaceholderFontSize
     | CardSetChangeText
+    | CardSetChangeImage
     | CardSetSetActiveCardAndPlaceholder;
 
 export type CardSetAction =
@@ -290,7 +312,18 @@ export type CardSetAction =
     | CardSetUpdateDataAction
     | CardSetModifyAction;
 
-export type Action = InitAction | LoginAction | SignUpAction | GameAction | CardSetAction | MessageAction;
+export type ImageListRequest = { type: typeof IMAGE_LIST_REQUEST, filter: string };
+export type ImageListSuccess = { type: typeof IMAGE_LIST_SUCCESS, images: ImageArray };
+export type ImageListAction = ImageListRequest | ImageListSuccess | { type: typeof IMAGE_LIST_FAILURE };
+
+export type Action =
+    | InitAction
+    | LoginAction
+    | SignUpAction
+    | GameAction
+    | CardSetAction
+    | ImageListAction
+    | MessageAction;
 
 export type Dispatch = (action: Action) => any;
 
@@ -510,6 +543,15 @@ export const cardSetChangeText = (cardId: string, placeholderId: string, textInf
     };
 };
 
+export const cardSetChangeImage = (cardId: string, placeholderId: string, url: string): CardSetChangeImage => {
+    return {
+        type: CARDSET_CHANGE_IMAGE,
+        cardId,
+        placeholderId,
+        url,
+    };
+};
+
 export const cardSetActiveCardAndPlaceholder = (
     cardId: ?string,
     placeholderId: ?string,
@@ -518,5 +560,12 @@ export const cardSetActiveCardAndPlaceholder = (
         type: CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
         cardId,
         placeholderId,
+    };
+};
+
+export const imageListRequest = (filter: string): ImageListAction => {
+    return {
+        type: IMAGE_LIST_REQUEST,
+        filter,
     };
 };
