@@ -121,10 +121,17 @@ class Card extends Component<Props, State> {
                             {placeholderIds &&
                                 placeholderIds.map(p => {
                                     const placeholder = placeholders[p];
+                                    if (placeholder.type === 'image') {
+                                        return <ImageField key={p} cardId={card.id} imagePlaceholder={placeholder} />;
+                                    }
+                                    return null;
+                                })}
+
+                            {placeholderIds &&
+                                placeholderIds.map(p => {
+                                    const placeholder = placeholders[p];
                                     if (placeholder.type === 'text') {
                                         return <TextField key={p} cardId={card.id} textPlaceholder={placeholder} />;
-                                    } else if (placeholder.type === 'image') {
-                                        return <ImageField key={p} cardId={card.id} imagePlaceholder={placeholder} />;
                                     }
                                     return null;
                                 })}
