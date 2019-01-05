@@ -50,6 +50,7 @@ class FieldController extends React.Component<Props> {
     }
 
     componentDidMount() {
+        this.cDiv.current.addEventListener('dragstart', this.handleBrowserDragStart);
         this.cDiv.current.addEventListener('mousedown', this.handleMouseDown);
         this.cDiv.current.addEventListener('touchstart', this.handleTouchStart);
         this.resizeDiv.current.addEventListener('mousedown', this.handleResizeMouseDown);
@@ -70,6 +71,11 @@ class FieldController extends React.Component<Props> {
         const ry = sinA * x + cosA * y;
 
         return { rx, ry };
+    };
+
+    handleBrowserDragStart = (event: DragEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
     };
 
     // Dragging handling
