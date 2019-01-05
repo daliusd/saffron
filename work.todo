@@ -106,30 +106,41 @@
 
 + Move to seperate git repo
 
-- Update CRA
-
-- Cards can have two sides
++ Update CRA
 
 - Image field
 
-    - Add image field / change position
+    + Add image field / change position
 
-        - Use icons from collection
+    + Change size
 
-            - Allow changing image's color if it is from
-            collection
+    + Rotate
 
-        - Allow uploading custom images
+    - Remove Image
 
-    - Change size
+    - Use icons from collection
 
-    - Rotate
+    - Allow changing image's color if it is from collection
+
+    - Allow uploading custom images
 
     - Find more icons or give instructions to users where to
     get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
 
     - Generate list with authors of icons
+
+- Generate PDF
+
+- UI
+
+    - https://react-kawaii.now.sh/
+
+    - Open page
+
+    - Changelog page
+
+    - Help page
 
 - Background control
 
@@ -151,22 +162,18 @@
 
     - Specify card size when creating new card set
 
+    - Cards can have two sides
+
     - Delete Card Set
 
     - Rename Card Set
 
-- Game Delete
+- Games
 
-- Game Rename
+    - Game Delete
 
-- Generate PDF
+    - Game Rename
 
 - Export / Import data as JSON
 
 - Export / Import data as CSV
-
-- Help page
-
-- UI
-
-    - https://react-kawaii.now.sh/

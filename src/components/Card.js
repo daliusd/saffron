@@ -8,15 +8,18 @@ import {
     type Dispatch,
     type PlaceholdersCollection,
     cardSetActiveCardAndPlaceholder,
+    cardSetAddImagePlaceholder,
     cardSetAddTextPlaceholder,
     cardSetChangeActiveTextPlaceholderAlign,
     cardSetCloneCard,
+    cardSetRemoveActiveImagePlaceholder,
     cardSetRemoveActiveTextPlaceholder,
     cardSetRemoveCard,
     cardSetUpdateCardCount,
 } from '../actions';
 import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
+import ImageField from './ImageField';
 import TextField from './TextField';
 
 type Props = {
@@ -60,9 +63,19 @@ class Card extends Component<Props, State> {
         dispatch(cardSetAddTextPlaceholder());
     };
 
+    handleAddImageClick = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetAddImagePlaceholder());
+    };
+
     handleRemoveTextClick = () => {
         const { dispatch } = this.props;
         dispatch(cardSetRemoveActiveTextPlaceholder());
+    };
+
+    handleRemoveImageClick = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetRemoveActiveImagePlaceholder());
     };
 
     handleSetTextAlignLeft = () => {
@@ -112,16 +125,24 @@ class Card extends Component<Props, State> {
                             onTouchStart={this.handleFieldDeselect}
                         >
                             {placeholderIds &&
-                                placeholderIds.map(p => (
-                                    <TextField key={p} cardId={card.id} textPlaceholder={placeholders[p]} />
-                                ))}
+                                placeholderIds.map(p => {
+                                    const placeholder = placeholders[p];
+                                    if (placeholder.type === 'text') {
+                                        return <TextField key={p} cardId={card.id} textPlaceholder={placeholder} />;
+                                    } else if (placeholder.type === 'image') {
+                                        return <ImageField key={p} cardId={card.id} imagePlaceholder={placeholder} />;
+                                    }
+                                    return null;
+                                })}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>
                         <button onClick={this.handleCloneCardClick}>Clone</button>
                         <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
                         <button onClick={this.handleAddTextClick}>+Text</button>
+                        <button onClick={this.handleAddImageClick}>+Image</button>
                         <button onClick={this.handleRemoveTextClick}>-Text</button>
+                        <button onClick={this.handleRemoveImageClick}>-Image</button>
                         <button onClick={this.handleSetTextAlignLeft}>L</button>
                         <button onClick={this.handleSetTextAlignCenter}>C</button>
                         <button onClick={this.handleSetTextAlignRight}>R</button>

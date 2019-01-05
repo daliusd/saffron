@@ -38,14 +38,15 @@ export const CARDSET_CLONE_CARD: 'CARDSET_CLONE_CARD' = 'CARDSET_CLONE_CARD';
 export const CARDSET_REMOVE_CARD: 'CARDSET_REMOVE_CARD' = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT: 'CARDSET_UPDATE_CARD_COUNT' = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER: 'CARDSET_ADD_TEXT_PLACEHOLDER' = 'CARDSET_ADD_TEXT_PLACEHOLDER';
+export const CARDSET_ADD_IMAGE_PLACEHOLDER: 'CARDSET_ADD_IMAGE_PLACEHOLDER' = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
 export const CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER' =
     'CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER';
-export const CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION' =
-    'CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION';
-export const CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE' =
-    'CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE';
-export const CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE: 'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE' =
-    'CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE';
+export const CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER: 'CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER' =
+    'CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER';
+export const CARDSET_CHANGE_PLACEHOLDER_POSITION: 'CARDSET_CHANGE_PLACEHOLDER_POSITION' =
+    'CARDSET_CHANGE_PLACEHOLDER_POSITION';
+export const CARDSET_CHANGE_PLACEHOLDER_SIZE: 'CARDSET_CHANGE_PLACEHOLDER_SIZE' = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
+export const CARDSET_CHANGE_PLACEHOLDER_ANGLE: 'CARDSET_CHANGE_PLACEHOLDER_ANGLE' = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN' =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR' =
@@ -96,7 +97,21 @@ export type TextPlaceholderType = {
     fontVariant: string,
     fontSize: string,
 };
-export type PlaceholdersCollection = { [string]: TextPlaceholderType };
+
+export type ImagePlaceholderType = {
+    id: string,
+    type: 'image',
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    angle: number,
+    url: string,
+};
+
+export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;
+
+export type PlaceholdersCollection = { [string]: PlaceholderType };
 
 export type TextInfo = { value: string };
 export type CardType = { id: string, count: number };
@@ -186,24 +201,28 @@ export type CardSetCloneCard = { type: typeof CARDSET_CLONE_CARD, card: CardType
 export type CardSetRemoveCard = { type: typeof CARDSET_REMOVE_CARD, card: CardType };
 export type CardSetUpdateCardCount = { type: typeof CARDSET_UPDATE_CARD_COUNT, card: CardType, count: number };
 export type CardSetAddTextPlaceholder = { type: typeof CARDSET_ADD_TEXT_PLACEHOLDER };
+export type CardSetAddImagePlaceholder = { type: typeof CARDSET_ADD_IMAGE_PLACEHOLDER };
 export type CardSetRemoveActiveTextPlaceholder = {
     type: typeof CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
 };
-export type CardSetChangeTextPlaceholderPosition = {
-    type: typeof CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
-    textPlaceholder: TextPlaceholderType,
+export type CardSetRemoveActiveImagePlaceholder = {
+    type: typeof CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
+};
+export type CardSetChangePlaceholderPosition = {
+    type: typeof CARDSET_CHANGE_PLACEHOLDER_POSITION,
+    placeholder: PlaceholderType,
     x: number,
     y: number,
 };
-export type CardSetChangeTextPlaceholderSize = {
-    type: typeof CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE,
-    textPlaceholder: TextPlaceholderType,
+export type CardSetChangePlaceholderSize = {
+    type: typeof CARDSET_CHANGE_PLACEHOLDER_SIZE,
+    placeholder: PlaceholderType,
     width: number,
     height: number,
 };
-export type CardSetChangeTextPlaceholderAngle = {
-    type: typeof CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
-    textPlaceholder: TextPlaceholderType,
+export type CardSetChangePlaceholderAngle = {
+    type: typeof CARDSET_CHANGE_PLACEHOLDER_ANGLE,
+    placeholder: PlaceholderType,
     angle: number,
 };
 export type CardSetChangeActiveTextPlaceholderAlign = {
@@ -255,10 +274,12 @@ export type CardSetModifyAction =
     | CardSetRemoveCard
     | CardSetUpdateCardCount
     | CardSetAddTextPlaceholder
+    | CardSetAddImagePlaceholder
     | CardSetRemoveActiveTextPlaceholder
-    | CardSetChangeTextPlaceholderPosition
-    | CardSetChangeTextPlaceholderSize
-    | CardSetChangeTextPlaceholderAngle
+    | CardSetRemoveActiveImagePlaceholder
+    | CardSetChangePlaceholderPosition
+    | CardSetChangePlaceholderSize
+    | CardSetChangePlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
     | CardSetChangeActiveTextPlaceholderColor
     | CardSetChangeActiveTextPlaceholderFontFamily
@@ -385,45 +406,57 @@ export const cardSetAddTextPlaceholder = (): CardSetAddTextPlaceholder => {
     };
 };
 
+export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
+    return {
+        type: CARDSET_ADD_IMAGE_PLACEHOLDER,
+    };
+};
+
 export const cardSetRemoveActiveTextPlaceholder = (): CardSetRemoveActiveTextPlaceholder => {
     return {
         type: CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
     };
 };
 
-export const cardSetChangeTextPlaceholderPosition = (
-    textPlaceholder: TextPlaceholderType,
+export const cardSetRemoveActiveImagePlaceholder = (): CardSetRemoveActiveImagePlaceholder => {
+    return {
+        type: CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
+    };
+};
+
+export const cardSetChangePlaceholderPosition = (
+    placeholder: PlaceholderType,
     x: number,
     y: number,
-): CardSetChangeTextPlaceholderPosition => {
+): CardSetChangePlaceholderPosition => {
     return {
-        type: CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
-        textPlaceholder,
+        type: CARDSET_CHANGE_PLACEHOLDER_POSITION,
+        placeholder,
         x,
         y,
     };
 };
 
-export const cardSetChangeTextPlaceholderSize = (
-    textPlaceholder: TextPlaceholderType,
+export const cardSetChangePlaceholderSize = (
+    placeholder: PlaceholderType,
     width: number,
     height: number,
-): CardSetChangeTextPlaceholderSize => {
+): CardSetChangePlaceholderSize => {
     return {
-        type: CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE,
-        textPlaceholder,
+        type: CARDSET_CHANGE_PLACEHOLDER_SIZE,
+        placeholder,
         width,
         height,
     };
 };
 
-export const cardSetChangeTextPlaceholderAngle = (
-    textPlaceholder: TextPlaceholderType,
+export const cardSetChangePlaceholderAngle = (
+    placeholder: PlaceholderType,
     angle: number,
-): CardSetChangeTextPlaceholderAngle => {
+): CardSetChangePlaceholderAngle => {
     return {
-        type: CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
-        textPlaceholder,
+        type: CARDSET_CHANGE_PLACEHOLDER_ANGLE,
+        placeholder,
         angle,
     };
 };

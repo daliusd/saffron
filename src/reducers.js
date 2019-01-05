@@ -3,6 +3,7 @@ import { combineReducers } from 'redux';
 import shortid from 'shortid';
 
 import {
+    CARDSET_ADD_IMAGE_PLACEHOLDER,
     CARDSET_ADD_TEXT_PLACEHOLDER,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
@@ -10,10 +11,10 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_PLACEHOLDER_ANGLE,
+    CARDSET_CHANGE_PLACEHOLDER_POSITION,
+    CARDSET_CHANGE_PLACEHOLDER_SIZE,
     CARDSET_CHANGE_TEXT,
-    CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE,
-    CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION,
-    CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE,
     CARDSET_CLONE_CARD,
     CARDSET_CREATE_CARD,
     CARDSET_CREATE_FAILURE,
@@ -23,6 +24,7 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
+    CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER,
     CARDSET_REMOVE_ACTIVE_TEXT_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
     CARDSET_SELECT_FAILURE,
@@ -46,6 +48,7 @@ import {
     type GameAction,
     type GamesCollection,
     type IdsArray,
+    type ImagePlaceholderType,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -61,7 +64,9 @@ import {
     SIGNUP_SUCCESS,
     type SignUpAction,
     type TextInfo,
+    type TextPlaceholderType,
 } from './actions';
+import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from './fontLoader';
 
 export const ACTIVITY_CREATING = 0x1;
 export const ACTIVITY_LISTING = 0x2;
@@ -347,10 +352,16 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
 
             const cardsAllIds = state.cardsAllIds.filter(id => id !== cardId);
 
+            let placeholders = state.placeholders;
+            if (cardsAllIds.length === 0) {
+                placeholders = {};
+            }
+
             return {
                 ...state,
                 cardsById,
                 cardsAllIds,
+                placeholders,
                 texts,
                 activeCard,
             };
@@ -370,13 +381,47 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         }
         case CARDSET_ADD_TEXT_PLACEHOLDER: {
             const id = shortid.generate();
-            const textPlaceholder = { id, x: 10, y: 10, width: 50, height: 50, angle: 0 };
+            const textPlaceholder: TextPlaceholderType = {
+                id,
+                type: 'text',
+                x: 10,
+                y: 10,
+                width: 50,
+                height: 50,
+                angle: 0,
+                align: 'left',
+                color: '#000000',
+                fontFamily: DEFAULT_FONT,
+                fontVariant: DEFAULT_FONT_VARIANT,
+                fontSize: DEFAULT_FONT_SIZE,
+            };
 
             return {
                 ...state,
                 placeholders: {
                     ...state.placeholders,
                     [id]: textPlaceholder,
+                },
+            };
+        }
+        case CARDSET_ADD_IMAGE_PLACEHOLDER: {
+            const id = shortid.generate();
+            const imagePlaceholder: ImagePlaceholderType = {
+                id,
+                type: 'image',
+                x: 10,
+                y: 10,
+                width: 50,
+                height: 50,
+                angle: 0,
+                url: '/api/imagefiles/delapouite%20banana',
+            };
+
+            return {
+                ...state,
+                placeholders: {
+                    ...state.placeholders,
+                    [id]: imagePlaceholder,
                 },
             };
         }
@@ -406,9 +451,25 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             }
             return state;
         }
-        case CARDSET_CHANGE_TEXT_PLACEHOLDER_POSITION: {
-            const textPlaceholder = {
-                ...state.placeholders[action.textPlaceholder.id],
+        case CARDSET_REMOVE_ACTIVE_IMAGE_PLACEHOLDER: {
+            const placeholderId = state.activePlaceholder;
+            if (placeholderId !== undefined && placeholderId !== null) {
+                let placeholders = { ...state.placeholders };
+                if (placeholderId in placeholders) {
+                    delete placeholders[placeholderId];
+                }
+
+                return {
+                    ...state,
+                    placeholders,
+                    activePlaceholder: null,
+                };
+            }
+            return state;
+        }
+        case CARDSET_CHANGE_PLACEHOLDER_POSITION: {
+            const placeholder = {
+                ...state.placeholders[action.placeholder.id],
                 x: action.x,
                 y: action.y,
             };
@@ -417,13 +478,13 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 ...state,
                 placeholders: {
                     ...state.placeholders,
-                    [action.textPlaceholder.id]: textPlaceholder,
+                    [action.placeholder.id]: placeholder,
                 },
             };
         }
-        case CARDSET_CHANGE_TEXT_PLACEHOLDER_SIZE: {
-            const textPlaceholder = {
-                ...state.placeholders[action.textPlaceholder.id],
+        case CARDSET_CHANGE_PLACEHOLDER_SIZE: {
+            const placeholder = {
+                ...state.placeholders[action.placeholder.id],
                 width: action.width,
                 height: action.height,
             };
@@ -432,13 +493,13 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 ...state,
                 placeholders: {
                     ...state.placeholders,
-                    [action.textPlaceholder.id]: textPlaceholder,
+                    [action.placeholder.id]: placeholder,
                 },
             };
         }
-        case CARDSET_CHANGE_TEXT_PLACEHOLDER_ANGLE: {
-            const textPlaceholder = {
-                ...state.placeholders[action.textPlaceholder.id],
+        case CARDSET_CHANGE_PLACEHOLDER_ANGLE: {
+            const placeholder = {
+                ...state.placeholders[action.placeholder.id],
                 angle: action.angle,
             };
 
@@ -446,7 +507,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 ...state,
                 placeholders: {
                     ...state.placeholders,
-                    [action.textPlaceholder.id]: textPlaceholder,
+                    [action.placeholder.id]: placeholder,
                 },
             };
         }

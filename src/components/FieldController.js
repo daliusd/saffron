@@ -315,10 +315,10 @@ class FieldController extends React.Component<Props> {
                         border: isActive ? '1px dotted pink' : '1px dotted gray',
                         padding: '0px',
                     },
-                    img: {
+                    'img.controller': {
                         visibility: 'hidden',
                     },
-                    '&:hover img': {
+                    '&:hover img.controller': {
                         visibility: 'visible',
                     },
                 }}
@@ -328,6 +328,7 @@ class FieldController extends React.Component<Props> {
                     src={resize}
                     alt="resize"
                     ref={this.resizeDiv}
+                    className="controller"
                     css={{
                         position: 'absolute',
                         right: 0,
@@ -339,6 +340,7 @@ class FieldController extends React.Component<Props> {
                     src={rotate}
                     alt="rotate"
                     ref={this.rotateDiv}
+                    className="controller"
                     css={{
                         position: 'absolute',
                         left: 0,

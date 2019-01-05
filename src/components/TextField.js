@@ -5,9 +5,9 @@ import React, { PureComponent } from 'react';
 import {
     type Dispatch,
     type TextPlaceholderType,
-    cardSetChangeTextPlaceholderAngle,
-    cardSetChangeTextPlaceholderPosition,
-    cardSetChangeTextPlaceholderSize,
+    cardSetChangePlaceholderAngle,
+    cardSetChangePlaceholderPosition,
+    cardSetChangePlaceholderSize,
 } from '../actions';
 import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
@@ -21,17 +21,17 @@ type Props = {
 class TextField extends PureComponent<Props> {
     handleDrag = (x: number, y: number) => {
         const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangeTextPlaceholderPosition(textPlaceholder, x, y));
+        dispatch(cardSetChangePlaceholderPosition(textPlaceholder, x, y));
     };
 
     handleResize = (width: number, height: number) => {
         const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangeTextPlaceholderSize(textPlaceholder, width, height));
+        dispatch(cardSetChangePlaceholderSize(textPlaceholder, width, height));
     };
 
     handleRotate = (angle: number) => {
         const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangeTextPlaceholderAngle(textPlaceholder, angle));
+        dispatch(cardSetChangePlaceholderAngle(textPlaceholder, angle));
     };
 
     render() {
