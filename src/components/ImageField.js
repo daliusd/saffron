@@ -128,6 +128,7 @@ class ImageField extends PureComponent<Props, State> {
                     />
                 </div>
                 <ImageSelectionDialog
+                    imageUrl={imageUrl}
                     cardId={this.props.cardId}
                     placeholder={imagePlaceholder}
                     onClose={this.handleImageSelectionDialogClose}

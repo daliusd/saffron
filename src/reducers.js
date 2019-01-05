@@ -440,7 +440,6 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: 50,
                 height: 50,
                 angle: 0,
-                url: '/api/imagefiles/delapouite%20banana',
             };
 
             return {

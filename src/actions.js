@@ -110,7 +110,6 @@ export type ImagePlaceholderType = {
     width: number,
     height: number,
     angle: number,
-    url: string,
 };
 
 export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;

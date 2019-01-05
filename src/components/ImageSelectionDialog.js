@@ -14,6 +14,7 @@ import {
 } from '../actions';
 
 type Props = {
+    imageUrl: string,
     cardId: string,
     placeholder: ImagePlaceholderType,
     isOpen: boolean,
@@ -65,7 +66,7 @@ class ImageSelectionDialog extends Component<Props> {
                 contentLabel="Select an image"
             >
                 <img
-                    src={this.props.placeholder.url}
+                    src={this.props.imageUrl}
                     alt=""
                     css={{
                         filter: 'invert(1)',

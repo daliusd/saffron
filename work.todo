@@ -120,7 +120,7 @@
 
     + Use icons from collection
 
-    - Remove url from image placeholder
+    + Remove url from image placeholder
 
     - Think: maybe we should use ImageInfo like TextInfo for forward compatibility
 
