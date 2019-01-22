@@ -391,8 +391,6 @@ test('CARDSET_SELECT', () => {
                     cardsAllIds: ['1'],
                     cardsById: { '1': { id: '1', count: 1 } },
                     placeholders: {},
-                    texts: {},
-                    images: {},
                 },
                 game_id: '2',
             },

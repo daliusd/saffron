@@ -315,8 +315,8 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsAllIds: action.data.cardsAllIds,
                 cardsById: action.data.cardsById,
                 placeholders: action.data.placeholders,
-                texts: action.data.texts,
-                images: action.data.images,
+                texts: action.data.texts || {},
+                images: action.data.images || {},
             });
         case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {
