@@ -122,7 +122,6 @@ class ImageField extends PureComponent<Props, LocalState> {
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
-                isActive={false}
             >
                 <div
                     ref={this.imageDiv}

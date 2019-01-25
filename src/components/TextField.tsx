@@ -48,7 +48,6 @@ class TextField extends PureComponent<Props> {
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
-                isActive={false}
             >
                 <ContentEditable
                     cardId={this.props.cardId}

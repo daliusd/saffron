@@ -1,18 +1,18 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
+import { jsx } from '@emotion/core';
 import React from 'react';
 
+import { Dispatch } from '../actions';
 import { State } from '../reducers';
 import resize from './resize.svg';
 import rotate from './rotate.svg';
 
 jsx; // eslint-disable-line
 
-interface Props {
+interface OwnProps {
     cardId: string;
     placeholderId: string;
-    isActive: boolean;
     x: number;
     y: number;
     width: number;
@@ -23,6 +23,16 @@ interface Props {
     onResize: (width: number, height: number) => void;
     onRotate: (angle: number) => void;
 }
+
+interface StateProps {
+    isActive: boolean;
+}
+
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & StateProps & DispatchProps;
 
 class FieldController extends React.Component<Props> {
     moving: boolean;
@@ -384,11 +394,11 @@ class FieldController extends React.Component<Props> {
     }
 }
 
-const mapStateToProps = (state: State, props: Props) => {
+const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     return {
         isActive:
             props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
     };
 };
 
-export default connect(mapStateToProps)(FieldController);
+export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(FieldController);
