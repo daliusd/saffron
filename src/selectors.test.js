@@ -1,4 +1,3 @@
-// @flow
 import { getActiveCardSet, getActiveGame } from './selectors';
 
 describe('getActiveGame', () => {

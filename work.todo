@@ -136,6 +136,22 @@
 
 + Clone not working
 
+- Migration to flow
+
+    + Get into working condition
+
+    - Fix FieldController
+
+    - Fix CamelCase
+
+    - mockStore problems
+
+- Figure out if we can avoid references everywhere
+
+- Figure out why image is not moved properly after selection
+
+- Figure out why selected image can't be moved
+
 - Generate PDF
 
 - UI

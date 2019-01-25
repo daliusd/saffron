@@ -4,10 +4,27 @@
   "private": true,
   "dependencies": {
     "@emotion/core": "^10.0.5",
+    "@types/enzyme": "^3.1.15",
+    "@types/enzyme-adapter-react-16": "^1.0.3",
+    "@types/jest": "^23.3.13",
+    "@types/jwt-decode": "^2.2.1",
+    "@types/node": "^10.12.18",
+    "@types/react": "^16.7.20",
+    "@types/react-color": "^2.14.0",
+    "@types/react-dom": "^16.0.11",
+    "@types/react-measure": "^2.0.4",
+    "@types/react-modal": "^3.8.0",
+    "@types/react-redux": "^7.0.1",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/react-select": "^2.0.11",
+    "@types/redux-mock-store": "^1.0.0",
+    "@types/shortid": "0.0.29",
+    "@types/webfontloader": "^1.6.29",
+    "@typescript-eslint/eslint-plugin": "^1.1.0",
+    "@typescript-eslint/parser": "^1.1.0",
     "axios": "^0.18.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
-    "flow-bin": "^0.83.0",
     "jwt-decode": "^2.2.0",
     "react": "^16.5.2",
     "react-color": "^2.17.0",
@@ -22,6 +39,7 @@
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "shortid": "^2.2.14",
+    "typescript": "^3.2.4",
     "webfontloader": "^1.6.28"
   },
   "scripts": {
@@ -30,8 +48,7 @@
     "postbuild": "rm -rf ../cardamon/static && mkdir ../cardamon/static && mv build/* ../cardamon/static/ && rmdir build",
     "test": "react-scripts test",
     "coverage": "npm test -- --coverage --watch",
-    "eject": "react-scripts eject",
-    "flow": "flow"
+    "eject": "react-scripts eject"
   },
   "proxy": "http://localhost:5000",
   "eslintConfig": {
@@ -44,7 +61,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "flow-typed": "^2.5.1",
     "husky": "^1.1.4",
     "jwt-simple": "^0.5.5",
     "lint-staged": "^8.1.0",
@@ -57,7 +73,7 @@
     }
   },
   "lint-staged": {
-    "*.js": [
+    "src/**/*.js": [
       "eslint --max-warnings 0"
     ]
   },
