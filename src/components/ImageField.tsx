@@ -6,7 +6,6 @@ import React, { PureComponent } from 'react';
 import {
     Dispatch,
     ImagePlaceholderType,
-    cardSetActiveCardAndPlaceholder,
     cardSetChangePlaceholderAngle,
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
@@ -24,7 +23,6 @@ interface OwnProps {
 
 interface StateProps {
     imageUrl: string;
-    isActive: boolean;
 }
 
 interface DispatchProps {
@@ -78,31 +76,18 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     handleMouseDown = (event: MouseEvent) => {
-        const { isActive } = this.props;
-        if (isActive) {
-            event.stopPropagation();
-        } else {
-            this.wasMoved = false;
-            event.preventDefault();
-        }
+        this.wasMoved = false;
+        event.preventDefault();
     };
 
     handleMouseMove = (event: MouseEvent) => {
-        const { isActive } = this.props;
-        if (isActive) {
-            event.stopPropagation();
-        } else {
-            this.wasMoved = true;
-            event.preventDefault();
-        }
+        this.wasMoved = true;
+        event.preventDefault();
     };
 
     handleMouseUp = (event: MouseEvent) => {
-        const { dispatch, cardId, imagePlaceholder, isActive } = this.props;
-        if (!isActive && !this.wasMoved) {
+        if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndPlaceholder(cardId, imagePlaceholder.id));
-
             this.setState({ imageSelectionDialogIsOpen: true });
         }
     };
@@ -159,9 +144,6 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
             : '';
     return {
         imageUrl,
-        isActive:
-            props.cardId === state.cardsets.activeCard &&
-            props.imagePlaceholder.id === state.cardsets.activePlaceholder,
     };
 };
 

@@ -90,7 +90,7 @@
 
 + Figure out if we can avoid references everywhere
 + Figure out why image is not moved properly after selection
-- Figure out why selected image can't be moved
++ Figure out why selected image can't be moved
 
 - Generate PDF
 
