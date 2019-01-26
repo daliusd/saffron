@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface Props {
-    onLogout: () => void,
-};
+    onLogout: () => void;
+}
 
 function Logout(props: Props) {
     return (

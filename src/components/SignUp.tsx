@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 
 import { Credentials, Dispatch, messageRequest } from '../actions';
 
