@@ -1,32 +1,54 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 
 interface Props {
     onLogin: (creds: { username: string; password: string }) => void;
 }
 
-export default class Login extends Component<Props> {
-    usernameRef = createRef<HTMLInputElement>();
-    passwordRef = createRef<HTMLInputElement>();
+interface LocalState {
+    username: string;
+    password: string;
+}
 
-    handleSubmit(event: React.FormEvent) {
-        const username = this.usernameRef.current;
-        const password = this.passwordRef.current;
+export default class Login extends Component<Props, LocalState> {
+    state = {
+        username: '',
+        password: '',
+    };
+
+    handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ username: event.target.value });
+    };
+
+    handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ password: event.target.value });
+    };
+
+    handleSubmit = (event: React.FormEvent) => {
+        const username = this.state.username.trim();
+        const password = this.state.password.trim();
         if (username && password) {
-            const creds = {
-                username: username.value.trim(),
-                password: password.value.trim(),
-            };
+            const creds = { username, password };
             this.props.onLogin(creds);
         }
         event.preventDefault();
-    }
+    };
 
     render() {
         return (
             <div>
-                <form onSubmit={event => this.handleSubmit(event)}>
-                    <input type="text" ref={this.usernameRef} className="form-control" placeholder="Username" />
-                    <input type="password" ref={this.passwordRef} className="form-control" placeholder="Password" />
+                <form onSubmit={this.handleSubmit}>
+                    <input
+                        type="text"
+                        onChange={this.handleUsernameChange}
+                        className="form-control"
+                        placeholder="Username"
+                    />
+                    <input
+                        type="password"
+                        onChange={this.handlePasswordChange}
+                        className="form-control"
+                        placeholder="Password"
+                    />
                     <input type="submit" value="Login" />
                 </form>
             </div>

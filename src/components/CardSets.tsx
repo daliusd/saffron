@@ -13,7 +13,19 @@ interface Props {
     byId: CardSetsCollection;
 }
 
-export class CardSets extends Component<Props> {
+interface LocalState {
+    cardSetName: string;
+}
+
+export class CardSets extends Component<Props, LocalState> {
+    state: LocalState = {
+        cardSetName: '',
+    };
+
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ cardSetName: event.target.value });
+    };
+
     handleCreateCardSetClick = () => {
         const { dispatch, activeGame } = this.props;
 
@@ -21,11 +33,10 @@ export class CardSets extends Component<Props> {
             return;
         }
 
-        const el = this.refs.cardsetname as HTMLInputElement;
-        const cardsetname = el.value.trim();
+        const cardSetName = this.state.cardSetName.trim();
 
-        if (cardsetname) {
-            dispatch(cardSetCreateRequest(cardsetname, activeGame));
+        if (cardSetName) {
+            dispatch(cardSetCreateRequest(cardSetName, activeGame));
         } else {
             dispatch(messageRequest('error', 'Card Set name should be non empty.'));
         }
@@ -48,7 +59,12 @@ export class CardSets extends Component<Props> {
                 <div>
                     <ul>{cardsetItems}</ul>
                     <div>
-                        <input type="text" ref="cardsetname" className="form-control" placeholder="Card Set name" />
+                        <input
+                            type="text"
+                            onChange={this.handleChange}
+                            className="form-control"
+                            placeholder="Card Set name"
+                        />
                         <button onClick={this.handleCreateCardSetClick}>Create Card Set</button>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
-import { shallow } from 'enzyme';
+import { Provider } from 'react-redux';
+import { shallow, mount } from 'enzyme';
 import React from 'react';
 
 import configureMockStore from 'redux-mock-store';
@@ -24,8 +25,11 @@ describe('<CardSet />', () => {
             },
         };
         const store = mockStore(state);
-        const wrapper = shallow(<ConnectedCardSet store={store} />);
-        wrapper.dive();
+        mount(
+            <Provider store={store}>
+                <ConnectedCardSet />
+            </Provider>,
+        );
     });
 
     it('Generates CardSet', () => {

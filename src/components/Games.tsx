@@ -12,12 +12,23 @@ interface Props {
     byId: GamesCollection;
 }
 
-export class Games extends Component<Props> {
+interface LocalState {
+    gameName: string;
+}
+
+export class Games extends Component<Props, LocalState> {
+    state: LocalState = {
+        gameName: '',
+    };
+
+    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ gameName: event.target.value });
+    };
+
     handleCreateGameClick = () => {
         const { dispatch } = this.props;
 
-        const el = this.refs.gamename as HTMLInputElement;
-        const gamename = el.value.trim();
+        const gamename = this.state.gameName.trim();
         if (gamename) {
             dispatch(gameCreateRequest(gamename));
         } else {
@@ -41,7 +52,12 @@ export class Games extends Component<Props> {
                 <div>
                     <ul>{gameItems}</ul>
                     <div>
-                        <input type="text" ref="gamename" className="form-control" placeholder="Game name" />
+                        <input
+                            type="text"
+                            onChange={this.handleChange}
+                            className="form-control"
+                            placeholder="Game name"
+                        />
                         <button onClick={this.handleCreateGameClick}>Create Game</button>
                     </div>
                 </div>
