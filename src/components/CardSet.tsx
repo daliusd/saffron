@@ -31,9 +31,9 @@ export class CardSet extends Component<Props> {
                     <div>
                         <ul>
                             {cardsAllIds &&
-                                cardsAllIds.map(card_id => (
-                                    <li key={card_id}>
-                                        <Card card={cardsById[card_id]} />
+                                cardsAllIds.map(cardId => (
+                                    <li key={cardId}>
+                                        <Card card={cardsById[cardId]} />
                                     </li>
                                 ))}
                         </ul>

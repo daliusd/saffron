@@ -19,7 +19,6 @@ module.exports = {
         semi: ['error', 'always'],
         '@typescript-eslint/explicit-member-accessibility': 'off',
         '@typescript-eslint/explicit-function-return-type': 'off',
-        '@typescript-eslint/camelcase': 'off',
         '@typescript-eslint/indent': 'off',
     },
 };
