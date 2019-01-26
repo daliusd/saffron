@@ -113,6 +113,11 @@ export interface PlaceholdersCollection {
 export interface TextInfo {
     value: string;
 }
+
+export interface ImageInfo {
+    url: string;
+}
+
 export interface CardType {
     id: string;
     count: number;
@@ -239,7 +244,7 @@ export interface CardSetSelectSuccess {
         };
         images: {
             [propName: string]: {
-                [propName: string]: string;
+                [propName: string]: ImageInfo;
             };
         };
     };
@@ -323,7 +328,7 @@ export interface CardSetChangeImage {
     type: typeof CARDSET_CHANGE_IMAGE;
     cardId: string;
     placeholderId: string;
-    url: string;
+    imageInfo: ImageInfo;
 }
 export interface CardSetSetActiveCardAndPlaceholder {
     type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER;
@@ -606,12 +611,12 @@ export const cardSetChangeText = (cardId: string, placeholderId: string, textInf
     };
 };
 
-export const cardSetChangeImage = (cardId: string, placeholderId: string, url: string): CardSetChangeImage => {
+export const cardSetChangeImage = (cardId: string, placeholderId: string, imageInfo: ImageInfo): CardSetChangeImage => {
     return {
         type: CARDSET_CHANGE_IMAGE,
         cardId,
         placeholderId,
-        url,
+        imageInfo,
     };
 };
 

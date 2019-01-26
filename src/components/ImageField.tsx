@@ -140,7 +140,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         state.cardsets.images &&
         state.cardsets.images[props.cardId] &&
         state.cardsets.images[props.cardId][props.imagePlaceholder.id]
-            ? state.cardsets.images[props.cardId][props.imagePlaceholder.id]
+            ? state.cardsets.images[props.cardId][props.imagePlaceholder.id].url
             : '';
     return {
         imageUrl,

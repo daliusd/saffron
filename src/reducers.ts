@@ -51,6 +51,7 @@ import {
     IMAGE_LIST_SUCCESS,
     IdsArray,
     ImageArray,
+    ImageInfo,
     ImageListAction,
     ImagePlaceholderType,
     LOGIN_FAILURE,
@@ -127,7 +128,7 @@ export interface CardSetState {
     activePlaceholder: string | null;
     placeholders: PlaceholdersCollection;
     texts: { [propName: string]: { [propName: string]: TextInfo } };
-    images: { [propName: string]: { [propName: string]: string } };
+    images: { [propName: string]: { [propName: string]: ImageInfo } };
 }
 
 export const DefaultCardSetState: CardSetState = {
@@ -675,11 +676,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_CHANGE_IMAGE: {
-            let placeholdersByCard: { [propName: string]: string } = {};
+            let placeholdersByCard: { [propName: string]: ImageInfo } = {};
             if (state.images && action.cardId in state.images) {
                 placeholdersByCard = { ...state.images[action.cardId] };
             }
-            placeholdersByCard[action.placeholderId] = action.url;
+            placeholdersByCard[action.placeholderId] = action.imageInfo;
 
             return {
                 ...state,

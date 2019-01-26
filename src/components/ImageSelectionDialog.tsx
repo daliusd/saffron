@@ -1,10 +1,17 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
+import { jsx } from '@emotion/core';
 import Modal from 'react-modal';
 import React, { Component } from 'react';
 
-import { Dispatch, ImageArray, ImagePlaceholderType, cardSetChangeImage, imageListRequest } from '../actions';
+import {
+    Dispatch,
+    ImageArray,
+    ImageInfo,
+    ImagePlaceholderType,
+    cardSetChangeImage,
+    imageListRequest,
+} from '../actions';
 import { State } from '../reducers';
 
 jsx; // eslint-disable-line
@@ -48,7 +55,8 @@ class ImageSelectionDialog extends Component<Props> {
     handleImageSelect = (imageName: string) => {
         const { dispatch, cardId, placeholder } = this.props;
 
-        dispatch(cardSetChangeImage(cardId, placeholder.id, `/api/imagefiles/${imageName}`));
+        const ii: ImageInfo = { url: `/api/imagefiles/${imageName}` };
+        dispatch(cardSetChangeImage(cardId, placeholder.id, ii));
 
         this.props.onClose();
     };

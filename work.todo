@@ -71,7 +71,7 @@
     + Remove Image
     + Use icons from collection
     + Remove url from image placeholder
-    - Think: maybe we should use ImageInfo like TextInfo for forward compatibility
+    + Think: maybe we should use ImageInfo like TextInfo for forward compatibility
     - Transparent background
     - Allow changing image's color if it is from collection
     - Allow uploading custom images
