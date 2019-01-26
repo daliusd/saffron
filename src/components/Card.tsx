@@ -98,7 +98,6 @@ class Card extends Component<Props, LocalState> {
     render() {
         const { placeholders, card } = this.props;
         const { width } = this.state.dimensions;
-        const placeholderIds: string[] = placeholders ? Object.keys(placeholders) : [];
 
         return (
             <Measure
@@ -125,23 +124,14 @@ class Card extends Component<Props, LocalState> {
                             onMouseDown={this.handleFieldDeselect}
                             onTouchStart={this.handleFieldDeselect}
                         >
-                            {placeholderIds &&
-                                placeholderIds.map(p => {
-                                    const placeholder = placeholders[p];
-                                    if (placeholder.type === 'image') {
-                                        return <ImageField key={p} cardId={card.id} imagePlaceholder={placeholder} />;
-                                    }
-                                    return null;
-                                })}
-
-                            {placeholderIds &&
-                                placeholderIds.map(p => {
-                                    const placeholder = placeholders[p];
-                                    if (placeholder.type === 'text') {
-                                        return <TextField key={p} cardId={card.id} textPlaceholder={placeholder} />;
-                                    }
-                                    return null;
-                                })}
+                            {Object.values(placeholders).map(p => {
+                                if (p.type === 'image') {
+                                    return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} />;
+                                } else if (p.type === 'text') {
+                                    return <TextField key={p.id} cardId={card.id} textPlaceholder={p} />;
+                                }
+                                return null;
+                            })}
                         </div>
 
                         <button onClick={this.handleRemoveCardClick}>Remove</button>

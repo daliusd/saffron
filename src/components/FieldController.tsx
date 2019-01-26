@@ -88,6 +88,12 @@ class FieldController extends React.Component<Props> {
 
     componentDidUpdate() {
         if (this.cDiv.current === null) return;
+        this.cDiv.current.style.left = '';
+        this.cDiv.current.style.top = '';
+        this.cDiv.current.style.width = '';
+        this.cDiv.current.style.height = '';
+        this.cDiv.current.style.transform = '';
+
         this.currentAngle = this.props.angle;
     }
 
