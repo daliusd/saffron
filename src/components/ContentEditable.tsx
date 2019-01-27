@@ -68,16 +68,6 @@ class ContentEditable extends Component<Props> {
         }
     }
 
-    componentDidUpdate() {
-        const { isActive } = this.props;
-
-        if (!this.editDiv.current) return;
-
-        if (isActive) {
-            this.editDiv.current.focus();
-        }
-    }
-
     shouldComponentUpdate(nextProps: Props) {
         return (
             nextProps.textValue !== this.currentText ||
@@ -117,6 +107,9 @@ class ContentEditable extends Component<Props> {
         } else if (!this.wasMoved) {
             event.preventDefault();
             dispatch(cardSetActiveCardAndPlaceholder(cardId, placeholderId));
+
+            if (!this.editDiv.current) return;
+            this.editDiv.current.focus();
         }
     };
 

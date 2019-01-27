@@ -55,6 +55,8 @@
     + Italic
     + Change font size
     + Remove text field
+    + Font size focus loss problem
+    - Set default font
 
 + Show active selection
 + Clone texts on card clone
@@ -72,7 +74,9 @@
     + Use icons from collection
     + Remove url from image placeholder
     + Think: maybe we should use ImageInfo like TextInfo for forward compatibility
-    - Transparent background
+    ? Transparent background
+        I assume this will just work if we will pass proper images.
+    - Move fields up/down in drawing order
     - Allow changing image's color if it is from collection
     - Allow uploading custom images
     - Find more icons or give instructions to users
