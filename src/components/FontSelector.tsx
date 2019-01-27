@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import WebFont from 'webfontloader';
 
-import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from '../fontLoader';
 import {
     Dispatch,
     cardSetChangeActiveTextPlaceholderFontFamilyAndVariant,
@@ -116,18 +115,9 @@ class FontSelector extends Component<Props> {
 }
 
 const mapStateToProps = (state: State) => {
-    let activeFont = DEFAULT_FONT;
-    let activeFontVariant = DEFAULT_FONT_VARIANT;
-    let activeFontSize = DEFAULT_FONT_SIZE;
-
-    if (state.cardsets.placeholders && state.cardsets.activePlaceholder) {
-        const placeholder = state.cardsets.placeholders[state.cardsets.activePlaceholder];
-        if (placeholder.type === 'text') {
-            activeFont = placeholder.fontFamily || DEFAULT_FONT;
-            activeFontVariant = placeholder.fontVariant || DEFAULT_FONT_VARIANT;
-            activeFontSize = placeholder.fontSize || DEFAULT_FONT_SIZE;
-        }
-    }
+    let activeFont = state.cardsets.textSettings.fontFamily;
+    let activeFontVariant = state.cardsets.textSettings.fontVariant;
+    let activeFontSize = state.cardsets.textSettings.fontSize;
 
     return {
         activeFont,

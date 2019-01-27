@@ -117,6 +117,14 @@ export const DefaultGameState: GameState = {
     active: null,
 };
 
+export interface TextSettings {
+    align: string;
+    color: string;
+    fontFamily: string;
+    fontVariant: string;
+    fontSize: string;
+}
+
 export interface CardSetState {
     byId: CardSetsCollection;
     allIds: IdsArray;
@@ -129,6 +137,7 @@ export interface CardSetState {
     placeholders: PlaceholdersCollection;
     texts: { [propName: string]: { [propName: string]: TextInfo } };
     images: { [propName: string]: { [propName: string]: ImageInfo } };
+    textSettings: TextSettings;
 }
 
 export const DefaultCardSetState: CardSetState = {
@@ -143,6 +152,13 @@ export const DefaultCardSetState: CardSetState = {
     activePlaceholder: null,
     texts: {},
     images: {},
+    textSettings: {
+        align: 'left',
+        color: '#000000',
+        fontFamily: DEFAULT_FONT,
+        fontVariant: DEFAULT_FONT_VARIANT,
+        fontSize: DEFAULT_FONT_SIZE,
+    },
 };
 
 export interface ImageState {
@@ -427,6 +443,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_ADD_TEXT_PLACEHOLDER: {
+            let textSettings = { ...state.textSettings };
             const id = shortid.generate();
             const textPlaceholder: TextPlaceholderType = {
                 id,
@@ -436,11 +453,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: 50,
                 height: 50,
                 angle: 0,
-                align: 'left',
-                color: '#000000',
-                fontFamily: DEFAULT_FONT,
-                fontVariant: DEFAULT_FONT_VARIANT,
-                fontSize: DEFAULT_FONT_SIZE,
+                align: textSettings.align,
+                color: textSettings.color,
+                fontFamily: textSettings.fontFamily,
+                fontVariant: textSettings.fontVariant,
+                fontSize: textSettings.fontSize,
             };
 
             return {
@@ -552,6 +569,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: {
+            let textSettings = {
+                ...state.textSettings,
+                align: action.align,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -564,12 +586,21 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: {
+            let textSettings = {
+                ...state.textSettings,
+                color: action.color,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -582,12 +613,21 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY: {
+            let textSettings = {
+                ...state.textSettings,
+                color: action.fontFamily,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -600,12 +640,21 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT: {
+            let textSettings = {
+                ...state.textSettings,
+                color: action.fontVariant,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -618,12 +667,22 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT: {
+            let textSettings = {
+                ...state.textSettings,
+                fontFamily: action.fontFamily,
+                fontVariant: action.fontVariant,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -637,12 +696,21 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE: {
+            let textSettings = {
+                ...state.textSettings,
+                fontSize: action.fontSize,
+            };
+
             if (state.activePlaceholder) {
                 const textPlaceholder = {
                     ...state.placeholders[state.activePlaceholder],
@@ -655,9 +723,13 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         ...state.placeholders,
                         [state.activePlaceholder]: textPlaceholder,
                     },
+                    textSettings,
                 };
             } else {
-                return state;
+                return {
+                    ...state,
+                    textSettings,
+                };
             }
         }
         case CARDSET_CHANGE_TEXT: {
@@ -691,10 +763,23 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
+            let textSettings = { ...state.textSettings };
+            if (action.placeholderId !== null) {
+                const placeholder = state.placeholders[action.placeholderId];
+                if (placeholder.type === 'text') {
+                    textSettings.align = placeholder.align;
+                    textSettings.color = placeholder.color;
+                    textSettings.fontFamily = placeholder.fontFamily;
+                    textSettings.fontVariant = placeholder.fontVariant;
+                    textSettings.fontSize = placeholder.fontSize;
+                }
+            }
+
             return {
                 ...state,
                 activeCard: action.cardId,
                 activePlaceholder: action.placeholderId,
+                textSettings,
             };
         }
         default:
