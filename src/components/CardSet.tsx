@@ -22,6 +22,8 @@ export class CardSet extends Component<Props> {
         dispatch(cardSetCreateCard(newCard));
     };
 
+    handleGeneratePdfClick = () => {};
+
     render() {
         const { isAuthenticated, cardsAllIds, cardsById } = this.props;
 
@@ -40,6 +42,9 @@ export class CardSet extends Component<Props> {
                     </div>
                     <div>
                         <button onClick={this.handleCreateCardClick}>Create Card</button>
+                    </div>
+                    <div>
+                        <button onClick={this.handleGeneratePdfClick}>Generate PDF</button>
                     </div>
                 </div>
             )
