@@ -14,6 +14,29 @@ interface Props {
 }
 
 export class CardSet extends Component<Props> {
+    worker: Worker | null = null;
+
+    componentDidMount = () => {
+        this.worker = new Worker('/js/worker.js');
+        this.worker.addEventListener('message', event => {
+            const blobURL = event.data;
+
+            const tempLink = document.createElement('a');
+            tempLink.style.display = 'none';
+            tempLink.href = blobURL;
+            tempLink.setAttribute('download', 'card.pdf');
+            if (typeof tempLink.download === 'undefined') {
+                tempLink.setAttribute('target', '_blank');
+            }
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            setTimeout(() => {
+                window.URL.revokeObjectURL(blobURL);
+            }, 100);
+        });
+    };
+
     handleCreateCardClick = () => {
         const { dispatch } = this.props;
 
@@ -22,7 +45,11 @@ export class CardSet extends Component<Props> {
         dispatch(cardSetCreateCard(newCard));
     };
 
-    handleGeneratePdfClick = () => {};
+    handleGeneratePdfClick = () => {
+        if (this.worker) {
+            this.worker.postMessage(JSON.parse(JSON.stringify(this.props)));
+        }
+    };
 
     render() {
         const { isAuthenticated, cardsAllIds, cardsById } = this.props;
@@ -57,6 +84,9 @@ const mapStateToProps = (state: State) => {
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
+        placeholders: state.cardsets.placeholders,
+        texts: state.cardsets.texts,
+        images: state.cardsets.images,
     };
 };
 

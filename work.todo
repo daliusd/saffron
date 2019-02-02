@@ -97,6 +97,9 @@
 + Figure out why selected image can't be moved
 
 - Generate PDF
+    + Create simple pdf renderer
+    - Pass current card set
+    - Generate PDF
 
 - UI
     - https://react-kawaii.now.sh/
