@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
+import { jsx } from '@emotion/core';
 import React, { PureComponent } from 'react';
 
 import {
     Dispatch,
     ImagePlaceholderType,
+    cardSetActiveCardAndPlaceholder,
     cardSetChangePlaceholderAngle,
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
@@ -86,8 +87,11 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
+        const { dispatch, cardId, imagePlaceholder } = this.props;
         if (!this.wasMoved) {
             event.preventDefault();
+            dispatch(cardSetActiveCardAndPlaceholder(cardId, imagePlaceholder.id));
+
             this.setState({ imageSelectionDialogIsOpen: true });
         }
     };
