@@ -53,7 +53,10 @@ describe('<CardSet />', () => {
                 cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
             />,
         );
-        wrapper.find('button').simulate('click');
+        wrapper
+            .find('button')
+            .first()
+            .simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
     });
 
@@ -67,7 +70,10 @@ describe('<CardSet />', () => {
                 cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
             />,
         );
-        wrapper.find('button').simulate('click');
+        wrapper
+            .find('button')
+            .first()
+            .simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
     });
 });

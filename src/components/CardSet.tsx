@@ -17,6 +17,9 @@ export class CardSet extends Component<Props> {
     worker: Worker | null = null;
 
     componentDidMount = () => {
+        // @ts-ignore
+        if (!window.Worker) return;
+
         this.worker = new Worker('/js/worker.js');
         this.worker.addEventListener('message', event => {
             const blobURL = event.data;
