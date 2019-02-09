@@ -448,11 +448,21 @@ test('handleGameSelectRequest with updateCardSets set to false', () => {
 });
 
 test('handleCardSetCreateRequest', () => {
-    const action: CardSetCreateRequest = { type: CARDSET_CREATE_REQUEST, cardsetname: 'test', gameId: '666' };
+    const action: CardSetCreateRequest = {
+        type: CARDSET_CREATE_REQUEST,
+        cardsetname: 'test',
+        width: 30,
+        height: 40,
+        gameId: '666',
+    };
     const gen = cloneableGenerator(handleCardSetCreateRequest)(action);
 
     expect(gen.next().value).toEqual(
-        call(authorizedPostRequest, '/api/cardsets', { name: 'test', gameId: '666', data: '{}' }),
+        call(authorizedPostRequest, '/api/cardsets', {
+            name: 'test',
+            gameId: '666',
+            data: JSON.stringify({ width: 30, height: 40 }),
+        }),
     );
 
     let clone = gen.clone();
@@ -478,7 +488,7 @@ test('handleCardSetSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next({ id: '345', name: 'test', data: '{ "placeholders": {} }', game_id: '666' }).value).toEqual(
+    expect(gen.next({ id: '345', name: 'test', data: '{ "placeholders": {} }', gameId: '666' }).value).toEqual(
         call(loadFontsUsedInPlaceholders, { placeholders: {} }),
     );
 
@@ -511,7 +521,15 @@ test('handleCardSetChange', () => {
     expect(gen.next().value).toEqual(select());
     expect(gen.next(state).value).toEqual(
         call(authorizedPutRequest, '/api/cardsets/123', {
-            data: JSON.stringify({ cardsAllIds: [], cardsById: {}, placeholders: {}, texts: {}, images: {} }),
+            data: JSON.stringify({
+                width: 63.5,
+                height: 88.9,
+                cardsAllIds: [],
+                cardsById: {},
+                placeholders: {},
+                texts: {},
+                images: {},
+            }),
             name: 'name',
         }),
     );

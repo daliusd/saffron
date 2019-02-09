@@ -2,12 +2,14 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { CardType, Dispatch, cardSetCreateCard } from '../actions';
+import { CardType, Dispatch, cardSetCreateCard, cardSetChangeHeight, cardSetChangeWidth } from '../actions';
 import { State } from '../reducers';
 import Card from './Card';
 
 interface Props {
     dispatch: Dispatch;
+    width: number;
+    height: number;
     isAuthenticated: boolean;
     cardsAllIds: string[];
     cardsById: { [propName: string]: CardType };
@@ -54,12 +56,42 @@ export class CardSet extends Component<Props> {
         }
     };
 
+    handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeWidth(parseFloat(event.target.value)));
+    };
+
+    handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
+    };
+
     render() {
-        const { isAuthenticated, cardsAllIds, cardsById } = this.props;
+        const { isAuthenticated, cardsAllIds, cardsById, width, height } = this.props;
 
         return (
             isAuthenticated && (
                 <div>
+                    <div>
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            onChange={this.handleWidthChange}
+                            className="form-control"
+                            placeholder="width"
+                            value={width}
+                        />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            onChange={this.handleHeightChange}
+                            className="form-control"
+                            placeholder="height"
+                            value={height}
+                        />
+                    </div>
                     <div>
                         <ul>
                             {cardsAllIds &&
@@ -84,6 +116,8 @@ export class CardSet extends Component<Props> {
 
 const mapStateToProps = (state: State) => {
     return {
+        width: state.cardsets.width,
+        height: state.cardsets.height,
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,

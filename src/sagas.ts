@@ -12,11 +12,13 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
     CARDSET_CHANGE_TEXT,
+    CARDSET_CHANGE_WIDTH,
     CARDSET_CLONE_CARD,
     CARDSET_CREATE_CARD,
     CARDSET_CREATE_FAILURE,
@@ -293,7 +295,7 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): SagaI
         yield call(authorizedPostRequest, '/api/cardsets', {
             name: action.cardsetname,
             gameId: action.gameId,
-            data: '{}',
+            data: JSON.stringify({ width: action.width, height: action.height }),
         });
         yield put({
             type: CARDSET_CREATE_SUCCESS,
@@ -316,7 +318,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
             name: data.name,
             data: parsedData,
         });
-        yield put(gameSelectRequest(data.game_id, false));
+        yield put(gameSelectRequest(data.gameId, false));
     } catch (e) {
         yield put({ type: CARDSET_SELECT_FAILURE });
         yield call(putError, e.message);
@@ -330,6 +332,8 @@ export function* handleCardSetChange(): SagaIterator {
 
         const cardsetId = state.cardsets.active;
         const data = {
+            width: state.cardsets.width,
+            height: state.cardsets.height,
             cardsAllIds: state.cardsets.cardsAllIds,
             cardsById: state.cardsets.cardsById,
             placeholders: state.cardsets.placeholders,
@@ -395,6 +399,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_ADD_TEXT_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_ADD_IMAGE_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_REMOVE_ACTIVE_PLACEHOLDER, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_WIDTH, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_HEIGHT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_POSITION, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_ANGLE, handleCardSetChange),

@@ -39,6 +39,8 @@ export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER = 'CARDSET_ADD_TEXT_PLACEHOLDER';
 export const CARDSET_ADD_IMAGE_PLACEHOLDER = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
 export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
+export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
+export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
@@ -207,6 +209,8 @@ export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
 export interface CardSetCreateRequest {
     type: typeof CARDSET_CREATE_REQUEST;
     cardsetname: string;
+    width: number;
+    height: number;
     gameId: string;
 }
 export type CardSetCreateAction =
@@ -234,6 +238,8 @@ export interface CardSetSelectSuccess {
     id: string;
     name: string;
     data: {
+        width: number;
+        height: number;
         cardsAllIds: IdsArray;
         cardsById: { [propName: string]: CardType };
         placeholders: PlaceholdersCollection;
@@ -276,6 +282,17 @@ export interface CardSetAddImagePlaceholder {
 export interface CardSetRemoveActivePlaceholder {
     type: typeof CARDSET_REMOVE_ACTIVE_PLACEHOLDER;
 }
+
+export interface CardSetChangeWidth {
+    type: typeof CARDSET_CHANGE_WIDTH;
+    width: number;
+}
+
+export interface CardSetChangeHeight {
+    type: typeof CARDSET_CHANGE_HEIGHT;
+    height: number;
+}
+
 export interface CardSetChangePlaceholderPosition {
     type: typeof CARDSET_CHANGE_PLACEHOLDER_POSITION;
     placeholder: PlaceholderType;
@@ -354,6 +371,8 @@ export type CardSetModifyAction =
     | CardSetAddTextPlaceholder
     | CardSetAddImagePlaceholder
     | CardSetRemoveActivePlaceholder
+    | CardSetChangeWidth
+    | CardSetChangeHeight
     | CardSetChangePlaceholderPosition
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
@@ -451,10 +470,17 @@ export const gameSelectRequest = (id: string, updateCardSets: boolean): GameActi
     };
 };
 
-export const cardSetCreateRequest = (cardsetname: string, gameId: string): CardSetAction => {
+export const cardSetCreateRequest = (
+    cardsetname: string,
+    width: number,
+    height: number,
+    gameId: string,
+): CardSetAction => {
     return {
         type: CARDSET_CREATE_REQUEST,
         cardsetname: cardsetname,
+        width,
+        height,
         gameId,
     };
 };
@@ -510,6 +536,20 @@ export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
 export const cardSetRemoveActivePlaceholder = (): CardSetRemoveActivePlaceholder => {
     return {
         type: CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
+    };
+};
+
+export const cardSetChangeWidth = (width: number): CardSetChangeWidth => {
+    return {
+        type: CARDSET_CHANGE_WIDTH,
+        width,
+    };
+};
+
+export const cardSetChangeHeight = (height: number): CardSetChangeHeight => {
+    return {
+        type: CARDSET_CHANGE_HEIGHT,
+        height,
     };
 };
 

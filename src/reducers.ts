@@ -10,11 +10,13 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
     CARDSET_CHANGE_TEXT,
+    CARDSET_CHANGE_WIDTH,
     CARDSET_CLONE_CARD,
     CARDSET_CREATE_CARD,
     CARDSET_CREATE_FAILURE,
@@ -126,6 +128,8 @@ export interface TextSettings {
 }
 
 export interface CardSetState {
+    width: number;
+    height: number;
     byId: CardSetsCollection;
     allIds: IdsArray;
     activity: number;
@@ -141,6 +145,8 @@ export interface CardSetState {
 }
 
 export const DefaultCardSetState: CardSetState = {
+    width: 63.5,
+    height: 88.9,
     byId: {},
     allIds: [],
     activity: 0,
@@ -349,6 +355,8 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                         name: action.name,
                     },
                 }),
+                width: action.data.width || 63.5,
+                height: action.data.height || 88.9,
                 cardsAllIds: action.data.cardsAllIds,
                 cardsById: action.data.cardsById,
                 placeholders: action.data.placeholders,
@@ -523,6 +531,18 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 };
             }
             return state;
+        }
+        case CARDSET_CHANGE_WIDTH: {
+            return {
+                ...state,
+                width: action.width,
+            };
+        }
+        case CARDSET_CHANGE_HEIGHT: {
+            return {
+                ...state,
+                height: action.height,
+            };
         }
         case CARDSET_CHANGE_PLACEHOLDER_POSITION: {
             const placeholder = {

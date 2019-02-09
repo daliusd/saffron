@@ -25,6 +25,8 @@ interface Props {
     card: CardType;
     dispatch: Dispatch;
     placeholders: PlaceholdersCollection;
+    width: number;
+    height: number;
 }
 
 interface LocalState {
@@ -96,8 +98,8 @@ class Card extends Component<Props, LocalState> {
     };
 
     render() {
-        const { placeholders, card } = this.props;
-        const { width } = this.state.dimensions;
+        const { placeholders, card, width, height } = this.props;
+        // const ppmm = this.state.dimensions.width / width;
 
         return (
             <Measure
@@ -115,8 +117,8 @@ class Card extends Component<Props, LocalState> {
                             id={`card_${card.id}`}
                             ref={measureRef}
                             style={{
-                                width: '5cm',
-                                height: `${width * 1.5}px`,
+                                width: `${width}mm`,
+                                height: `${height}mm`,
                                 border: '1px solid black',
                                 position: 'relative',
                                 overflow: 'hidden',
@@ -155,6 +157,8 @@ class Card extends Component<Props, LocalState> {
 const mapStateToProps = (state: State) => {
     return {
         placeholders: state.cardsets.placeholders,
+        width: state.cardsets.width,
+        height: state.cardsets.height,
     };
 };
 

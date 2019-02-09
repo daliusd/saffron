@@ -15,15 +15,27 @@ interface Props {
 
 interface LocalState {
     cardSetName: string;
+    width: number;
+    height: number;
 }
 
 export class CardSets extends Component<Props, LocalState> {
     state: LocalState = {
         cardSetName: '',
+        width: 63.5,
+        height: 88.9,
     };
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ cardSetName: event.target.value });
+    };
+
+    handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ width: parseFloat(event.target.value) });
+    };
+
+    handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ height: parseFloat(event.target.value) });
     };
 
     handleCreateCardSetClick = () => {
@@ -36,7 +48,7 @@ export class CardSets extends Component<Props, LocalState> {
         const cardSetName = this.state.cardSetName.trim();
 
         if (cardSetName) {
-            dispatch(cardSetCreateRequest(cardSetName, activeGame));
+            dispatch(cardSetCreateRequest(cardSetName, this.state.width, this.state.height, activeGame));
         } else {
             dispatch(messageRequest('error', 'Card Set name should be non empty.'));
         }
@@ -65,6 +77,27 @@ export class CardSets extends Component<Props, LocalState> {
                             className="form-control"
                             placeholder="Card Set name"
                         />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            onChange={this.handleWidthChange}
+                            className="form-control"
+                            placeholder="width"
+                            value={this.state.width}
+                        />
+                        <input
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            onChange={this.handleHeightChange}
+                            className="form-control"
+                            placeholder="height"
+                            value={this.state.height}
+                        />
+                    </div>
+                    <div>Poker card size 63.5mm x 88.9mm. Bridge card size 56mm x 88.9mm.</div>
+                    <div>
                         <button onClick={this.handleCreateCardSetClick}>Create Card Set</button>
                     </div>
                 </div>
