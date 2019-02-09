@@ -96,8 +96,12 @@
 + Figure out why image is not moved properly after selection
 + Figure out why selected image can't be moved
 
++ Refactoring: more camel case
+- Fields should be controlled by mm not px
+
 - Generate PDF
     + Create simple pdf renderer
+    - Move worker to Saga where it belongs
     - Pass current card set
     - Generate PDF
 

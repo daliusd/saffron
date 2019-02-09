@@ -1,6 +1,6 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
-import jwt_decode from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 import {
     Action,
@@ -102,7 +102,7 @@ export function* handleMessageDisplay(action: MessageAction): SagaIterator {
 
 export function validateToken(token: string): boolean {
     try {
-        const decoded = jwt_decode<{ exp: number }>(token);
+        const decoded = jwtDecode<{ exp: number }>(token);
         const valid = decoded.exp - new Date().getTime() / 1000 > 5;
         return valid;
     } catch (e) {
@@ -110,29 +110,29 @@ export function validateToken(token: string): boolean {
     }
 }
 
-export function* getToken(with_error_if_missing: boolean): SagaIterator {
+export function* getToken(withErrorIfMissing: boolean): SagaIterator {
     const token = yield call(getTokenFromStorage);
     if (token) {
-        const token_valid = yield call(validateToken, token);
-        if (token_valid) return token;
+        const tokenValid = yield call(validateToken, token);
+        if (tokenValid) return token;
     }
 
-    const refresh_token = yield call(getRefreshTokenFromStorage);
-    if (!refresh_token) {
-        if (with_error_if_missing) throw new Error('Token not found.');
+    const refreshTokenValue = yield call(getRefreshTokenFromStorage);
+    if (!refreshTokenValue) {
+        if (withErrorIfMissing) throw new Error('Token not found.');
         return null;
     }
 
-    const refresh_token_valid = yield call(validateToken, refresh_token);
-    if (!refresh_token_valid) {
+    const refreshTokenValid = yield call(validateToken, refreshTokenValue);
+    if (!refreshTokenValid) {
         yield put({ type: LOGOUT_REQUEST });
-        if (with_error_if_missing) throw new Error('Token not found.');
+        if (withErrorIfMissing) throw new Error('Token not found.');
         return null;
     }
 
-    const new_token = yield call(refreshToken, refresh_token);
-    yield call(saveAccessToken, new_token);
-    return new_token;
+    const newToken = yield call(refreshToken, refreshTokenValue);
+    yield call(saveAccessToken, newToken);
+    return newToken;
 }
 
 // Login
@@ -157,19 +157,19 @@ export function* handleLoginSuccess(): SagaIterator {
 export function* logoutToken(): SagaIterator {
     const token = yield call(getTokenFromStorage);
     if (token) {
-        const token_valid = yield call(validateToken, token);
-        if (token_valid) {
+        const tokenValid = yield call(validateToken, token);
+        if (tokenValid) {
             yield call(deleteAccessToken, token);
         }
     }
 }
 
 export function* logoutRefreshToken(): SagaIterator {
-    const refresh_token = yield call(getRefreshTokenFromStorage);
-    if (refresh_token) {
-        const refresh_token_valid = yield call(validateToken, refresh_token);
-        if (refresh_token_valid) {
-            yield call(deleteRefreshToken, refresh_token);
+    const refreshTokenValue = yield call(getRefreshTokenFromStorage);
+    if (refreshTokenValue) {
+        const refreshTokenValid = yield call(validateToken, refreshTokenValue);
+        if (refreshTokenValid) {
+            yield call(deleteRefreshToken, refreshTokenValue);
         }
     }
 }

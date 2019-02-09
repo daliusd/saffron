@@ -35,7 +35,7 @@ test('getTokens failure', async () => {
 });
 
 test('refreshToken success', () => {
-    mockedAxios.post.mockResolvedValue({ data: { access_token: 'at' } });
+    mockedAxios.post.mockResolvedValue({ data: { accessToken: 'at' } });
     expect(refreshToken('rt')).resolves.toEqual('at');
 });
 

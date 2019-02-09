@@ -27,14 +27,14 @@ export function getTokens(creds: Credentials) {
         });
 }
 
-export function refreshToken(refresh_token: string) {
+export function refreshToken(refreshTokenValue: string) {
     let config = {
-        headers: { Authorization: `Bearer ${refresh_token}` },
+        headers: { Authorization: `Bearer ${refreshTokenValue}` },
     };
     return axios
         .post('/api/access_tokens', {}, config)
         .then(resp => {
-            return resp.data.access_token;
+            return resp.data.accessToken;
         })
         .catch(error => {
             handleAxiosError(error);

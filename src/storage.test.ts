@@ -4,12 +4,12 @@ test('storage tokens', () => {
     expect(getTokenFromStorage()).toBeNull();
     expect(getRefreshTokenFromStorage()).toBeNull();
 
-    let access_token = '_access_token_';
-    let refresh_token = '_refresh_token_';
-    saveTokens({ access_token, refresh_token });
+    let accessToken = '_access_token_';
+    let refreshToken = '_refresh_token_';
+    saveTokens({ accessToken, refreshToken });
 
-    expect(getTokenFromStorage()).toEqual(access_token);
-    expect(getRefreshTokenFromStorage()).toEqual(refresh_token);
+    expect(getTokenFromStorage()).toEqual(accessToken);
+    expect(getRefreshTokenFromStorage()).toEqual(refreshToken);
 
     saveAccessToken('_access_token_changed_');
     expect(getTokenFromStorage()).toEqual('_access_token_changed_');

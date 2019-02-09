@@ -115,7 +115,7 @@ test('handleLoginRequest', () => {
     const clone = gen.clone();
 
     expect(clone.next().value).toEqual(call(getTokens, creds));
-    const data = { access_token: 'test' };
+    const data = { accessToken: 'test' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
     expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
     expect(clone.next().done).toBeTruthy();
@@ -162,8 +162,8 @@ test('getToken with_error_if_missing=false', () => {
     expect(next.done).toBeTruthy();
     expect(next.value).toBeNull();
 
-    const refresh_token = 'refresh_token';
-    expect(gen.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
+    const refreshTokenValue = 'refreshTokenValue';
+    expect(gen.next(refreshTokenValue).value).toEqual(call(validateToken, refreshTokenValue));
 
     clone = gen.clone();
     expect(clone.next(false).value).toEqual(put({ type: LOGOUT_REQUEST }));
@@ -171,7 +171,7 @@ test('getToken with_error_if_missing=false', () => {
     expect(next.done).toBeTruthy();
     expect(next.value).toBeNull();
 
-    expect(gen.next(true).value).toEqual(call(refreshToken, refresh_token));
+    expect(gen.next(true).value).toEqual(call(refreshToken, refreshTokenValue));
     expect(gen.next('new_token').value).toEqual(call(saveAccessToken, 'new_token'));
     next = gen.next();
     expect(next.done).toBeTruthy();
@@ -205,8 +205,8 @@ test('getToken with_error_if_missing=true', () => {
         clone.next(null);
     }).toThrow();
 
-    const refresh_token = 'refresh_token';
-    expect(gen.next(refresh_token).value).toEqual(call(validateToken, refresh_token));
+    const refreshTokenValue = 'refreshTokenValue';
+    expect(gen.next(refreshTokenValue).value).toEqual(call(validateToken, refreshTokenValue));
 
     clone = gen.clone();
     expect(clone.next(false).value).toEqual(put({ type: LOGOUT_REQUEST }));
@@ -214,7 +214,7 @@ test('getToken with_error_if_missing=true', () => {
         clone.next(null);
     }).toThrow();
 
-    expect(gen.next(true).value).toEqual(call(refreshToken, refresh_token));
+    expect(gen.next(true).value).toEqual(call(refreshToken, refreshTokenValue));
     expect(gen.next('new_token').value).toEqual(call(saveAccessToken, 'new_token'));
     next = gen.next();
     expect(next.done).toBeTruthy();
@@ -290,7 +290,7 @@ test('handleSignupRequest', () => {
     // Success case
     const clone = gen.clone();
 
-    const data = { access_token: 'test' };
+    const data = { accessToken: 'test' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
     expect(clone.next().value).toEqual(put({ type: SIGNUP_SUCCESS }));
     expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
