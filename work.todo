@@ -101,8 +101,8 @@
 
 - Generate PDF
     + Create simple pdf renderer
-    - Move worker to Saga where it belongs
-    - Pass current card set
+    + Move worker to Saga where it belongs
+    + Pass current card set
     - Generate PDF
 
 - UI

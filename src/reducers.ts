@@ -37,6 +37,9 @@ import {
     CardSetsCollection,
     CardType,
     GAME_CREATE_FAILURE,
+    GAME_CREATE_PDF_FAILURE,
+    GAME_CREATE_PDF_REQUEST,
+    GAME_CREATE_PDF_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
     GAME_LIST_FAILURE,
@@ -80,6 +83,7 @@ import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from './fontLoa
 export const ACTIVITY_CREATING = 0x1;
 export const ACTIVITY_LISTING = 0x2;
 export const ACTIVITY_SELECTING = 0x4;
+export const ACTIVITY_CREATING_PDF = 0x8;
 
 export interface MessageState {
     messages: MessageType[];
@@ -303,6 +307,18 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
         case GAME_SELECT_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
+            });
+        case GAME_CREATE_PDF_REQUEST:
+            return Object.assign({}, state, {
+                activity: state.activity | ACTIVITY_CREATING_PDF,
+            });
+        case GAME_CREATE_PDF_SUCCESS:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING_PDF,
+            });
+        case GAME_CREATE_PDF_FAILURE:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING_PDF,
             });
         default:
             return state;

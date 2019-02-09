@@ -39,6 +39,9 @@ import {
     CardSetType,
     CardSetsCollection,
     GAME_CREATE_FAILURE,
+    GAME_CREATE_PDF_FAILURE,
+    GAME_CREATE_PDF_REQUEST,
+    GAME_CREATE_PDF_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
     GAME_LIST_FAILURE,
@@ -48,6 +51,7 @@ import {
     GAME_SELECT_FAILURE,
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
+    GameCreatePdfRequest,
     GameCreateRequest,
     GameSelectRequest,
     GameType,
@@ -84,6 +88,7 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
+import { generatePdfUsingWorker } from './workerController';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
 
@@ -288,6 +293,29 @@ export function* handleGameSelectRequest(action: GameSelectRequest): SagaIterato
     }
 }
 
+export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaIterator {
+    try {
+        const state = yield select();
+
+        yield call(
+            generatePdfUsingWorker,
+            state.cardsets.placeholders,
+            state.cardsets.texts,
+            state.cardsets.images,
+            action.pageWidth,
+            action.pageHeight,
+            action.topBottomMargin,
+            action.leftRightMargin,
+        );
+        yield put({
+            type: GAME_CREATE_PDF_SUCCESS,
+        });
+    } catch (e) {
+        yield put({ type: GAME_CREATE_PDF_FAILURE });
+        yield call(putError, e.message);
+    }
+}
+
 // Card Set
 
 export function* handleCardSetCreateRequest(action: CardSetCreateRequest): SagaIterator {
@@ -389,6 +417,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(GAME_CREATE_REQUEST, handleGameCreateRequest),
         takeLatest(GAME_LIST_REQUEST, handleGameListRequest),
         takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
+        takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
         takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
 

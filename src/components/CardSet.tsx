@@ -2,17 +2,15 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
+import { ACTIVITY_CREATING_PDF, State } from '../reducers';
 import {
     CardType,
     Dispatch,
-    PlaceholdersCollection,
-    PlaceholdersImageInfoByCardCollection,
-    PlaceholdersTextInfoByCardCollection,
     cardSetChangeHeight,
     cardSetChangeWidth,
     cardSetCreateCard,
+    gameCreatePdfRequest,
 } from '../actions';
-import { State } from '../reducers';
 import Card from './Card';
 
 interface StateProps {
@@ -21,9 +19,7 @@ interface StateProps {
     isAuthenticated: boolean;
     cardsAllIds: string[];
     cardsById: { [propName: string]: CardType };
-    placeholders: PlaceholdersCollection;
-    texts: PlaceholdersTextInfoByCardCollection;
-    images: PlaceholdersImageInfoByCardCollection;
+    isCreatingPdf: boolean;
 }
 
 interface DispatchProps {
@@ -40,37 +36,11 @@ interface LocalState {
 }
 
 export class CardSet extends Component<Props, LocalState> {
-    worker: Worker | null = null;
-
     state = {
         pageWidth: 210,
         pageHeight: 297,
         topBottomMargin: 20,
         leftRightMargin: 20,
-    };
-
-    componentDidMount = () => {
-        // @ts-ignore
-        if (!window.Worker) return;
-
-        this.worker = new Worker('/js/worker.js');
-        this.worker.addEventListener('message', event => {
-            const blobURL = event.data;
-
-            const tempLink = document.createElement('a');
-            tempLink.style.display = 'none';
-            tempLink.href = blobURL;
-            tempLink.setAttribute('download', 'card.pdf');
-            if (typeof tempLink.download === 'undefined') {
-                tempLink.setAttribute('target', '_blank');
-            }
-            document.body.appendChild(tempLink);
-            tempLink.click();
-            document.body.removeChild(tempLink);
-            setTimeout(() => {
-                window.URL.revokeObjectURL(blobURL);
-            }, 100);
-        });
     };
 
     handleCreateCardClick = () => {
@@ -82,9 +52,10 @@ export class CardSet extends Component<Props, LocalState> {
     };
 
     handleGeneratePdfClick = () => {
-        if (this.worker) {
-            this.worker.postMessage(JSON.parse(JSON.stringify(this.props)));
-        }
+        const { dispatch } = this.props;
+        const { pageWidth, pageHeight, topBottomMargin, leftRightMargin } = this.state;
+
+        dispatch(gameCreatePdfRequest(pageWidth, pageHeight, topBottomMargin, leftRightMargin));
     };
 
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -114,7 +85,7 @@ export class CardSet extends Component<Props, LocalState> {
     };
 
     render() {
-        const { isAuthenticated, cardsAllIds, cardsById, width, height } = this.props;
+        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf } = this.props;
 
         return (
             isAuthenticated && (
@@ -181,7 +152,9 @@ export class CardSet extends Component<Props, LocalState> {
                     </div>
 
                     <div>
-                        <button onClick={this.handleGeneratePdfClick}>Generate PDF</button>
+                        <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
+                            Generate PDF
+                        </button>
                     </div>
                 </div>
             )
@@ -196,9 +169,7 @@ const mapStateToProps = (state: State): StateProps => {
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
-        placeholders: state.cardsets.placeholders,
-        texts: state.cardsets.texts,
-        images: state.cardsets.images,
+        isCreatingPdf: (state.games.activity & ACTIVITY_CREATING_PDF) === ACTIVITY_CREATING_PDF,
     };
 };
 

@@ -23,6 +23,9 @@ export const GAME_LIST_RESET = 'GAME_LIST_RESET';
 export const GAME_SELECT_REQUEST = 'GAME_SELECT_REQUEST';
 export const GAME_SELECT_SUCCESS = 'GAME_SELECT_SUCCESS';
 export const GAME_SELECT_FAILURE = 'GAME_SELECT_FAILURE';
+export const GAME_CREATE_PDF_REQUEST = 'GAME_CREATE_PDF_REQUEST';
+export const GAME_CREATE_PDF_SUCCESS = 'GAME_CREATE_PDF_SUCCESS';
+export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
 export const CARDSET_CREATE_FAILURE = 'CARDSET_CREATE_FAILURE';
@@ -220,7 +223,20 @@ export type GameSelectAction =
     | { type: typeof GAME_SELECT_SUCCESS; id: string }
     | { type: typeof GAME_SELECT_FAILURE };
 
-export type GameAction = GameCreateAction | GameListAction | GameSelectAction;
+export interface GameCreatePdfRequest {
+    type: typeof GAME_CREATE_PDF_REQUEST;
+    pageWidth: number;
+    pageHeight: number;
+    topBottomMargin: number;
+    leftRightMargin: number;
+}
+
+export type GameCreatePdfAction =
+    | GameCreatePdfRequest
+    | { type: typeof GAME_CREATE_PDF_SUCCESS }
+    | { type: typeof GAME_CREATE_PDF_FAILURE };
+
+export type GameAction = GameCreateAction | GameListAction | GameSelectAction | GameCreatePdfAction;
 
 export interface CardSetCreateRequest {
     type: typeof CARDSET_CREATE_REQUEST;
@@ -475,6 +491,21 @@ export const gameSelectRequest = (id: string, updateCardSets: boolean): GameActi
         type: GAME_SELECT_REQUEST,
         id,
         updateCardSets,
+    };
+};
+
+export const gameCreatePdfRequest = (
+    pageWidth: number,
+    pageHeight: number,
+    topBottomMargin: number,
+    leftRightMargin: number,
+): GameCreatePdfRequest => {
+    return {
+        type: GAME_CREATE_PDF_REQUEST,
+        pageWidth,
+        pageHeight,
+        topBottomMargin,
+        leftRightMargin,
     };
 };
 
