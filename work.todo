@@ -97,7 +97,7 @@
 + Figure out why selected image can't be moved
 
 + Refactoring: more camel case
-- Fields should be controlled by mm not px
++ Fields should be controlled by mm not px
 
 - Generate PDF
     + Create simple pdf renderer

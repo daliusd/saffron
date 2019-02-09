@@ -99,7 +99,7 @@ class Card extends Component<Props, LocalState> {
 
     render() {
         const { placeholders, card, width, height } = this.props;
-        // const ppmm = this.state.dimensions.width / width;
+        const ppmm = this.state.dimensions.width / width;
 
         return (
             <Measure
@@ -128,9 +128,9 @@ class Card extends Component<Props, LocalState> {
                         >
                             {Object.values(placeholders).map(p => {
                                 if (p.type === 'image') {
-                                    return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} />;
+                                    return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} ppmm={ppmm} />;
                                 } else if (p.type === 'text') {
-                                    return <TextField key={p.id} cardId={card.id} textPlaceholder={p} />;
+                                    return <TextField key={p.id} cardId={card.id} textPlaceholder={p} ppmm={ppmm} />;
                                 }
                                 return null;
                             })}

@@ -27,12 +27,17 @@ const options: FontOption[] = Object.keys(webfonts)
     .sort()
     .map(fi => ({ value: fi, label: fi }));
 
-interface Props {
-    dispatch: Dispatch;
+interface StateProps {
     activeFont: string;
     activeFontVariant: string;
-    activeFontSize: string;
+    activeFontSize: number;
 }
+
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = StateProps & DispatchProps;
 
 class FontSelector extends Component<Props> {
     getFontStringForLoad = (family: string, variant: string) => {
@@ -82,7 +87,7 @@ class FontSelector extends Component<Props> {
 
     handleFontSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderFontSize(event.target.value));
+        dispatch(cardSetChangeActiveTextPlaceholderFontSize(parseFloat(event.target.value)));
     };
 
     render() {
@@ -114,7 +119,7 @@ class FontSelector extends Component<Props> {
     }
 }
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: State): StateProps => {
     let activeFont = state.cardsets.textSettings.fontFamily;
     let activeFontVariant = state.cardsets.textSettings.fontVariant;
     let activeFontSize = state.cardsets.textSettings.fontSize;
@@ -126,4 +131,4 @@ const mapStateToProps = (state: State) => {
     };
 };
 
-export default connect(mapStateToProps)(FontSelector);
+export default connect<StateProps, DispatchProps, {}, State>(mapStateToProps)(FontSelector);

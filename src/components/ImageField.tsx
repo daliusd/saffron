@@ -19,6 +19,7 @@ jsx; // eslint-disable-line
 
 interface OwnProps {
     cardId: string;
+    ppmm: number;
     imagePlaceholder: ImagePlaceholderType;
 }
 
@@ -58,13 +59,13 @@ class ImageField extends PureComponent<Props, LocalState> {
     }
 
     handleDrag = (x: number, y: number) => {
-        const { dispatch, imagePlaceholder } = this.props;
-        dispatch(cardSetChangePlaceholderPosition(imagePlaceholder, x, y));
+        const { dispatch, imagePlaceholder, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderPosition(imagePlaceholder, x / ppmm, y / ppmm));
     };
 
     handleResize = (width: number, height: number) => {
-        const { dispatch, imagePlaceholder } = this.props;
-        dispatch(cardSetChangePlaceholderSize(imagePlaceholder, width, height));
+        const { dispatch, imagePlaceholder, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderSize(imagePlaceholder, width / ppmm, height / ppmm));
     };
 
     handleRotate = (angle: number) => {
@@ -97,16 +98,16 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     render() {
-        const { imagePlaceholder, imageUrl } = this.props;
+        const { imagePlaceholder, imageUrl, ppmm } = this.props;
 
         return (
             <FieldController
                 cardId={this.props.cardId}
                 placeholderId={imagePlaceholder.id}
-                x={imagePlaceholder.x}
-                y={imagePlaceholder.y}
-                width={imagePlaceholder.width}
-                height={imagePlaceholder.height}
+                x={imagePlaceholder.x * ppmm}
+                y={imagePlaceholder.y * ppmm}
+                width={imagePlaceholder.width * ppmm}
+                height={imagePlaceholder.height * ppmm}
                 angle={imagePlaceholder.angle}
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}

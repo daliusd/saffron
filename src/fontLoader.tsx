@@ -4,7 +4,7 @@ import { PlaceholdersCollection } from './actions';
 
 export const DEFAULT_FONT = 'Roboto';
 export const DEFAULT_FONT_VARIANT = 'regular';
-export const DEFAULT_FONT_SIZE = '16';
+export const DEFAULT_FONT_SIZE = 8;
 
 const webFontsLoadPromise = (config: WebFont.Config) =>
     new Promise((resolve, reject) => {

@@ -93,7 +93,7 @@ export interface TextPlaceholderType {
     color: string;
     fontFamily: string;
     fontVariant: string;
-    fontSize: string;
+    fontSize: number;
 }
 
 export interface ImagePlaceholderType {
@@ -333,7 +333,7 @@ export interface CardSetChangeActiveTextPlaceholderFontFamilyAndVariant {
 }
 export interface CardSetChangeActiveTextPlaceholderFontSize {
     type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE;
-    fontSize: string;
+    fontSize: number;
 }
 export interface CardSetChangeText {
     type: typeof CARDSET_CHANGE_TEXT;
@@ -634,7 +634,7 @@ export const cardSetChangeActiveTextPlaceholderFontFamilyAndVariant = (
 };
 
 export const cardSetChangeActiveTextPlaceholderFontSize = (
-    fontSize: string,
+    fontSize: number,
 ): CardSetChangeActiveTextPlaceholderFontSize => {
     return {
         type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,

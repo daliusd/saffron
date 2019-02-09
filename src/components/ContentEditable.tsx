@@ -16,7 +16,7 @@ interface OwnProps {
     color: string;
     fontFamily: string;
     fontVariant: string;
-    fontSize: string;
+    fontSize: number;
 }
 
 interface StateProps {
@@ -37,7 +37,7 @@ class ContentEditable extends Component<Props> {
     currentColor: string;
     currentFontFamily: string;
     currentFontVariant: string;
-    currentFontSize: string;
+    currentFontSize: number;
     timeout: NodeJS.Timeout | null;
     wasMoved: boolean;
 

@@ -124,7 +124,7 @@ export interface TextSettings {
     color: string;
     fontFamily: string;
     fontVariant: string;
-    fontSize: string;
+    fontSize: number;
 }
 
 export interface CardSetState {
@@ -456,10 +456,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             const textPlaceholder: TextPlaceholderType = {
                 id,
                 type: 'text',
-                x: 10,
-                y: 10,
-                width: 50,
-                height: 50,
+                x: 5,
+                y: 5,
+                width: 20,
+                height: 10,
                 angle: 0,
                 align: textSettings.align,
                 color: textSettings.color,
@@ -481,10 +481,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             const imagePlaceholder: ImagePlaceholderType = {
                 id,
                 type: 'image',
-                x: 10,
-                y: 10,
-                width: 50,
-                height: 50,
+                x: 5,
+                y: 5,
+                width: 20,
+                height: 20,
                 angle: 0,
             };
 

@@ -15,17 +15,18 @@ interface Props {
     cardId: string;
     textPlaceholder: TextPlaceholderType;
     dispatch: Dispatch;
+    ppmm: number;
 }
 
 class TextField extends PureComponent<Props> {
     handleDrag = (x: number, y: number) => {
-        const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangePlaceholderPosition(textPlaceholder, x, y));
+        const { dispatch, textPlaceholder, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderPosition(textPlaceholder, x / ppmm, y / ppmm));
     };
 
     handleResize = (width: number, height: number) => {
-        const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangePlaceholderSize(textPlaceholder, width, height));
+        const { dispatch, textPlaceholder, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderSize(textPlaceholder, width / ppmm, height / ppmm));
     };
 
     handleRotate = (angle: number) => {
@@ -34,16 +35,16 @@ class TextField extends PureComponent<Props> {
     };
 
     render() {
-        const { textPlaceholder } = this.props;
+        const { textPlaceholder, ppmm } = this.props;
 
         return (
             <FieldController
                 cardId={this.props.cardId}
                 placeholderId={textPlaceholder.id}
-                x={textPlaceholder.x}
-                y={textPlaceholder.y}
-                width={textPlaceholder.width}
-                height={textPlaceholder.height}
+                x={textPlaceholder.x * ppmm}
+                y={textPlaceholder.y * ppmm}
+                width={textPlaceholder.width * ppmm}
+                height={textPlaceholder.height * ppmm}
                 angle={textPlaceholder.angle}
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
@@ -56,7 +57,7 @@ class TextField extends PureComponent<Props> {
                     color={textPlaceholder.color}
                     fontFamily={textPlaceholder.fontFamily}
                     fontVariant={textPlaceholder.fontVariant}
-                    fontSize={textPlaceholder.fontSize}
+                    fontSize={textPlaceholder.fontSize * ppmm}
                 />
             </FieldController>
         );
