@@ -53,7 +53,6 @@ import {
     IMAGE_LIST_SUCCESS,
     IdsArray,
     ImageArray,
-    ImageInfo,
     ImageListAction,
     ImagePlaceholderType,
     LOGIN_FAILURE,
@@ -66,11 +65,14 @@ import {
     MessageAction,
     MessageType,
     PlaceholdersCollection,
+    PlaceholdersImageInfoByCardCollection,
+    PlaceholdersImageInfoCollection,
+    PlaceholdersTextInfoByCardCollection,
+    PlaceholdersTextInfoCollection,
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
     SignUpAction,
-    TextInfo,
     TextPlaceholderType,
 } from './actions';
 import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from './fontLoader';
@@ -139,8 +141,8 @@ export interface CardSetState {
     activeCard: string | null;
     activePlaceholder: string | null;
     placeholders: PlaceholdersCollection;
-    texts: { [propName: string]: { [propName: string]: TextInfo } };
-    images: { [propName: string]: { [propName: string]: ImageInfo } };
+    texts: PlaceholdersTextInfoByCardCollection;
+    images: PlaceholdersImageInfoByCardCollection;
     textSettings: TextSettings;
 }
 
@@ -753,7 +755,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             }
         }
         case CARDSET_CHANGE_TEXT: {
-            let placeholdersByCard: { [propName: string]: TextInfo } = {};
+            let placeholdersByCard: PlaceholdersTextInfoCollection = {};
             if (state.texts && action.cardId in state.texts) {
                 placeholdersByCard = { ...state.texts[action.cardId] };
             }
@@ -768,7 +770,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_CHANGE_IMAGE: {
-            let placeholdersByCard: { [propName: string]: ImageInfo } = {};
+            let placeholdersByCard: PlaceholdersImageInfoCollection = {};
             if (state.images && action.cardId in state.images) {
                 placeholdersByCard = { ...state.images[action.cardId] };
             }

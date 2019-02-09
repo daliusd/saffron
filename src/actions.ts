@@ -116,8 +116,24 @@ export interface TextInfo {
     value: string;
 }
 
+export interface PlaceholdersTextInfoCollection {
+    [propName: string]: TextInfo;
+}
+
+export interface PlaceholdersTextInfoByCardCollection {
+    [propName: string]: PlaceholdersTextInfoCollection;
+}
+
 export interface ImageInfo {
     url: string;
+}
+
+export interface PlaceholdersImageInfoCollection {
+    [propName: string]: ImageInfo;
+}
+
+export interface PlaceholdersImageInfoByCardCollection {
+    [propName: string]: PlaceholdersImageInfoCollection;
 }
 
 export interface CardType {
@@ -243,16 +259,8 @@ export interface CardSetSelectSuccess {
         cardsAllIds: IdsArray;
         cardsById: { [propName: string]: CardType };
         placeholders: PlaceholdersCollection;
-        texts: {
-            [propName: string]: {
-                [propName: string]: TextInfo;
-            };
-        };
-        images: {
-            [propName: string]: {
-                [propName: string]: ImageInfo;
-            };
-        };
+        texts: PlaceholdersTextInfoByCardCollection;
+        images: PlaceholdersImageInfoByCardCollection;
     };
     gameId: string;
 }

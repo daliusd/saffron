@@ -2,21 +2,52 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { CardType, Dispatch, cardSetCreateCard, cardSetChangeHeight, cardSetChangeWidth } from '../actions';
+import {
+    CardType,
+    Dispatch,
+    PlaceholdersCollection,
+    PlaceholdersImageInfoByCardCollection,
+    PlaceholdersTextInfoByCardCollection,
+    cardSetChangeHeight,
+    cardSetChangeWidth,
+    cardSetCreateCard,
+} from '../actions';
 import { State } from '../reducers';
 import Card from './Card';
 
-interface Props {
-    dispatch: Dispatch;
+interface StateProps {
     width: number;
     height: number;
     isAuthenticated: boolean;
     cardsAllIds: string[];
     cardsById: { [propName: string]: CardType };
+    placeholders: PlaceholdersCollection;
+    texts: PlaceholdersTextInfoByCardCollection;
+    images: PlaceholdersImageInfoByCardCollection;
 }
 
-export class CardSet extends Component<Props> {
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = StateProps & DispatchProps;
+
+interface LocalState {
+    pageWidth: number;
+    pageHeight: number;
+    topBottomMargin: number;
+    leftRightMargin: number;
+}
+
+export class CardSet extends Component<Props, LocalState> {
     worker: Worker | null = null;
+
+    state = {
+        pageWidth: 210,
+        pageHeight: 297,
+        topBottomMargin: 20,
+        leftRightMargin: 20,
+    };
 
     componentDidMount = () => {
         // @ts-ignore
@@ -66,6 +97,22 @@ export class CardSet extends Component<Props> {
         dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
     };
 
+    handlePageWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ pageWidth: parseFloat(event.target.value) });
+    };
+
+    handlePageHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ pageHeight: parseFloat(event.target.value) });
+    };
+
+    handleTopBottomMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ topBottomMargin: parseFloat(event.target.value) });
+    };
+
+    handleLeftRightMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ leftRightMargin: parseFloat(event.target.value) });
+    };
+
     render() {
         const { isAuthenticated, cardsAllIds, cardsById, width, height } = this.props;
 
@@ -105,6 +152,34 @@ export class CardSet extends Component<Props> {
                     <div>
                         <button onClick={this.handleCreateCardClick}>Create Card</button>
                     </div>
+
+                    <div>
+                        <input
+                            type="number"
+                            onChange={this.handlePageWidthChange}
+                            placeholder="Page width"
+                            value={this.state.pageWidth}
+                        />
+                        <input
+                            type="number"
+                            onChange={this.handlePageHeightChange}
+                            placeholder="Page Height"
+                            value={this.state.pageHeight}
+                        />
+                        <input
+                            type="number"
+                            onChange={this.handleTopBottomMarginChange}
+                            placeholder="Top/Bottom margin"
+                            value={this.state.topBottomMargin}
+                        />
+                        <input
+                            type="number"
+                            onChange={this.handleLeftRightMarginChange}
+                            placeholder="Left/Right margin"
+                            value={this.state.leftRightMargin}
+                        />
+                    </div>
+
                     <div>
                         <button onClick={this.handleGeneratePdfClick}>Generate PDF</button>
                     </div>
@@ -114,7 +189,7 @@ export class CardSet extends Component<Props> {
     }
 }
 
-const mapStateToProps = (state: State) => {
+const mapStateToProps = (state: State): StateProps => {
     return {
         width: state.cardsets.width,
         height: state.cardsets.height,
@@ -127,4 +202,4 @@ const mapStateToProps = (state: State) => {
     };
 };
 
-export default connect(mapStateToProps)(CardSet);
+export default connect<StateProps, DispatchProps, {}, State>(mapStateToProps)(CardSet);
