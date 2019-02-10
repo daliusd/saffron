@@ -6,6 +6,8 @@ import {
 } from './actions';
 
 export const generatePdfUsingWorker = (
+    width: number,
+    height: number,
     cardsAllIds: string[],
     cardsById: CardsCollection,
     placeholders: PlaceholdersCollection,
@@ -44,6 +46,8 @@ export const generatePdfUsingWorker = (
             });
 
             worker.postMessage({
+                width,
+                height,
                 cardsAllIds,
                 cardsById,
                 placeholders,
