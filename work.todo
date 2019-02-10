@@ -99,11 +99,11 @@
 + Refactoring: more camel case
 + Fields should be controlled by mm not px
 
-- Generate PDF
++ Generate PDF
     + Create simple pdf renderer
     + Move worker to Saga where it belongs
     + Pass current card set
-    - Generate PDF
+    + Generate PDF
 
 - UI
     - https://react-kawaii.now.sh/
