@@ -123,9 +123,6 @@ class ImageField extends PureComponent<Props, LocalState> {
                     <img
                         src={imageUrl}
                         alt=""
-                        css={{
-                            filter: 'invert(1)',
-                        }}
                     />
                 </div>
                 <ImageSelectionDialog

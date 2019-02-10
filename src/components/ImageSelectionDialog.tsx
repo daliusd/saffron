@@ -73,7 +73,6 @@ class ImageSelectionDialog extends Component<Props> {
                     src={this.props.imageUrl}
                     alt=""
                     css={{
-                        filter: 'invert(1)',
                         width: 100,
                         height: 100,
                     }}
@@ -90,7 +89,6 @@ class ImageSelectionDialog extends Component<Props> {
                                 onClick={() => this.handleImageSelect(im.name)}
                                 alt=""
                                 css={{
-                                    filter: 'invert(1)',
                                     width: 100,
                                     height: 100,
                                 }}
