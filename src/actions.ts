@@ -144,6 +144,10 @@ export interface CardType {
     count: number;
 }
 
+export interface CardsCollection {
+    [propName: string]: CardType;
+}
+
 export interface CardSetType {
     id: string;
     name: string;
@@ -273,7 +277,7 @@ export interface CardSetSelectSuccess {
         width: number;
         height: number;
         cardsAllIds: IdsArray;
-        cardsById: { [propName: string]: CardType };
+        cardsById: CardsCollection;
         placeholders: PlaceholdersCollection;
         texts: PlaceholdersTextInfoByCardCollection;
         images: PlaceholdersImageInfoByCardCollection;

@@ -1,10 +1,13 @@
 import {
+    CardsCollection,
     PlaceholdersCollection,
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
 } from './actions';
 
 export const generatePdfUsingWorker = (
+    cardsAllIds: string[],
+    cardsById: CardsCollection,
     placeholders: PlaceholdersCollection,
     texts: PlaceholdersTextInfoByCardCollection,
     images: PlaceholdersImageInfoByCardCollection,
@@ -41,6 +44,8 @@ export const generatePdfUsingWorker = (
             });
 
             worker.postMessage({
+                cardsAllIds,
+                cardsById,
                 placeholders,
                 texts,
                 images,

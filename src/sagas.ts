@@ -299,6 +299,8 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
 
         yield call(
             generatePdfUsingWorker,
+            state.cardsets.cardsAllIds,
+            state.cardsets.cardsById,
             state.cardsets.placeholders,
             state.cardsets.texts,
             state.cardsets.images,

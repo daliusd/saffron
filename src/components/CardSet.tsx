@@ -5,6 +5,7 @@ import shortid from 'shortid';
 import { ACTIVITY_CREATING_PDF, State } from '../reducers';
 import {
     CardType,
+    CardsCollection,
     Dispatch,
     cardSetChangeHeight,
     cardSetChangeWidth,
@@ -18,7 +19,7 @@ interface StateProps {
     height: number;
     isAuthenticated: boolean;
     cardsAllIds: string[];
-    cardsById: { [propName: string]: CardType };
+    cardsById: CardsCollection;
     isCreatingPdf: boolean;
 }
 

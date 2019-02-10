@@ -35,7 +35,7 @@ import {
     CARDSET_UPDATE_CARD_COUNT,
     CardSetAction,
     CardSetsCollection,
-    CardType,
+    CardsCollection,
     GAME_CREATE_FAILURE,
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
@@ -141,7 +141,7 @@ export interface CardSetState {
     activity: number;
     active: string | null;
     cardsAllIds: IdsArray;
-    cardsById: { [propName: string]: CardType };
+    cardsById: CardsCollection;
     activeCard: string | null;
     activePlaceholder: string | null;
     placeholders: PlaceholdersCollection;
