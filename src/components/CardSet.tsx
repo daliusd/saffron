@@ -40,8 +40,8 @@ export class CardSet extends Component<Props, LocalState> {
     state = {
         pageWidth: 210,
         pageHeight: 297,
-        topBottomMargin: 20,
-        leftRightMargin: 20,
+        topBottomMargin: 15,
+        leftRightMargin: 9,
     };
 
     handleCreateCardClick = () => {
