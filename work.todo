@@ -104,6 +104,7 @@
     + Move worker to Saga where it belongs
     + Pass current card set
     + Generate PDF
+    - Generate PDF for full game
 
 - UI
     - https://react-kawaii.now.sh/
@@ -122,7 +123,7 @@
     - Change size, should work like text
 
 - Card Sets
-    - Specify card size when creating new card set
+    + Specify card size when creating new card set
     - Cards can have two sides
     - Delete Card Set
     - Rename Card Set
@@ -133,3 +134,8 @@
 
 - Export / Import data as JSON
 - Export / Import data as CSV
+
+- UI ideas
+    - Lock fields from moving/rotation
+    - Snapping
+    - Keyboard manipulation
