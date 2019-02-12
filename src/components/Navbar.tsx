@@ -1,11 +1,15 @@
+/** @jsx jsx */
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import React, { Component } from 'react';
+import { jsx } from '@emotion/core';
+import { Component } from 'react';
 
 import { CardSetType, Dispatch, GameType, MessageType, logoutRequest } from '../actions';
 import { State } from '../reducers';
 import { getActiveCardSet, getActiveGame } from '../selectors';
 import Logout from './Logout';
+
+jsx; // eslint-disable-line
 
 interface OwnProps {
     isAuthenticated: boolean;
@@ -30,8 +34,14 @@ export class Navbar extends Component<Props> {
         return (
             <nav className="navbar navbar-default">
                 <div className="container-fluid">
-                    <h1>
-                        <Link to="/">Cardamon</Link>
+                    <h1
+                        css={{
+                            fontFamily: 'Monoton',
+                            fontWeight: 400,
+                            fontSize: '3em',
+                        }}
+                    >
+                        <Link to="/">CARD-A-MON</Link>
                     </h1>
                     <div>{isAuthenticated && <Logout onLogout={() => dispatch(logoutRequest())} />}</div>
                     <div>{isAuthenticated && <Link to="/">Main</Link>}</div>

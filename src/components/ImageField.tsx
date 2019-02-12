@@ -120,10 +120,7 @@ class ImageField extends PureComponent<Props, LocalState> {
                         height: '100%',
                     }}
                 >
-                    <img
-                        src={imageUrl}
-                        alt=""
-                    />
+                    <img src={imageUrl} alt="" />
                 </div>
                 <ImageSelectionDialog
                     imageUrl={imageUrl}

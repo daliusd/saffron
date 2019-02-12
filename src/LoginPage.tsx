@@ -2,7 +2,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, loginRequest } from './actions';
+import { Dispatch, loginRequest, messageRequest } from './actions';
 import { State } from './reducers';
 import Login from './components/Login';
 
@@ -17,7 +17,12 @@ export class LoginPage extends Component<Props> {
 
         return (
             <div className="App">
-                {!isAuthenticated && <Login onLogin={creds => dispatch(loginRequest(creds))} />}
+                {!isAuthenticated && (
+                    <Login
+                        onLogin={creds => dispatch(loginRequest(creds))}
+                        onLoginFailure={msg => dispatch(messageRequest('error', msg))}
+                    />
+                )}
                 {isAuthenticated && <Redirect to="/" />}
             </div>
         );

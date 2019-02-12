@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 interface Props {
     onLogin: (creds: { username: string; password: string }) => void;
+    onLoginFailure: (message: string) => void;
 }
 
 interface LocalState {
@@ -29,6 +30,8 @@ export default class Login extends Component<Props, LocalState> {
         if (username && password) {
             const creds = { username, password };
             this.props.onLogin(creds);
+        } else {
+            this.props.onLoginFailure('Missing username and/or password.');
         }
         event.preventDefault();
     };
