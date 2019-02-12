@@ -136,15 +136,31 @@ class Card extends Component<Props, LocalState> {
                             })}
                         </div>
 
-                        <button onClick={this.handleRemoveCardClick}>Remove</button>
-                        <button onClick={this.handleCloneCardClick}>Clone</button>
+                        <button onClick={this.handleRemoveCardClick} title="Remove card">
+                            <i className="material-icons">delete</i>
+                        </button>
+                        <button onClick={this.handleCloneCardClick} title="Clone card">
+                            <i className="material-icons">file_copy</i>
+                        </button>
                         <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
-                        <button onClick={this.handleAddTextClick}>+Text</button>
-                        <button onClick={this.handleAddImageClick}>+Image</button>
-                        <button onClick={this.handleRemoveClick}>-</button>
-                        <button onClick={this.handleSetTextAlignLeft}>L</button>
-                        <button onClick={this.handleSetTextAlignCenter}>C</button>
-                        <button onClick={this.handleSetTextAlignRight}>R</button>
+                        <button onClick={this.handleAddTextClick} title="Add text field">
+                            <i className="material-icons">text_fields</i>
+                        </button>
+                        <button onClick={this.handleAddImageClick} title="Add image field">
+                            <i className="material-icons">add_photo_alternate</i>
+                        </button>
+                        <button onClick={this.handleRemoveClick} title="Remove field">
+                            <i className="material-icons">remove</i>
+                        </button>
+                        <button onClick={this.handleSetTextAlignLeft} title="Align text left">
+                            <i className="material-icons">format_align_left</i>
+                        </button>
+                        <button onClick={this.handleSetTextAlignCenter} title="Align text center">
+                            <i className="material-icons">format_align_center</i>
+                        </button>
+                        <button onClick={this.handleSetTextAlignRight} title="Align text right">
+                            <i className="material-icons">format_align_right</i>
+                        </button>
                         <ColorButton />
                         <FontSelector />
                     </div>

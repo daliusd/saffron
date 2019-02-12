@@ -49,7 +49,9 @@ class ColorButton extends Component<Props, State> {
         };
         return (
             <div>
-                <button onClick={this.handleClick}>Cl</button>
+                <button onClick={this.handleClick} title="Change text color">
+                    <i className="material-icons">format_color_text</i>
+                </button>
                 {this.state.displayColorPicker ? (
                     <div style={popover}>
                         <div style={cover} onClick={this.handleClose} />
