@@ -1,6 +1,6 @@
 import './App.css';
 
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
@@ -11,6 +11,7 @@ import GamePage from './GamePage';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import Navbar from './components/Navbar';
+import NotFoundPage from './NotFoundPage';
 import SignUpPage from './SignUpPage';
 
 interface Props {
@@ -29,11 +30,14 @@ export class App extends Component<Props> {
             <Router>
                 <div className="App">
                     <Navbar isAuthenticated={isAuthenticated} />
-                    <Route exact path="/" component={Main} />
-                    <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/signup" component={SignUpPage} />
-                    <Route exact path="/game/:id" component={GamePage} />
-                    <Route exact path="/cardset/:id" component={CardSetPage} />
+                    <Switch>
+                        <Route exact path="/" component={Main} />
+                        <Route exact path="/login" component={LoginPage} />
+                        <Route exact path="/signup" component={SignUpPage} />
+                        <Route exact path="/game/:id" component={GamePage} />
+                        <Route exact path="/cardset/:id" component={CardSetPage} />
+                        <Route component={NotFoundPage} />
+                    </Switch>
                 </div>
             </Router>
         );
