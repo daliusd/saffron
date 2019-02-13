@@ -1,10 +1,9 @@
-// @flow
-import { Ghost } from 'react-kawaii';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { State } from './reducers';
 import Games from './components/Games';
+import KawaiiMessage, { Character } from './components/KawaiiMessage';
 
 interface Props {
     isAuthenticated: boolean;
@@ -16,11 +15,10 @@ export class Main extends Component<Props> {
             return <Games />;
         } else {
             return (
-                <div>
-                    <Ghost size={120} mood="blissful" color="#E0E4E8" />
+                <KawaiiMessage character={Character.Ghost}>
                     Hey! Here you can create your own card game but you need to <a href="/login">Login</a> or{' '}
                     <a href="/signup">Sign-up</a> first.
-                </div>
+                </KawaiiMessage>
             );
         }
     }

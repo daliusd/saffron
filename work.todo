@@ -107,7 +107,12 @@
     - Generate PDF for full game
 
 - UI
-    - https://react-kawaii.now.sh/
+    + https://react-kawaii.now.sh/
+    - UI
+        + Header
+        + Info messages
+        - Menu
+        - Error messages
     - Open page
     - Changelog page
     - Help page

@@ -1,8 +1,13 @@
 import React, { Component } from 'react';
-import { Browser } from 'react-kawaii';
+
+import KawaiiMessage, { Character } from './components/KawaiiMessage';
 
 export default class NotFoundPage extends Component {
     render() {
-        return <Browser size={320} mood="sad" color="#83D1FB" />;
+        return (
+            <KawaiiMessage character={Character.Browser} mood="sad">
+                There is nothing here.
+            </KawaiiMessage>
+        );
     }
 }

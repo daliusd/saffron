@@ -32,13 +32,20 @@ export class Navbar extends Component<Props> {
         const { dispatch, isAuthenticated, messages, activeGame, activeCardSet } = this.props;
 
         return (
-            <nav className="navbar navbar-default">
-                <div className="container-fluid">
+            <nav>
+                <div>
                     <h1
                         css={{
                             fontFamily: 'Monoton',
                             fontWeight: 400,
-                            fontSize: '3em',
+                            fontSize: '2.5em',
+                            lineHeight: 1.5,
+                            margin: 0,
+                            a: {
+                                textDecoration: 'none',
+                                outline: 0,
+                                color: 'black',
+                            },
                         }}
                     >
                         <Link to="/">CARD-A-MON</Link>
