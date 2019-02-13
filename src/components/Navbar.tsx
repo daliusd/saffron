@@ -1,15 +1,12 @@
-/** @jsx jsx */
+import style from './Navbar.module.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
-import { Component } from 'react';
+import React, { Component } from 'react';
 
 import { CardSetType, Dispatch, GameType, MessageType, logoutRequest } from '../actions';
 import { State } from '../reducers';
 import { getActiveCardSet, getActiveGame } from '../selectors';
 import Logout from './Logout';
-
-jsx; // eslint-disable-line
 
 interface OwnProps {
     isAuthenticated: boolean;
@@ -34,37 +31,45 @@ export class Navbar extends Component<Props> {
         return (
             <nav>
                 <div>
-                    <h1
-                        css={{
-                            fontFamily: 'Monoton',
-                            fontWeight: 400,
-                            fontSize: '2.5em',
-                            lineHeight: 1.5,
-                            margin: 0,
-                            a: {
-                                textDecoration: 'none',
-                                outline: 0,
-                                color: 'black',
-                            },
-                        }}
-                    >
+                    <h1 className={style.header}>
                         <Link to="/">CARD-A-MON</Link>
                     </h1>
-                    <div>{isAuthenticated && <Logout onLogout={() => dispatch(logoutRequest())} />}</div>
-                    <div>{isAuthenticated && <Link to="/">Main</Link>}</div>
                     <div>
-                        {isAuthenticated && activeGame && <Link to={`/game/${activeGame.id}`}>{activeGame.name}</Link>}
-                    </div>
-                    <div>
-                        {isAuthenticated && activeCardSet && (
-                            <Link to={`/cardset/${activeCardSet.id}`}>{activeCardSet.name}</Link>
-                        )}
+                        <ul>
+                            {isAuthenticated && (
+                                <>
+                                    <li>
+                                        <Link to="/">Main</Link>
+                                    </li>
+                                    {activeGame && (
+                                        <li>
+                                            <Link to={`/game/${activeGame.id}`}>{activeGame.name}</Link>
+                                        </li>
+                                    )}
+                                    {activeCardSet && (
+                                        <li>
+                                            <Link to={`/cardset/${activeCardSet.id}`}>{activeCardSet.name}</Link>
+                                        </li>
+                                    )}
+                                    <li>
+                                        <Logout onLogout={() => dispatch(logoutRequest())} />
+                                    </li>
+                                </>
+                            )}
+                            {!isAuthenticated && (
+                                <>
+                                    <li>
+                                        <Link to="/login">Login</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="/signup">Sign-up</Link>
+                                    </li>
+                                </>
+                            )}
+                        </ul>
                     </div>
 
-                    <div>{!isAuthenticated && <Link to="/login">Login</Link>}</div>
-                    <div>{!isAuthenticated && <Link to="/signup">Sign-up</Link>}</div>
-
-                    <div>
+                    <div id="messages">
                         <ul>
                             {messages.map(m => (
                                 <li key={m.id}>{m.text}</li>

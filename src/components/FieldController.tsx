@@ -1,14 +1,11 @@
-/** @jsx jsx */
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import React from 'react';
 
 import { Dispatch } from '../actions';
 import { State } from '../reducers';
 import resize from './resize.svg';
 import rotate from './rotate.svg';
-
-jsx; // eslint-disable-line
+import style from './FieldController.module.css';
 
 interface OwnProps {
     cardId: string;
@@ -88,11 +85,6 @@ class FieldController extends React.Component<Props> {
 
     componentDidUpdate() {
         if (this.cDiv.current === null) return;
-        this.cDiv.current.style.left = '';
-        this.cDiv.current.style.top = '';
-        this.cDiv.current.style.width = '';
-        this.cDiv.current.style.height = '';
-        this.cDiv.current.style.transform = '';
 
         this.currentAngle = this.props.angle;
     }
@@ -348,7 +340,8 @@ class FieldController extends React.Component<Props> {
         return (
             <div
                 ref={this.cDiv}
-                css={{
+                className={`${style.fieldcontroller} ${isActive ? style.fieldcontrolleractive : ''}`}
+                style={{
                     position: 'absolute',
                     left: x,
                     top: y,
@@ -356,18 +349,6 @@ class FieldController extends React.Component<Props> {
                     height: height,
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
-                    border: isActive ? '1px dotted hotpink' : '0px',
-                    padding: isActive ? '0px' : '1px',
-                    '&:hover': {
-                        border: isActive ? '1px dotted pink' : '1px dotted gray',
-                        padding: '0px',
-                    },
-                    'img.controller': {
-                        visibility: 'hidden',
-                    },
-                    '&:hover img.controller': {
-                        visibility: 'visible',
-                    },
                 }}
             >
                 {children}
@@ -375,8 +356,8 @@ class FieldController extends React.Component<Props> {
                     src={resize}
                     alt="resize"
                     ref={this.resizeDiv}
-                    className="controller"
-                    css={{
+                    className={style.controller}
+                    style={{
                         position: 'absolute',
                         right: 0,
                         bottom: 0,
@@ -387,8 +368,8 @@ class FieldController extends React.Component<Props> {
                     src={rotate}
                     alt="rotate"
                     ref={this.rotateDiv}
-                    className="controller"
-                    css={{
+                    className={style.controller}
+                    style={{
                         position: 'absolute',
                         left: 0,
                         bottom: 0,

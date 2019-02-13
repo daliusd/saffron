@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import React, { PureComponent } from 'react';
 
 import {
@@ -14,8 +12,6 @@ import {
 import { State } from '../reducers';
 import FieldController from './FieldController';
 import ImageSelectionDialog from './ImageSelectionDialog';
-
-jsx; // eslint-disable-line
 
 interface OwnProps {
     cardId: string;
@@ -115,7 +111,7 @@ class ImageField extends PureComponent<Props, LocalState> {
             >
                 <div
                     ref={this.imageDiv}
-                    css={{
+                    style={{
                         width: '100%',
                         height: '100%',
                     }}

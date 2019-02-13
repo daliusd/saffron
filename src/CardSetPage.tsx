@@ -1,4 +1,3 @@
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
@@ -14,18 +13,12 @@ interface Props {
 
 export class CardSetPage extends Component<Props> {
     componentDidMount() {
-        const { dispatch, match, isAuthenticated } = this.props;
-        if (isAuthenticated) {
-            dispatch(cardSetSelectRequest(match.params.id));
-        }
+        const { dispatch, match } = this.props;
+        dispatch(cardSetSelectRequest(match.params.id));
     }
 
     render() {
-        if (this.props.isAuthenticated) {
-            return <CardSet />;
-        } else {
-            return <Redirect to="/login" />;
-        }
+        return <CardSet />;
     }
 }
 

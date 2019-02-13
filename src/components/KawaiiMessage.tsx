@@ -1,9 +1,5 @@
-/** @jsx jsx */
 import { Ghost, Browser } from 'react-kawaii';
-import { jsx } from '@emotion/core';
-import { Component } from 'react';
-
-jsx; // eslint-disable-line
+import React, { Component } from 'react';
 
 export enum Character {
     Ghost,
@@ -20,7 +16,7 @@ export default class KawaiiMessage extends Component<Props> {
 
         return (
             <div
-                css={{
+                style={{
                     padding: '1em',
                     borderRadius: '1em',
                     backgroundColor: '#ebf3fa',
@@ -30,7 +26,7 @@ export default class KawaiiMessage extends Component<Props> {
             >
                 {character === Character.Ghost && <Ghost size={120} mood={mood || 'blissful'} color="#faebef" />}
                 {character === Character.Browser && <Browser size={120} mood={mood || 'blissful'} color="#faebef" />}
-                <div css={{ marginLeft: '1em' }}>{this.props.children}</div>
+                <div style={{ marginLeft: '1em' }}>{this.props.children}</div>
             </div>
         );
     }

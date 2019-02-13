@@ -1,6 +1,4 @@
-/** @jsx jsx */
 import { connect } from 'react-redux';
-import { jsx } from '@emotion/core';
 import Modal from 'react-modal';
 import React, { Component } from 'react';
 
@@ -13,8 +11,6 @@ import {
     imageListRequest,
 } from '../actions';
 import { State } from '../reducers';
-
-jsx; // eslint-disable-line
 
 interface Props {
     imageUrl: string;
@@ -72,7 +68,7 @@ class ImageSelectionDialog extends Component<Props> {
                 <img
                     src={this.props.imageUrl}
                     alt=""
-                    css={{
+                    style={{
                         width: 100,
                         height: 100,
                     }}
@@ -88,7 +84,7 @@ class ImageSelectionDialog extends Component<Props> {
                                 src={`/api/imagefiles/${im.name}`}
                                 onClick={() => this.handleImageSelect(im.name)}
                                 alt=""
-                                css={{
+                                style={{
                                     width: 100,
                                     height: 100,
                                 }}

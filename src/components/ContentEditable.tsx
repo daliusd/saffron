@@ -1,13 +1,9 @@
-/** @jsx jsx */
-import { jsx } from '@emotion/core';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { DEFAULT_FONT, DEFAULT_FONT_SIZE } from '../fontLoader';
 import { Dispatch, TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 import { State } from '../reducers';
-
-jsx; // eslint-disable-line
 
 interface OwnProps {
     cardId: string;
@@ -178,7 +174,7 @@ class ContentEditable extends Component<Props> {
                 onFocus={this.onFocus}
                 onBlur={this.handleBlur}
                 onInput={this.handleInput}
-                css={{
+                style={{
                     width: '100%',
                     height: '100%',
                     textAlign: align === 'left' ? 'left' : align === 'right' ? 'right' : 'center',

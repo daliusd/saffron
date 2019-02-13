@@ -39,7 +39,7 @@ describe('<Navbar />', () => {
                 activeCardSet={null}
             />,
         );
-        expect(wrapper.find('li')).toHaveLength(1);
+        expect(wrapper.find('#messages li')).toHaveLength(1);
     });
 
     it('Generates Navbar isAuthenticated=true and activeGame supplied', () => {

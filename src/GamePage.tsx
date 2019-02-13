@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 
 import { Dispatch, gameSelectRequest } from './actions';
 import { State } from './reducers';
-import CardSets from './components/CardSets';
 
 interface Props {
     dispatch: Dispatch;
@@ -14,18 +13,12 @@ interface Props {
 
 export class GamePage extends Component<Props> {
     componentDidMount() {
-        const { dispatch, match, isAuthenticated } = this.props;
-        if (isAuthenticated) {
-            dispatch(gameSelectRequest(match.params.id, true));
-        }
+        const { dispatch, match } = this.props;
+        dispatch(gameSelectRequest(match.params.id, true));
     }
 
     render() {
-        if (this.props.isAuthenticated) {
-            return <CardSets />;
-        } else {
-            return <Redirect to="/login" />;
-        }
+        return <Redirect to="/login" />;
     }
 }
 

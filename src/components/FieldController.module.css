@@ -1,0 +1,26 @@
+.fieldcontroller {
+    border: 0;
+    padding: 1px;
+}
+
+.fieldcontroller:hover {
+    border: 1px dotted gray;
+    padding: 0px;
+}
+
+.fieldcontrolleractive {
+    border: 1px dotted hotpink;
+    padding: 0;
+}
+
+.fieldcontrolleractive:hover {
+    border: 1px dotted pink;
+}
+
+.controller {
+    visibility: hidden;
+}
+
+.fieldcontroller:hover .controller {
+    visibility: visible;
+}
