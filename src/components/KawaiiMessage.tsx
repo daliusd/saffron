@@ -19,7 +19,7 @@ export default class KawaiiMessage extends Component<Props> {
                 style={{
                     padding: '1em',
                     borderRadius: '1em',
-                    backgroundColor: '#ebf3fa',
+                    backgroundColor: 'var(--color-2)',
                     display: 'grid',
                     grid: 'auto-flow / minmax(120px, auto) 1fr',
                 }}

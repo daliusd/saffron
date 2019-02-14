@@ -35,7 +35,7 @@ export class Navbar extends Component<Props> {
                         <Link to="/">CARD-A-MON</Link>
                     </h1>
                     <div>
-                        <ul>
+                        <ul className={style.menu}>
                             {isAuthenticated && (
                                 <>
                                     <li>

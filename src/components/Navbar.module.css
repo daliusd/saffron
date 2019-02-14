@@ -11,3 +11,38 @@
     outline: 0;
     color: black;
 }
+
+.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu li {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+    background-color: var(--color-2);
+    text-align: center;
+    vertical-align: center;
+}
+
+.menu li:hover {
+    background-color: var(--color-3);
+}
+
+.menu li a {
+    text-decoration: none;
+    color: black;
+}
+
+.menu button {
+    background: none !important;
+    color: inherit;
+    border: none;
+    padding: 0 !important;
+    font: inherit;
+    cursor: pointer;
+}

@@ -1,9 +1,9 @@
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { Dispatch, gameSelectRequest } from './actions';
 import { State } from './reducers';
+import CardSets from './components/CardSets';
 
 interface Props {
     dispatch: Dispatch;
@@ -18,7 +18,7 @@ export class GamePage extends Component<Props> {
     }
 
     render() {
-        return <Redirect to="/login" />;
+        return <CardSets />;
     }
 }
 
