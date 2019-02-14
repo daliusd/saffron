@@ -47,3 +47,25 @@
     font: inherit;
     cursor: pointer;
 }
+
+.messages {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+
+.messages ul {
+    list-style: none;
+}
+
+.messages li {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+    background-color: var(--color-3);
+}
+
+.messages li i {
+    font-size: 1em;
+}

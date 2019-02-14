@@ -1,4 +1,3 @@
-import style from './Navbar.module.css';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
@@ -7,6 +6,7 @@ import { CardSetType, Dispatch, GameType, MessageType, logoutRequest } from '../
 import { State } from '../reducers';
 import { getActiveCardSet, getActiveGame } from '../selectors';
 import Logout from './Logout';
+import style from './Navbar.module.css';
 
 interface OwnProps {
     isAuthenticated: boolean;
@@ -30,6 +30,15 @@ export class Navbar extends Component<Props> {
 
         return (
             <nav>
+                <div id="messages" className={style.messages}>
+                    <ul>
+                        {messages.map(m => (
+                            <li key={m.id}>
+                                <i className="material-icons">error</i> {m.text}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
                 <div>
                     <h1 className={style.header}>
                         <Link to="/">CARD-A-MON</Link>
@@ -68,14 +77,6 @@ export class Navbar extends Component<Props> {
                                     </li>
                                 </>
                             )}
-                        </ul>
-                    </div>
-
-                    <div id="messages">
-                        <ul>
-                            {messages.map(m => (
-                                <li key={m.id}>{m.text}</li>
-                            ))}
                         </ul>
                     </div>
                 </div>
