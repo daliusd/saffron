@@ -15,28 +15,3 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-.form {
-    width: 20em;
-    display: grid;
-    grid: auto-flow / 1fr;
-}
-
-.form input {
-    margin: 0.5em;
-}
-
-.form input[type='submit'] {
-    background: none;
-    border-radius: 0.5em;
-    background-color: var(--color-2);
-    padding: 0.25em;
-    color: inherit;
-    border: none;
-    font: inherit;
-    cursor: pointer;
-}
-
-.form input[type='submit']:hover {
-    background-color: var(--color-3);
-}

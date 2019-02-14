@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, messageRequest } from '../actions';
 import { State } from '../reducers';
+import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface Props {
     dispatch: Dispatch;
@@ -50,8 +51,12 @@ export class Games extends Component<Props, LocalState> {
         return (
             isAuthenticated && (
                 <div>
+                    <KawaiiMessage character={Character.Ghost}>
+                        Here you can see a list of your games or you can create even more games.
+                    </KawaiiMessage>
+
                     <ul>{gameItems}</ul>
-                    <div>
+                    <div className="form">
                         <input
                             type="text"
                             onChange={this.handleChange}
