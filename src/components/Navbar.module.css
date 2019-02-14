@@ -36,6 +36,7 @@
 .menu li a {
     text-decoration: none;
     color: black;
+    outline: 0;
 }
 
 .menu button {

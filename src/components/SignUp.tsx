@@ -46,7 +46,7 @@ export class SignUp extends Component<Props> {
     render() {
         return (
             <div>
-                <form onSubmit={event => this.handleSubmit(event)}>
+                <form className="form" onSubmit={event => this.handleSubmit(event)}>
                     <input
                         type="text"
                         onChange={this.handleUsernameChange}

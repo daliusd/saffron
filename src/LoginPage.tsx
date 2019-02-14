@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import { Dispatch, loginRequest, messageRequest } from './actions';
 import { State } from './reducers';
+import KawaiiMessage, { Character } from './components/KawaiiMessage';
 import Login from './components/Login';
 
 interface Props {
@@ -18,10 +19,17 @@ export class LoginPage extends Component<Props> {
         return (
             <div className="App">
                 {!isAuthenticated && (
-                    <Login
-                        onLogin={creds => dispatch(loginRequest(creds))}
-                        onLoginFailure={msg => dispatch(messageRequest('error', msg))}
-                    />
+                    <>
+                        <KawaiiMessage character={Character.Ghost}>
+                            Please enter your credentials to login. If you don't have account yet then you can create
+                            one here: <a href="/signup">Sign-up</a>.
+                        </KawaiiMessage>
+
+                        <Login
+                            onLogin={creds => dispatch(loginRequest(creds))}
+                            onLoginFailure={msg => dispatch(messageRequest('error', msg))}
+                        />
+                    </>
                 )}
                 {isAuthenticated && <Redirect to="/" />}
             </div>

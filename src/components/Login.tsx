@@ -39,7 +39,7 @@ export default class Login extends Component<Props, LocalState> {
     render() {
         return (
             <div>
-                <form onSubmit={this.handleSubmit}>
+                <form className="form" onSubmit={this.handleSubmit}>
                     <input
                         type="text"
                         onChange={this.handleUsernameChange}

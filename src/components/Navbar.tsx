@@ -43,12 +43,14 @@ export class Navbar extends Component<Props> {
                                     </li>
                                     {activeGame && (
                                         <li>
-                                            <Link to={`/game/${activeGame.id}`}>{activeGame.name}</Link>
+                                            <Link to={`/game/${activeGame.id}`}>Game "{activeGame.name}"</Link>
                                         </li>
                                     )}
                                     {activeCardSet && (
                                         <li>
-                                            <Link to={`/cardset/${activeCardSet.id}`}>{activeCardSet.name}</Link>
+                                            <Link to={`/cardset/${activeCardSet.id}`}>
+                                                Card Set "{activeCardSet.name}"
+                                            </Link>
                                         </li>
                                     )}
                                     <li>
