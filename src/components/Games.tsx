@@ -52,7 +52,12 @@ export class Games extends Component<Props, LocalState> {
             isAuthenticated && (
                 <div>
                     <KawaiiMessage character={Character.Ghost}>
-                        Here you can see a list of your games or you can create even more games.
+                        {allIds.length === 0 && (
+                            <>Here you can create your games and see list of your games when you have some.</>
+                        )}
+                        {allIds.length > 0 && (
+                            <>Here you can see a list of your games or you can create even more games.</>
+                        )}
                     </KawaiiMessage>
 
                     <ul>{gameItems}</ul>
