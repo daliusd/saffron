@@ -24,7 +24,8 @@
     grid: auto-flow / 1fr;
 }
 
-.form input {
+.form input,
+.form label {
     margin: 0.5em;
 }
 

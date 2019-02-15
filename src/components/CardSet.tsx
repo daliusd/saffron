@@ -13,6 +13,7 @@ import {
     gameCreatePdfRequest,
 } from '../actions';
 import Card from './Card';
+import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface StateProps {
     width: number;
@@ -91,8 +92,13 @@ export class CardSet extends Component<Props, LocalState> {
         return (
             isAuthenticated && (
                 <div>
-                    <div>
+                    <KawaiiMessage character={Character.Ghost}>
+                        <p>Here you can design your cards.</p>
+                    </KawaiiMessage>
+                    <div className="form">
+                        <label htmlFor="card_width">Card width (mm):</label>
                         <input
+                            id="card_width"
                             type="number"
                             min="0"
                             step="0.1"
@@ -101,7 +107,9 @@ export class CardSet extends Component<Props, LocalState> {
                             placeholder="width"
                             value={width}
                         />
+                        <label htmlFor="card_height">Card height (mm):</label>
                         <input
+                            id="card_height"
                             type="number"
                             min="0"
                             step="0.1"
@@ -121,38 +129,49 @@ export class CardSet extends Component<Props, LocalState> {
                                 ))}
                         </ul>
                     </div>
-                    <div>
+                    <div className="form">
                         <button onClick={this.handleCreateCardClick}>Create Card</button>
                     </div>
 
-                    <div>
+                    <KawaiiMessage character={Character.Ghost} mood="excited">
+                        <p>Here you can generate PDF for your cardset.</p>
+                        <p>Hint 1: A4 page size is 210 mm x 297 mm. Letter page size is 215.9 x 279.4 mm.</p>
+                        <p>Hint 2: 1 inch is equal to 25.4 mm.</p>
+                    </KawaiiMessage>
+
+                    <div className="form">
+                        <label htmlFor="page_width">Page width (mm):</label>
                         <input
+                            id="page_width"
                             type="number"
                             onChange={this.handlePageWidthChange}
                             placeholder="Page width"
                             value={this.state.pageWidth}
                         />
+                        <label htmlFor="page_height">Page height (mm):</label>
                         <input
+                            id="page_height"
                             type="number"
                             onChange={this.handlePageHeightChange}
                             placeholder="Page Height"
                             value={this.state.pageHeight}
                         />
+                        <label htmlFor="page_topbottom_margin">Margin from top/bottom (mm):</label>
                         <input
+                            id="page_topbottom_margin"
                             type="number"
                             onChange={this.handleTopBottomMarginChange}
                             placeholder="Top/Bottom margin"
                             value={this.state.topBottomMargin}
                         />
+                        <label htmlFor="page_leftright_margin">Margin from left/right (mm):</label>
                         <input
+                            id="page_leftright_margin"
                             type="number"
                             onChange={this.handleLeftRightMarginChange}
                             placeholder="Left/Right margin"
                             value={this.state.leftRightMargin}
                         />
-                    </div>
-
-                    <div>
                         <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
                             Generate PDF
                         </button>

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import { CardSetsCollection, Dispatch, IdsArray, cardSetCreateRequest, messageRequest } from '../actions';
 import { State } from '../reducers';
+import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface Props {
     dispatch: Dispatch;
@@ -69,8 +70,14 @@ export class CardSets extends Component<Props, LocalState> {
             isAuthenticated &&
             activeGame !== null && (
                 <div>
+                    <KawaiiMessage character={Character.Ghost}>
+                        Each game is made from card sets. Card set is collection of cards that share the same properties
+                        but have different text and images.
+                    </KawaiiMessage>
+
                     <ul>{cardsetItems}</ul>
-                    <div>
+
+                    <div className="form">
                         <input
                             type="text"
                             onChange={this.handleChange}
@@ -95,11 +102,13 @@ export class CardSets extends Component<Props, LocalState> {
                             placeholder="height"
                             value={this.state.height}
                         />
-                    </div>
-                    <div>Poker card size 63.5mm x 88.9mm. Bridge card size 56mm x 88.9mm.</div>
-                    <div>
                         <button onClick={this.handleCreateCardSetClick}>Create Card Set</button>
                     </div>
+
+                    <KawaiiMessage character={Character.Ghost} mood="excited">
+                        Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 56mm x 88.9mm. But you can cards of any
+                        size.
+                    </KawaiiMessage>
                 </div>
             )
         );

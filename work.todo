@@ -108,11 +108,13 @@
 
 - UI
     + https://react-kawaii.now.sh/
-    - UI
+    + UI
         + Header
         + Info messages
-        - Menu
-        - Error messages
+        + Menu
+        + Error messages
+    - Card Set page UI
+    - Show text/image field
     - Open page
     - Changelog page
     - Help page
