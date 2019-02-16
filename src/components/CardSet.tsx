@@ -14,6 +14,7 @@ import {
 } from '../actions';
 import Card from './Card';
 import KawaiiMessage, { Character } from './KawaiiMessage';
+import style from './CardSet.module.css';
 
 interface StateProps {
     width: number;
@@ -119,8 +120,12 @@ export class CardSet extends Component<Props, LocalState> {
                             value={height}
                         />
                     </div>
-                    <div>
-                        <ul>
+                    <div className={style.cardset}>
+                        <ul
+                            style={{
+                                gridTemplateColumns: `repeat(auto-fill, minmax(${width}mm, 1fr))`,
+                            }}
+                        >
                             {cardsAllIds &&
                                 cardsAllIds.map(cardId => (
                                     <li key={cardId}>

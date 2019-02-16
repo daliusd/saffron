@@ -11,7 +11,6 @@ import {
 } from '../actions';
 import { State } from '../reducers';
 import FieldController from './FieldController';
-import ImageSelectionDialog from './ImageSelectionDialog';
 
 interface OwnProps {
     cardId: string;
@@ -29,17 +28,9 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-interface LocalState {
-    imageSelectionDialogIsOpen: boolean;
-}
-
-class ImageField extends PureComponent<Props, LocalState> {
+class ImageField extends PureComponent<Props> {
     imageDiv: React.RefObject<HTMLDivElement>;
     wasMoved: boolean;
-
-    state = {
-        imageSelectionDialogIsOpen: false,
-    };
 
     constructor(props: Props) {
         super(props);
@@ -69,10 +60,6 @@ class ImageField extends PureComponent<Props, LocalState> {
         dispatch(cardSetChangePlaceholderAngle(imagePlaceholder, angle));
     };
 
-    handleImageSelectionDialogClose = () => {
-        this.setState({ imageSelectionDialogIsOpen: false });
-    };
-
     handleMouseDown = (event: MouseEvent) => {
         this.wasMoved = false;
         event.preventDefault();
@@ -88,8 +75,6 @@ class ImageField extends PureComponent<Props, LocalState> {
         if (!this.wasMoved) {
             event.preventDefault();
             dispatch(cardSetActiveCardAndPlaceholder(cardId, imagePlaceholder.id));
-
-            this.setState({ imageSelectionDialogIsOpen: true });
         }
     };
 
@@ -118,13 +103,6 @@ class ImageField extends PureComponent<Props, LocalState> {
                 >
                     <img src={imageUrl} alt="" />
                 </div>
-                <ImageSelectionDialog
-                    imageUrl={imageUrl}
-                    cardId={this.props.cardId}
-                    placeholder={imagePlaceholder}
-                    onClose={this.handleImageSelectionDialogClose}
-                    isOpen={this.state.imageSelectionDialogIsOpen}
-                />
             </FieldController>
         );
     }

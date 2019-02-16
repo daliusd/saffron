@@ -1,3 +1,5 @@
+import './FontSelector.css';
+
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Select from 'react-select';
@@ -10,6 +12,7 @@ import {
     cardSetChangeActiveTextPlaceholderFontVariant,
 } from '../actions';
 import { State } from '../reducers';
+import style from './FontSelector.module.css';
 import webfonts from './webfonts.json';
 
 interface WebFontsInfo {
@@ -100,21 +103,22 @@ class FontSelector extends Component<Props> {
         const selectedFontVariant = fontVariantOptions.find(f => f.value === this.props.activeFontVariant);
 
         return (
-            <div>
-                <div style={{ width: 200, display: 'inline-block' }}>
-                    <Select value={selectedFontFamily} onChange={this.handleChange} options={options} />
-                </div>
-                <div style={{ width: 100, display: 'inline-block' }}>
-                    <Select
-                        value={selectedFontVariant}
-                        onChange={this.handleFontVariantChange}
-                        options={fontVariantOptions}
-                    />
-                </div>
-                <div style={{ width: 20, display: 'inline-block' }}>
-                    <input type="number" value={this.props.activeFontSize} onChange={this.handleFontSizeChange} />
-                </div>
-            </div>
+            <>
+                <input type="number" value={this.props.activeFontSize} onChange={this.handleFontSizeChange} />
+                <Select
+                    className={style.fontFamily}
+                    classNamePrefix="fontFamily"
+                    value={selectedFontFamily}
+                    onChange={this.handleChange}
+                    options={options}
+                />
+                <Select
+                    className={style.fontVariant}
+                    value={selectedFontVariant}
+                    onChange={this.handleFontVariantChange}
+                    options={fontVariantOptions}
+                />
+            </>
         );
     }
 }

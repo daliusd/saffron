@@ -1,0 +1,6 @@
+.cardset ul {
+    display: grid;
+    list-style: none;
+    margin: 1em;
+    padding: 0;
+}

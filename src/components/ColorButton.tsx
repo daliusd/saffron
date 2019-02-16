@@ -48,7 +48,7 @@ class ColorButton extends Component<Props, State> {
             left: '0px',
         };
         return (
-            <div>
+            <>
                 <button onClick={this.handleClick} title="Change text color">
                     <i className="material-icons">format_color_text</i>
                 </button>
@@ -58,7 +58,7 @@ class ColorButton extends Component<Props, State> {
                         <ChromePicker disableAlpha={true} onChange={this.handleChange} />
                     </div>
                 ) : null}
-            </div>
+            </>
         );
     }
 }
