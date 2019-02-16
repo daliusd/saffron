@@ -115,11 +115,12 @@
         + Error messages
     + Card Set page UI
     + Show text/image field
-    - Field context menu
+    - Copyright
     - Open page
     - Changelog page
     - Help page
     - Loading indicators
+    - [F] Field context menu
 
 - Background control
     - Use color for background
