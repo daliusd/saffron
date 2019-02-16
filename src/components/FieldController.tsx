@@ -23,6 +23,7 @@ interface OwnProps {
 
 interface StateProps {
     isActive: boolean;
+    isActivePlaceholder: boolean;
 }
 
 interface DispatchProps {
@@ -335,12 +336,14 @@ class FieldController extends React.Component<Props> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, children, isActive } = this.props;
+        const { x, y, width, height, angle, children, isActive, isActivePlaceholder } = this.props;
 
         return (
             <div
                 ref={this.cDiv}
-                className={`${style.fieldcontroller} ${isActive ? style.fieldcontrolleractive : ''}`}
+                className={`${style.fieldcontroller} ${
+                    isActivePlaceholder ? style.fieldcontrolleractiveplaceholder : ''
+                } ${isActive ? style.fieldcontrolleractive : ''}`}
                 style={{
                     position: 'absolute',
                     left: x,
@@ -385,6 +388,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     return {
         isActive:
             props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
+        isActivePlaceholder: props.placeholderId === state.cardsets.activePlaceholder,
     };
 };
 

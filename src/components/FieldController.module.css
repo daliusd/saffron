@@ -8,6 +8,11 @@
     padding: 0px;
 }
 
+.fieldcontrolleractiveplaceholder {
+    border: 1px dotted #90ff90;
+    padding: 0;
+}
+
 .fieldcontrolleractive {
     border: 1px dotted hotpink;
     padding: 0;
