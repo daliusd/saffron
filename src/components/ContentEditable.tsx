@@ -76,6 +76,16 @@ class ContentEditable extends Component<Props> {
         );
     }
 
+    componentDidUpdate() {
+        const { textValue, align, color, fontFamily, fontVariant, fontSize } = this.props;
+        this.currentText = textValue;
+        this.currentAlign = align;
+        this.currentColor = color;
+        this.currentFontFamily = fontFamily;
+        this.currentFontVariant = fontVariant;
+        this.currentFontSize = fontSize;
+    }
+
     handleMouseDown = (event: MouseEvent) => {
         const { isActive } = this.props;
         if (isActive) {
