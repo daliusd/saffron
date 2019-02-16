@@ -104,7 +104,12 @@ class FontSelector extends Component<Props> {
 
         return (
             <>
-                <input type="number" value={this.props.activeFontSize} onChange={this.handleFontSizeChange} />
+                <input
+                    type="number"
+                    value={this.props.activeFontSize}
+                    onChange={this.handleFontSizeChange}
+                    title="Font size"
+                />
                 <Select
                     className={style.fontFamily}
                     classNamePrefix="fontFamily"

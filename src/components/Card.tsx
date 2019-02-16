@@ -170,7 +170,12 @@ class Card extends Component<Props, LocalState> {
                             <button onClick={this.handleCloneCardClick} title="Clone card">
                                 <i className="material-icons">file_copy</i>
                             </button>
-                            <input type="number" value={card.count.toString()} onChange={this.handleCountChange} />
+                            <input
+                                type="number"
+                                value={card.count.toString()}
+                                onChange={this.handleCountChange}
+                                title="Number of card's copies"
+                            />
                             <button onClick={this.handleRemoveCardClick} title="Remove card">
                                 <i className="material-icons">delete</i>
                             </button>
