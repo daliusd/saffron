@@ -18,6 +18,10 @@
     margin: 0;
 }
 
+.App-footer {
+    text-align: right;
+}
+
 .form {
     width: 20em;
     display: grid;

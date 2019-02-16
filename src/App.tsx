@@ -38,6 +38,7 @@ export class App extends Component<Props> {
                         <Route exact path="/cardset/:id" component={CardSetPage} />
                         <Route component={NotFoundPage} />
                     </Switch>
+                    <div className="App-footer">Dalius Dobravolskas &copy; {new Date().getFullYear()}</div>
                 </div>
             </Router>
         );
