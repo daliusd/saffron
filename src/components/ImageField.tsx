@@ -11,6 +11,7 @@ import {
 } from '../actions';
 import { State } from '../reducers';
 import FieldController from './FieldController';
+import emptyImageImage from './image.svg';
 
 interface OwnProps {
     cardId: string;
@@ -101,7 +102,11 @@ class ImageField extends PureComponent<Props> {
                         height: '100%',
                     }}
                 >
-                    <img src={imageUrl} alt="" />
+                    <img
+                        style={{ opacity: imageUrl.length > 0 ? 1 : 0.5, width: '100%', height: 'auto' }}
+                        src={imageUrl || emptyImageImage}
+                        alt=""
+                    />
                 </div>
             </FieldController>
         );

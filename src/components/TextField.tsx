@@ -8,15 +8,26 @@ import {
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
 } from '../actions';
+import { State } from '../reducers';
 import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
+import emptyTextImage from './text.svg';
 
-interface Props {
+interface OwnProps {
     cardId: string;
-    textPlaceholder: TextPlaceholderType;
-    dispatch: Dispatch;
     ppmm: number;
+    textPlaceholder: TextPlaceholderType;
 }
+
+interface StateProps {
+    text: string;
+}
+
+interface DispatchProps {
+    dispatch: Dispatch;
+}
+
+type Props = OwnProps & StateProps & DispatchProps;
 
 class TextField extends PureComponent<Props> {
     handleDrag = (x: number, y: number) => {
@@ -35,7 +46,7 @@ class TextField extends PureComponent<Props> {
     };
 
     render() {
-        const { textPlaceholder, ppmm } = this.props;
+        const { textPlaceholder, text, ppmm } = this.props;
 
         return (
             <FieldController
@@ -50,6 +61,27 @@ class TextField extends PureComponent<Props> {
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
             >
+                {text === '' && (
+                    <div
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'fixed',
+                            left: 0,
+                            top: 0,
+                            zIndex: -1,
+                            textAlign:
+                                textPlaceholder.align === 'left'
+                                    ? 'left'
+                                    : textPlaceholder.align === 'right'
+                                    ? 'right'
+                                    : 'center',
+                        }}
+                    >
+                        <img style={{ opacity: 0.5, width: 'auto', height: '100%' }} src={emptyTextImage} alt="" />
+                    </div>
+                )}
+
                 <ContentEditable
                     cardId={this.props.cardId}
                     placeholderId={textPlaceholder.id}
@@ -64,4 +96,17 @@ class TextField extends PureComponent<Props> {
     }
 }
 
-export default connect()(TextField);
+const mapStateToProps = (state: State, props: OwnProps): StateProps => {
+    let text =
+        state.cardsets.texts &&
+        state.cardsets.texts[props.cardId] &&
+        state.cardsets.texts[props.cardId][props.textPlaceholder.id]
+            ? state.cardsets.texts[props.cardId][props.textPlaceholder.id].value
+            : '';
+    text = text.replace(/<br>/g, '').trim();
+    return {
+        text,
+    };
+};
+
+export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(TextField);

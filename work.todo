@@ -113,8 +113,9 @@
         + Info messages
         + Menu
         + Error messages
-    - Card Set page UI
-    - Show text/image field
+    + Card Set page UI
+    + Show text/image field
+    - Field context menu
     - Open page
     - Changelog page
     - Help page
