@@ -78,28 +78,34 @@ export class CardSets extends Component<Props, LocalState> {
                     <ul>{cardsetItems}</ul>
 
                     <div className="form">
+                        <label htmlFor="cardset_name">Card Set name:</label>
                         <input
+                            id="cardset_name"
                             type="text"
                             onChange={this.handleChange}
                             className="form-control"
                             placeholder="Card Set name"
                         />
+                        <label htmlFor="card_width">Card width:</label>
                         <input
+                            id="card_width"
                             type="number"
                             min="0"
                             step="0.1"
                             onChange={this.handleWidthChange}
                             className="form-control"
-                            placeholder="width"
+                            placeholder="Card width"
                             value={this.state.width}
                         />
+                        <label htmlFor="card_height">Card height:</label>
                         <input
+                            id="card_height"
                             type="number"
                             min="0"
                             step="0.1"
                             onChange={this.handleHeightChange}
                             className="form-control"
-                            placeholder="height"
+                            placeholder="Card height"
                             value={this.state.height}
                         />
                         <button onClick={this.handleCreateCardSetClick}>Create Card Set</button>

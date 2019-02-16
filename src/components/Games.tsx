@@ -62,7 +62,9 @@ export class Games extends Component<Props, LocalState> {
 
                     <ul>{gameItems}</ul>
                     <div className="form">
+                        <label htmlFor="game_name">Game name:</label>
                         <input
+                            id="game_name"
                             type="text"
                             onChange={this.handleChange}
                             className="form-control"

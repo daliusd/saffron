@@ -24,9 +24,13 @@
     grid: auto-flow / 1fr;
 }
 
-.form input,
+.form input {
+    margin: 0.5em;
+}
+
 .form label {
     margin: 0.5em;
+    margin-bottom: 0;
 }
 
 .form input[type='submit'],
