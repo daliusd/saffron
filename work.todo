@@ -116,10 +116,10 @@
     + Card Set page UI
     + Show text/image field
     + Copyright
-    - Open page
-    - Changelog page
+    + Changelog page
     - Help page
     - Loading indicators
+    - [F] Open page
     - [F] Field context menu
 
 - Background control

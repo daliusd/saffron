@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { Dispatch, initRequest } from './actions';
 import { State } from './reducers';
 import CardSetPage from './CardSetPage';
+import ChangelogPage from './ChangelogPage';
 import GamePage from './GamePage';
 import LoginPage from './LoginPage';
 import Main from './Main';
@@ -36,6 +37,7 @@ export class App extends Component<Props> {
                         <Route exact path="/signup" component={SignUpPage} />
                         <Route exact path="/game/:id" component={GamePage} />
                         <Route exact path="/cardset/:id" component={CardSetPage} />
+                        <Route exact path="/changelog" component={ChangelogPage} />
                         <Route component={NotFoundPage} />
                     </Switch>
                     <div className="App-footer">Dalius Dobravolskas &copy; {new Date().getFullYear()}</div>
