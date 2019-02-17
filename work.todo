@@ -118,10 +118,12 @@
     + Copyright
     + Changelog page
     + Help page
+    + Clean-up saga logs
     - Loading indicators
-    - Clean-up saga logs
-    - [F] Open page
+    - [F] Open (statistics) page
     - [F] Field context menu
+
+- Crash page
 
 - Background control
     - Use color for background

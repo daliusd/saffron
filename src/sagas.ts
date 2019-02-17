@@ -3,7 +3,6 @@ import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
 
 import {
-    Action,
     CARDSET_ADD_IMAGE_PLACEHOLDER,
     CARDSET_ADD_TEXT_PLACEHOLDER,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
@@ -402,14 +401,6 @@ export function* handleImageListRequest(action: ImageListRequest): SagaIterator 
     }
 }
 
-// Logger
-function* handleEverything(action: Action) {
-    const state = yield select();
-
-    console.log('action', action);
-    console.log('state after', state);
-}
-
 // All
 export function* rootSaga(): SagaIterator {
     yield all([
@@ -449,6 +440,5 @@ export function* rootSaga(): SagaIterator {
         takeLatest(IMAGE_LIST_REQUEST, handleImageListRequest),
 
         takeLatest(INIT_REQUEST, handleInitRequest),
-        takeEvery('*', handleEverything),
     ]);
 }
