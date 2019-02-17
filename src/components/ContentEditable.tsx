@@ -209,7 +209,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
             ? state.cardsets.texts[props.cardId][props.placeholderId]
             : { value: '' };
     return {
-        textValue: textInfo.value,
+        textValue: textInfo.value.replace(/<br>/g, ''),
         isActive:
             props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
     };
