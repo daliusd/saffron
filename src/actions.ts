@@ -58,6 +58,7 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE = 'CARDSET_CHANGE_
 export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER = 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
+export const CARDSET_UPDATE_DATA_REQUEST = 'CARDSET_UPDATE_DATA_REQUEST';
 export const CARDSET_UPDATE_DATA_SUCCESS = 'CARDSET_UPDATE_DATA_SUCCESS';
 export const CARDSET_UPDATE_DATA_FAILURE = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
@@ -383,13 +384,16 @@ export interface CardSetSetActiveCardAndPlaceholder {
 
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
 
+export interface CardSetUpdateDataRequest {
+    type: typeof CARDSET_UPDATE_DATA_REQUEST;
+}
 export interface CardSetUpdateDataSuccess {
     type: typeof CARDSET_UPDATE_DATA_SUCCESS;
 }
 export interface CardSetUpdateDataFailure {
     type: typeof CARDSET_UPDATE_DATA_FAILURE;
 }
-export type CardSetUpdateDataAction = CardSetUpdateDataSuccess | CardSetUpdateDataFailure;
+export type CardSetUpdateDataAction = CardSetUpdateDataRequest | CardSetUpdateDataSuccess | CardSetUpdateDataFailure;
 
 export type CardSetModifyAction =
     | CardSetCreateCard

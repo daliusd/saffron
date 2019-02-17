@@ -33,6 +33,9 @@ import {
     CARDSET_SELECT_SUCCESS,
     CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
     CARDSET_UPDATE_CARD_COUNT,
+    CARDSET_UPDATE_DATA_FAILURE,
+    CARDSET_UPDATE_DATA_REQUEST,
+    CARDSET_UPDATE_DATA_SUCCESS,
     CardSetAction,
     CardSetsCollection,
     CardsCollection,
@@ -84,6 +87,7 @@ export const ACTIVITY_CREATING = 0x1;
 export const ACTIVITY_LISTING = 0x2;
 export const ACTIVITY_SELECTING = 0x4;
 export const ACTIVITY_CREATING_PDF = 0x8;
+export const ACTIVITY_UPDATING = 0x10;
 
 export interface MessageState {
     messages: MessageType[];
@@ -338,6 +342,18 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         case CARDSET_CREATE_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
+            });
+        case CARDSET_UPDATE_DATA_REQUEST:
+            return Object.assign({}, state, {
+                activity: state.activity | ACTIVITY_UPDATING,
+            });
+        case CARDSET_UPDATE_DATA_SUCCESS:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_UPDATING,
+            });
+        case CARDSET_UPDATE_DATA_FAILURE:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_UPDATING,
             });
         case CARDSET_LIST_REQUEST:
             return Object.assign({}, state, {

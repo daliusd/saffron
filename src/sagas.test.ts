@@ -14,6 +14,7 @@ import {
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
     CARDSET_UPDATE_DATA_FAILURE,
+    CARDSET_UPDATE_DATA_REQUEST,
     CARDSET_UPDATE_DATA_SUCCESS,
     CardSetCreateRequest,
     CardSetSelectRequest,
@@ -519,7 +520,8 @@ test('handleCardSetChange', () => {
     };
 
     expect(gen.next().value).toEqual(select());
-    expect(gen.next(state).value).toEqual(
+    expect(gen.next(state).value).toEqual(put({ type: CARDSET_UPDATE_DATA_REQUEST }));
+    expect(gen.next().value).toEqual(
         call(authorizedPutRequest, '/api/cardsets/123', {
             data: JSON.stringify({
                 width: 63.5,

@@ -32,6 +32,7 @@ import {
     CARDSET_SELECT_SUCCESS,
     CARDSET_UPDATE_CARD_COUNT,
     CARDSET_UPDATE_DATA_FAILURE,
+    CARDSET_UPDATE_DATA_REQUEST,
     CARDSET_UPDATE_DATA_SUCCESS,
     CardSetCreateRequest,
     CardSetSelectRequest,
@@ -360,6 +361,10 @@ export function* handleCardSetChange(): SagaIterator {
     try {
         yield call(delay, 1000);
         const state = yield select();
+
+        yield put({
+            type: CARDSET_UPDATE_DATA_REQUEST,
+        });
 
         const cardsetId = state.cardsets.active;
         const data = {

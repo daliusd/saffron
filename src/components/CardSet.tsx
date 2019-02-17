@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { ACTIVITY_CREATING_PDF, State } from '../reducers';
+import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, ACTIVITY_UPDATING, State } from '../reducers';
 import {
     CardType,
     CardsCollection,
@@ -14,6 +14,7 @@ import {
 } from '../actions';
 import Card from './Card';
 import KawaiiMessage, { Character } from './KawaiiMessage';
+import Loader from './Loader';
 import style from './CardSet.module.css';
 
 interface StateProps {
@@ -23,6 +24,7 @@ interface StateProps {
     cardsAllIds: string[];
     cardsById: CardsCollection;
     isCreatingPdf: boolean;
+    activity: number;
 }
 
 interface DispatchProps {
@@ -88,11 +90,12 @@ export class CardSet extends Component<Props, LocalState> {
     };
 
     render() {
-        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf } = this.props;
+        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf, activity } = this.props;
 
         return (
             isAuthenticated && (
                 <div>
+                    {(activity & ACTIVITY_UPDATING) === ACTIVITY_UPDATING && <Loader fixed={true} />}
                     <KawaiiMessage character={Character.Ghost}>
                         <p>Here you can design your cards.</p>
                     </KawaiiMessage>
@@ -120,6 +123,7 @@ export class CardSet extends Component<Props, LocalState> {
                             value={height}
                         />
                     </div>
+                    {(activity & ACTIVITY_SELECTING) === ACTIVITY_SELECTING && <Loader />}
                     <div className={style.cardset}>
                         <ul
                             style={{
@@ -189,6 +193,7 @@ export class CardSet extends Component<Props, LocalState> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
+        activity: state.cardsets.activity,
         width: state.cardsets.width,
         height: state.cardsets.height,
         isAuthenticated: state.auth.isAuthenticated,
