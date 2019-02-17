@@ -124,6 +124,8 @@
     - [F] Field context menu
 
 - Crash page
+- Remove Redux from production build
++ Fix touch on mobile
 
 - Background control
     - Use color for background

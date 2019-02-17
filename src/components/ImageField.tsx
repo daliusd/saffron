@@ -42,8 +42,11 @@ class ImageField extends PureComponent<Props> {
     componentDidMount() {
         if (!this.imageDiv.current) return;
         this.imageDiv.current.addEventListener('mousedown', this.handleMouseDown);
+        this.imageDiv.current.addEventListener('touchstart', this.handleTouchStart);
         this.imageDiv.current.addEventListener('mousemove', this.handleMouseMove);
+        this.imageDiv.current.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         this.imageDiv.current.addEventListener('mouseup', this.handleMouseUp);
+        this.imageDiv.current.addEventListener('touchend', this.handleTouchEnd, { passive: false });
     }
 
     handleDrag = (x: number, y: number) => {
@@ -66,12 +69,30 @@ class ImageField extends PureComponent<Props> {
         event.preventDefault();
     };
 
+    handleTouchStart = (event: TouchEvent) => {
+        this.wasMoved = false;
+        event.preventDefault();
+    };
+
     handleMouseMove = (event: MouseEvent) => {
         this.wasMoved = true;
         event.preventDefault();
     };
 
+    handleTouchMove = (event: TouchEvent) => {
+        this.wasMoved = true;
+        event.preventDefault();
+    };
+
     handleMouseUp = (event: MouseEvent) => {
+        this.handleComplete(event);
+    };
+
+    handleTouchEnd = (event: TouchEvent) => {
+        this.handleComplete(event);
+    };
+
+    handleComplete = (event: Event) => {
         const { dispatch, cardId, imagePlaceholder } = this.props;
         if (!this.wasMoved) {
             event.preventDefault();

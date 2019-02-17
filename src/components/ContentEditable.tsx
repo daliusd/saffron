@@ -56,8 +56,11 @@ class ContentEditable extends Component<Props> {
         if (!this.editDiv.current) return;
 
         this.editDiv.current.addEventListener('mousedown', this.handleMouseDown);
+        this.editDiv.current.addEventListener('touchstart', this.handleTouchStart);
         this.editDiv.current.addEventListener('mousemove', this.handleMouseMove);
+        this.editDiv.current.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         this.editDiv.current.addEventListener('mouseup', this.handleMouseUp);
+        this.editDiv.current.addEventListener('touchend', this.handleTouchEnd, { passive: false });
 
         if (isActive) {
             this.editDiv.current.focus();
@@ -87,6 +90,14 @@ class ContentEditable extends Component<Props> {
     }
 
     handleMouseDown = (event: MouseEvent) => {
+        this.handleStart(event);
+    };
+
+    handleTouchStart = (event: TouchEvent) => {
+        this.handleStart(event);
+    };
+
+    handleStart = (event: Event) => {
         const { isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
@@ -97,6 +108,14 @@ class ContentEditable extends Component<Props> {
     };
 
     handleMouseMove = (event: MouseEvent) => {
+        this.handleMove(event);
+    };
+
+    handleTouchMove = (event: TouchEvent) => {
+        this.handleMove(event);
+    };
+
+    handleMove = (event: Event) => {
         const { isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
@@ -107,6 +126,14 @@ class ContentEditable extends Component<Props> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
+        this.handleComplete(event);
+    };
+
+    handleTouchEnd = (event: TouchEvent) => {
+        this.handleComplete(event);
+    };
+
+    handleComplete = (event: Event) => {
         const { dispatch, cardId, placeholderId, isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
