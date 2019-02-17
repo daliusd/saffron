@@ -67,6 +67,9 @@ export class Navbar extends Component<Props> {
                             <li>
                                 <Link to="/changelog">Changelog</Link>
                             </li>
+                            <li>
+                                <Link to="/about">About</Link>
+                            </li>
                             {isAuthenticated && (
                                 <li>
                                     <Logout onLogout={() => dispatch(logoutRequest())} />
