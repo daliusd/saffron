@@ -391,9 +391,9 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 }),
                 width: action.data.width || 63.5,
                 height: action.data.height || 88.9,
-                cardsAllIds: action.data.cardsAllIds,
-                cardsById: action.data.cardsById,
-                placeholders: action.data.placeholders,
+                cardsAllIds: action.data.cardsAllIds || [],
+                cardsById: action.data.cardsById || {},
+                placeholders: action.data.placeholders || {},
                 texts: action.data.texts || {},
                 images: action.data.images || {},
             });
