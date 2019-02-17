@@ -25,7 +25,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     render() {
         if (this.state.hasError) {
             return (
-                <KawaiiMessage character={Character.Browser} mood="xo">
+                <KawaiiMessage character={Character.Browser} mood="ko">
                     Something unexpected has happened. If you want this problem to be fixed write me to{' '}
                     <a href="mailto:dalius@ffff.lt">dalius@ffff.lt</a>.
                 </KawaiiMessage>
