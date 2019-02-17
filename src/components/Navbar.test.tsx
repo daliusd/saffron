@@ -8,7 +8,7 @@ describe('<Navbar />', () => {
         const wrapper = shallow(
             <Navbar isAuthenticated={false} dispatch={a => a} messages={[]} activeGame={null} activeCardSet={null} />,
         );
-        expect(wrapper.find('Link')).toHaveLength(3);
+        expect(wrapper.find('Link')).toHaveLength(5);
         expect(wrapper.find('Logout')).toHaveLength(0);
     });
 
@@ -16,7 +16,7 @@ describe('<Navbar />', () => {
         const wrapper = shallow(
             <Navbar isAuthenticated={true} dispatch={a => a} messages={[]} activeGame={null} activeCardSet={null} />,
         );
-        expect(wrapper.find('Link')).toHaveLength(2);
+        expect(wrapper.find('Link')).toHaveLength(4);
         expect(wrapper.find('Logout')).toHaveLength(1);
     });
 
