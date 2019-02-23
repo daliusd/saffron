@@ -57,6 +57,7 @@
     + Remove text field
     + Font size focus loss problem
     + Set default font
+    - Allow to set line height
 
 + Show active selection
 + Clone texts on card clone
@@ -128,7 +129,7 @@
 + Try different approach to render PDF
 + Reset active card and placeholder after load (otherwise it crashes page)
 + Instead of auto-hiding fields simply disable them
-- Create super user who can see anything
++ Create super user who can see anything
 
 - Background control
     - Use color for background
