@@ -103,7 +103,6 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         state.cardsets.texts[props.cardId][props.textPlaceholder.id]
             ? state.cardsets.texts[props.cardId][props.textPlaceholder.id].value
             : '';
-    text = text.replace(/<br>/g, '').trim();
     return {
         text,
     };

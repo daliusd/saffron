@@ -68,15 +68,16 @@ class ContentEditable extends Component<Props> {
     }
 
     shouldComponentUpdate(nextProps: Props) {
-        return (
+        const shouldUpdate =
             nextProps.textValue !== this.currentText ||
             nextProps.align !== this.currentAlign ||
             nextProps.color !== this.currentColor ||
             nextProps.fontFamily !== this.currentFontFamily ||
             nextProps.fontVariant !== this.currentFontVariant ||
             nextProps.fontSize !== this.currentFontSize ||
-            this.props.isActive !== nextProps.isActive
-        );
+            this.props.isActive !== nextProps.isActive;
+
+        return shouldUpdate;
     }
 
     componentDidUpdate() {
@@ -167,7 +168,8 @@ class ContentEditable extends Component<Props> {
 
     updateContent = (timeoutInMiliseconds: number) => {
         if (!this.editDiv.current) return;
-        const value = this.editDiv.current.innerHTML;
+        let value = this.editDiv.current.innerHTML;
+        value = value.replace(/<br>/g, '');
 
         if (value !== this.currentText) {
             this.currentText = value;
@@ -237,7 +239,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
             ? state.cardsets.texts[props.cardId][props.placeholderId]
             : { value: '' };
     return {
-        textValue: textInfo.value.replace(/<br>/g, ''),
+        textValue: textInfo.value,
         isActive:
             props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
     };
