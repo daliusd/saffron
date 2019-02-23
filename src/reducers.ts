@@ -396,6 +396,8 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 placeholders: action.data.placeholders || {},
                 texts: action.data.texts || {},
                 images: action.data.images || {},
+                activeCard: null,
+                activePlaceholder: null,
             });
         case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {

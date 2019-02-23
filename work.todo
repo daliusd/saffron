@@ -126,7 +126,7 @@
 + Fix touch on mobile
 + Edit moves to cursor to beginning of screen
 + Try different approach to render PDF
-- Crash page
++ Reset active card and placeholder after load (otherwise it crashes page)
 - Create super user who can see anything
 - Instead of auto-hiding fields simply disable them
 
