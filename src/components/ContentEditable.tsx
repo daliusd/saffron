@@ -221,6 +221,7 @@ class ContentEditable extends Component<Props> {
                     fontWeight,
                     fontSize: `${fontSize}px`,
                     outline: 'none',
+                    overflowWrap: 'break-word',
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />

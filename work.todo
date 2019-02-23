@@ -123,9 +123,11 @@
     - [F] Open (statistics) page
     - [F] Field context menu
 
-- Crash page
-- Remove Redux from production build
 + Fix touch on mobile
+- Try different approach to render PDF
+- Crash page
+- Edit moves to cursor to beginning of screen
+- Create super user who can see anything
 
 - Background control
     - Use color for background
