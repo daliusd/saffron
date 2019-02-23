@@ -127,8 +127,8 @@
 + Edit moves to cursor to beginning of screen
 + Try different approach to render PDF
 + Reset active card and placeholder after load (otherwise it crashes page)
++ Instead of auto-hiding fields simply disable them
 - Create super user who can see anything
-- Instead of auto-hiding fields simply disable them
 
 - Background control
     - Use color for background

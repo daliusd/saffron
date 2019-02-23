@@ -85,12 +85,17 @@ class Card extends Component<Props, LocalState> {
     };
 
     handleRemoveClick = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetRemoveActivePlaceholder());
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetRemoveActivePlaceholder());
+        }
     };
 
     handleChangeImage = () => {
-        this.setState({ imageSelectionDialogIsOpen: true });
+        const { activePlaceholder } = this.props;
+        if (activePlaceholder !== null && activePlaceholder.type === 'image') {
+            this.setState({ imageSelectionDialogIsOpen: true });
+        }
     };
 
     handleImageSelectionDialogClose = () => {
@@ -123,6 +128,7 @@ class Card extends Component<Props, LocalState> {
     render() {
         const { placeholders, card, width, height, imageUrl, activePlaceholder } = this.props;
         const ppmm = this.state.dimensions.width / width;
+        const imageSelected = activePlaceholder !== null && activePlaceholder.type === 'image';
 
         return (
             <Measure
@@ -182,42 +188,41 @@ class Card extends Component<Props, LocalState> {
                         </div>
 
                         <div>
-                            {activePlaceholder !== null && activePlaceholder.type === 'image' && (
-                                <>
-                                    <button onClick={this.handleChangeImage} title="Change image">
-                                        <i className="material-icons">photo</i>
-                                    </button>
-                                    <ImageSelectionDialog
-                                        imageUrl={imageUrl}
-                                        cardId={card.id}
-                                        placeholder={activePlaceholder}
-                                        onClose={this.handleImageSelectionDialogClose}
-                                        isOpen={this.state.imageSelectionDialogIsOpen}
-                                    />
-                                </>
-                            )}
+                            <button onClick={this.handleSetTextAlignLeft} title="Align text left">
+                                <i className="material-icons">format_align_left</i>
+                            </button>
+                            <button onClick={this.handleSetTextAlignCenter} title="Align text center">
+                                <i className="material-icons">format_align_center</i>
+                            </button>
+                            <button onClick={this.handleSetTextAlignRight} title="Align text right">
+                                <i className="material-icons">format_align_right</i>
+                            </button>
+                            <ColorButton />
+                            <FontSelector />
 
-                            {activePlaceholder !== null && activePlaceholder.type === 'text' && (
-                                <>
-                                    <button onClick={this.handleSetTextAlignLeft} title="Align text left">
-                                        <i className="material-icons">format_align_left</i>
-                                    </button>
-                                    <button onClick={this.handleSetTextAlignCenter} title="Align text center">
-                                        <i className="material-icons">format_align_center</i>
-                                    </button>
-                                    <button onClick={this.handleSetTextAlignRight} title="Align text right">
-                                        <i className="material-icons">format_align_right</i>
-                                    </button>
-                                    <ColorButton />
-                                    <FontSelector />
-                                </>
-                            )}
+                            <button
+                                className={imageSelected ? '' : style.disabled}
+                                onClick={this.handleChangeImage}
+                                title="Change image"
+                            >
+                                <i className="material-icons">photo</i>
+                            </button>
 
-                            {activePlaceholder !== null && (
-                                <button onClick={this.handleRemoveClick} title="Remove field">
-                                    <i className="material-icons">remove</i>
-                                </button>
-                            )}
+                            <ImageSelectionDialog
+                                imageUrl={imageUrl}
+                                cardId={card.id}
+                                placeholderId={activePlaceholder !== null ? activePlaceholder.id : ''}
+                                onClose={this.handleImageSelectionDialogClose}
+                                isOpen={this.state.imageSelectionDialogIsOpen}
+                            />
+
+                            <button
+                                className={activePlaceholder === null ? style.disabled : ''}
+                                onClick={this.handleRemoveClick}
+                                title="Remove field"
+                            >
+                                <i className="material-icons">remove</i>
+                            </button>
                         </div>
                     </div>
                 )}

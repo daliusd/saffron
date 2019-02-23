@@ -2,20 +2,13 @@ import { connect } from 'react-redux';
 import Modal from 'react-modal';
 import React, { Component } from 'react';
 
-import {
-    Dispatch,
-    ImageArray,
-    ImageInfo,
-    ImagePlaceholderType,
-    cardSetChangeImage,
-    imageListRequest,
-} from '../actions';
+import { Dispatch, ImageArray, ImageInfo, cardSetChangeImage, imageListRequest } from '../actions';
 import { State } from '../reducers';
 
 interface Props {
     imageUrl: string;
     cardId: string;
-    placeholder: ImagePlaceholderType;
+    placeholderId: string;
     isOpen: boolean;
     filter: string;
     images: ImageArray;
@@ -49,10 +42,10 @@ class ImageSelectionDialog extends Component<Props> {
     };
 
     handleImageSelect = (imageName: string) => {
-        const { dispatch, cardId, placeholder } = this.props;
+        const { dispatch, cardId, placeholderId } = this.props;
 
         const ii: ImageInfo = { url: `/api/imagefiles/${imageName}` };
-        dispatch(cardSetChangeImage(cardId, placeholder.id, ii));
+        dispatch(cardSetChangeImage(cardId, placeholderId, ii));
 
         this.props.onClose();
     };

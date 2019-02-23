@@ -33,3 +33,7 @@
 .card button:hover {
     background-color: var(--color-3);
 }
+
+.disabled i {
+    color: #cccccc;
+}
