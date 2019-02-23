@@ -120,14 +120,15 @@
     + Help page
     + Clean-up saga logs
     + Loading indicators in cardset page
-    - [F] Open (statistics) page
     - [F] Field context menu
+    - [F] Open (statistics) page
 
 + Fix touch on mobile
-- Try different approach to render PDF
++ Edit moves to cursor to beginning of screen
++ Try different approach to render PDF
 - Crash page
-- Edit moves to cursor to beginning of screen
 - Create super user who can see anything
+- Instead of auto-hiding fields simply disable them
 
 - Background control
     - Use color for background
