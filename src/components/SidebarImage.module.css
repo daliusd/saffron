@@ -1,5 +1,8 @@
 .view {
-    overflow: hidden;
+    height: 98%;
+    max-height: 98%;
+    display: grid;
+    grid-template-rows: auto auto auto 1fr;
 }
 
 .disabled i {
@@ -8,4 +11,8 @@
 
 .view input {
     width: 9em;
+}
+
+.images {
+    overflow: scroll;
 }

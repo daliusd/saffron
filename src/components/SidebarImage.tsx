@@ -93,7 +93,7 @@ export class SidebarImage extends Component<Props> {
                             <input type="text" value={filter} onChange={this.handleFilterChange} />
                         </div>
 
-                        <div>
+                        <div className={style.images}>
                             {this.props.images.map(im => {
                                 return (
                                     <img
