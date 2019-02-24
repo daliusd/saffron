@@ -24,6 +24,10 @@ export default class ChangelogPage extends Component {
                     <li>Data export/import from JSON and CSV.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-02-24</h2>
+                <ul>
+                    <li>Sidebar created for lighter, cleaner and faster UI.</li>
+                </ul>
                 <h2>2019-02-23</h2>
                 <ul>
                     <li>Text rendering changed and should be working properly now.</li>
