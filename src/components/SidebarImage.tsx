@@ -4,19 +4,24 @@ import React, { Component } from 'react';
 import {
     CardType,
     Dispatch,
+    ImageArray,
+    ImageInfo,
     PlaceholderType,
     cardSetAddImagePlaceholder,
+    cardSetChangeImage,
     cardSetRemoveActivePlaceholder,
+    imageListRequest,
 } from '../actions';
 import { State } from '../reducers';
-import ImageSelectionDialog from './ImageSelectionDialog';
-import style from './SidebarText.module.css';
+import style from './SidebarImage.module.css';
 
 interface StateProps {
     isAuthenticated: boolean;
     activePlaceholder: PlaceholderType | null;
     imageUrl: string;
     activeCard: CardType | null;
+    filter: string;
+    images: ImageArray;
 }
 
 interface DispatchProps {
@@ -25,15 +30,7 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps;
 
-interface LocalState {
-    imageSelectionDialogIsOpen: boolean;
-}
-
-export class SidebarImage extends Component<Props, LocalState> {
-    state = {
-        imageSelectionDialogIsOpen: false,
-    };
-
+export class SidebarImage extends Component<Props> {
     handleAddImageClick = () => {
         const { dispatch } = this.props;
         dispatch(cardSetAddImagePlaceholder());
@@ -46,52 +43,70 @@ export class SidebarImage extends Component<Props, LocalState> {
         }
     };
 
-    handleChangeImage = () => {
-        const { activePlaceholder } = this.props;
-        if (activePlaceholder !== null && activePlaceholder.type === 'image') {
-            this.setState({ imageSelectionDialogIsOpen: true });
+    handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(imageListRequest(event.target.value));
+    };
+
+    handleImageSelect = (imageName: string) => {
+        const { dispatch, activeCard, activePlaceholder } = this.props;
+
+        if (activeCard && activePlaceholder) {
+            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}` };
+            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
         }
     };
 
-    handleImageSelectionDialogClose = () => {
-        this.setState({ imageSelectionDialogIsOpen: false });
-    };
-
     render() {
-        const { activeCard, activePlaceholder, imageUrl } = this.props;
-        const imageSelected = activePlaceholder !== null && activePlaceholder.type === 'image';
+        const { activePlaceholder, imageUrl, filter } = this.props;
 
         return (
             <div className={style.view}>
-                <button onClick={this.handleAddImageClick} title="Add image field">
-                    <i className="material-icons">add_photo_alternate</i>
-                </button>
+                <div>
+                    <button onClick={this.handleAddImageClick} title="Add image field">
+                        <i className="material-icons">add_photo_alternate</i>
+                    </button>
 
-                <button
-                    className={imageSelected ? '' : style.disabled}
-                    onClick={this.handleChangeImage}
-                    title="Change image"
-                >
-                    <i className="material-icons">photo</i>
-                </button>
+                    <button
+                        className={activePlaceholder === null ? style.disabled : ''}
+                        onClick={this.handleRemoveClick}
+                        title="Remove field"
+                    >
+                        <i className="material-icons">remove</i>
+                    </button>
+                </div>
 
-                {activeCard && (
-                    <ImageSelectionDialog
-                        imageUrl={imageUrl}
-                        cardId={activeCard.id}
-                        placeholderId={activePlaceholder !== null ? activePlaceholder.id : ''}
-                        onClose={this.handleImageSelectionDialogClose}
-                        isOpen={this.state.imageSelectionDialogIsOpen}
+                <div>
+                    <img
+                        src={imageUrl}
+                        alt=""
+                        style={{
+                            width: 100,
+                            height: 100,
+                        }}
                     />
-                )}
+                </div>
 
-                <button
-                    className={activePlaceholder === null ? style.disabled : ''}
-                    onClick={this.handleRemoveClick}
-                    title="Remove field"
-                >
-                    <i className="material-icons">remove</i>
-                </button>
+                <div>
+                    <input type="text" value={filter} onChange={this.handleFilterChange} />
+                </div>
+
+                <div>
+                    {this.props.images.map(im => {
+                        return (
+                            <img
+                                key={im.id}
+                                src={`/api/imagefiles/${im.name}`}
+                                onClick={() => this.handleImageSelect(im.name)}
+                                alt=""
+                                style={{
+                                    width: 100,
+                                    height: 100,
+                                }}
+                            />
+                        );
+                    })}
+                </div>
             </div>
         );
     }
@@ -120,6 +135,8 @@ const mapStateToProps = (state: State): StateProps => {
         activePlaceholder,
         imageUrl,
         activeCard,
+        images: state.images.images,
+        filter: state.images.filter,
     };
 };
 

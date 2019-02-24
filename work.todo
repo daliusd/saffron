@@ -134,10 +134,10 @@
 
 + Selection for active card without placeholder
 + Selection of no active card and placeholder if clicked in work area but not on card
-- Sidebar
-    - initial work
-    - Color picker
-    - Show image selection in sidebar
++ Sidebar
+    + initial work
+    + Color picker
+    + Show image selection in sidebar
 - Zoom control
 
 - Background control

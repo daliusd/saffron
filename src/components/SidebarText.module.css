@@ -1,6 +1,11 @@
 .view {
 }
 
+.view input {
+    width: 2em;
+    text-align: center;
+}
+
 .disabled i {
     color: #cccccc;
 }

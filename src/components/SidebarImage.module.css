@@ -4,3 +4,7 @@
 .disabled i {
     color: #cccccc;
 }
+
+.view input {
+    width: 9em;
+}
