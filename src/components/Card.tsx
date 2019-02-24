@@ -17,6 +17,7 @@ interface StateProps {
     width: number;
     height: number;
     isActiveCard: boolean;
+    zoom: number;
 }
 
 interface DispatchProps {
@@ -50,7 +51,7 @@ class Card extends Component<Props, LocalState> {
     };
 
     render() {
-        const { placeholders, card, width, height, isActiveCard } = this.props;
+        const { placeholders, card, width, height, isActiveCard, zoom } = this.props;
         const ppmm = this.state.dimensions.width / width;
 
         return (
@@ -64,29 +65,27 @@ class Card extends Component<Props, LocalState> {
                 }}
             >
                 {({ measureRef }) => (
-                    <div className={style.card}>
-                        <div
-                            className={`${style.cardWorkarea} ${isActiveCard ? style.active : ''}`}
-                            id={`card_${card.id}`}
-                            ref={measureRef}
-                            style={{
-                                width: `${width}mm`,
-                                height: `${height}mm`,
-                                position: 'relative',
-                                overflow: 'hidden',
-                            }}
-                            onMouseDown={this.handleFieldDeselect}
-                            onTouchStart={this.handleFieldDeselect}
-                        >
-                            {Object.values(placeholders).map(p => {
-                                if (p.type === 'image') {
-                                    return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} ppmm={ppmm} />;
-                                } else if (p.type === 'text') {
-                                    return <TextField key={p.id} cardId={card.id} textPlaceholder={p} ppmm={ppmm} />;
-                                }
-                                return null;
-                            })}
-                        </div>
+                    <div
+                        className={`${style.card} ${isActiveCard ? style.active : ''}`}
+                        id={`card_${card.id}`}
+                        ref={measureRef}
+                        style={{
+                            width: `${width * zoom}mm`,
+                            height: `${height * zoom}mm`,
+                            position: 'relative',
+                            overflow: 'hidden',
+                        }}
+                        onMouseDown={this.handleFieldDeselect}
+                        onTouchStart={this.handleFieldDeselect}
+                    >
+                        {Object.values(placeholders).map(p => {
+                            if (p.type === 'image') {
+                                return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} ppmm={ppmm} />;
+                            } else if (p.type === 'text') {
+                                return <TextField key={p.id} cardId={card.id} textPlaceholder={p} ppmm={ppmm} />;
+                            }
+                            return null;
+                        })}
                     </div>
                 )}
             </Measure>
@@ -100,6 +99,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         width: state.cardsets.width,
         height: state.cardsets.height,
         isActiveCard: state.cardsets.activeCard === props.card.id,
+        zoom: state.cardsets.zoom,
     };
 };
 

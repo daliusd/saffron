@@ -63,6 +63,7 @@ export const CARDSET_UPDATE_DATA_SUCCESS = 'CARDSET_UPDATE_DATA_SUCCESS';
 export const CARDSET_UPDATE_DATA_FAILURE = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
 export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
+export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
 export const IMAGE_LIST_REQUEST = 'IMAGE_LIST_REQUEST';
 export const IMAGE_LIST_SUCCESS = 'IMAGE_LIST_SUCCESS';
 export const IMAGE_LIST_FAILURE = 'IMAGE_LIST_FAILURE';
@@ -392,6 +393,10 @@ export interface CardSetSetSidebarState {
     type: typeof CARDSET_SET_SIDEBAR_STATE;
     sidebarState: SidebarState | null;
 }
+export interface CardSetSetZoom {
+    type: typeof CARDSET_SET_ZOOM;
+    zoom: number;
+}
 
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
 
@@ -428,7 +433,8 @@ export type CardSetModifyAction =
     | CardSetChangeText
     | CardSetChangeImage
     | CardSetSetActiveCardAndPlaceholder
-    | CardSetSetSidebarState;
+    | CardSetSetSidebarState
+    | CardSetSetZoom;
 
 export type CardSetAction =
     | CardSetCreateAction
@@ -734,6 +740,13 @@ export const cardSetSetSidebarState = (sidebarState: SidebarState | null): CardS
     return {
         type: CARDSET_SET_SIDEBAR_STATE,
         sidebarState,
+    };
+};
+
+export const cardSetSetZoom = (zoom: number): CardSetSetZoom => {
+    return {
+        type: CARDSET_SET_ZOOM,
+        zoom,
     };
 };
 

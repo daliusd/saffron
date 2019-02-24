@@ -33,6 +33,7 @@ import {
     CARDSET_SELECT_SUCCESS,
     CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
     CARDSET_SET_SIDEBAR_STATE,
+    CARDSET_SET_ZOOM,
     CARDSET_UPDATE_CARD_COUNT,
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_REQUEST,
@@ -155,6 +156,7 @@ export interface CardSetState {
     images: PlaceholdersImageInfoByCardCollection;
     textSettings: TextSettings;
     activeSidebar: SidebarState | null;
+    zoom: number;
 }
 
 export const DefaultCardSetState: CardSetState = {
@@ -179,6 +181,7 @@ export const DefaultCardSetState: CardSetState = {
         fontSize: DEFAULT_FONT_SIZE,
     },
     activeSidebar: null,
+    zoom: 1,
 };
 
 export interface ImageState {
@@ -853,6 +856,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             return {
                 ...state,
                 activeSidebar: action.sidebarState,
+            };
+        }
+        case CARDSET_SET_ZOOM: {
+            return {
+                ...state,
+                zoom: action.zoom,
             };
         }
         default:

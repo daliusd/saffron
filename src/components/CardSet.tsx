@@ -11,6 +11,7 @@ import {
     cardSetChangeHeight,
     cardSetChangeWidth,
     cardSetCreateCard,
+    cardSetSetZoom,
     gameCreatePdfRequest,
 } from '../actions';
 import Card from './Card';
@@ -27,6 +28,7 @@ interface StateProps {
     cardsById: CardsCollection;
     isCreatingPdf: boolean;
     activity: number;
+    zoom: number;
 }
 
 interface DispatchProps {
@@ -75,6 +77,11 @@ export class CardSet extends Component<Props, LocalState> {
         dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
     };
 
+    handleZoom = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetSetZoom(parseFloat(event.target.value)));
+    };
+
     handlePageWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ pageWidth: parseFloat(event.target.value) });
     };
@@ -97,7 +104,7 @@ export class CardSet extends Component<Props, LocalState> {
     };
 
     render() {
-        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf, activity } = this.props;
+        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf, activity, zoom } = this.props;
 
         return (
             isAuthenticated && (
@@ -136,11 +143,24 @@ export class CardSet extends Component<Props, LocalState> {
                                     value={height}
                                 />
                             </div>
+                            <div className="form">
+                                <label htmlFor="zoom">Zoom (if you want to see details or big picture)</label>
+                                <input
+                                    id="zoom"
+                                    type="number"
+                                    min="0.1"
+                                    step="0.1"
+                                    onChange={this.handleZoom}
+                                    className="form-control"
+                                    placeholder="zoom"
+                                    value={zoom}
+                                />
+                            </div>
                             {(activity & ACTIVITY_SELECTING) === ACTIVITY_SELECTING && <Loader />}
                             <div className={style.cardset}>
                                 <ul
                                     style={{
-                                        gridTemplateColumns: `repeat(auto-fill, minmax(${width}mm, 1fr))`,
+                                        gridTemplateColumns: `repeat(auto-fill, minmax(${width * zoom}mm, 1fr))`,
                                     }}
                                 >
                                     {cardsAllIds &&
@@ -211,6 +231,7 @@ const mapStateToProps = (state: State): StateProps => {
         activity: state.cardsets.activity,
         width: state.cardsets.width,
         height: state.cardsets.height,
+        zoom: state.cardsets.zoom,
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
