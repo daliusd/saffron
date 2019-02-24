@@ -17,6 +17,8 @@ interface OwnProps {
     cardId: string;
     ppmm: number;
     textPlaceholder: TextPlaceholderType;
+    cardWidth: number;
+    cardHeight: number;
 }
 
 interface StateProps {
@@ -46,7 +48,7 @@ class TextField extends PureComponent<Props> {
     };
 
     render() {
-        const { textPlaceholder, text, ppmm } = this.props;
+        const { textPlaceholder, text, ppmm, cardWidth, cardHeight } = this.props;
 
         return (
             <FieldController
@@ -60,6 +62,8 @@ class TextField extends PureComponent<Props> {
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
+                cardWidth={cardWidth}
+                cardHeight={cardHeight}
             >
                 {text === '' && (
                     <div

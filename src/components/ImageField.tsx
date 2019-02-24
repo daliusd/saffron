@@ -17,6 +17,8 @@ interface OwnProps {
     cardId: string;
     ppmm: number;
     imagePlaceholder: ImagePlaceholderType;
+    cardWidth: number;
+    cardHeight: number;
 }
 
 interface StateProps {
@@ -101,7 +103,7 @@ class ImageField extends PureComponent<Props> {
     };
 
     render() {
-        const { imagePlaceholder, imageUrl, ppmm } = this.props;
+        const { imagePlaceholder, imageUrl, ppmm, cardWidth, cardHeight } = this.props;
 
         return (
             <FieldController
@@ -115,6 +117,8 @@ class ImageField extends PureComponent<Props> {
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
+                cardWidth={cardWidth}
+                cardHeight={cardHeight}
             >
                 <div
                     ref={this.imageDiv}

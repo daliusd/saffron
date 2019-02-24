@@ -19,6 +19,8 @@ interface OwnProps {
     onDrag: (x: number, y: number) => void;
     onResize: (width: number, height: number) => void;
     onRotate: (angle: number) => void;
+    cardWidth: number;
+    cardHeight: number;
 }
 
 interface StateProps {
@@ -163,10 +165,18 @@ class FieldController extends React.Component<Props> {
 
     handleDragMove = (co: { clientX: number; clientY: number }) => {
         if (this.cDiv.current === null) return;
+        const { width, height, cardWidth, cardHeight } = this.props;
         this.moving = true;
 
-        const x = co.clientX - this.relX;
-        const y = co.clientY - this.relY;
+        const { rx, ry } = this.rotateVec(width / 2, height / 2, this.currentAngle);
+
+        const dx = Math.abs(rx) - width / 2;
+        const dy = Math.abs(ry) - height / 2;
+        const dx2 = Math.abs(rx) + width / 2;
+        const dy2 = Math.abs(ry) + height / 2;
+
+        const x = Math.min(Math.max(co.clientX - this.relX, dx), cardWidth - dx2);
+        const y = Math.min(Math.max(co.clientY - this.relY, dy), cardHeight - dy2);
         this.cDiv.current.style.left = x + 'px';
         this.cDiv.current.style.top = y + 'px';
     };

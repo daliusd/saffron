@@ -80,9 +80,27 @@ class Card extends Component<Props, LocalState> {
                     >
                         {Object.values(placeholders).map(p => {
                             if (p.type === 'image') {
-                                return <ImageField key={p.id} cardId={card.id} imagePlaceholder={p} ppmm={ppmm} />;
+                                return (
+                                    <ImageField
+                                        key={p.id}
+                                        cardId={card.id}
+                                        imagePlaceholder={p}
+                                        ppmm={ppmm}
+                                        cardWidth={this.state.dimensions.width}
+                                        cardHeight={this.state.dimensions.height}
+                                    />
+                                );
                             } else if (p.type === 'text') {
-                                return <TextField key={p.id} cardId={card.id} textPlaceholder={p} ppmm={ppmm} />;
+                                return (
+                                    <TextField
+                                        key={p.id}
+                                        cardId={card.id}
+                                        textPlaceholder={p}
+                                        ppmm={ppmm}
+                                        cardWidth={this.state.dimensions.width}
+                                        cardHeight={this.state.dimensions.height}
+                                    />
+                                );
                             }
                             return null;
                         })}
