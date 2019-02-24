@@ -1,4 +1,5 @@
 .view {
+    overflow: hidden;
 }
 
 .disabled i {

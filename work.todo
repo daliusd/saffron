@@ -138,6 +138,7 @@
     + initial work
     + Color picker
     + Show image selection in sidebar
++ Hide image selection if image placeholder is not selected
 - Zoom control
 
 - Background control

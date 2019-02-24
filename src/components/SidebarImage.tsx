@@ -76,37 +76,41 @@ export class SidebarImage extends Component<Props> {
                     </button>
                 </div>
 
-                <div>
-                    <img
-                        src={imageUrl}
-                        alt=""
-                        style={{
-                            width: 100,
-                            height: 100,
-                        }}
-                    />
-                </div>
-
-                <div>
-                    <input type="text" value={filter} onChange={this.handleFilterChange} />
-                </div>
-
-                <div>
-                    {this.props.images.map(im => {
-                        return (
+                {activePlaceholder && activePlaceholder.type === 'image' && (
+                    <>
+                        <div>
                             <img
-                                key={im.id}
-                                src={`/api/imagefiles/${im.name}`}
-                                onClick={() => this.handleImageSelect(im.name)}
+                                src={imageUrl}
                                 alt=""
                                 style={{
                                     width: 100,
                                     height: 100,
                                 }}
                             />
-                        );
-                    })}
-                </div>
+                        </div>
+
+                        <div>
+                            <input type="text" value={filter} onChange={this.handleFilterChange} />
+                        </div>
+
+                        <div>
+                            {this.props.images.map(im => {
+                                return (
+                                    <img
+                                        key={im.id}
+                                        src={`/api/imagefiles/${im.name}`}
+                                        onClick={() => this.handleImageSelect(im.name)}
+                                        alt=""
+                                        style={{
+                                            width: 100,
+                                            height: 100,
+                                        }}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </>
+                )}
             </div>
         );
     }
