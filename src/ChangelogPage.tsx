@@ -27,6 +27,7 @@ export default class ChangelogPage extends Component {
                 <h2>2019-02-24</h2>
                 <ul>
                     <li>Sidebar created for lighter, cleaner and faster UI.</li>
+                    <li>Zoom added to card set for more flexibility while viewing or editing.</li>
                 </ul>
                 <h2>2019-02-23</h2>
                 <ul>
