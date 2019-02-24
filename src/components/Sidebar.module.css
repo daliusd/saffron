@@ -1,0 +1,64 @@
+.sidebar {
+    margin: 4px;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+}
+
+.controls {
+    padding-bottom: 4px;
+}
+
+.controls i {
+    font-size: 32px;
+    padding: 4px;
+}
+
+.controls i:hover {
+    background-color: var(--color-3);
+    border-radius: 0.25em;
+}
+
+.controls i.active {
+    background-color: var(--color-3);
+    border-top-left-radius: 0.25em;
+    border-bottom-left-radius: 0.25em;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.view {
+    background-color: var(--color-3);
+    border-radius: 0.25em;
+    width: 15em;
+    padding: 4px;
+}
+
+.view button,
+.view input {
+    background-color: var(--color-3);
+    padding: 0.25em;
+    color: inherit;
+    border: none;
+    font: inherit;
+    font-size: 1.5em;
+    line-height: 1.5;
+    cursor: pointer;
+    height: 2em;
+    margin: 0;
+}
+
+.view input {
+    padding: 0;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+    width: 2em;
+    text-align: right;
+}
+
+.view input:hover,
+.view button:hover {
+    background-color: var(--color-2);
+    border-radius: 0.25em;
+    border: 0.1em solid var(--color-3);
+    padding: 0.15em;
+}

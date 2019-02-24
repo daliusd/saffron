@@ -32,6 +32,7 @@ import {
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
     CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
+    CARDSET_SET_SIDEBAR_STATE,
     CARDSET_UPDATE_CARD_COUNT,
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_REQUEST,
@@ -78,6 +79,7 @@ import {
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
+    SidebarState,
     SignUpAction,
     TextPlaceholderType,
 } from './actions';
@@ -152,6 +154,7 @@ export interface CardSetState {
     texts: PlaceholdersTextInfoByCardCollection;
     images: PlaceholdersImageInfoByCardCollection;
     textSettings: TextSettings;
+    activeSidebar: SidebarState | null;
 }
 
 export const DefaultCardSetState: CardSetState = {
@@ -175,6 +178,7 @@ export const DefaultCardSetState: CardSetState = {
         fontVariant: DEFAULT_FONT_VARIANT,
         fontSize: DEFAULT_FONT_SIZE,
     },
+    activeSidebar: null,
 };
 
 export interface ImageState {
@@ -820,6 +824,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         }
         case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
             let textSettings = { ...state.textSettings };
+            let activeSidebar = action.cardId !== null ? SidebarState.Details : state.activeSidebar;
             if (action.placeholderId !== null) {
                 const placeholder = state.placeholders[action.placeholderId];
                 if (placeholder.type === 'text') {
@@ -828,6 +833,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     textSettings.fontFamily = placeholder.fontFamily;
                     textSettings.fontVariant = placeholder.fontVariant;
                     textSettings.fontSize = placeholder.fontSize;
+
+                    activeSidebar = SidebarState.Text;
+                } else {
+                    activeSidebar = SidebarState.Image;
                 }
             }
 
@@ -836,6 +845,14 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 activeCard: action.cardId,
                 activePlaceholder: action.placeholderId,
                 textSettings,
+                activeSidebar,
+            };
+        }
+
+        case CARDSET_SET_SIDEBAR_STATE: {
+            return {
+                ...state,
+                activeSidebar: action.sidebarState,
             };
         }
         default:

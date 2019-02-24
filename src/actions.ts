@@ -62,6 +62,7 @@ export const CARDSET_UPDATE_DATA_REQUEST = 'CARDSET_UPDATE_DATA_REQUEST';
 export const CARDSET_UPDATE_DATA_SUCCESS = 'CARDSET_UPDATE_DATA_SUCCESS';
 export const CARDSET_UPDATE_DATA_FAILURE = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
+export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
 export const IMAGE_LIST_REQUEST = 'IMAGE_LIST_REQUEST';
 export const IMAGE_LIST_SUCCESS = 'IMAGE_LIST_SUCCESS';
 export const IMAGE_LIST_FAILURE = 'IMAGE_LIST_FAILURE';
@@ -382,6 +383,16 @@ export interface CardSetSetActiveCardAndPlaceholder {
     placeholderId: string | null;
 }
 
+export enum SidebarState {
+    Details,
+    Image,
+    Text,
+}
+export interface CardSetSetSidebarState {
+    type: typeof CARDSET_SET_SIDEBAR_STATE;
+    sidebarState: SidebarState | null;
+}
+
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
 
 export interface CardSetUpdateDataRequest {
@@ -416,7 +427,8 @@ export type CardSetModifyAction =
     | CardSetChangeActiveTextPlaceholderFontSize
     | CardSetChangeText
     | CardSetChangeImage
-    | CardSetSetActiveCardAndPlaceholder;
+    | CardSetSetActiveCardAndPlaceholder
+    | CardSetSetSidebarState;
 
 export type CardSetAction =
     | CardSetCreateAction
@@ -715,6 +727,13 @@ export const cardSetActiveCardAndPlaceholder = (
         type: CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
         cardId,
         placeholderId,
+    };
+};
+
+export const cardSetSetSidebarState = (sidebarState: SidebarState | null): CardSetSetSidebarState => {
+    return {
+        type: CARDSET_SET_SIDEBAR_STATE,
+        sidebarState,
     };
 };
 

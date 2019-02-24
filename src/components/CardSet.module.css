@@ -1,6 +1,22 @@
 .cardset ul {
     display: grid;
     list-style: none;
-    margin: 1em;
+    margin: 0;
     padding: 0;
+}
+
+.cardsetview {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.sidebar {
+    background-color: var(--color-2);
+    position: sticky;
+    top: 0;
+    height: 50vh;
+    box-sizing: border-box;
+    border-radius: 1em;
 }

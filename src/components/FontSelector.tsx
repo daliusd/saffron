@@ -1,5 +1,3 @@
-import './FontSelector.css';
-
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import Select from 'react-select';
@@ -112,7 +110,6 @@ class FontSelector extends Component<Props> {
                 />
                 <Select
                     className={style.fontFamily}
-                    classNamePrefix="fontFamily"
                     value={selectedFontFamily}
                     onChange={this.handleChange}
                     options={options}

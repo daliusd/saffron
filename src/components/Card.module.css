@@ -7,6 +7,10 @@
     border: 1px solid black;
 }
 
+.active {
+    border: 1px dotted hotpink;
+}
+
 .card button,
 .card input {
     background-color: var(--color-2);

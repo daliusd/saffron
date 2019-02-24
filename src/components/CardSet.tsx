@@ -7,6 +7,7 @@ import {
     CardType,
     CardsCollection,
     Dispatch,
+    cardSetActiveCardAndPlaceholder,
     cardSetChangeHeight,
     cardSetChangeWidth,
     cardSetCreateCard,
@@ -15,6 +16,7 @@ import {
 import Card from './Card';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import Loader from './Loader';
+import Sidebar from './Sidebar';
 import style from './CardSet.module.css';
 
 interface StateProps {
@@ -89,6 +91,11 @@ export class CardSet extends Component<Props, LocalState> {
         this.setState({ leftRightMargin: parseFloat(event.target.value) });
     };
 
+    handleClickOutsideOfCard = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetActiveCardAndPlaceholder(null, null));
+    };
+
     render() {
         const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf, activity } = this.props;
 
@@ -99,47 +106,55 @@ export class CardSet extends Component<Props, LocalState> {
                     <KawaiiMessage character={Character.Ghost}>
                         <p>Here you can design your cards.</p>
                     </KawaiiMessage>
-                    <div className="form">
-                        <label htmlFor="card_width">Card width (mm):</label>
-                        <input
-                            id="card_width"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            onChange={this.handleWidthChange}
-                            className="form-control"
-                            placeholder="width"
-                            value={width}
-                        />
-                        <label htmlFor="card_height">Card height (mm):</label>
-                        <input
-                            id="card_height"
-                            type="number"
-                            min="0"
-                            step="0.1"
-                            onChange={this.handleHeightChange}
-                            className="form-control"
-                            placeholder="height"
-                            value={height}
-                        />
-                    </div>
-                    {(activity & ACTIVITY_SELECTING) === ACTIVITY_SELECTING && <Loader />}
-                    <div className={style.cardset}>
-                        <ul
-                            style={{
-                                gridTemplateColumns: `repeat(auto-fill, minmax(${width}mm, 1fr))`,
-                            }}
-                        >
-                            {cardsAllIds &&
-                                cardsAllIds.map(cardId => (
-                                    <li key={cardId}>
-                                        <Card card={cardsById[cardId]} />
-                                    </li>
-                                ))}
-                        </ul>
-                    </div>
-                    <div className="form">
-                        <button onClick={this.handleCreateCardClick}>Create Card</button>
+
+                    <div className={style.cardsetview}>
+                        <div className={style.sidebar}>
+                            <Sidebar />
+                        </div>
+                        <div onMouseDown={this.handleClickOutsideOfCard} onTouchStart={this.handleClickOutsideOfCard}>
+                            <div className="form">
+                                <label htmlFor="card_width">Card width (mm):</label>
+                                <input
+                                    id="card_width"
+                                    type="number"
+                                    min="0"
+                                    step="0.1"
+                                    onChange={this.handleWidthChange}
+                                    className="form-control"
+                                    placeholder="width"
+                                    value={width}
+                                />
+                                <label htmlFor="card_height">Card height (mm):</label>
+                                <input
+                                    id="card_height"
+                                    type="number"
+                                    min="0"
+                                    step="0.1"
+                                    onChange={this.handleHeightChange}
+                                    className="form-control"
+                                    placeholder="height"
+                                    value={height}
+                                />
+                            </div>
+                            {(activity & ACTIVITY_SELECTING) === ACTIVITY_SELECTING && <Loader />}
+                            <div className={style.cardset}>
+                                <ul
+                                    style={{
+                                        gridTemplateColumns: `repeat(auto-fill, minmax(${width}mm, 1fr))`,
+                                    }}
+                                >
+                                    {cardsAllIds &&
+                                        cardsAllIds.map(cardId => (
+                                            <li key={cardId}>
+                                                <Card card={cardsById[cardId]} />
+                                            </li>
+                                        ))}
+                                </ul>
+                            </div>
+                            <div className="form">
+                                <button onClick={this.handleCreateCardClick}>Create Card</button>
+                            </div>
+                        </div>
                     </div>
 
                     <KawaiiMessage character={Character.Ghost} mood="excited">

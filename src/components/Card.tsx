@@ -2,25 +2,9 @@ import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
 
-import {
-    CardType,
-    Dispatch,
-    PlaceholderType,
-    PlaceholdersCollection,
-    cardSetActiveCardAndPlaceholder,
-    cardSetAddImagePlaceholder,
-    cardSetAddTextPlaceholder,
-    cardSetChangeActiveTextPlaceholderAlign,
-    cardSetCloneCard,
-    cardSetRemoveActivePlaceholder,
-    cardSetRemoveCard,
-    cardSetUpdateCardCount,
-} from '../actions';
+import { CardType, Dispatch, PlaceholdersCollection, cardSetActiveCardAndPlaceholder } from '../actions';
 import { State } from '../reducers';
-import ColorButton from './ColorButton';
-import FontSelector from './FontSelector';
 import ImageField from './ImageField';
-import ImageSelectionDialog from './ImageSelectionDialog';
 import TextField from './TextField';
 import style from './Card.module.css';
 
@@ -32,8 +16,7 @@ interface StateProps {
     placeholders: PlaceholdersCollection;
     width: number;
     height: number;
-    activePlaceholder: PlaceholderType | null;
-    imageUrl: string;
+    isActiveCard: boolean;
 }
 
 interface DispatchProps {
@@ -47,7 +30,6 @@ interface LocalState {
         width: number;
         height: number;
     };
-    imageSelectionDialogIsOpen: boolean;
 }
 
 class Card extends Component<Props, LocalState> {
@@ -56,79 +38,20 @@ class Card extends Component<Props, LocalState> {
             width: -1,
             height: -1,
         },
-        imageSelectionDialogIsOpen: false,
-    };
-
-    handleRemoveCardClick = () => {
-        const { card, dispatch } = this.props;
-        dispatch(cardSetRemoveCard(card));
-    };
-
-    handleCloneCardClick = () => {
-        const { card, dispatch } = this.props;
-        dispatch(cardSetCloneCard(card));
-    };
-
-    handleCountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { card, dispatch } = this.props;
-        dispatch(cardSetUpdateCardCount(card, parseInt(event.target.value)));
-    };
-
-    handleAddTextClick = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetAddTextPlaceholder());
-    };
-
-    handleAddImageClick = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetAddImagePlaceholder());
-    };
-
-    handleRemoveClick = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
-            dispatch(cardSetRemoveActivePlaceholder());
-        }
-    };
-
-    handleChangeImage = () => {
-        const { activePlaceholder } = this.props;
-        if (activePlaceholder !== null && activePlaceholder.type === 'image') {
-            this.setState({ imageSelectionDialogIsOpen: true });
-        }
-    };
-
-    handleImageSelectionDialogClose = () => {
-        this.setState({ imageSelectionDialogIsOpen: false });
-    };
-
-    handleSetTextAlignLeft = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('left'));
-    };
-
-    handleSetTextAlignCenter = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('center'));
-    };
-
-    handleSetTextAlignRight = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
     };
 
     handleFieldDeselect = (event: React.MouseEvent | React.TouchEvent) => {
         const { dispatch, card } = this.props;
         const el = event.target as HTMLElement;
         if (el.getAttribute('id') === `card_${card.id}`) {
-            dispatch(cardSetActiveCardAndPlaceholder(null, null));
+            dispatch(cardSetActiveCardAndPlaceholder(card.id, null));
+            event.stopPropagation();
         }
     };
 
     render() {
-        const { placeholders, card, width, height, imageUrl, activePlaceholder } = this.props;
+        const { placeholders, card, width, height, isActiveCard } = this.props;
         const ppmm = this.state.dimensions.width / width;
-        const imageSelected = activePlaceholder !== null && activePlaceholder.type === 'image';
 
         return (
             <Measure
@@ -143,7 +66,7 @@ class Card extends Component<Props, LocalState> {
                 {({ measureRef }) => (
                     <div className={style.card}>
                         <div
-                            className={style.cardWorkarea}
+                            className={`${style.cardWorkarea} ${isActiveCard ? style.active : ''}`}
                             id={`card_${card.id}`}
                             ref={measureRef}
                             style={{
@@ -164,66 +87,6 @@ class Card extends Component<Props, LocalState> {
                                 return null;
                             })}
                         </div>
-
-                        <div>
-                            <button onClick={this.handleAddImageClick} title="Add image field">
-                                <i className="material-icons">add_photo_alternate</i>
-                            </button>
-                            <button onClick={this.handleAddTextClick} title="Add text field">
-                                <i className="material-icons">text_fields</i>
-                            </button>
-
-                            <button onClick={this.handleCloneCardClick} title="Clone card">
-                                <i className="material-icons">file_copy</i>
-                            </button>
-                            <input
-                                type="number"
-                                value={card.count.toString()}
-                                onChange={this.handleCountChange}
-                                title="Number of card's copies"
-                            />
-                            <button onClick={this.handleRemoveCardClick} title="Remove card">
-                                <i className="material-icons">delete</i>
-                            </button>
-                        </div>
-
-                        <div>
-                            <button onClick={this.handleSetTextAlignLeft} title="Align text left">
-                                <i className="material-icons">format_align_left</i>
-                            </button>
-                            <button onClick={this.handleSetTextAlignCenter} title="Align text center">
-                                <i className="material-icons">format_align_center</i>
-                            </button>
-                            <button onClick={this.handleSetTextAlignRight} title="Align text right">
-                                <i className="material-icons">format_align_right</i>
-                            </button>
-                            <ColorButton />
-                            <FontSelector />
-
-                            <button
-                                className={imageSelected ? '' : style.disabled}
-                                onClick={this.handleChangeImage}
-                                title="Change image"
-                            >
-                                <i className="material-icons">photo</i>
-                            </button>
-
-                            <ImageSelectionDialog
-                                imageUrl={imageUrl}
-                                cardId={card.id}
-                                placeholderId={activePlaceholder !== null ? activePlaceholder.id : ''}
-                                onClose={this.handleImageSelectionDialogClose}
-                                isOpen={this.state.imageSelectionDialogIsOpen}
-                            />
-
-                            <button
-                                className={activePlaceholder === null ? style.disabled : ''}
-                                onClick={this.handleRemoveClick}
-                                title="Remove field"
-                            >
-                                <i className="material-icons">remove</i>
-                            </button>
-                        </div>
                     </div>
                 )}
             </Measure>
@@ -232,25 +95,11 @@ class Card extends Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const activePlaceholder =
-        state.cardsets.activePlaceholder !== null
-            ? state.cardsets.placeholders[state.cardsets.activePlaceholder]
-            : null;
-
-    const imageUrl =
-        state.cardsets.images &&
-        state.cardsets.images[props.card.id] &&
-        activePlaceholder !== null &&
-        activePlaceholder.type === 'image' &&
-        state.cardsets.images[props.card.id][activePlaceholder.id]
-            ? state.cardsets.images[props.card.id][activePlaceholder.id].url
-            : '';
     return {
         placeholders: state.cardsets.placeholders,
         width: state.cardsets.width,
         height: state.cardsets.height,
-        activePlaceholder,
-        imageUrl,
+        isActiveCard: state.cardsets.activeCard === props.card.id,
     };
 };
 
