@@ -29,3 +29,7 @@
 .fieldcontroller:hover .controller {
     visibility: visible;
 }
+
+.fieldcontrolleractive .controller {
+    visibility: visible;
+}
