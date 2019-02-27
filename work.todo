@@ -144,6 +144,7 @@
 + Do not allow to move fields outside of card
 
 - Improve progress bar
+- Retain admin status during refresh
 
 - Background control
     - Use color for background
