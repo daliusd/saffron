@@ -8,8 +8,16 @@ import { connect } from 'react-redux';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import React, { Component } from 'react';
+import axios from 'axios';
 
-import { Dispatch, messageRequest } from '../actions';
+import {
+    Dispatch,
+    FPAbortCallback,
+    FPErrorCallback,
+    FPLoadCallback,
+    FPProgressCallback,
+    cardSetUploadImage,
+} from '../actions';
 import { State } from '../reducers';
 import style from './SidebarUpload.module.css';
 
@@ -31,16 +39,27 @@ interface DispatchProps {
 type Props = StateProps & DispatchProps & OwnProps;
 
 export class SidebarDetails extends Component<Props> {
-    handleAddFile = (error: { main: string; sub: string }, file: object) => {
-        const { dispatch } = this.props;
-        if (error !== null) {
-            dispatch(messageRequest('error', error.main));
+    handleProcess = (
+        fieldName: string,
+        file: File,
+        metadata: { [propName: string]: string },
+        load: FPLoadCallback,
+        error: FPErrorCallback,
+        progress: FPProgressCallback,
+        abort: FPAbortCallback,
+    ) => {
+        const { dispatch, activeGame } = this.props;
+
+        if (activeGame === null) {
+            abort();
             return;
         }
-        // console.log(error);
-        console.log(file);
-        // file.serverId
-        // console.log(file.filenameWithoutExtension);
+
+        let source = axios.CancelToken.source();
+
+        dispatch(cardSetUploadImage(activeGame, file, load, error, progress, abort, source.token));
+
+        return { abort: source.cancel };
     };
 
     render() {
@@ -50,9 +69,10 @@ export class SidebarDetails extends Component<Props> {
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
                 <FilePond
                     allowMultiple={true}
-                    server="/api/filepond"
+                    server={{
+                        process: this.handleProcess,
+                    }}
                     allowRevert={false}
-                    onaddfile={this.handleAddFile}
                     acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml']}
                 />
             </div>

@@ -1,5 +1,6 @@
 import shortid from 'shortid';
 import { Dispatch as ReduxDispatch } from 'redux';
+import { CancelToken } from 'axios';
 
 export const INIT_REQUEST = 'INIT_REQUEST';
 export const MESSAGE_DISPLAY = 'MESSAGE_DISPLAY';
@@ -64,6 +65,9 @@ export const CARDSET_UPDATE_DATA_FAILURE = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
 export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
 export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
+export const CARDSET_UPLOAD_IMAGE = 'CARDSET_UPLOAD_IMAGE';
+export const CARDSET_UPLOAD_IMAGE_SUCCESS = 'CARDSET_UPLOAD_IMAGE_SUCCESS';
+export const CARDSET_UPLOAD_IMAGE_FAILURE = 'CARDSET_UPLOAD_IMAGE_FAILURE';
 export const IMAGE_LIST_REQUEST = 'IMAGE_LIST_REQUEST';
 export const IMAGE_LIST_SUCCESS = 'IMAGE_LIST_SUCCESS';
 export const IMAGE_LIST_FAILURE = 'IMAGE_LIST_FAILURE';
@@ -399,6 +403,30 @@ export interface CardSetSetZoom {
     zoom: number;
 }
 
+export type FPLoadCallback = (id: string) => void;
+export type FPErrorCallback = (error: string) => void;
+export type FPProgressCallback = (computable: boolean, loaded: number, total: number) => void;
+export type FPAbortCallback = () => void;
+
+export interface CardSetUploadImage {
+    type: typeof CARDSET_UPLOAD_IMAGE;
+    gameId: string;
+    file: File;
+    load: FPLoadCallback;
+    error: FPErrorCallback;
+    progress: FPProgressCallback;
+    abort: FPAbortCallback;
+    cancelToken: CancelToken;
+}
+
+export interface CardSetUploadImageSuccess {
+    type: typeof CARDSET_UPLOAD_IMAGE_SUCCESS;
+}
+
+export interface CardSetUploadImageFailure {
+    type: typeof CARDSET_UPLOAD_IMAGE_FAILURE;
+}
+
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
 
 export interface CardSetUpdateDataRequest {
@@ -435,7 +463,10 @@ export type CardSetModifyAction =
     | CardSetChangeImage
     | CardSetSetActiveCardAndPlaceholder
     | CardSetSetSidebarState
-    | CardSetSetZoom;
+    | CardSetSetZoom
+    | CardSetUploadImage
+    | CardSetUploadImageSuccess
+    | CardSetUploadImageFailure;
 
 export type CardSetAction =
     | CardSetCreateAction
@@ -748,6 +779,27 @@ export const cardSetSetZoom = (zoom: number): CardSetSetZoom => {
     return {
         type: CARDSET_SET_ZOOM,
         zoom,
+    };
+};
+
+export const cardSetUploadImage = (
+    gameId: string,
+    file: File,
+    load: FPLoadCallback,
+    error: FPErrorCallback,
+    progress: FPProgressCallback,
+    abort: FPAbortCallback,
+    cancelToken: CancelToken,
+): CardSetUploadImage => {
+    return {
+        type: CARDSET_UPLOAD_IMAGE,
+        gameId,
+        file,
+        load,
+        error,
+        progress,
+        abort,
+        cancelToken,
     };
 };
 

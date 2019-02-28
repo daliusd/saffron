@@ -1,5 +1,6 @@
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
+import { CancelToken } from 'axios';
 import jwtDecode from 'jwt-decode';
 
 import {
@@ -34,9 +35,13 @@ import {
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_REQUEST,
     CARDSET_UPDATE_DATA_SUCCESS,
+    CARDSET_UPLOAD_IMAGE,
+    CARDSET_UPLOAD_IMAGE_FAILURE,
+    CARDSET_UPLOAD_IMAGE_SUCCESS,
     CardSetCreateRequest,
     CardSetSelectRequest,
     CardSetType,
+    CardSetUploadImage,
     CardSetsCollection,
     GAME_CREATE_FAILURE,
     GAME_CREATE_PDF_FAILURE,
@@ -84,6 +89,7 @@ import {
     getRequest,
     getTokens,
     postRequest,
+    postRequestFormDataCancelable,
     putRequest,
     refreshToken,
     registerUser,
@@ -229,6 +235,17 @@ export function* authorizedPostRequest(url: string, data: object): SagaIterator 
     return yield call(postRequest, url, token, data);
 }
 
+export function* authorizedPostFormDataRequest(
+    url: string,
+    data: FormData,
+    progressCallback: (event: ProgressEvent) => void,
+    cancelToken: CancelToken,
+    cancelCallback: () => void,
+): SagaIterator {
+    const token = yield call(getToken, true);
+    return yield call(postRequestFormDataCancelable, url, token, data, progressCallback, cancelToken, cancelCallback);
+}
+
 export function* authorizedPutRequest(url: string, data: object): SagaIterator {
     const token = yield call(getToken, true);
     return yield call(putRequest, url, token, data);
@@ -357,6 +374,31 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
     }
 }
 
+export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaIterator {
+    try {
+        const formData = new FormData();
+        formData.set('gameId', action.gameId);
+        formData.append('filepond', action.file, action.file.name);
+
+        const data = yield call(
+            authorizedPostFormDataRequest,
+            '/api/filepond',
+            formData,
+            (event: ProgressEvent) => action.progress(event.lengthComputable, event.loaded, event.total),
+            action.cancelToken,
+            () => {
+                action.abort();
+            },
+        );
+        action.load(data.id);
+        yield put({ type: CARDSET_UPLOAD_IMAGE_SUCCESS });
+    } catch (e) {
+        yield put({ type: CARDSET_UPLOAD_IMAGE_FAILURE });
+        yield call(putError, e.message);
+        action.error(e.message);
+    }
+}
+
 export function* handleCardSetChange(): SagaIterator {
     try {
         yield call(delay, 1000);
@@ -420,6 +462,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
         takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
+        takeEvery(CARDSET_UPLOAD_IMAGE, handleCardSetUploadImage),
 
         takeLatest(CARDSET_CREATE_CARD, handleCardSetChange),
         takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),

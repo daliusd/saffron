@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, CancelToken } from 'axios';
 
 import { Credentials } from './actions';
 
@@ -107,6 +107,37 @@ export function postRequest(url: string, token: string, data: object) {
         })
         .catch(error => {
             handleAxiosError(error);
+        });
+}
+
+export function postRequestFormDataCancelable(
+    url: string,
+    token: string,
+    data: FormData,
+    progressCallback: (event: ProgressEvent) => void,
+    cancelToken: CancelToken,
+    cancelCallback: () => void,
+) {
+    let config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+        },
+        cancelToken,
+        onUploadProgress: progressCallback,
+    };
+
+    return axios
+        .post(url, data, config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            if (axios.isCancel(error)) {
+                cancelCallback();
+            } else {
+                handleAxiosError(error);
+            }
         });
 }
 
