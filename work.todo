@@ -145,6 +145,7 @@
 
 - Improve progress bar
 - Retain admin status during refresh
+- Show controls only if touch events are detected
 
 - Background control
     - Use color for background

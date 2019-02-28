@@ -15,6 +15,10 @@ import {
 import { State } from '../reducers';
 import style from './SidebarImage.module.css';
 
+interface OwnProps {
+    visible: boolean;
+}
+
 interface StateProps {
     isAuthenticated: boolean;
     activePlaceholder: PlaceholderType | null;
@@ -28,7 +32,7 @@ interface DispatchProps {
     dispatch: Dispatch;
 }
 
-type Props = StateProps & DispatchProps;
+type Props = StateProps & DispatchProps & OwnProps;
 
 export class SidebarImage extends Component<Props> {
     handleAddImageClick = () => {
@@ -58,10 +62,10 @@ export class SidebarImage extends Component<Props> {
     };
 
     render() {
-        const { activePlaceholder, imageUrl, filter } = this.props;
+        const { activePlaceholder, imageUrl, filter, visible } = this.props;
 
         return (
-            <div className={style.view}>
+            <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
                 <div>
                     <button onClick={this.handleAddImageClick} title="Add image field">
                         <i className="material-icons">add_photo_alternate</i>
@@ -144,4 +148,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, {}, State>(mapStateToProps)(SidebarImage);
+export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarImage);

@@ -13,6 +13,10 @@ import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
 import style from './SidebarText.module.css';
 
+interface OwnProps {
+    visible: boolean;
+}
+
 interface StateProps {
     isAuthenticated: boolean;
     activePlaceholder: PlaceholderType | null;
@@ -22,7 +26,7 @@ interface DispatchProps {
     dispatch: Dispatch;
 }
 
-type Props = StateProps & DispatchProps;
+type Props = StateProps & DispatchProps & OwnProps;
 
 export class SidebarText extends Component<Props> {
     handleAddTextClick = () => {
@@ -53,10 +57,10 @@ export class SidebarText extends Component<Props> {
     };
 
     render() {
-        const { activePlaceholder } = this.props;
+        const { activePlaceholder, visible } = this.props;
 
         return (
-            <div className={style.view}>
+            <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
                 <button onClick={this.handleAddTextClick} title="Add text field">
                     <i className="material-icons">text_fields</i>
                 </button>
@@ -96,4 +100,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, {}, State>(mapStateToProps)(SidebarText);
+export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarText);

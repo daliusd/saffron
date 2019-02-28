@@ -37,6 +37,10 @@
     max-height: 98%;
 }
 
+.hidden {
+    display: none;
+}
+
 .view button,
 .view input {
     background-color: var(--color-3);

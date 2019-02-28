@@ -388,6 +388,7 @@ export enum SidebarState {
     Details,
     Image,
     Text,
+    Upload,
 }
 export interface CardSetSetSidebarState {
     type: typeof CARDSET_SET_SIDEBAR_STATE;
