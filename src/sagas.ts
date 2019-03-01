@@ -321,6 +321,7 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
             state.cardsets.cardsAllIds,
             state.cardsets.cardsById,
             state.cardsets.placeholders,
+            state.cardsets.placeholdersAllIds,
             state.cardsets.texts,
             state.cardsets.images,
             action.pageWidth,
@@ -360,6 +361,9 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
     try {
         const data = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
         const parsedData = JSON.parse(data.data);
+        if (!('placeholdersAllIds' in parsedData) && 'placeholders' in parsedData) {
+            parsedData.placeholdersAllIds = Object.keys(parsedData.placeholders);
+        }
         yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
             type: CARDSET_SELECT_SUCCESS,

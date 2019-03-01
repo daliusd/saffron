@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
 
-import { CardType, Dispatch, PlaceholdersCollection, cardSetActiveCardAndPlaceholder } from '../actions';
+import { CardType, Dispatch, PlaceholdersCollection, cardSetActiveCardAndPlaceholder, IdsArray } from '../actions';
 import { State } from '../reducers';
 import ImageField from './ImageField';
 import TextField from './TextField';
@@ -14,6 +14,7 @@ interface OwnProps {
 
 interface StateProps {
     placeholders: PlaceholdersCollection;
+    placeholdersAllIds: IdsArray;
     width: number;
     height: number;
     isActiveCard: boolean;
@@ -51,7 +52,7 @@ class Card extends Component<Props, LocalState> {
     };
 
     render() {
-        const { placeholders, card, width, height, isActiveCard, zoom } = this.props;
+        const { placeholders, placeholdersAllIds, card, width, height, isActiveCard, zoom } = this.props;
         const ppmm = this.state.dimensions.width / width;
 
         return (
@@ -78,7 +79,8 @@ class Card extends Component<Props, LocalState> {
                         onMouseDown={this.handleFieldDeselect}
                         onTouchStart={this.handleFieldDeselect}
                     >
-                        {Object.values(placeholders).map(p => {
+                        {placeholdersAllIds.map(id => {
+                            const p = placeholders[id];
                             if (p.type === 'image') {
                                 return (
                                     <ImageField
@@ -114,6 +116,7 @@ class Card extends Component<Props, LocalState> {
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     return {
         placeholders: state.cardsets.placeholders,
+        placeholdersAllIds: state.cardsets.placeholdersAllIds,
         width: state.cardsets.width,
         height: state.cardsets.height,
         isActiveCard: state.cardsets.activeCard === props.card.id,

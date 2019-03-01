@@ -286,6 +286,7 @@ export interface CardSetSelectSuccess {
         cardsAllIds: IdsArray;
         cardsById: CardsCollection;
         placeholders: PlaceholdersCollection;
+        placeholdersAllIds: IdsArray;
         texts: PlaceholdersTextInfoByCardCollection;
         images: PlaceholdersImageInfoByCardCollection;
     };

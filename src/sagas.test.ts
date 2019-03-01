@@ -490,11 +490,16 @@ test('handleCardSetSelectRequest', () => {
 
     // Successful request
     expect(gen.next({ id: '345', name: 'test', data: '{ "placeholders": {} }', gameId: '666' }).value).toEqual(
-        call(loadFontsUsedInPlaceholders, { placeholders: {} }),
+        call(loadFontsUsedInPlaceholders, { placeholders: {}, placeholdersAllIds: [] }),
     );
 
     expect(gen.next().value).toEqual(
-        put({ type: CARDSET_SELECT_SUCCESS, id: '345', name: 'test', data: { placeholders: {} } }),
+        put({
+            type: CARDSET_SELECT_SUCCESS,
+            id: '345',
+            name: 'test',
+            data: { placeholders: {}, placeholdersAllIds: [] },
+        }),
     );
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
     expect(gen.next().done).toBeTruthy();

@@ -152,6 +152,7 @@ export interface CardSetState {
     activeCard: string | null;
     activePlaceholder: string | null;
     placeholders: PlaceholdersCollection;
+    placeholdersAllIds: IdsArray;
     texts: PlaceholdersTextInfoByCardCollection;
     images: PlaceholdersImageInfoByCardCollection;
     textSettings: TextSettings;
@@ -167,6 +168,7 @@ export const DefaultCardSetState: CardSetState = {
     activity: 0,
     active: null,
     placeholders: {},
+    placeholdersAllIds: [],
     cardsById: {},
     cardsAllIds: [],
     activeCard: null,
@@ -401,6 +403,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
                 placeholders: action.data.placeholders || {},
+                placeholdersAllIds: action.data.placeholdersAllIds || [],
                 texts: action.data.texts || {},
                 images: action.data.images || {},
                 activeCard: null,
@@ -466,8 +469,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             const cardsAllIds = state.cardsAllIds.filter(id => id !== cardId);
 
             let placeholders = state.placeholders;
+            let placeholdersAllIds = state.placeholdersAllIds;
             if (cardsAllIds.length === 0) {
                 placeholders = {};
+                placeholdersAllIds = [];
             }
 
             return {
@@ -475,6 +480,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 cardsById,
                 cardsAllIds,
                 placeholders,
+                placeholdersAllIds,
                 texts,
                 images,
                 activeCard,
@@ -517,6 +523,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     ...state.placeholders,
                     [id]: textPlaceholder,
                 },
+                placeholdersAllIds: [...state.placeholdersAllIds, id],
             };
         }
         case CARDSET_ADD_IMAGE_PLACEHOLDER: {
@@ -537,14 +544,20 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     ...state.placeholders,
                     [id]: imagePlaceholder,
                 },
+                placeholdersAllIds: [...state.placeholdersAllIds, id],
             };
         }
         case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
             const placeholderId = state.activePlaceholder;
             if (placeholderId !== undefined && placeholderId !== null) {
                 let placeholders = { ...state.placeholders };
+                let placeholdersAllIds = [...state.placeholdersAllIds];
                 if (placeholderId in placeholders) {
                     delete placeholders[placeholderId];
+                }
+                let placeholderIndex = placeholdersAllIds.indexOf(placeholderId);
+                if (placeholderIndex !== -1) {
+                    placeholdersAllIds.splice(placeholderIndex, 1);
                 }
 
                 let texts = { ...state.texts };
@@ -568,6 +581,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 return {
                     ...state,
                     placeholders,
+                    placeholdersAllIds,
                     texts,
                     images,
                     activePlaceholder: null,
