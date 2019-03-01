@@ -76,12 +76,12 @@
     + Use icons from collection
     + Remove url from image placeholder
     + Think: maybe we should use ImageInfo like TextInfo for forward compatibility
+    + Allow uploading custom images
     ? Transparent background
         I assume this will just work if we will pass proper images.
     - Move fields up/down in drawing order
         Check if this does not require fix in PDF renderer.
     - Allow changing image's color if it is from collection
-    - Allow uploading custom images
     - Find more icons or give instructions to users
         Where to get them. https://thenounproject.com/developers/ looks
         like an option but it is not free.
@@ -143,8 +143,10 @@
 + Zoom control
 + Do not allow to move fields outside of card
 
-- Improve progress bar
-- Retain admin status during refresh
++ Retain admin status during refresh
++ Allow to move placeholders up/down in drawing queue
+- Save zoom
+- Improve progress indicator
 - Show controls only if touch events are detected
 
 - Background control

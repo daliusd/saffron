@@ -6,6 +6,8 @@ import {
     PlaceholderType,
     cardSetAddTextPlaceholder,
     cardSetChangeActiveTextPlaceholderAlign,
+    cardSetLowerActivePlaceholderToBottom,
+    cardSetRaiseActivePlaceholderToTop,
     cardSetRemoveActivePlaceholder,
 } from '../actions';
 import { State } from '../reducers';
@@ -56,6 +58,20 @@ export class SidebarText extends Component<Props> {
         }
     };
 
+    handleRaiseToTop = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetRaiseActivePlaceholderToTop());
+        }
+    };
+
+    handleLowerToBottom = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetLowerActivePlaceholderToBottom());
+        }
+    };
+
     render() {
         const { activePlaceholder, visible } = this.props;
 
@@ -72,6 +88,12 @@ export class SidebarText extends Component<Props> {
                 </button>
                 <button onClick={this.handleSetTextAlignRight} title="Align text right">
                     <i className="material-icons">format_align_right</i>
+                </button>
+                <button onClick={this.handleRaiseToTop} title="Raise text to top">
+                    <i className="material-icons">arrow_upward</i>
+                </button>
+                <button onClick={this.handleLowerToBottom} title="Lower text to bottom">
+                    <i className="material-icons">arrow_downward</i>
                 </button>
                 <ColorButton />
                 <FontSelector />

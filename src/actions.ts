@@ -43,6 +43,8 @@ export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER = 'CARDSET_ADD_TEXT_PLACEHOLDER';
 export const CARDSET_ADD_IMAGE_PLACEHOLDER = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
 export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
+export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP';
+export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
@@ -318,6 +320,12 @@ export interface CardSetAddImagePlaceholder {
 export interface CardSetRemoveActivePlaceholder {
     type: typeof CARDSET_REMOVE_ACTIVE_PLACEHOLDER;
 }
+export interface CardSetRaiseActivePlaceholderToTop {
+    type: typeof CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP;
+}
+export interface CardSetLowerActivePlaceholderToBottom {
+    type: typeof CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM;
+}
 
 export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
@@ -449,6 +457,8 @@ export type CardSetModifyAction =
     | CardSetAddTextPlaceholder
     | CardSetAddImagePlaceholder
     | CardSetRemoveActivePlaceholder
+    | CardSetRaiseActivePlaceholderToTop
+    | CardSetLowerActivePlaceholderToBottom
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangePlaceholderPosition
@@ -634,6 +644,18 @@ export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
 export const cardSetRemoveActivePlaceholder = (): CardSetRemoveActivePlaceholder => {
     return {
         type: CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
+    };
+};
+
+export const cardSetRaiseActivePlaceholderToTop = (): CardSetRaiseActivePlaceholderToTop => {
+    return {
+        type: CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
+    };
+};
+
+export const cardSetLowerActivePlaceholderToBottom = (): CardSetLowerActivePlaceholderToBottom => {
+    return {
+        type: CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
     };
 };
 

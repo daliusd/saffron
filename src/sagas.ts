@@ -1,6 +1,6 @@
+import { CancelToken } from 'axios';
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
-import { CancelToken } from 'axios';
 import jwtDecode from 'jwt-decode';
 
 import {
@@ -26,6 +26,8 @@ import {
     CARDSET_CREATE_SUCCESS,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
+    CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
+    CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
     CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
     CARDSET_SELECT_FAILURE,
@@ -475,6 +477,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_ADD_TEXT_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_ADD_IMAGE_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_REMOVE_ACTIVE_PLACEHOLDER, handleCardSetChange),
+        takeLatest(CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP, handleCardSetChange),
+        takeLatest(CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_WIDTH, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_HEIGHT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_POSITION, handleCardSetChange),

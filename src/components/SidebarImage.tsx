@@ -9,6 +9,8 @@ import {
     PlaceholderType,
     cardSetAddImagePlaceholder,
     cardSetChangeImage,
+    cardSetLowerActivePlaceholderToBottom,
+    cardSetRaiseActivePlaceholderToTop,
     cardSetRemoveActivePlaceholder,
     imageListRequest,
 } from '../actions';
@@ -61,6 +63,20 @@ export class SidebarImage extends Component<Props> {
         }
     };
 
+    handleRaiseToTop = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetRaiseActivePlaceholderToTop());
+        }
+    };
+
+    handleLowerToBottom = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetLowerActivePlaceholderToBottom());
+        }
+    };
+
     render() {
         const { activePlaceholder, imageUrl, filter, visible } = this.props;
 
@@ -69,6 +85,13 @@ export class SidebarImage extends Component<Props> {
                 <div>
                     <button onClick={this.handleAddImageClick} title="Add image field">
                         <i className="material-icons">add_photo_alternate</i>
+                    </button>
+
+                    <button onClick={this.handleRaiseToTop} title="Raise image to top">
+                        <i className="material-icons">arrow_upward</i>
+                    </button>
+                    <button onClick={this.handleLowerToBottom} title="Lower image to bottom">
+                        <i className="material-icons">arrow_downward</i>
                     </button>
 
                     <button

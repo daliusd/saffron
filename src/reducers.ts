@@ -26,6 +26,8 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
+    CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
+    CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
     CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
     CARDSET_SELECT_FAILURE,
@@ -588,6 +590,36 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 };
             }
             return state;
+        }
+        case CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP: {
+            let placeholdersAllIds = [...state.placeholdersAllIds];
+
+            if (state.activePlaceholder !== null) {
+                let index = placeholdersAllIds.indexOf(state.activePlaceholder);
+                if (index !== -1) {
+                    placeholdersAllIds.push(placeholdersAllIds.splice(index, 1)[0]);
+                }
+            }
+
+            return {
+                ...state,
+                placeholdersAllIds,
+            };
+        }
+        case CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM: {
+            let placeholdersAllIds = [...state.placeholdersAllIds];
+
+            if (state.activePlaceholder !== null) {
+                let index = placeholdersAllIds.indexOf(state.activePlaceholder);
+                if (index !== -1) {
+                    placeholdersAllIds.unshift(placeholdersAllIds.splice(index, 1)[0]);
+                }
+            }
+
+            return {
+                ...state,
+                placeholdersAllIds,
+            };
         }
         case CARDSET_CHANGE_WIDTH: {
             return {
