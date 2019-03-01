@@ -145,7 +145,7 @@
 
 + Retain admin status during refresh
 + Allow to move placeholders up/down in drawing queue
-- Save zoom
++ Save zoom
 - Improve progress indicator
 - Show controls only if touch events are detected
 

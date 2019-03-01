@@ -291,6 +291,7 @@ export interface CardSetSelectSuccess {
         placeholdersAllIds: IdsArray;
         texts: PlaceholdersTextInfoByCardCollection;
         images: PlaceholdersImageInfoByCardCollection;
+        zoom: number;
     };
     gameId: string;
 }

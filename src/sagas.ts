@@ -33,6 +33,7 @@ import {
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
+    CARDSET_SET_ZOOM,
     CARDSET_UPDATE_CARD_COUNT,
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_REQUEST,
@@ -423,6 +424,7 @@ export function* handleCardSetChange(): SagaIterator {
             placeholders: state.cardsets.placeholders,
             texts: state.cardsets.texts,
             images: state.cardsets.images,
+            zoom: state.cardsets.zoom,
         };
 
         yield call(authorizedPutRequest, '/api/cardsets/' + cardsetId, {
@@ -492,6 +494,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_IMAGE, handleCardSetChange),
+        takeLatest(CARDSET_SET_ZOOM, handleCardSetChange),
 
         takeLatest(IMAGE_LIST_REQUEST, handleImageListRequest),
 

@@ -410,6 +410,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 images: action.data.images || {},
                 activeCard: null,
                 activePlaceholder: null,
+                zoom: action.data.zoom || 1,
             });
         case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {
