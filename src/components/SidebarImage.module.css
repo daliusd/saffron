@@ -16,3 +16,11 @@
 .images {
     overflow: scroll;
 }
+
+.image img,
+.images img {
+    width: 6.5em;
+    margin-right: 0.25em;
+    margin-top: 0.25em;
+    height: auto;
+}

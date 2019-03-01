@@ -65,7 +65,7 @@ export class SidebarImage extends Component<Props> {
         const { activePlaceholder, imageUrl, filter, visible } = this.props;
 
         return (
-            <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
+            <div className={style.view} style={{ display: visible ? 'grid' : 'none' }}>
                 <div>
                     <button onClick={this.handleAddImageClick} title="Add image field">
                         <i className="material-icons">add_photo_alternate</i>
@@ -82,15 +82,8 @@ export class SidebarImage extends Component<Props> {
 
                 {activePlaceholder && activePlaceholder.type === 'image' && (
                     <>
-                        <div>
-                            <img
-                                src={imageUrl}
-                                alt=""
-                                style={{
-                                    width: 100,
-                                    height: 100,
-                                }}
-                            />
+                        <div className={style.image}>
+                            <img src={imageUrl} alt="" />
                         </div>
 
                         <div>
@@ -105,10 +98,6 @@ export class SidebarImage extends Component<Props> {
                                         src={`/api/imagefiles/${im.name}`}
                                         onClick={() => this.handleImageSelect(im.name)}
                                         alt=""
-                                        style={{
-                                            width: 100,
-                                            height: 100,
-                                        }}
                                     />
                                 );
                             })}
