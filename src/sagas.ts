@@ -378,11 +378,11 @@ export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaItera
     try {
         const formData = new FormData();
         formData.set('gameId', action.gameId);
-        formData.append('filepond', action.file, action.file.name);
+        formData.append('image', action.file, action.file.name);
 
         const data = yield call(
             authorizedPostFormDataRequest,
-            '/api/filepond',
+            '/api/images',
             formData,
             (event: ProgressEvent) => action.progress(event.lengthComputable, event.loaded, event.total),
             action.cancelToken,
