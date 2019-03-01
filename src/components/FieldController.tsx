@@ -51,6 +51,7 @@ class FieldController extends React.Component<Props> {
     centerY: number;
     originalAngle: number;
     currentAngle: number;
+    activatedUsingTouch: boolean;
 
     constructor(props: Props) {
         super(props);
@@ -70,6 +71,7 @@ class FieldController extends React.Component<Props> {
         this.centerX = 0;
         this.centerY = 0;
         this.originalAngle = 0;
+        this.activatedUsingTouch = false;
     }
 
     componentDidMount() {
@@ -131,25 +133,26 @@ class FieldController extends React.Component<Props> {
     };
 
     handleMouseUp = (event: MouseEvent) => {
-        this.handleComplete(event);
+        this.handleComplete(event, false);
 
         document.removeEventListener('mousemove', this.handleMouseMove);
         document.removeEventListener('mouseup', this.handleMouseUp);
     };
 
     handleTouchEnd = (event: TouchEvent) => {
-        this.handleComplete(event);
+        this.handleComplete(event, true);
 
         document.removeEventListener('touchmove', this.handleTouchMove);
         document.removeEventListener('touchend', this.handleTouchEnd);
     };
 
-    handleComplete = (event: Event) => {
+    handleComplete = (event: Event, isTouchEvent: boolean) => {
         if (this.cDiv.current === null) return;
         if (this.moving) {
             this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
             this.moving = false;
         }
+        this.activatedUsingTouch = isTouchEvent;
         event.preventDefault();
     };
 
@@ -353,7 +356,9 @@ class FieldController extends React.Component<Props> {
                 ref={this.cDiv}
                 className={`${style.fieldcontroller} ${
                     isActivePlaceholder ? style.fieldcontrolleractiveplaceholder : ''
-                } ${isActive ? style.fieldcontrolleractive : ''}`}
+                } ${isActive ? style.fieldcontrolleractive : ''} ${
+                    isActive && this.activatedUsingTouch ? style.touchactivated : ''
+                } `}
                 style={{
                     position: 'absolute',
                     left: x,

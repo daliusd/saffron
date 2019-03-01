@@ -146,8 +146,9 @@
 + Retain admin status during refresh
 + Allow to move placeholders up/down in drawing queue
 + Save zoom
++ Show controls only if touch events are detected
 - Improve progress indicator
-- Show controls only if touch events are detected
+- Allow to select only user or game images
 
 - Background control
     - Use color for background

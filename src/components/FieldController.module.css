@@ -30,6 +30,6 @@
     visibility: visible;
 }
 
-.fieldcontrolleractive .controller {
+.touchactivated .controller {
     visibility: visible;
 }
