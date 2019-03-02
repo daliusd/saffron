@@ -154,3 +154,17 @@ export function putRequest(url: string, token: string, data: object) {
             handleAxiosError(error);
         });
 }
+
+export function deleteRequest(url: string, token: string) {
+    let config = {
+        headers: { Authorization: `Bearer ${token}` },
+    };
+    return axios
+        .delete(url, config)
+        .then(resp => {
+            return resp.data;
+        })
+        .catch(error => {
+            handleAxiosError(error);
+        });
+}

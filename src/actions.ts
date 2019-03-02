@@ -70,6 +70,7 @@ export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
 export const CARDSET_UPLOAD_IMAGE = 'CARDSET_UPLOAD_IMAGE';
 export const CARDSET_UPLOAD_IMAGE_SUCCESS = 'CARDSET_UPLOAD_IMAGE_SUCCESS';
 export const CARDSET_UPLOAD_IMAGE_FAILURE = 'CARDSET_UPLOAD_IMAGE_FAILURE';
+export const CARDSET_DELETE_IMAGE = 'CARDSET_DELETE_IMAGE';
 export const IMAGE_LIST_REQUEST = 'IMAGE_LIST_REQUEST';
 export const IMAGE_LIST_SUCCESS = 'IMAGE_LIST_SUCCESS';
 export const IMAGE_LIST_FAILURE = 'IMAGE_LIST_FAILURE';
@@ -419,6 +420,7 @@ export type FPLoadCallback = (id: string) => void;
 export type FPErrorCallback = (error: string) => void;
 export type FPProgressCallback = (computable: boolean, loaded: number, total: number) => void;
 export type FPAbortCallback = () => void;
+export type FPRevertLoadCallback = () => void;
 
 export interface CardSetUploadImage {
     type: typeof CARDSET_UPLOAD_IMAGE;
@@ -429,6 +431,13 @@ export interface CardSetUploadImage {
     progress: FPProgressCallback;
     abort: FPAbortCallback;
     cancelToken: CancelToken;
+}
+
+export interface CardSetDeleteImage {
+    type: typeof CARDSET_DELETE_IMAGE;
+    imageId: string;
+    load: FPRevertLoadCallback;
+    error: FPErrorCallback;
 }
 
 export interface CardSetUploadImageSuccess {
@@ -479,6 +488,7 @@ export type CardSetModifyAction =
     | CardSetSetSidebarState
     | CardSetSetZoom
     | CardSetUploadImage
+    | CardSetDeleteImage
     | CardSetUploadImageSuccess
     | CardSetUploadImageFailure;
 
@@ -826,6 +836,19 @@ export const cardSetUploadImage = (
         progress,
         abort,
         cancelToken,
+    };
+};
+
+export const cardSetDeleteImage = (
+    imageId: string,
+    load: FPRevertLoadCallback,
+    error: FPErrorCallback,
+): CardSetDeleteImage => {
+    return {
+        type: CARDSET_DELETE_IMAGE,
+        imageId,
+        load,
+        error,
     };
 };
 

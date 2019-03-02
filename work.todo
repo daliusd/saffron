@@ -147,9 +147,10 @@
 + Allow to move placeholders up/down in drawing queue
 + Save zoom
 + Show controls only if touch events are detected
-- Improve progress indicator
++ Improve progress indicator
++ Cancel image upload
 - Allow to select only user or game images
-- Cancel image upload
+- Show image upload message in message bar
 
 - Background control
     - Use color for background

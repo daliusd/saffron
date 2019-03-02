@@ -16,6 +16,8 @@ import {
     FPErrorCallback,
     FPLoadCallback,
     FPProgressCallback,
+    FPRevertLoadCallback,
+    cardSetDeleteImage,
     cardSetUploadImage,
 } from '../actions';
 import { State } from '../reducers';
@@ -62,6 +64,13 @@ export class SidebarDetails extends Component<Props> {
         return { abort: source.cancel };
     };
 
+    handleRevert = (uniqueFileId: string, load: FPRevertLoadCallback, error: FPErrorCallback) => {
+        console.log(uniqueFileId);
+
+        const { dispatch } = this.props;
+        dispatch(cardSetDeleteImage(uniqueFileId, load, error));
+    };
+
     render() {
         const { visible } = this.props;
 
@@ -71,8 +80,8 @@ export class SidebarDetails extends Component<Props> {
                     allowMultiple={true}
                     server={{
                         process: this.handleProcess,
+                        revert: this.handleRevert,
                     }}
-                    allowRevert={false}
                     acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml']}
                 />
             </div>

@@ -24,6 +24,7 @@ import {
     CARDSET_CREATE_FAILURE,
     CARDSET_CREATE_REQUEST,
     CARDSET_CREATE_SUCCESS,
+    CARDSET_DELETE_IMAGE,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
     CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
@@ -42,6 +43,7 @@ import {
     CARDSET_UPLOAD_IMAGE_FAILURE,
     CARDSET_UPLOAD_IMAGE_SUCCESS,
     CardSetCreateRequest,
+    CardSetDeleteImage,
     CardSetSelectRequest,
     CardSetType,
     CardSetUploadImage,
@@ -89,6 +91,7 @@ import {
 import {
     deleteAccessToken,
     deleteRefreshToken,
+    deleteRequest,
     getRequest,
     getTokens,
     postRequest,
@@ -252,6 +255,11 @@ export function* authorizedGetRequest(url: string): SagaIterator {
 export function* authorizedPostRequest(url: string, data: object): SagaIterator {
     const token = yield call(getToken, true);
     return yield call(postRequest, url, token, data);
+}
+
+export function* authorizedDeleteRequest(url: string): SagaIterator {
+    const token = yield call(getToken, true);
+    return yield call(deleteRequest, url, token);
 }
 
 export function* authorizedPostFormDataRequest(
@@ -418,11 +426,23 @@ export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaItera
                 action.abort();
             },
         );
-        action.load(data.id);
-        yield put({ type: CARDSET_UPLOAD_IMAGE_SUCCESS });
+        if (data !== undefined) {
+            // not cancelled
+            action.load(data.imageId.toString());
+            yield put({ type: CARDSET_UPLOAD_IMAGE_SUCCESS });
+        }
     } catch (e) {
         yield put({ type: CARDSET_UPLOAD_IMAGE_FAILURE });
         yield call(putError, e.message);
+        action.error(e.message);
+    }
+}
+
+export function* handleCardSetDeleteImage(action: CardSetDeleteImage): SagaIterator {
+    try {
+        yield call(authorizedDeleteRequest, '/api/images/' + action.imageId);
+        action.load();
+    } catch (e) {
         action.error(e.message);
     }
 }
@@ -498,6 +518,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
         takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
         takeEvery(CARDSET_UPLOAD_IMAGE, handleCardSetUploadImage),
+        takeEvery(CARDSET_DELETE_IMAGE, handleCardSetDeleteImage),
 
         takeLatest(CARDSET_CREATE_CARD, handleCardSetChange),
         takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),
