@@ -226,7 +226,7 @@ export function message(state: MessageState = DefaultMessageState, action: Messa
             });
         case MESSAGE_HIDE:
             return Object.assign({}, state, {
-                messages: state.messages.filter(m => m.id !== action.message.id),
+                messages: state.messages.filter(m => m.id !== action.messageId),
             });
         default:
             return state;

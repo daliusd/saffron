@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, ACTIVITY_UPDATING, State } from '../reducers';
+import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, State } from '../reducers';
 import {
     CardType,
     CardsCollection,
@@ -109,7 +109,6 @@ export class CardSet extends Component<Props, LocalState> {
         return (
             isAuthenticated && (
                 <div>
-                    {(activity & ACTIVITY_UPDATING) === ACTIVITY_UPDATING && <Loader fixed={true} />}
                     <KawaiiMessage character={Character.Ghost}>
                         <p>Here you can design your cards.</p>
                     </KawaiiMessage>

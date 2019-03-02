@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import { CardSetType, Dispatch, GameType, MessageType, logoutRequest } from '../actions';
 import { State } from '../reducers';
 import { getActiveCardSet, getActiveGame } from '../selectors';
+import Loader from './Loader';
 import Logout from './Logout';
 import style from './Navbar.module.css';
 
@@ -33,8 +34,22 @@ export class Navbar extends Component<Props> {
                 <div id="messages" className={style.messages}>
                     <ul>
                         {messages.map(m => (
-                            <li key={m.id}>
-                                <i className="material-icons">error</i> {m.text}
+                            <li key={m.id} className={m.type === 'error' ? style.error : style.info}>
+                                {m.type === 'error' && (
+                                    <>
+                                        <i className="material-icons">error</i> {m.text}
+                                    </>
+                                )}
+                                {m.type === 'info' && (
+                                    <>
+                                        <i className="material-icons">info</i> {m.text}
+                                    </>
+                                )}
+                                {m.type === 'progress' && (
+                                    <>
+                                        <Loader small={true} /> {m.text}
+                                    </>
+                                )}
                             </li>
                         ))}
                     </ul>

@@ -2,7 +2,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, loginRequest, messageRequest } from './actions';
+import { Dispatch, loginRequest, messageDisplay } from './actions';
 import { State } from './reducers';
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
 import Login from './components/Login';
@@ -27,7 +27,7 @@ export class LoginPage extends Component<Props> {
 
                         <Login
                             onLogin={creds => dispatch(loginRequest(creds))}
-                            onLoginFailure={msg => dispatch(messageRequest('error', msg))}
+                            onLoginFailure={msg => dispatch(messageDisplay('error', msg))}
                         />
                     </>
                 )}

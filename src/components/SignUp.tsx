@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Credentials, Dispatch, messageRequest } from '../actions';
+import { Credentials, Dispatch, messageDisplay } from '../actions';
 
 interface Props {
     dispatch: Dispatch;
@@ -19,7 +19,7 @@ export class SignUp extends Component<Props> {
         const { dispatch, onSignUp } = this.props;
 
         if (this.state.password !== this.state.passwordRepeat) {
-            dispatch(messageRequest('error', 'Passwords do not match.'));
+            dispatch(messageDisplay('error', 'Passwords do not match.'));
         } else {
             const creds = {
                 username: this.state.username.trim(),

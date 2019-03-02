@@ -71,9 +71,16 @@
     padding: 0.5em;
     margin: 0.5em;
     border-radius: 0.5em;
-    background-color: var(--color-3);
 }
 
 .messages li i {
     font-size: 1em;
+}
+
+.error {
+    background-color: var(--color-3);
+}
+
+.info {
+    background-color: var(--color-2);
 }

@@ -60,7 +60,7 @@ test('message', () => {
         messages: [testMessage2, testMessage1],
     });
 
-    expect(message(state, { type: MESSAGE_HIDE, message: testMessage2 })).toEqual({ messages: [] });
+    expect(message(state, { type: MESSAGE_HIDE, messageId: testMessage2.id })).toEqual({ messages: [] });
 });
 
 test('auth', () => {

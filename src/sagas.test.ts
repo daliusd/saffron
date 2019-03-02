@@ -43,7 +43,7 @@ import {
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
     gameSelectRequest,
-    messageRequest,
+    messageDisplay,
 } from './actions';
 import { CardSetState, DefaultCardSetState } from './reducers';
 import {
@@ -63,9 +63,12 @@ import {
     handleLogoutRequest,
     handleMessageDisplay,
     handleSignupRequest,
+    hideProgress,
     logoutRefreshToken,
     logoutToken,
     putError,
+    putInfo,
+    putProgress,
     validateToken,
 } from './sagas';
 import {
@@ -86,10 +89,10 @@ test('putError', () => {
 });
 
 test('handleMessageDisplay', () => {
-    const message = messageRequest('error', 'message');
+    const message = messageDisplay('error', 'message');
     let gen = handleMessageDisplay(message);
     expect(gen.next().value).toEqual(call(delay, 5000));
-    expect(gen.next().value).toEqual(put({ type: MESSAGE_HIDE, message: message.message }));
+    expect(gen.next().value).toEqual(put({ type: MESSAGE_HIDE, messageId: message.message.id }));
     expect(gen.next().done).toBeTruthy();
 });
 
@@ -515,6 +518,7 @@ test('handleCardSetChange', () => {
     const gen = cloneableGenerator(handleCardSetChange)();
 
     expect(gen.next().value).toEqual(call(delay, 1000));
+    expect(gen.next().value).toEqual(call(putProgress, 'Saving Card Set'));
 
     const state: { cardsets: CardSetState } = {
         cardsets: {
@@ -524,7 +528,9 @@ test('handleCardSetChange', () => {
         },
     };
 
-    expect(gen.next().value).toEqual(select());
+    const progressId = '123456';
+
+    expect(gen.next(progressId).value).toEqual(select());
     expect(gen.next(state).value).toEqual(put({ type: CARDSET_UPDATE_DATA_REQUEST }));
     expect(gen.next().value).toEqual(
         call(authorizedPutRequest, '/api/cardsets/123', {
@@ -536,6 +542,7 @@ test('handleCardSetChange', () => {
                 placeholders: {},
                 texts: {},
                 images: {},
+                zoom: 1,
             }),
             name: 'name',
         }),
@@ -544,12 +551,15 @@ test('handleCardSetChange', () => {
     let clone = gen.clone();
 
     // Successful request
+    expect(gen.next().value).toEqual(call(hideProgress, progressId));
+    expect(gen.next().value).toEqual(call(putInfo, 'Card Set saved'));
     expect(gen.next().value).toEqual(put({ type: CARDSET_UPDATE_DATA_SUCCESS }));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
     let message = 'message';
     expect(clone.throw && clone.throw({ message }).value).toEqual(put({ type: CARDSET_UPDATE_DATA_FAILURE }));
+    expect(clone.next().value).toEqual(call(hideProgress, progressId));
     expect(clone.next().value).toEqual(call(putError, message));
     expect(clone.next().done).toBeTruthy();
 });

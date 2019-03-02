@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardSetsCollection, Dispatch, IdsArray, cardSetCreateRequest, messageRequest } from '../actions';
+import { CardSetsCollection, Dispatch, IdsArray, cardSetCreateRequest, messageDisplay } from '../actions';
 import { State } from '../reducers';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 
@@ -51,7 +51,7 @@ export class CardSets extends Component<Props, LocalState> {
         if (cardSetName) {
             dispatch(cardSetCreateRequest(cardSetName, this.state.width, this.state.height, activeGame));
         } else {
-            dispatch(messageRequest('error', 'Card Set name should be non empty.'));
+            dispatch(messageDisplay('error', 'Card Set name should be non empty.'));
         }
     };
 

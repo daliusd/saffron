@@ -79,7 +79,7 @@
     + Allow uploading custom images
     ? Transparent background
         I assume this will just work if we will pass proper images.
-    - Move fields up/down in drawing order
+    + Move fields up/down in drawing order
         Check if this does not require fix in PDF renderer.
     - Allow changing image's color if it is from collection
     - Find more icons or give instructions to users
@@ -149,6 +149,7 @@
 + Show controls only if touch events are detected
 - Improve progress indicator
 - Allow to select only user or game images
+- Cancel image upload
 
 - Background control
     - Use color for background
@@ -181,3 +182,4 @@
     - Special visual effects
     - Change add card button to fake card
     - Drag and drop for images would be cool
+    - Give white shadow to rotate and resize controls

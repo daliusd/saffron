@@ -78,13 +78,13 @@ import {
     LoginRequest,
     MESSAGE_DISPLAY,
     MESSAGE_HIDE,
-    MessageAction,
+    MessageDisplay,
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
     SignUpRequest,
     gameSelectRequest,
-    messageRequest,
+    messageDisplay,
 } from './actions';
 import {
     deleteAccessToken,
@@ -103,12 +103,28 @@ import { loadFontsUsedInPlaceholders } from './fontLoader';
 
 // Messages
 export function* putError(message: string): SagaIterator {
-    yield put(messageRequest('error', message));
+    yield put(messageDisplay('error', message));
 }
 
-export function* handleMessageDisplay(action: MessageAction): SagaIterator {
+export function* putInfo(message: string): SagaIterator {
+    yield put(messageDisplay('info', message));
+}
+
+export function* putProgress(text: string): SagaIterator {
+    const message = messageDisplay('progress', text);
+    yield put(message);
+    return message.message.id;
+}
+
+export function* hideProgress(messageId: string): SagaIterator {
+    yield put({ type: MESSAGE_HIDE, messageId });
+}
+
+export function* handleMessageDisplay(action: MessageDisplay): SagaIterator {
+    if (action.message.type === 'progress') return;
+
     yield call(delay, 5000);
-    yield put({ type: MESSAGE_HIDE, message: action.message });
+    yield put({ type: MESSAGE_HIDE, messageId: action.message.id });
 }
 
 // Login & Signup
@@ -314,8 +330,10 @@ export function* handleGameSelectRequest(action: GameSelectRequest): SagaIterato
 }
 
 export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaIterator {
+    let progressId = null;
     try {
         const state = yield select();
+        progressId = yield call(putProgress, 'Generating PDF');
 
         yield call(
             generatePdfUsingWorker,
@@ -332,11 +350,14 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
             action.topBottomMargin,
             action.leftRightMargin,
         );
+        yield call(hideProgress, progressId);
+        yield call(putInfo, 'PDF generated.');
         yield put({
             type: GAME_CREATE_PDF_SUCCESS,
         });
     } catch (e) {
         yield put({ type: GAME_CREATE_PDF_FAILURE });
+        if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
     }
 }
@@ -407,8 +428,11 @@ export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaItera
 }
 
 export function* handleCardSetChange(): SagaIterator {
+    let progressId = null;
+
     try {
         yield call(delay, 1000);
+        progressId = yield call(putProgress, 'Saving Card Set');
         const state = yield select();
 
         yield put({
@@ -431,11 +455,14 @@ export function* handleCardSetChange(): SagaIterator {
             name: state.cardsets.byId[cardsetId].name,
             data: JSON.stringify(data),
         });
+        yield call(hideProgress, progressId);
+        yield call(putInfo, 'Card Set saved');
         yield put({
             type: CARDSET_UPDATE_DATA_SUCCESS,
         });
     } catch (e) {
         yield put({ type: CARDSET_UPDATE_DATA_FAILURE });
+        if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
     }
 }

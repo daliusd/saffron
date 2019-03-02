@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, messageRequest } from '../actions';
+import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, messageDisplay } from '../actions';
 import { State } from '../reducers';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 
@@ -33,7 +33,7 @@ export class Games extends Component<Props, LocalState> {
         if (gamename) {
             dispatch(gameCreateRequest(gamename));
         } else {
-            dispatch(messageRequest('error', 'Game name should be non empty.'));
+            dispatch(messageDisplay('error', 'Game name should be non empty.'));
         }
     };
 

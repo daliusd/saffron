@@ -184,9 +184,11 @@ export interface InitAction {
     type: typeof INIT_REQUEST;
 }
 
-export type MessageAction =
-    | { type: typeof MESSAGE_DISPLAY; message: MessageType }
-    | { type: typeof MESSAGE_HIDE; message: MessageType };
+export interface MessageDisplay {
+    type: typeof MESSAGE_DISPLAY;
+    message: MessageType;
+}
+export type MessageAction = MessageDisplay | { type: typeof MESSAGE_HIDE; messageId: string };
 
 export interface LoginRequest {
     type: typeof LOGIN_REQUEST;
@@ -508,7 +510,7 @@ export type Action =
 
 export type Dispatch = ReduxDispatch<Action>;
 
-export const messageRequest = (type: string, text: string): MessageAction => {
+export const messageDisplay = (type: string, text: string): MessageDisplay => {
     return {
         type: MESSAGE_DISPLAY,
         message: {
