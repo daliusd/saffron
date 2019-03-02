@@ -74,7 +74,10 @@ export class SidebarDetails extends Component<Props> {
         const { visible } = this.props;
 
         return (
-            <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
+            <div className={style.view} style={{ display: visible ? 'grid' : 'none' }}>
+                <div>
+                    Uploaded imaged are kept for limited time. If they are deleted then simply re-upload them again.
+                </div>
                 <FilePond
                     allowMultiple={true}
                     server={{
