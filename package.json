@@ -26,6 +26,7 @@
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
     "filepond": "^4.2.0",
+    "filepond-plugin-file-validate-size": "^2.1.1",
     "filepond-plugin-file-validate-type": "^1.2.2",
     "jwt-decode": "^2.2.0",
     "react": "^16.5.2",

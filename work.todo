@@ -150,8 +150,8 @@
 + Improve progress indicator
 + Cancel image upload
 + Show image upload message in message bar
++ Limit image size
 - Allow to select only user or game images
-- Limit image size
 
 - Background control
     - Use color for background

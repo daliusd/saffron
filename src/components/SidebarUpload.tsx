@@ -4,6 +4,7 @@ import './SidebarUpload.css';
 
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
+import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -21,6 +22,7 @@ import {
 import { State } from '../reducers';
 import style from './SidebarUpload.module.css';
 
+registerPlugin(FilePondPluginFileValidateSize);
 registerPlugin(FilePondPluginFileValidateType);
 
 interface OwnProps {
@@ -80,6 +82,8 @@ export class SidebarDetails extends Component<Props> {
                         revert: this.handleRevert,
                     }}
                     acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml']}
+                    allowFileSizeValidation={true}
+                    maxFileSize="500KB"
                 />
             </div>
         );
