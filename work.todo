@@ -149,8 +149,8 @@
 + Show controls only if touch events are detected
 + Improve progress indicator
 + Cancel image upload
++ Show image upload message in message bar
 - Allow to select only user or game images
-- Show image upload message in message bar
 
 - Background control
     - Use color for background

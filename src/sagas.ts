@@ -411,7 +411,9 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
 }
 
 export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaIterator {
+    let progressId = null;
     try {
+        progressId = yield call(putProgress, `Uploading ${action.file.name}`);
         const formData = new FormData();
         formData.set('gameId', action.gameId);
         formData.append('image', action.file, action.file.name);
@@ -430,9 +432,12 @@ export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaItera
             // not cancelled
             action.load(data.imageId.toString());
             yield put({ type: CARDSET_UPLOAD_IMAGE_SUCCESS });
+            yield call(putInfo, `${action.file.name} uploaded`);
         }
+        yield call(hideProgress, progressId);
     } catch (e) {
         yield put({ type: CARDSET_UPLOAD_IMAGE_FAILURE });
+        if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
         action.error(e.message);
     }
