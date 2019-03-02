@@ -26,6 +26,7 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
+    CARDSET_LOCK_ACTIVE_PLACEHOLDER,
     CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
     CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
     CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
@@ -36,6 +37,7 @@ import {
     CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
     CARDSET_SET_SIDEBAR_STATE,
     CARDSET_SET_ZOOM,
+    CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
     CARDSET_UPDATE_CARD_COUNT,
     CARDSET_UPDATE_DATA_FAILURE,
     CARDSET_UPDATE_DATA_REQUEST,
@@ -553,6 +555,11 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
             const placeholderId = state.activePlaceholder;
             if (placeholderId !== undefined && placeholderId !== null) {
+                const activePlaceholder = state.placeholders[placeholderId];
+                if (activePlaceholder.locked) {
+                    return state;
+                }
+
                 let placeholders = { ...state.placeholders };
                 let placeholdersAllIds = [...state.placeholdersAllIds];
                 if (placeholderId in placeholders) {
@@ -621,6 +628,42 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 ...state,
                 placeholdersAllIds,
             };
+        }
+        case CARDSET_LOCK_ACTIVE_PLACEHOLDER: {
+            if (state.activePlaceholder) {
+                const placeholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    locked: true,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: placeholder,
+                    },
+                };
+            }
+
+            return state;
+        }
+        case CARDSET_UNLOCK_ACTIVE_PLACEHOLDER: {
+            if (state.activePlaceholder) {
+                const placeholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    locked: false,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: placeholder,
+                    },
+                };
+            }
+
+            return state;
         }
         case CARDSET_CHANGE_WIDTH: {
             return {

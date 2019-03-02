@@ -45,6 +45,8 @@ export const CARDSET_ADD_IMAGE_PLACEHOLDER = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
 export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
 export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP';
 export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM';
+export const CARDSET_LOCK_ACTIVE_PLACEHOLDER = 'CARDSET_LOCK_ACTIVE_PLACEHOLDER';
+export const CARDSET_UNLOCK_ACTIVE_PLACEHOLDER = 'CARDSET_UNLOCK_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
@@ -94,14 +96,19 @@ export interface GamesCollection {
     [propName: string]: GameType;
 }
 
-export interface TextPlaceholderType {
+export interface PlaceholderBase {
     id: string;
-    type: 'text';
+    type: string;
     x: number;
     y: number;
     width: number;
     height: number;
     angle: number;
+    locked?: boolean;
+}
+
+export interface TextPlaceholderType extends PlaceholderBase {
+    type: 'text';
     align: string;
     color: string;
     fontFamily: string;
@@ -109,14 +116,9 @@ export interface TextPlaceholderType {
     fontSize: number;
 }
 
-export interface ImagePlaceholderType {
+export interface ImagePlaceholderType extends PlaceholderBase {
     id: string;
     type: 'image';
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    angle: number;
 }
 
 export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;
@@ -330,6 +332,12 @@ export interface CardSetRaiseActivePlaceholderToTop {
 export interface CardSetLowerActivePlaceholderToBottom {
     type: typeof CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM;
 }
+export interface CardSetLockActivePlaceholder {
+    type: typeof CARDSET_LOCK_ACTIVE_PLACEHOLDER;
+}
+export interface CardSetUnlockActivePlaceholder {
+    type: typeof CARDSET_UNLOCK_ACTIVE_PLACEHOLDER;
+}
 
 export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
@@ -471,6 +479,8 @@ export type CardSetModifyAction =
     | CardSetRemoveActivePlaceholder
     | CardSetRaiseActivePlaceholderToTop
     | CardSetLowerActivePlaceholderToBottom
+    | CardSetLockActivePlaceholder
+    | CardSetUnlockActivePlaceholder
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangePlaceholderPosition
@@ -669,6 +679,18 @@ export const cardSetRaiseActivePlaceholderToTop = (): CardSetRaiseActivePlacehol
 export const cardSetLowerActivePlaceholderToBottom = (): CardSetLowerActivePlaceholderToBottom => {
     return {
         type: CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
+    };
+};
+
+export const cardSetLockActivePlaceholder = (): CardSetLockActivePlaceholder => {
+    return {
+        type: CARDSET_LOCK_ACTIVE_PLACEHOLDER,
+    };
+};
+
+export const cardSetUnlockActivePlaceholder = (): CardSetUnlockActivePlaceholder => {
+    return {
+        type: CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
     };
 };
 

@@ -151,12 +151,13 @@
 + Cancel image upload
 + Show image upload message in message bar
 + Limit image size
++ Lock fields from moving/rotation
 - Allow to select only user or game images
 
 - Background control
+    + Use image for background
+        + Allow uploading images
     - Use color for background
-    - Use image for background
-        - Allow uploading images
     - Apply background to all cards
 
 - Repeated image control or images in text control
@@ -178,7 +179,6 @@
 - Export / Import data as CSV
 
 - UI ideas
-    - Lock fields from moving/rotation
     - Snapping
     - Keyboard manipulation
     - Special visual effects

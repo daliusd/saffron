@@ -26,6 +26,7 @@ interface OwnProps {
 interface StateProps {
     isActive: boolean;
     isActivePlaceholder: boolean;
+    isLocked: boolean;
 }
 
 interface DispatchProps {
@@ -147,8 +148,10 @@ class FieldController extends React.Component<Props> {
     };
 
     handleComplete = (event: Event, isTouchEvent: boolean) => {
+        const { isLocked } = this.props;
+
         if (this.cDiv.current === null) return;
-        if (this.moving) {
+        if (this.moving && !isLocked) {
             this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
             this.moving = false;
         }
@@ -167,7 +170,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleDragMove = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
+        const { isLocked } = this.props;
+
+        if (this.cDiv.current === null || isLocked) return;
         const { width, height, cardWidth, cardHeight } = this.props;
         this.moving = true;
 
@@ -204,7 +209,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleResizeStart = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
+        const { isLocked } = this.props;
+
+        if (this.cDiv.current === null || isLocked) return;
         this.originalW = this.cDiv.current.clientWidth;
         this.originalH = this.cDiv.current.clientHeight;
 
@@ -234,8 +241,10 @@ class FieldController extends React.Component<Props> {
     };
 
     handleResizeComplete = (event: Event) => {
+        const { isLocked } = this.props;
+
         if (this.cDiv.current === null) return;
-        if (this.moving) {
+        if (this.moving && !isLocked) {
             const { offsetLeft, offsetTop, clientWidth, clientHeight } = this.cDiv.current;
             this.props.onDrag(offsetLeft, offsetTop);
             this.props.onResize(clientWidth, clientHeight);
@@ -255,7 +264,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleResizeMove = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
+        const { isLocked } = this.props;
+
+        if (this.cDiv.current === null || isLocked) return;
         this.moving = true;
 
         const vx = co.clientX - this.startX;
@@ -296,7 +307,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleRotateStart = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
+        const { isLocked } = this.props;
+
+        if (this.cDiv.current === null || isLocked) return;
         const rect = this.cDiv.current.getBoundingClientRect();
         this.centerX = rect.left + this.cDiv.current.clientWidth / 2;
         this.centerY = rect.top + this.cDiv.current.clientHeight / 2;
@@ -319,7 +332,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleRotateComplete = (event: Event) => {
-        if (this.moving) {
+        const { isLocked } = this.props;
+
+        if (this.moving && !isLocked) {
             this.props.onRotate(this.currentAngle);
             this.moving = false;
         }
@@ -337,7 +352,9 @@ class FieldController extends React.Component<Props> {
     };
 
     handleRotateMove = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
+        const { isLocked } = this.props;
+
+        if (this.cDiv.current === null || isLocked) return;
         this.moving = true;
 
         const angle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY);
@@ -400,10 +417,15 @@ class FieldController extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
+    const isActivePlaceholder = props.placeholderId === state.cardsets.activePlaceholder;
+    const isActive =
+        props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder;
+    const isLocked = state.cardsets.placeholders[props.placeholderId].locked === true;
+
     return {
-        isActive:
-            props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
-        isActivePlaceholder: props.placeholderId === state.cardsets.activePlaceholder,
+        isActive,
+        isActivePlaceholder,
+        isLocked,
     };
 };
 

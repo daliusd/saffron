@@ -6,9 +6,11 @@ import {
     PlaceholderType,
     cardSetAddTextPlaceholder,
     cardSetChangeActiveTextPlaceholderAlign,
+    cardSetLockActivePlaceholder,
     cardSetLowerActivePlaceholderToBottom,
     cardSetRaiseActivePlaceholderToTop,
     cardSetRemoveActivePlaceholder,
+    cardSetUnlockActivePlaceholder,
 } from '../actions';
 import { State } from '../reducers';
 import ColorButton from './ColorButton';
@@ -72,6 +74,20 @@ export class SidebarText extends Component<Props> {
         }
     };
 
+    handleLockField = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetLockActivePlaceholder());
+        }
+    };
+
+    handleUnlockField = () => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetUnlockActivePlaceholder());
+        }
+    };
+
     render() {
         const { activePlaceholder, visible } = this.props;
 
@@ -98,8 +114,26 @@ export class SidebarText extends Component<Props> {
                 <ColorButton />
                 <FontSelector />
 
+                {activePlaceholder !== null && !activePlaceholder.locked && (
+                    <button
+                        onClick={this.handleLockField}
+                        title="Lock text field. Locked field can't be dragged, rotated, resized and removed."
+                    >
+                        <i className="material-icons">lock_open</i>
+                    </button>
+                )}
+
+                {activePlaceholder !== null && activePlaceholder.locked && (
+                    <button
+                        onClick={this.handleUnlockField}
+                        title="Unlock text field. Unlocked text field can be dragged, rotated, resized and removed."
+                    >
+                        <i className="material-icons">lock</i>
+                    </button>
+                )}
+
                 <button
-                    className={activePlaceholder === null ? style.disabled : ''}
+                    className={activePlaceholder === null || activePlaceholder.locked ? style.disabled : ''}
                     onClick={this.handleRemoveClick}
                     title="Remove field"
                 >
