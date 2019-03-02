@@ -2,14 +2,14 @@
     height: 98%;
     max-height: 98%;
     display: grid;
-    grid-template-rows: auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto 1fr;
 }
 
 .disabled i {
     color: #cccccc;
 }
 
-.view input {
+.view input[type='text'] {
     width: 9em;
 }
 

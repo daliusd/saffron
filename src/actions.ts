@@ -512,6 +512,7 @@ export type CardSetAction =
 export interface ImageListRequest {
     type: typeof IMAGE_LIST_REQUEST;
     filter: string;
+    location: string;
 }
 export interface ImageListSuccess {
     type: typeof IMAGE_LIST_SUCCESS;
@@ -874,9 +875,10 @@ export const cardSetDeleteImage = (
     };
 };
 
-export const imageListRequest = (filter: string): ImageListAction => {
+export const imageListRequest = (filter: string, location: string): ImageListAction => {
     return {
         type: IMAGE_LIST_REQUEST,
         filter,
+        location,
     };
 };

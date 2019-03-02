@@ -42,7 +42,8 @@
 }
 
 .view button,
-.view input {
+.view input[type='number'],
+.view input[type='text'] {
     background-color: var(--color-3);
     padding: 0.25em;
     color: inherit;
@@ -55,7 +56,8 @@
     margin: 0;
 }
 
-.view input {
+.view input[type='number'],
+.view input[type='text'] {
     padding: 0;
     padding-left: 0.25em;
     padding-right: 0.25em;
@@ -63,7 +65,8 @@
     border-radius: 0.25em;
 }
 
-.view input:hover,
+.view input[type='number']:hover,
+.view input[type='text']:hover,
 .view button:hover {
     background-color: var(--color-2);
     border-radius: 0.25em;

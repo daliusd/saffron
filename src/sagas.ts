@@ -498,7 +498,12 @@ export function* handleCardSetChange(): SagaIterator {
 export function* handleImageListRequest(action: ImageListRequest): SagaIterator {
     try {
         yield call(delay, 200);
-        const data = yield call(authorizedGetRequest, '/api/images?name=' + action.filter);
+        const state = yield select();
+
+        const filter = encodeURIComponent(action.filter);
+        const location = encodeURIComponent(action.location);
+        const game = encodeURIComponent(state.games.active);
+        const data = yield call(authorizedGetRequest, `/api/images?name=${filter}&location=${location}&game=${game}`);
         const images = data.images;
         yield put({
             type: IMAGE_LIST_SUCCESS,

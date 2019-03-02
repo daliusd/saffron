@@ -38,7 +38,15 @@ interface DispatchProps {
 
 type Props = StateProps & DispatchProps & OwnProps;
 
-export class SidebarImage extends Component<Props> {
+interface LocalState {
+    location: string;
+}
+
+export class SidebarImage extends Component<Props, LocalState> {
+    state = {
+        location: 'all',
+    };
+
     handleAddImageClick = () => {
         const { dispatch } = this.props;
         dispatch(cardSetAddImagePlaceholder());
@@ -53,7 +61,9 @@ export class SidebarImage extends Component<Props> {
 
     handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(imageListRequest(event.target.value));
+        const { location } = this.state;
+        const filter = event.target.value;
+        dispatch(imageListRequest(filter, location));
     };
 
     handleImageSelect = (imageName: string) => {
@@ -93,8 +103,17 @@ export class SidebarImage extends Component<Props> {
         }
     };
 
+    handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { filter, dispatch } = this.props;
+        const location = event.target.value;
+
+        this.setState({ location });
+        dispatch(imageListRequest(filter, location));
+    };
+
     render() {
         const { activePlaceholder, imageUrl, filter, visible } = this.props;
+        const { location } = this.state;
 
         return (
             <div className={style.view} style={{ display: visible ? 'grid' : 'none' }}>
@@ -142,11 +161,47 @@ export class SidebarImage extends Component<Props> {
                         <div className={style.image}>
                             <img src={imageUrl} alt="" />
                         </div>
-
+                        <div>
+                            Where to look for images?
+                            <form>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="all"
+                                            checked={location === 'all'}
+                                            onChange={this.handleOptionChange}
+                                        />
+                                        All images
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="user"
+                                            checked={location === 'user'}
+                                            onChange={this.handleOptionChange}
+                                        />
+                                        User images
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            value="game"
+                                            checked={location === 'game'}
+                                            onChange={this.handleOptionChange}
+                                        />
+                                        Game images
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
                         <div>
                             <input type="text" value={filter} onChange={this.handleFilterChange} />
                         </div>
-
                         <div className={style.images}>
                             {this.props.images.map(im => {
                                 return (
