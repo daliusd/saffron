@@ -151,6 +151,7 @@
 + Cancel image upload
 + Show image upload message in message bar
 - Allow to select only user or game images
+- Limit image size
 
 - Background control
     - Use color for background

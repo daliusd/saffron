@@ -1,4 +1,3 @@
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import 'filepond/dist/filepond.min.css';
 
 import './SidebarUpload.css';
@@ -6,7 +5,6 @@ import './SidebarUpload.css';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import React, { Component } from 'react';
 import axios from 'axios';
 
@@ -23,7 +21,6 @@ import {
 import { State } from '../reducers';
 import style from './SidebarUpload.module.css';
 
-registerPlugin(FilePondPluginImagePreview);
 registerPlugin(FilePondPluginFileValidateType);
 
 interface OwnProps {
