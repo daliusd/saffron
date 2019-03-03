@@ -23,6 +23,7 @@ import {
     CARDSET_CREATE_FAILURE,
     CARDSET_CREATE_REQUEST,
     CARDSET_CREATE_SUCCESS,
+    CARDSET_IMPORT_DATA,
     CARDSET_LIST_FAILURE,
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
@@ -990,6 +991,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             return {
                 ...state,
                 zoom: action.zoom,
+            };
+        }
+        case CARDSET_IMPORT_DATA: {
+            return {
+                ...state,
+                ...action.data,
             };
         }
         default:

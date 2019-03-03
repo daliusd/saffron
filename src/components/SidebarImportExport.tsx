@@ -9,10 +9,14 @@ import md5 from 'md5';
 
 import {
     CardsCollection,
+    FPLoadCallback,
+    FPRevertLoadCallback,
     IdsArray,
     PlaceholdersCollection,
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
+    cardSetImportData,
+    messageDisplay,
 } from '../actions';
 import { DispatchProps, SidebarOwnProps } from '../types';
 import { State } from '../reducers';
@@ -36,16 +40,6 @@ interface StateProps {
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarImportExport extends Component<Props> {
-    handleProcess = () =>
-        // fieldName: string,
-        // file: File,
-        // metadata: { [propName: string]: string },
-        // load: FPLoadCallback,
-        // error: FPErrorCallback,
-        // progress: FPProgressCallback,
-        // abort: FPAbortCallback,
-        {};
-
     prepareImagePaths = (images: PlaceholdersImageInfoByCardCollection) => {
         const { activeGame } = this.props;
         if (activeGame === null) return images;
@@ -88,7 +82,7 @@ export class SidebarImportExport extends Component<Props> {
             placeholders,
             placeholdersAllIds,
             texts,
-            preparedImages,
+            images: preparedImages,
         };
 
         let json = JSON.stringify(data, null, 4);
@@ -98,12 +92,12 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleExportCsv = () => {
-        const { cardsAllIds, placeholders, placeholdersAllIds, texts, images } = this.props;
+        const { cardsAllIds, cardsById, placeholders, placeholdersAllIds, texts, images } = this.props;
 
         const preparedImages = this.prepareImagePaths(images);
 
-        let csvData: string[][] = [];
-        let header = ['cardId'];
+        let csvData: (string | number)[][] = [];
+        let header = ['card_id', 'card_count'];
         let usedNames: { [key: string]: boolean } = {};
         for (const plId of placeholdersAllIds) {
             const placeholder = placeholders[plId];
@@ -119,7 +113,9 @@ export class SidebarImportExport extends Component<Props> {
         csvData.push(header);
 
         for (const cardId of cardsAllIds) {
-            let dataRow: string[] = [cardId];
+            let card = cardsById[cardId];
+
+            let dataRow: (string | number)[] = [cardId, card.count];
 
             let written = { ...usedNames };
             for (const plId of placeholdersAllIds) {
@@ -146,6 +142,50 @@ export class SidebarImportExport extends Component<Props> {
         downloadBlob(url, 'cardset.csv');
     };
 
+    handleProcess = (fieldName: string, file: File, metadata: { [propName: string]: string }, load: FPLoadCallback) => {
+        const { dispatch, activeGame } = this.props;
+        if (activeGame === null) return;
+
+        var reader = new FileReader();
+        reader.readAsText(file, 'UTF-8');
+        reader.onload = function(e) {
+            if (e.target === null) return;
+
+            let data = null;
+            const ending = '_' + md5(activeGame);
+
+            if (file.type === 'application/json') {
+                // eslint-disable-next-line
+                data = JSON.parse((e.target as any).result);
+
+                for (const cardId in data.images) {
+                    const placeholders = data.images[cardId];
+                    for (const placeholderId in placeholders) {
+                        let imageInfo = placeholders[placeholderId];
+                        let isGlobal = imageInfo.global || false;
+
+                        imageInfo.url = `/api/imagefiles/${imageInfo.url}${isGlobal ? '' : ending}`;
+                        delete imageInfo.global;
+                    }
+                }
+            } else if (file.type === 'text/csv') {
+            }
+
+            if (data !== null) {
+                dispatch(cardSetImportData(data));
+            }
+        };
+        reader.onerror = function() {
+            dispatch(messageDisplay('error', 'Problem during import.'));
+        };
+
+        load(file.name);
+    };
+
+    handleRevert = (uniqueFileId: string, load: FPRevertLoadCallback) => {
+        load();
+    };
+
     render() {
         const { visible } = this.props;
 
@@ -162,9 +202,12 @@ export class SidebarImportExport extends Component<Props> {
                     <i className="material-icons">cloud_download</i> Get CSV
                 </button>
 
+                <div>Drag & Drop or browser for JSON or CSV file here:</div>
+
                 <FilePond
                     server={{
                         process: this.handleProcess,
+                        revert: this.handleRevert,
                     }}
                     acceptedFileTypes={['text/csv', 'application/json']}
                 />

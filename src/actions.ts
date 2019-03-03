@@ -30,6 +30,7 @@ export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
 export const CARDSET_CREATE_FAILURE = 'CARDSET_CREATE_FAILURE';
+export const CARDSET_IMPORT_DATA = 'CARDSET_IMPORT_DATA';
 export const CARDSET_LIST_SUCCESS = 'CARDSET_LIST_SUCCESS';
 export const CARDSET_LIST_REQUEST = 'CARDSET_LIST_REQUEST';
 export const CARDSET_LIST_FAILURE = 'CARDSET_LIST_FAILURE';
@@ -270,6 +271,11 @@ export type CardSetCreateAction =
     | CardSetCreateRequest
     | { type: typeof CARDSET_CREATE_SUCCESS }
     | { type: typeof CARDSET_CREATE_FAILURE };
+
+export interface CardSetImportData {
+    type: typeof CARDSET_IMPORT_DATA;
+    data: object;
+}
 
 export interface CardSetListSuccess {
     type: typeof CARDSET_LIST_SUCCESS;
@@ -513,6 +519,7 @@ export type CardSetModifyAction =
 
 export type CardSetAction =
     | CardSetCreateAction
+    | CardSetImportData
     | CardSetListAction
     | CardSetSelectAction
     | CardSetUpdateDataAction
@@ -623,6 +630,13 @@ export const cardSetCreateRequest = (
         width,
         height,
         gameId,
+    };
+};
+
+export const cardSetImportData = (data: object): CardSetImportData => {
+    return {
+        type: CARDSET_IMPORT_DATA,
+        data,
     };
 };
 

@@ -56,8 +56,6 @@ export class SidebarUpload extends Component<Props> {
     };
 
     handleRevert = (uniqueFileId: string, load: FPRevertLoadCallback, error: FPErrorCallback) => {
-        console.log(uniqueFileId);
-
         const { dispatch } = this.props;
         dispatch(cardSetDeleteImage(uniqueFileId, load, error));
     };
