@@ -154,6 +154,10 @@
 + Lock fields from moving/rotation
 + Allow to select only user or game images
 
++ Named fields
+- Export / Import data as JSON
+- Export / Import data as CSV
+
 - Background control
     + Use image for background
         + Allow uploading images
@@ -174,9 +178,6 @@
 - Games
     - Game Delete
     - Game Rename
-
-- Export / Import data as JSON
-- Export / Import data as CSV
 
 - UI ideas
     - Snapping

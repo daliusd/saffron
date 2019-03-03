@@ -4,6 +4,7 @@ import shortid from 'shortid';
 import {
     CARDSET_ADD_IMAGE_PLACEHOLDER,
     CARDSET_ADD_TEXT_PLACEHOLDER,
+    CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
@@ -552,6 +553,23 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 placeholdersAllIds: [...state.placeholdersAllIds, id],
             };
         }
+        case CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME: {
+            if (state.activePlaceholder !== null) {
+                let placeholders = { ...state.placeholders };
+                placeholders[state.activePlaceholder] = {
+                    ...placeholders[state.activePlaceholder],
+                    name: action.name,
+                };
+
+                return {
+                    ...state,
+                    placeholders,
+                };
+            }
+
+            return state;
+        }
+
         case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
             const placeholderId = state.activePlaceholder;
             if (placeholderId !== undefined && placeholderId !== null) {
@@ -890,7 +908,17 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             if (state.texts && action.cardId in state.texts) {
                 placeholdersByCard = { ...state.texts[action.cardId] };
             }
-            placeholdersByCard[action.placeholderId] = action.textInfo;
+
+            const placeholder = state.placeholders[action.placeholderId];
+            const name = placeholder.name || placeholder.id;
+
+            for (const plId in state.placeholders) {
+                const pl = state.placeholders[plId];
+
+                if ((pl.name === name || pl.id === name) && pl.type === 'text') {
+                    placeholdersByCard[plId] = action.textInfo;
+                }
+            }
 
             return {
                 ...state,
@@ -905,7 +933,17 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             if (state.images && action.cardId in state.images) {
                 placeholdersByCard = { ...state.images[action.cardId] };
             }
-            placeholdersByCard[action.placeholderId] = action.imageInfo;
+
+            const placeholder = state.placeholders[action.placeholderId];
+            const name = placeholder.name || placeholder.id;
+
+            for (const plId in state.placeholders) {
+                const pl = state.placeholders[plId];
+
+                if ((pl.name === name || pl.id === name) && pl.type === 'image') {
+                    placeholdersByCard[plId] = action.imageInfo;
+                }
+            }
 
             return {
                 ...state,

@@ -8,6 +8,7 @@ import {
     ImageInfo,
     PlaceholderType,
     cardSetAddImagePlaceholder,
+    cardSetChangeActivePlaceholderName,
     cardSetChangeImage,
     cardSetLockActivePlaceholder,
     cardSetLowerActivePlaceholderToBottom,
@@ -56,6 +57,14 @@ export class SidebarImage extends Component<Props, LocalState> {
         const { activePlaceholder, dispatch } = this.props;
         if (activePlaceholder !== null) {
             dispatch(cardSetRemoveActivePlaceholder());
+        }
+    };
+
+    handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { activePlaceholder, dispatch } = this.props;
+        const name = event.target.value.trim();
+        if (activePlaceholder !== null) {
+            dispatch(cardSetChangeActivePlaceholderName(name));
         }
     };
 
@@ -154,6 +163,16 @@ export class SidebarImage extends Component<Props, LocalState> {
                     >
                         <i className="material-icons">remove</i>
                     </button>
+
+                    {activePlaceholder !== null && (
+                        <input
+                            type="text"
+                            value={activePlaceholder.type === 'image' ? activePlaceholder.name || '' : ''}
+                            placeholder={activePlaceholder.id}
+                            onChange={this.handleNameChange}
+                            title="Change name of image field."
+                        />
+                    )}
                 </div>
 
                 {activePlaceholder && activePlaceholder.type === 'image' && (

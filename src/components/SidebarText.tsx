@@ -5,6 +5,7 @@ import {
     Dispatch,
     PlaceholderType,
     cardSetAddTextPlaceholder,
+    cardSetChangeActivePlaceholderName,
     cardSetChangeActiveTextPlaceholderAlign,
     cardSetLockActivePlaceholder,
     cardSetLowerActivePlaceholderToBottom,
@@ -88,6 +89,14 @@ export class SidebarText extends Component<Props> {
         }
     };
 
+    handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { activePlaceholder, dispatch } = this.props;
+        const name = event.target.value.trim();
+        if (activePlaceholder !== null) {
+            dispatch(cardSetChangeActivePlaceholderName(name));
+        }
+    };
+
     render() {
         const { activePlaceholder, visible } = this.props;
 
@@ -96,23 +105,12 @@ export class SidebarText extends Component<Props> {
                 <button onClick={this.handleAddTextClick} title="Add text field">
                     <i className="material-icons">text_fields</i>
                 </button>
-                <button onClick={this.handleSetTextAlignLeft} title="Align text left">
-                    <i className="material-icons">format_align_left</i>
-                </button>
-                <button onClick={this.handleSetTextAlignCenter} title="Align text center">
-                    <i className="material-icons">format_align_center</i>
-                </button>
-                <button onClick={this.handleSetTextAlignRight} title="Align text right">
-                    <i className="material-icons">format_align_right</i>
-                </button>
                 <button onClick={this.handleRaiseToTop} title="Raise text to top">
                     <i className="material-icons">arrow_upward</i>
                 </button>
                 <button onClick={this.handleLowerToBottom} title="Lower text to bottom">
                     <i className="material-icons">arrow_downward</i>
                 </button>
-                <ColorButton />
-                <FontSelector />
 
                 {activePlaceholder !== null && !activePlaceholder.locked && (
                     <button
@@ -139,6 +137,30 @@ export class SidebarText extends Component<Props> {
                 >
                     <i className="material-icons">remove</i>
                 </button>
+
+                {activePlaceholder !== null && (
+                    <input
+                        type="text"
+                        value={activePlaceholder.type === 'text' ? activePlaceholder.name || '' : ''}
+                        placeholder={activePlaceholder.id}
+                        onChange={this.handleNameChange}
+                        title="Change name of text field."
+                    />
+                )}
+
+                <div>
+                    <button onClick={this.handleSetTextAlignLeft} title="Align text left">
+                        <i className="material-icons">format_align_left</i>
+                    </button>
+                    <button onClick={this.handleSetTextAlignCenter} title="Align text center">
+                        <i className="material-icons">format_align_center</i>
+                    </button>
+                    <button onClick={this.handleSetTextAlignRight} title="Align text right">
+                        <i className="material-icons">format_align_right</i>
+                    </button>
+                    <ColorButton />
+                    <FontSelector />
+                </div>
             </div>
         );
     }

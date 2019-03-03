@@ -42,6 +42,7 @@ export const CARDSET_REMOVE_CARD = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_PLACEHOLDER = 'CARDSET_ADD_TEXT_PLACEHOLDER';
 export const CARDSET_ADD_IMAGE_PLACEHOLDER = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
+export const CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME = 'CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME';
 export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
 export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP';
 export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM';
@@ -105,6 +106,7 @@ export interface PlaceholderBase {
     height: number;
     angle: number;
     locked?: boolean;
+    name?: string;
 }
 
 export interface TextPlaceholderType extends PlaceholderBase {
@@ -323,6 +325,10 @@ export interface CardSetAddTextPlaceholder {
 export interface CardSetAddImagePlaceholder {
     type: typeof CARDSET_ADD_IMAGE_PLACEHOLDER;
 }
+export interface CardSetChangeActivePlaceholderName {
+    type: typeof CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME;
+    name: string;
+}
 export interface CardSetRemoveActivePlaceholder {
     type: typeof CARDSET_REMOVE_ACTIVE_PLACEHOLDER;
 }
@@ -476,6 +482,7 @@ export type CardSetModifyAction =
     | CardSetUpdateCardCount
     | CardSetAddTextPlaceholder
     | CardSetAddImagePlaceholder
+    | CardSetChangeActivePlaceholderName
     | CardSetRemoveActivePlaceholder
     | CardSetRaiseActivePlaceholderToTop
     | CardSetLowerActivePlaceholderToBottom
@@ -662,6 +669,13 @@ export const cardSetAddTextPlaceholder = (): CardSetAddTextPlaceholder => {
 export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
     return {
         type: CARDSET_ADD_IMAGE_PLACEHOLDER,
+    };
+};
+
+export const cardSetChangeActivePlaceholderName = (name: string): CardSetChangeActivePlaceholderName => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
+        name,
     };
 };
 

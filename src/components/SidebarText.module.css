@@ -6,6 +6,11 @@
     text-align: center;
 }
 
+.view input[type='text'] {
+    text-align: left;
+    width: 9em;
+}
+
 .disabled i {
     color: #cccccc;
 }
