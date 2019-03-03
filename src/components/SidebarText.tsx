@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import { DispatchProps, SidebarOwnProps } from '../types';
 import {
-    Dispatch,
     PlaceholderType,
     cardSetAddTextPlaceholder,
     cardSetChangeActivePlaceholderName,
@@ -18,20 +18,12 @@ import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
 import style from './SidebarText.module.css';
 
-interface OwnProps {
-    visible: boolean;
-}
-
 interface StateProps {
     isAuthenticated: boolean;
     activePlaceholder: PlaceholderType | null;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarText extends Component<Props> {
     handleAddTextClick = () => {
@@ -178,4 +170,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarText);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarText);

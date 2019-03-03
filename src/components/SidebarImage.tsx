@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 
 import {
     CardType,
-    Dispatch,
     ImageArray,
     ImageInfo,
     PlaceholderType,
@@ -17,12 +16,9 @@ import {
     cardSetUnlockActivePlaceholder,
     imageListRequest,
 } from '../actions';
+import { DispatchProps, SidebarOwnProps } from '../types';
 import { State } from '../reducers';
 import style from './SidebarImage.module.css';
-
-interface OwnProps {
-    visible: boolean;
-}
 
 interface StateProps {
     isAuthenticated: boolean;
@@ -33,11 +29,7 @@ interface StateProps {
     images: ImageArray;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 interface LocalState {
     location: string;
@@ -268,4 +260,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarImage);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarImage);

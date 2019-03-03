@@ -1,7 +1,8 @@
-import { connect } from 'react-redux';
+import { connect, ConnectedComponentClass } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, SidebarState, cardSetSetSidebarState } from '../actions';
+import { DispatchProps, SidebarOwnProps } from '../types';
+import { SidebarState, cardSetSetSidebarState } from '../actions';
 import { State } from '../reducers';
 import SidebarDetails from './SidebarDetails';
 import SidebarImage from './SidebarImage';
@@ -14,46 +15,50 @@ interface StateProps {
     activeSidebar: SidebarState | null;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
 type Props = StateProps & DispatchProps;
 
+interface SidebarInfo {
+    state: SidebarState;
+    title: string;
+    icon: string;
+    component: ConnectedComponentClass<typeof Component, SidebarOwnProps>;
+}
+
+const SIDEBARS: SidebarInfo[] = [
+    {
+        state: SidebarState.Details,
+        title: 'Details',
+        icon: 'details',
+        component: SidebarDetails,
+    },
+    {
+        state: SidebarState.Image,
+        title: 'Images',
+        icon: 'photo',
+        component: SidebarImage,
+    },
+    {
+        state: SidebarState.Text,
+        title: 'Texts',
+        icon: 'text_fields',
+        component: SidebarText,
+    },
+    {
+        state: SidebarState.Upload,
+        title: 'Upload',
+        icon: 'cloud_upload',
+        component: SidebarUpload,
+    },
+    // picture_as_pdf
+];
+
 export class Sidebar extends Component<Props> {
-    handleDetails = () => {
+    handleSidebar = (state: SidebarState) => {
         const { activeSidebar, dispatch } = this.props;
-        if (activeSidebar === SidebarState.Details) {
+        if (activeSidebar === state) {
             dispatch(cardSetSetSidebarState(null));
         } else {
-            dispatch(cardSetSetSidebarState(SidebarState.Details));
-        }
-    };
-
-    handleImages = () => {
-        const { activeSidebar, dispatch } = this.props;
-        if (activeSidebar === SidebarState.Image) {
-            dispatch(cardSetSetSidebarState(null));
-        } else {
-            dispatch(cardSetSetSidebarState(SidebarState.Image));
-        }
-    };
-
-    handleTexts = () => {
-        const { activeSidebar, dispatch } = this.props;
-        if (activeSidebar === SidebarState.Text) {
-            dispatch(cardSetSetSidebarState(null));
-        } else {
-            dispatch(cardSetSetSidebarState(SidebarState.Text));
-        }
-    };
-
-    handleUpload = () => {
-        const { activeSidebar, dispatch } = this.props;
-        if (activeSidebar === SidebarState.Upload) {
-            dispatch(cardSetSetSidebarState(null));
-        } else {
-            dispatch(cardSetSetSidebarState(SidebarState.Upload));
+            dispatch(cardSetSetSidebarState(state));
         }
     };
 
@@ -62,41 +67,21 @@ export class Sidebar extends Component<Props> {
         return (
             <div className={style.sidebar}>
                 <div className={style.controls}>
-                    <i
-                        title="Details"
-                        className={`material-icons ${activeSidebar === SidebarState.Details ? style.active : ''}`}
-                        onClick={this.handleDetails}
-                    >
-                        details
-                    </i>
-                    <i
-                        title="Images"
-                        className={`material-icons ${activeSidebar === SidebarState.Image ? style.active : ''}`}
-                        onClick={this.handleImages}
-                    >
-                        photo
-                    </i>
-                    <i
-                        title="Texts"
-                        className={`material-icons ${activeSidebar === SidebarState.Text ? style.active : ''}`}
-                        onClick={this.handleTexts}
-                    >
-                        text_fields
-                    </i>
-                    <i
-                        title="Upload"
-                        className={`material-icons ${activeSidebar === SidebarState.Upload ? style.active : ''}`}
-                        onClick={this.handleUpload}
-                    >
-                        cloud_upload
-                    </i>
-                    {/*<i className="material-icons">picture_as_pdf</i>*/}
+                    {SIDEBARS.map(sb => (
+                        <i
+                            key={sb.state}
+                            title={sb.title}
+                            className={`material-icons ${activeSidebar === sb.state ? style.active : ''}`}
+                            onClick={() => this.handleSidebar(sb.state)}
+                        >
+                            {sb.icon}
+                        </i>
+                    ))}
                 </div>
                 <div className={`${style.view} ${activeSidebar === null ? style.hidden : ''}`}>
-                    <SidebarDetails visible={activeSidebar === SidebarState.Details} />
-                    <SidebarImage visible={activeSidebar === SidebarState.Image} />
-                    <SidebarText visible={activeSidebar === SidebarState.Text} />
-                    <SidebarUpload visible={activeSidebar === SidebarState.Upload} />
+                    {SIDEBARS.map(sb => (
+                        <sb.component visible={activeSidebar === sb.state} />
+                    ))}
                 </div>
             </div>
         );

@@ -9,8 +9,8 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import { DispatchProps, SidebarOwnProps } from '../types';
 import {
-    Dispatch,
     FPAbortCallback,
     FPErrorCallback,
     FPLoadCallback,
@@ -25,19 +25,11 @@ import style from './SidebarUpload.module.css';
 registerPlugin(FilePondPluginFileValidateSize);
 registerPlugin(FilePondPluginFileValidateType);
 
-interface OwnProps {
-    visible: boolean;
-}
-
 interface StateProps {
     activeGame: string | null;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarDetails extends Component<Props> {
     handleProcess = (
@@ -99,4 +91,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarDetails);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarDetails);

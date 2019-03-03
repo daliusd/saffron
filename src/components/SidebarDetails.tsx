@@ -1,24 +1,17 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardType, Dispatch, cardSetCloneCard, cardSetRemoveCard, cardSetUpdateCardCount } from '../actions';
+import { CardType, cardSetCloneCard, cardSetRemoveCard, cardSetUpdateCardCount } from '../actions';
+import { DispatchProps, SidebarOwnProps } from '../types';
 import { State } from '../reducers';
 import style from './SidebarDetails.module.css';
-
-interface OwnProps {
-    visible: boolean;
-}
 
 interface StateProps {
     isAuthenticated: boolean;
     activeCard: CardType | null;
 }
 
-interface DispatchProps {
-    dispatch: Dispatch;
-}
-
-type Props = StateProps & DispatchProps & OwnProps;
+type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarDetails extends Component<Props> {
     handleCloneCardClick = () => {
@@ -81,4 +74,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, OwnProps, State>(mapStateToProps)(SidebarDetails);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarDetails);
