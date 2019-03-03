@@ -3,6 +3,7 @@ import 'filepond/dist/filepond.min.css';
 import { FilePond, registerPlugin } from 'react-filepond';
 import { connect } from 'react-redux';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+import Papa from 'papaparse';
 import React, { Component } from 'react';
 import md5 from 'md5';
 
@@ -97,7 +98,42 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleExportCsv = () => {
-        console.log('csv data');
+        const { cardsAllIds, placeholders, placeholdersAllIds, texts, images } = this.props;
+
+        const preparedImages = this.prepareImagePaths(images);
+
+        let csvData: string[][] = [];
+        let header = ['cardId'];
+        for (const plId of placeholdersAllIds) {
+            const placeholder = placeholders[plId];
+            const name = placeholder.name || placeholder.id;
+            header.push(name);
+            if (placeholder.type === 'image') {
+                header.push(`${name}_global`);
+            }
+        }
+        csvData.push(header);
+
+        for (const cardId of cardsAllIds) {
+            let dataRow: string[] = [cardId];
+
+            for (const plId of placeholdersAllIds) {
+                const placeholder = placeholders[plId];
+                if (placeholder.type === 'text') {
+                    dataRow.push(texts[cardId][plId].value);
+                } else if (placeholder.type === 'image') {
+                    const image = preparedImages[cardId][plId];
+                    dataRow.push(image.url);
+                    dataRow.push(image.global ? 'y' : 'n');
+                }
+            }
+            csvData.push(dataRow);
+        }
+
+        let csv = Papa.unparse(csvData);
+        let blob = new Blob([csv], { type: 'octet/stream' });
+        let url = window.URL.createObjectURL(blob);
+        downloadBlob(url, 'cardset.csv');
     };
 
     render() {
