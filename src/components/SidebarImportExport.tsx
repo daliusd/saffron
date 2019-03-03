@@ -104,12 +104,16 @@ export class SidebarImportExport extends Component<Props> {
 
         let csvData: string[][] = [];
         let header = ['cardId'];
+        let usedNames: { [key: string]: boolean } = {};
         for (const plId of placeholdersAllIds) {
             const placeholder = placeholders[plId];
             const name = placeholder.name || placeholder.id;
-            header.push(name);
-            if (placeholder.type === 'image') {
-                header.push(`${name}_global`);
+            if (!(name in usedNames)) {
+                header.push(name);
+                if (placeholder.type === 'image') {
+                    header.push(`${name}_global`);
+                }
+                usedNames[name] = false;
             }
         }
         csvData.push(header);
@@ -117,14 +121,20 @@ export class SidebarImportExport extends Component<Props> {
         for (const cardId of cardsAllIds) {
             let dataRow: string[] = [cardId];
 
+            let written = { ...usedNames };
             for (const plId of placeholdersAllIds) {
                 const placeholder = placeholders[plId];
-                if (placeholder.type === 'text') {
-                    dataRow.push(texts[cardId][plId].value);
-                } else if (placeholder.type === 'image') {
-                    const image = preparedImages[cardId][plId];
-                    dataRow.push(image.url);
-                    dataRow.push(image.global ? 'y' : 'n');
+                const name = placeholder.name || placeholder.id;
+
+                if (!written[name]) {
+                    if (placeholder.type === 'text') {
+                        dataRow.push(texts[cardId][plId].value);
+                    } else if (placeholder.type === 'image') {
+                        const image = preparedImages[cardId][plId];
+                        dataRow.push(image.url);
+                        dataRow.push(image.global ? 'y' : 'n');
+                    }
+                    written[name] = true;
                 }
             }
             csvData.push(dataRow);
