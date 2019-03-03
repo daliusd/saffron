@@ -155,8 +155,8 @@
 + Allow to select only user or game images
 
 + Named fields
-- Export / Import data as JSON
-- Export / Import data as CSV
++ Export / Import data as JSON
++ Export / Import data as CSV
 
 - Background control
     + Use image for background

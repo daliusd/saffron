@@ -6,8 +6,10 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import Papa from 'papaparse';
 import React, { Component } from 'react';
 import md5 from 'md5';
+import shortid from 'shortid';
 
 import {
+    CardType,
     CardsCollection,
     FPLoadCallback,
     FPRevertLoadCallback,
@@ -143,7 +145,7 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleProcess = (fieldName: string, file: File, metadata: { [propName: string]: string }, load: FPLoadCallback) => {
-        const { dispatch, activeGame } = this.props;
+        const { dispatch, activeGame, placeholders } = this.props;
         if (activeGame === null) return;
 
         var reader = new FileReader();
@@ -159,9 +161,9 @@ export class SidebarImportExport extends Component<Props> {
                 data = JSON.parse((e.target as any).result);
 
                 for (const cardId in data.images) {
-                    const placeholders = data.images[cardId];
-                    for (const placeholderId in placeholders) {
-                        let imageInfo = placeholders[placeholderId];
+                    const loadedPlaceholders = data.images[cardId];
+                    for (const placeholderId in loadedPlaceholders) {
+                        let imageInfo = loadedPlaceholders[placeholderId];
                         let isGlobal = imageInfo.global || false;
 
                         imageInfo.url = `/api/imagefiles/${imageInfo.url}${isGlobal ? '' : ending}`;
@@ -169,6 +171,55 @@ export class SidebarImportExport extends Component<Props> {
                     }
                 }
             } else if (file.type === 'text/csv') {
+                // eslint-disable-next-line
+                const csvData = Papa.parse((e.target as any).result, { header: true });
+
+                let cardsAllIds: IdsArray = [];
+                let cardsById: CardsCollection = {};
+                let texts: PlaceholdersTextInfoByCardCollection = {};
+                let images: PlaceholdersImageInfoByCardCollection = {};
+
+                for (const row of csvData.data) {
+                    const card: CardType = {
+                        id: row['card_id'] || shortid.generate(),
+                        count: row['card_count'] || 1,
+                    };
+
+                    cardsAllIds.push(card.id);
+                    cardsById[card.id] = card;
+
+                    for (const plId in placeholders) {
+                        const pl = placeholders[plId];
+                        const name = pl.name || pl.id;
+
+                        if (row[name]) {
+                            if (pl.type === 'image') {
+                                const isGlobal = row[`${name}_global`] === 'y';
+                                const url = row[name];
+
+                                if (!(card.id in images)) {
+                                    images[card.id] = {};
+                                }
+
+                                images[card.id][plId] = {
+                                    url: `/api/imagefiles/${url}${isGlobal ? '' : ending}`,
+                                };
+                            } else if (pl.type === 'text') {
+                                if (!(card.id in texts)) {
+                                    texts[card.id] = {};
+                                }
+                                texts[card.id][plId] = { value: row[name] };
+                            }
+                        }
+                    }
+                }
+
+                data = {
+                    cardsAllIds,
+                    cardsById,
+                    texts,
+                    images,
+                };
             }
 
             if (data !== null) {
