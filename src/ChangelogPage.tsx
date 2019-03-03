@@ -22,6 +22,15 @@ export default class ChangelogPage extends Component {
                     <li>Data export/import from JSON and CSV.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-03-03</h2>
+                <ul>
+                    <li>Data import/export in JSON and CSV formats.</li>
+                    <li>
+                        Named fields. If multiple fields have the same name then by editing one you change value in all
+                        of them. As well named fields look better in data export/import.
+                    </li>
+                </ul>
+
                 <h2>2019-03-02</h2>
                 <ul>
                     <li>You can upload your own images now. Images are limited.</li>
