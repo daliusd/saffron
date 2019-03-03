@@ -143,6 +143,7 @@ export interface PlaceholdersTextInfoByCardCollection {
 
 export interface ImageInfo {
     url: string;
+    global?: boolean;
 }
 
 export interface PlaceholdersImageInfoCollection {
@@ -420,6 +421,7 @@ export enum SidebarState {
     Image,
     Text,
     Upload,
+    ImportExport,
 }
 export interface CardSetSetSidebarState {
     type: typeof CARDSET_SET_SIDEBAR_STATE;

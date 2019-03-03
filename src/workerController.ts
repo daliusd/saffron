@@ -4,6 +4,7 @@ import {
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
 } from './actions';
+import { downloadBlob } from './utils';
 
 export const generatePdfUsingWorker = (
     width: number,
@@ -29,21 +30,7 @@ export const generatePdfUsingWorker = (
             const worker = new Worker('/js/worker.js');
             worker.addEventListener('message', event => {
                 const blobURL = event.data;
-
-                const tempLink = document.createElement('a');
-                tempLink.style.display = 'none';
-                tempLink.href = blobURL;
-                tempLink.setAttribute('download', 'card.pdf');
-                if (typeof tempLink.download === 'undefined') {
-                    tempLink.setAttribute('target', '_blank');
-                }
-                document.body.appendChild(tempLink);
-                tempLink.click();
-                document.body.removeChild(tempLink);
-                setTimeout(() => {
-                    window.URL.revokeObjectURL(blobURL);
-                    resolve();
-                }, 100);
+                downloadBlob(blobURL, 'card.pdf', resolve);
             });
 
             worker.postMessage({

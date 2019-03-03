@@ -31,7 +31,7 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
-export class SidebarDetails extends Component<Props> {
+export class SidebarUpload extends Component<Props> {
     handleProcess = (
         fieldName: string,
         file: File,
@@ -91,4 +91,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarDetails);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarUpload);

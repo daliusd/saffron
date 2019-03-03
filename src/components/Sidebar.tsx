@@ -6,6 +6,7 @@ import { SidebarState, cardSetSetSidebarState } from '../actions';
 import { State } from '../reducers';
 import SidebarDetails from './SidebarDetails';
 import SidebarImage from './SidebarImage';
+import SidebarImportExport from './SidebarImportExport';
 import SidebarText from './SidebarText';
 import SidebarUpload from './SidebarUpload';
 import style from './Sidebar.module.css';
@@ -49,6 +50,12 @@ const SIDEBARS: SidebarInfo[] = [
         icon: 'cloud_upload',
         component: SidebarUpload,
     },
+    {
+        state: SidebarState.ImportExport,
+        title: 'Import/Export',
+        icon: 'import_export',
+        component: SidebarImportExport,
+    },
     // picture_as_pdf
 ];
 
@@ -80,7 +87,7 @@ export class Sidebar extends Component<Props> {
                 </div>
                 <div className={`${style.view} ${activeSidebar === null ? style.hidden : ''}`}>
                     {SIDEBARS.map(sb => (
-                        <sb.component visible={activeSidebar === sb.state} />
+                        <sb.component key={sb.state} visible={activeSidebar === sb.state} />
                     ))}
                 </div>
             </div>
