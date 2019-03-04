@@ -26,6 +26,7 @@ import {
     CARDSET_CREATE_REQUEST,
     CARDSET_CREATE_SUCCESS,
     CARDSET_DELETE_IMAGE,
+    CARDSET_IMPORT_DATA,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
     CARDSET_LOCK_ACTIVE_PLACEHOLDER,
@@ -559,6 +560,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CHANGE_TEXT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_IMAGE, handleCardSetChange),
         takeLatest(CARDSET_SET_ZOOM, handleCardSetChange),
+        takeLatest(CARDSET_IMPORT_DATA, handleCardSetChange),
 
         takeLatest(IMAGE_LIST_REQUEST, handleImageListRequest),
 

@@ -19,7 +19,6 @@ export default class ChangelogPage extends Component {
                     <li>Two-sided cards.</li>
                     <li>UI improvements (snapping, keyboard support and etc.).</li>
                     <li>PDF generation for all the game.</li>
-                    <li>Data export/import from JSON and CSV.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
                 <h2>2019-03-03</h2>
