@@ -20,20 +20,19 @@
     + Games
     + Card Sets
 
-- Card control
++ Card control
     + Create simple cards
     + Remove card
     + Clone card
     + Specify how many copies of card to make
-    - Create some cards templates
 
-- Draggable, Resizable, Rotateble controller
++ Draggable, Resizable, Rotateble controller
     + Implementation
     + Mobile support
     + SVG icons
     + Events: select, drag and others
     + State update
-    - Mouse cursor by current controller state
+    + Mouse cursor by current controller state
 
 + Fix tests and flow errors, refactor code
 
@@ -57,8 +56,6 @@
     + Remove text field
     + Font size focus loss problem
     + Set default font
-    - Allow to set line height
-    - Emoji support
 
 + Show active selection
 + Clone texts on card clone
@@ -68,7 +65,7 @@
 + Move to seperate git repo
 + Update CRA
 
-- Image field
++ Image field
     + Add image field / change position
     + Change size
     + Rotate
@@ -77,15 +74,9 @@
     + Remove url from image placeholder
     + Think: maybe we should use ImageInfo like TextInfo for forward compatibility
     + Allow uploading custom images
-    ? Transparent background
-        I assume this will just work if we will pass proper images.
+    + Transparent background
     + Move fields up/down in drawing order
         Check if this does not require fix in PDF renderer.
-    - Allow changing image's color if it is from collection
-    - Find more icons or give instructions to users
-        Where to get them. https://thenounproject.com/developers/ looks
-        like an option but it is not free.
-    - Generate list with authors of icons
 
 + Clone not working
 
@@ -107,9 +98,8 @@
     + Move worker to Saga where it belongs
     + Pass current card set
     + Generate PDF
-    - Generate PDF for full game
 
-- UI
++ UI
     + https://react-kawaii.now.sh/
     + UI
         + Header
@@ -123,8 +113,6 @@
     + Help page
     + Clean-up saga logs
     + Loading indicators in cardset page
-    - [F] Field context menu
-    - [F] Open (statistics) page
 
 + Fix touch on mobile
 + Edit moves to cursor to beginning of screen
@@ -158,26 +146,22 @@
 + Export / Import data as JSON
 + Export / Import data as CSV
 
-- Background control
++ Background control
     + Use image for background
         + Allow uploading images
-    - Use color for background
-    - Apply background to all cards
-
-- Repeated image control or images in text control
-    - Allow assigning letters to user images
-    - Change size, should work like text
+- Games
+    - Game Delete
+    - Game Rename
 
 - Card Sets
     + Specify card size when creating new card set
-    - Cards can have two sides
     - Delete Card Set
     - Rename Card Set
     - Show Card Set name in Card Set page.
 
-- Games
-    - Game Delete
-    - Game Rename
+- Cards can have two sides
+
+- Allow changing image's color if it is SVG
 
 - UI ideas
     - Snapping
@@ -187,6 +171,26 @@
     - Drag and drop for images would be cool
     + Give white shadow to rotate and resize controls
 
+- Allow to set line height
+- Apply image to all cards (e.g. if we want to change background).
+
 - PDF Output improvements
     - cut marks outside of design
     - empty space between cards
+    - Generate PDF for full game
+
+- Add support for cutting edges
+    - Investigate make playing card templates. Change naming appropriately.
+    - Create some cards templates. Potentially with edges.
+
+- Generate list with authors of icons
+- Find more icons or give instructions to users
+    Where to get them. https://thenounproject.com/developers/ looks
+    like an option but it is not free.
+
+- Repeated image control or images in text control
+    - Allow assigning letters to user images
+    - Change size, should work like text
+    - Emoji support
+
+- Open (statistics) page

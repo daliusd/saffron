@@ -53,6 +53,7 @@ class FieldController extends React.Component<Props> {
     originalAngle: number;
     currentAngle: number;
     activatedUsingTouch: boolean;
+    originalBodyCursor: string | null;
 
     constructor(props: Props) {
         super(props);
@@ -73,12 +74,15 @@ class FieldController extends React.Component<Props> {
         this.centerY = 0;
         this.originalAngle = 0;
         this.activatedUsingTouch = false;
+        this.originalBodyCursor = null;
     }
 
     componentDidMount() {
         if (this.cDiv.current === null) return;
         if (this.resizeDiv.current === null) return;
         if (this.rotateDiv.current === null) return;
+
+        this.originalBodyCursor = document.body.style.cursor;
 
         this.cDiv.current.addEventListener('dragstart', this.handleBrowserDragStart);
         this.cDiv.current.addEventListener('mousedown', this.handleMouseDown);
@@ -129,6 +133,9 @@ class FieldController extends React.Component<Props> {
 
     handleDragStart = (co: { clientX: number; clientY: number }) => {
         if (this.cDiv.current === null) return;
+
+        this.cDiv.current.style.cursor = 'grabbing';
+
         this.relX = co.clientX - this.cDiv.current.offsetLeft;
         this.relY = co.clientY - this.cDiv.current.offsetTop;
     };
@@ -156,6 +163,9 @@ class FieldController extends React.Component<Props> {
             this.moving = false;
         }
         this.activatedUsingTouch = isTouchEvent;
+
+        this.cDiv.current.style.cursor = 'grab';
+
         event.preventDefault();
     };
 
@@ -212,6 +222,9 @@ class FieldController extends React.Component<Props> {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
+
+        document.body.style.cursor = `url(${resize}), auto`;
+
         this.originalW = this.cDiv.current.clientWidth;
         this.originalH = this.cDiv.current.clientHeight;
 
@@ -244,12 +257,16 @@ class FieldController extends React.Component<Props> {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null) return;
+
         if (this.moving && !isLocked) {
             const { offsetLeft, offsetTop, clientWidth, clientHeight } = this.cDiv.current;
             this.props.onDrag(offsetLeft, offsetTop);
             this.props.onResize(clientWidth, clientHeight);
             this.moving = false;
         }
+
+        document.body.style.cursor = this.originalBodyCursor;
+
         event.preventDefault();
     };
 
@@ -310,6 +327,9 @@ class FieldController extends React.Component<Props> {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
+
+        document.body.style.cursor = `url(${rotate}), auto`;
+
         const rect = this.cDiv.current.getBoundingClientRect();
         this.centerX = rect.left + this.cDiv.current.clientWidth / 2;
         this.centerY = rect.top + this.cDiv.current.clientHeight / 2;
@@ -338,6 +358,9 @@ class FieldController extends React.Component<Props> {
             this.props.onRotate(this.currentAngle);
             this.moving = false;
         }
+
+        document.body.style.cursor = this.originalBodyCursor;
+
         event.preventDefault();
     };
 
