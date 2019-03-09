@@ -474,6 +474,7 @@ export function* handleCardSetChange(): SagaIterator {
             height: state.cardsets.height,
             cardsAllIds: state.cardsets.cardsAllIds,
             cardsById: state.cardsets.cardsById,
+            placeholdersAllIds: state.cardsets.placeholdersAllIds,
             placeholders: state.cardsets.placeholders,
             texts: state.cardsets.texts,
             images: state.cardsets.images,
