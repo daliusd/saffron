@@ -389,7 +389,7 @@ class FieldController extends React.Component<Props> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, children, isActive, isActivePlaceholder } = this.props;
+        const { x, y, width, height, angle, children, isActive, isActivePlaceholder, isLocked } = this.props;
 
         return (
             <div
@@ -410,30 +410,34 @@ class FieldController extends React.Component<Props> {
                 }}
             >
                 {children}
-                <img
-                    src={resize}
-                    alt="resize"
-                    ref={this.resizeDiv}
-                    className={style.controller}
-                    style={{
-                        position: 'absolute',
-                        right: 0,
-                        bottom: 0,
-                        cursor: `url(${resize}), auto`,
-                    }}
-                />
-                <img
-                    src={rotate}
-                    alt="rotate"
-                    ref={this.rotateDiv}
-                    className={style.controller}
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        bottom: 0,
-                        cursor: `url(${rotate}), auto`,
-                    }}
-                />
+                {!isLocked && (
+                    <img
+                        src={resize}
+                        alt="resize"
+                        ref={this.resizeDiv}
+                        className={style.controller}
+                        style={{
+                            position: 'absolute',
+                            right: 0,
+                            bottom: 0,
+                            cursor: `url(${resize}), auto`,
+                        }}
+                    />
+                )}
+                {!isLocked && (
+                    <img
+                        src={rotate}
+                        alt="rotate"
+                        ref={this.rotateDiv}
+                        className={style.controller}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            bottom: 0,
+                            cursor: `url(${rotate}), auto`,
+                        }}
+                    />
+                )}
             </div>
         );
     }
