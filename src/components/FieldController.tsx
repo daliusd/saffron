@@ -410,34 +410,32 @@ class FieldController extends React.Component<Props> {
                 }}
             >
                 {children}
-                {!isLocked && (
-                    <img
-                        src={resize}
-                        alt="resize"
-                        ref={this.resizeDiv}
-                        className={style.controller}
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                            bottom: 0,
-                            cursor: `url(${resize}), auto`,
-                        }}
-                    />
-                )}
-                {!isLocked && (
-                    <img
-                        src={rotate}
-                        alt="rotate"
-                        ref={this.rotateDiv}
-                        className={style.controller}
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            bottom: 0,
-                            cursor: `url(${rotate}), auto`,
-                        }}
-                    />
-                )}
+                <img
+                    src={resize}
+                    alt="resize"
+                    ref={this.resizeDiv}
+                    className={style.controller}
+                    style={{
+                        position: 'absolute',
+                        right: 0,
+                        bottom: 0,
+                        cursor: `url(${resize}), auto`,
+                        display: isLocked ? 'none' : 'initial',
+                    }}
+                />
+                <img
+                    src={rotate}
+                    alt="rotate"
+                    ref={this.rotateDiv}
+                    className={style.controller}
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        bottom: 0,
+                        cursor: `url(${rotate}), auto`,
+                        display: isLocked ? 'none' : 'initial',
+                    }}
+                />
             </div>
         );
     }
