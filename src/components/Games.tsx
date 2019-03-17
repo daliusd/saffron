@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, messageDisplay } from '../actions';
+import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, gameDeleteRequest, messageDisplay } from '../actions';
 import { State } from '../reducers';
+import ConfirmedDelete from './ConfirmedDelete';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface Props {
@@ -37,6 +38,11 @@ export class Games extends Component<Props, LocalState> {
         }
     };
 
+    handleGameDelete = (gameId: string) => {
+        const { dispatch } = this.props;
+        dispatch(gameDeleteRequest(gameId));
+    };
+
     render() {
         const { isAuthenticated, allIds, byId } = this.props;
 
@@ -44,7 +50,11 @@ export class Games extends Component<Props, LocalState> {
             .map(gameId => byId[gameId])
             .map(game => (
                 <li key={game.id}>
-                    <Link to={`/game/${game.id}`}>{game.name}</Link>
+                    <Link to={`/game/${game.id}`}>{game.name}</Link>{' '}
+                    <ConfirmedDelete
+                        question="Do you really want to delete this game?"
+                        onDelete={() => this.handleGameDelete(game.id)}
+                    />
                 </li>
             ));
 

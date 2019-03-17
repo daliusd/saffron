@@ -17,6 +17,9 @@ export const SIGNUP_FAILURE = 'SIGNUP_FAILURE';
 export const GAME_CREATE_REQUEST = 'GAME_CREATE_REQUEST';
 export const GAME_CREATE_SUCCESS = 'GAME_CREATE_SUCCESS';
 export const GAME_CREATE_FAILURE = 'GAME_CREATE_FAILURE';
+export const GAME_DELETE_REQUEST = 'GAME_DELETE_REQUEST';
+export const GAME_DELETE_SUCCESS = 'GAME_DELETE_SUCCESS';
+export const GAME_DELETE_FAILURE = 'GAME_DELETE_FAILURE';
 export const GAME_LIST_SUCCESS = 'GAME_LIST_SUCCESS';
 export const GAME_LIST_REQUEST = 'GAME_LIST_REQUEST';
 export const GAME_LIST_FAILURE = 'GAME_LIST_FAILURE';
@@ -224,6 +227,16 @@ export type GameCreateAction =
     | { type: typeof GAME_CREATE_SUCCESS }
     | { type: typeof GAME_CREATE_FAILURE };
 
+export interface GameDeleteRequest {
+    type: typeof GAME_DELETE_REQUEST;
+    gameId: string;
+}
+
+export type GameDeleteAction =
+    | GameDeleteRequest
+    | { type: typeof GAME_DELETE_SUCCESS }
+    | { type: typeof GAME_DELETE_FAILURE };
+
 export interface GameListSuccess {
     type: typeof GAME_LIST_SUCCESS;
     byId: GamesCollection;
@@ -258,7 +271,7 @@ export type GameCreatePdfAction =
     | { type: typeof GAME_CREATE_PDF_SUCCESS }
     | { type: typeof GAME_CREATE_PDF_FAILURE };
 
-export type GameAction = GameCreateAction | GameListAction | GameSelectAction | GameCreatePdfAction;
+export type GameAction = GameCreateAction | GameDeleteAction | GameListAction | GameSelectAction | GameCreatePdfAction;
 
 export interface CardSetCreateRequest {
     type: typeof CARDSET_CREATE_REQUEST;
@@ -586,6 +599,13 @@ export const gameCreateRequest = (gamename: string): GameAction => {
     return {
         type: GAME_CREATE_REQUEST,
         gamename: gamename,
+    };
+};
+
+export const gameDeleteRequest = (gameId: string): GameAction => {
+    return {
+        type: GAME_DELETE_REQUEST,
+        gameId,
     };
 };
 
