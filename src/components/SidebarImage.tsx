@@ -211,7 +211,12 @@ export class SidebarImage extends Component<Props, LocalState> {
                             </form>
                         </div>
                         <div>
-                            <input type="text" value={filter} onChange={this.handleFilterChange} />
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={filter}
+                                onChange={this.handleFilterChange}
+                            />
                         </div>
                         <div className={style.images}>
                             {this.props.images.map(im => {
