@@ -33,6 +33,7 @@ import {
     CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
     CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
+    CARDSET_RENAME_REQUEST,
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
@@ -372,6 +373,19 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
+        case CARDSET_RENAME_REQUEST:
+            const cardset = state.byId[action.cardSetId];
+
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [cardset.id]: {
+                        ...cardset,
+                        name: action.newName,
+                    },
+                },
+            };
         case CARDSET_UPDATE_DATA_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_UPDATING,

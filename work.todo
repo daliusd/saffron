@@ -153,26 +153,32 @@
     + Game Delete
     + Game Rename
 
-- Card Sets
++ Card Sets
     + Specify card size when creating new card set
-    - Delete Card Set
-    - Rename Card Set
-    - Show Card Set name in Card Set page.
+    + Delete Card Set
+    + Show Card Set name in Card Set page.
+    + Rename Card Set
+
+- Add placeholder to search field
+- Fit by width
+- Fit by height
+- Stretch image
+- Remove image from field
+- Allow changing image's color if it is SVG
+- Apply image to all cards (e.g. if we want to change background).
+
+- Allow to set line height
 
 - Cards can have two sides
 
-- Allow changing image's color if it is SVG
-
 - UI ideas
+    - Manual control of field (separate sidebar control)
     - Snapping
     - Keyboard manipulation
     - Special visual effects
     - Change add card button to fake card
     - Drag and drop for images would be cool
     + Give white shadow to rotate and resize controls
-
-- Allow to set line height
-- Apply image to all cards (e.g. if we want to change background).
 
 - PDF Output improvements
     - cut marks outside of design

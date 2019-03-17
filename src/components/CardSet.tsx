@@ -4,6 +4,7 @@ import shortid from 'shortid';
 
 import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, State } from '../reducers';
 import {
+    CardSetType,
     CardType,
     CardsCollection,
     Dispatch,
@@ -11,10 +12,12 @@ import {
     cardSetChangeHeight,
     cardSetChangeWidth,
     cardSetCreateCard,
+    cardSetRenameRequest,
     cardSetSetZoom,
     gameCreatePdfRequest,
 } from '../actions';
 import Card from './Card';
+import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import Loader from './Loader';
 import Sidebar from './Sidebar';
@@ -29,6 +32,7 @@ interface StateProps {
     isCreatingPdf: boolean;
     activity: number;
     zoom: number;
+    activeCardSet: CardSetType | null;
 }
 
 interface DispatchProps {
@@ -103,8 +107,25 @@ export class CardSet extends Component<Props, LocalState> {
         dispatch(cardSetActiveCardAndPlaceholder(null, null));
     };
 
+    handleCardSetNameChange = (newName: string) => {
+        const { dispatch, activeCardSet } = this.props;
+        if (activeCardSet !== null) {
+            dispatch(cardSetRenameRequest(activeCardSet.id, newName));
+        }
+    };
+
     render() {
-        const { isAuthenticated, cardsAllIds, cardsById, width, height, isCreatingPdf, activity, zoom } = this.props;
+        const {
+            isAuthenticated,
+            cardsAllIds,
+            cardsById,
+            width,
+            height,
+            isCreatingPdf,
+            activity,
+            zoom,
+            activeCardSet,
+        } = this.props;
 
         return (
             isAuthenticated && (
@@ -118,6 +139,10 @@ export class CardSet extends Component<Props, LocalState> {
                             <Sidebar />
                         </div>
                         <div onMouseDown={this.handleClickOutsideOfCard} onTouchStart={this.handleClickOutsideOfCard}>
+                            {activeCardSet !== null && (
+                                <EditableTitle title={activeCardSet.name} onChange={this.handleCardSetNameChange} />
+                            )}
+
                             <div className="form">
                                 <label htmlFor="card_width">Card width (mm):</label>
                                 <input
@@ -235,6 +260,10 @@ const mapStateToProps = (state: State): StateProps => {
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
         isCreatingPdf: (state.games.activity & ACTIVITY_CREATING_PDF) === ACTIVITY_CREATING_PDF,
+        activeCardSet:
+            state.cardsets.active && state.cardsets.byId[state.cardsets.active]
+                ? state.cardsets.byId[state.cardsets.active]
+                : null,
     };
 };
 

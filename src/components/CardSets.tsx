@@ -8,10 +8,12 @@ import {
     GameType,
     IdsArray,
     cardSetCreateRequest,
+    cardSetDeleteRequest,
     gameRenameRequest,
     messageDisplay,
 } from '../actions';
 import { State } from '../reducers';
+import ConfirmedDelete from './ConfirmedDelete';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 
@@ -71,6 +73,11 @@ export class CardSets extends Component<Props, LocalState> {
         }
     };
 
+    handleCardSetDelete = (cardSetId: string) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetDeleteRequest(cardSetId));
+    };
+
     render() {
         const { isAuthenticated, activeGame, allIds, byId } = this.props;
 
@@ -78,7 +85,11 @@ export class CardSets extends Component<Props, LocalState> {
             .map(gameId => byId[gameId])
             .map(cardset => (
                 <li key={cardset.id}>
-                    <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>
+                    <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>{' '}
+                    <ConfirmedDelete
+                        question="Do you really want to delete this card set?"
+                        onDelete={() => this.handleCardSetDelete(cardset.id)}
+                    />
                 </li>
             ));
 

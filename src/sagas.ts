@@ -26,6 +26,7 @@ import {
     CARDSET_CREATE_REQUEST,
     CARDSET_CREATE_SUCCESS,
     CARDSET_DELETE_IMAGE,
+    CARDSET_DELETE_REQUEST,
     CARDSET_IMPORT_DATA,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
@@ -34,6 +35,7 @@ import {
     CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
     CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
     CARDSET_REMOVE_CARD,
+    CARDSET_RENAME_REQUEST,
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
@@ -48,6 +50,8 @@ import {
     CARDSET_UPLOAD_IMAGE_SUCCESS,
     CardSetCreateRequest,
     CardSetDeleteImage,
+    CardSetDeleteRequest,
+    CardSetRenameRequest,
     CardSetSelectRequest,
     CardSetType,
     CardSetUploadImage,
@@ -415,6 +419,27 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): SagaI
     }
 }
 
+export function* handleCardSetDeleteRequest(action: CardSetDeleteRequest): SagaIterator {
+    try {
+        yield call(authorizedDeleteRequest, '/api/cardsets/' + action.cardSetId);
+        yield put({ type: GAME_LIST_REQUEST });
+
+        const state = yield select();
+        yield put(gameSelectRequest(state.games.active, true));
+    } catch (e) {
+        yield call(putError, e.message);
+    }
+}
+
+export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaIterator {
+    try {
+        yield call(delay, 500);
+        yield call(authorizedPutRequest, '/api/cardsets/' + action.cardSetId, { name: action.newName });
+    } catch (e) {
+        yield call(putError, e.message);
+    }
+}
+
 export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaIterator {
     try {
         const data = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
@@ -555,6 +580,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
         takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
+        takeLatest(CARDSET_DELETE_REQUEST, handleCardSetDeleteRequest),
+        takeLatest(CARDSET_RENAME_REQUEST, handleCardSetRenameRequest),
         takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
         takeEvery(CARDSET_UPLOAD_IMAGE, handleCardSetUploadImage),
         takeEvery(CARDSET_DELETE_IMAGE, handleCardSetDeleteImage),

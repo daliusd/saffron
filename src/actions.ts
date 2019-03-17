@@ -32,6 +32,8 @@ export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
 export const CARDSET_CREATE_FAILURE = 'CARDSET_CREATE_FAILURE';
+export const CARDSET_DELETE_REQUEST = 'CARDSET_DELETE_REQUEST';
+export const CARDSET_RENAME_REQUEST = 'CARDSET_RENAME_REQUEST';
 export const CARDSET_IMPORT_DATA = 'CARDSET_IMPORT_DATA';
 export const CARDSET_LIST_SUCCESS = 'CARDSET_LIST_SUCCESS';
 export const CARDSET_LIST_REQUEST = 'CARDSET_LIST_REQUEST';
@@ -295,6 +297,17 @@ export type CardSetCreateAction =
     | { type: typeof CARDSET_CREATE_SUCCESS }
     | { type: typeof CARDSET_CREATE_FAILURE };
 
+export interface CardSetDeleteRequest {
+    type: typeof CARDSET_DELETE_REQUEST;
+    cardSetId: string;
+}
+
+export interface CardSetRenameRequest {
+    type: typeof CARDSET_RENAME_REQUEST;
+    cardSetId: string;
+    newName: string;
+}
+
 export interface CardSetImportData {
     type: typeof CARDSET_IMPORT_DATA;
     data: object;
@@ -542,6 +555,8 @@ export type CardSetModifyAction =
 
 export type CardSetAction =
     | CardSetCreateAction
+    | CardSetDeleteRequest
+    | CardSetRenameRequest
     | CardSetImportData
     | CardSetListAction
     | CardSetSelectAction
@@ -668,6 +683,21 @@ export const cardSetCreateRequest = (
         width,
         height,
         gameId,
+    };
+};
+
+export const cardSetDeleteRequest = (cardSetId: string): CardSetAction => {
+    return {
+        type: CARDSET_DELETE_REQUEST,
+        cardSetId,
+    };
+};
+
+export const cardSetRenameRequest = (cardSetId: string, newName: string): CardSetAction => {
+    return {
+        type: CARDSET_RENAME_REQUEST,
+        cardSetId,
+        newName,
     };
 };
 
