@@ -58,19 +58,19 @@ import {
     GAME_CREATE_PDF_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
-    GAME_DELETE_FAILURE,
     GAME_DELETE_REQUEST,
-    GAME_DELETE_SUCCESS,
     GAME_LIST_FAILURE,
     GAME_LIST_REQUEST,
     GAME_LIST_RESET,
     GAME_LIST_SUCCESS,
+    GAME_RENAME_REQUEST,
     GAME_SELECT_FAILURE,
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
     GameCreatePdfRequest,
     GameCreateRequest,
     GameDeleteRequest,
+    GameRenameRequest,
     GameSelectRequest,
     GameType,
     GamesCollection,
@@ -303,12 +303,17 @@ export function* handleGameCreateRequest(action: GameCreateRequest): SagaIterato
 export function* handleGameDeleteRequest(action: GameDeleteRequest): SagaIterator {
     try {
         yield call(authorizedDeleteRequest, '/api/games/' + action.gameId);
-        yield put({
-            type: GAME_DELETE_SUCCESS,
-        });
         yield put({ type: GAME_LIST_REQUEST });
     } catch (e) {
-        yield put({ type: GAME_DELETE_FAILURE });
+        yield call(putError, e.message);
+    }
+}
+
+export function* handleGameRenameRequest(action: GameRenameRequest): SagaIterator {
+    try {
+        yield call(delay, 500);
+        yield call(authorizedPutRequest, '/api/games/' + action.gameId, { name: action.newName });
+    } catch (e) {
         yield call(putError, e.message);
     }
 }
@@ -545,6 +550,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(SIGNUP_REQUEST, handleSignupRequest),
         takeLatest(GAME_CREATE_REQUEST, handleGameCreateRequest),
         takeLatest(GAME_DELETE_REQUEST, handleGameDeleteRequest),
+        takeLatest(GAME_RENAME_REQUEST, handleGameRenameRequest),
         takeLatest(GAME_LIST_REQUEST, handleGameListRequest),
         takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
         takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),

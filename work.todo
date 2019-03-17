@@ -149,9 +149,9 @@
 + Background control
     + Use image for background
         + Allow uploading images
-- Games
++ Games
     + Game Delete
-    - Game Rename
+    + Game Rename
 
 - Card Sets
     + Specify card size when creating new card set

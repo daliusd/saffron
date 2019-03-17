@@ -2,14 +2,23 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardSetsCollection, Dispatch, IdsArray, cardSetCreateRequest, messageDisplay } from '../actions';
+import {
+    CardSetsCollection,
+    Dispatch,
+    GameType,
+    IdsArray,
+    cardSetCreateRequest,
+    gameRenameRequest,
+    messageDisplay,
+} from '../actions';
 import { State } from '../reducers';
+import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface Props {
     dispatch: Dispatch;
     isAuthenticated: boolean;
-    activeGame: string | null;
+    activeGame: GameType | null;
     allIds: IdsArray;
     byId: CardSetsCollection;
 }
@@ -25,6 +34,13 @@ export class CardSets extends Component<Props, LocalState> {
         cardSetName: '',
         width: 63.5,
         height: 88.9,
+    };
+
+    handleGameNameChange = (newName: string) => {
+        const { dispatch, activeGame } = this.props;
+        if (activeGame !== null) {
+            dispatch(gameRenameRequest(activeGame.id, newName));
+        }
     };
 
     handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +65,7 @@ export class CardSets extends Component<Props, LocalState> {
         const cardSetName = this.state.cardSetName.trim();
 
         if (cardSetName) {
-            dispatch(cardSetCreateRequest(cardSetName, this.state.width, this.state.height, activeGame));
+            dispatch(cardSetCreateRequest(cardSetName, this.state.width, this.state.height, activeGame.id));
         } else {
             dispatch(messageDisplay('error', 'Card Set name should be non empty.'));
         }
@@ -74,6 +90,8 @@ export class CardSets extends Component<Props, LocalState> {
                         Each game is made from card sets. Card set is collection of cards that share the same properties
                         but have different text and images.
                     </KawaiiMessage>
+
+                    <EditableTitle title={activeGame.name} onChange={this.handleGameNameChange} />
 
                     <ul>{cardsetItems}</ul>
 
@@ -124,7 +142,8 @@ export class CardSets extends Component<Props, LocalState> {
 const mapStateToProps = (state: State) => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activeGame: state.games.active,
+        activeGame:
+            state.games.active && state.games.byId[state.games.active] ? state.games.byId[state.games.active] : null,
         allIds: state.cardsets.allIds,
         byId: state.cardsets.byId,
     };

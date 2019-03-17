@@ -57,6 +57,7 @@ import {
     GAME_LIST_REQUEST,
     GAME_LIST_RESET,
     GAME_LIST_SUCCESS,
+    GAME_RENAME_REQUEST,
     GAME_SELECT_FAILURE,
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
@@ -294,6 +295,19 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING,
             });
+        case GAME_RENAME_REQUEST:
+            const game = state.byId[action.gameId];
+
+            return {
+                ...state,
+                byId: {
+                    ...state.byId,
+                    [game.id]: {
+                        ...game,
+                        name: action.newName,
+                    },
+                },
+            };
         case GAME_LIST_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_LISTING,
