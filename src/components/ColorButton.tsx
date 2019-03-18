@@ -41,7 +41,7 @@ export default class ColorButton extends Component<Props, State> {
         };
         return (
             <>
-                <button onClick={this.handleClick} title="Change text color">
+                <button onClick={this.handleClick} title="Change color">
                     <i className="material-icons">color_lens</i>
                 </button>
                 {this.state.displayColorPicker ? (

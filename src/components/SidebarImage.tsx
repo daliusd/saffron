@@ -141,6 +141,15 @@ export class SidebarImage extends Component<Props, LocalState> {
         }
     };
 
+    handleRemoveColorClick = () => {
+        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
+
+        if (activeCard && activePlaceholder && imageInfo) {
+            const ii: ImageInfo = { ...imageInfo, color: undefined };
+            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+        }
+    };
+
     render() {
         const { activePlaceholder, imageInfo, filter, visible } = this.props;
         const { location } = this.state;
@@ -247,6 +256,11 @@ export class SidebarImage extends Component<Props, LocalState> {
                                 color={(imageInfo && imageInfo.color) || '#FFFFFF'}
                                 onChange={this.handleColorChange}
                             />
+                            {imageInfo && imageInfo.color && (
+                                <button onClick={this.handleRemoveColorClick} title="Remove color">
+                                    <i className="material-icons">remove_circle</i>
+                                </button>
+                            )}
                         </div>
                         <div>
                             <form>
