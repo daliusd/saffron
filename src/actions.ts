@@ -53,6 +53,7 @@ export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLA
 export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM';
 export const CARDSET_LOCK_ACTIVE_PLACEHOLDER = 'CARDSET_LOCK_ACTIVE_PLACEHOLDER';
 export const CARDSET_UNLOCK_ACTIVE_PLACEHOLDER = 'CARDSET_UNLOCK_ACTIVE_PLACEHOLDER';
+export const CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
@@ -68,6 +69,7 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT =
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE';
 export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
+export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER = 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
 export const CARDSET_UPDATE_DATA_REQUEST = 'CARDSET_UPDATE_DATA_REQUEST';
 export const CARDSET_UPDATE_DATA_SUCCESS = 'CARDSET_UPDATE_DATA_SUCCESS';
@@ -126,6 +128,7 @@ export interface TextPlaceholderType extends PlaceholderBase {
 export interface ImagePlaceholderType extends PlaceholderBase {
     id: string;
     type: 'image';
+    fit?: string;
 }
 
 export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;
@@ -149,6 +152,8 @@ export interface PlaceholdersTextInfoByCardCollection {
 export interface ImageInfo {
     url: string;
     global?: boolean;
+    base64?: string;
+    color?: string;
 }
 
 export interface PlaceholdersImageInfoCollection {
@@ -387,6 +392,10 @@ export interface CardSetLockActivePlaceholder {
 export interface CardSetUnlockActivePlaceholder {
     type: typeof CARDSET_UNLOCK_ACTIVE_PLACEHOLDER;
 }
+export interface CardSetChangeFitForActivePlaceholder {
+    type: typeof CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER;
+    fit: string;
+}
 
 export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
@@ -451,6 +460,12 @@ export interface CardSetChangeImage {
     cardId: string;
     placeholderId: string;
     imageInfo: ImageInfo;
+}
+export interface CardSetChangeImageBase64 {
+    type: typeof CARDSET_CHANGE_IMAGE_BASE64;
+    cardId: string;
+    placeholderId: string;
+    base64?: string;
 }
 export interface CardSetSetActiveCardAndPlaceholder {
     type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER;
@@ -532,6 +547,7 @@ export type CardSetModifyAction =
     | CardSetLowerActivePlaceholderToBottom
     | CardSetLockActivePlaceholder
     | CardSetUnlockActivePlaceholder
+    | CardSetChangeFitForActivePlaceholder
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangePlaceholderPosition
@@ -545,6 +561,7 @@ export type CardSetModifyAction =
     | CardSetChangeActiveTextPlaceholderFontSize
     | CardSetChangeText
     | CardSetChangeImage
+    | CardSetChangeImageBase64
     | CardSetSetActiveCardAndPlaceholder
     | CardSetSetSidebarState
     | CardSetSetZoom
@@ -793,6 +810,13 @@ export const cardSetUnlockActivePlaceholder = (): CardSetUnlockActivePlaceholder
     };
 };
 
+export const cardSetChangeFitForActivePlaceholder = (fit: string): CardSetChangeFitForActivePlaceholder => {
+    return {
+        type: CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
+        fit,
+    };
+};
+
 export const cardSetChangeWidth = (width: number): CardSetChangeWidth => {
     return {
         type: CARDSET_CHANGE_WIDTH,
@@ -911,6 +935,19 @@ export const cardSetChangeImage = (cardId: string, placeholderId: string, imageI
         cardId,
         placeholderId,
         imageInfo,
+    };
+};
+
+export const cardSetChangeImageBase64 = (
+    cardId: string,
+    placeholderId: string,
+    base64?: string,
+): CardSetChangeImageBase64 => {
+    return {
+        type: CARDSET_CHANGE_IMAGE_BASE64,
+        cardId,
+        placeholderId,
+        base64,
     };
 };
 

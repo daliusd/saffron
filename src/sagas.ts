@@ -1,4 +1,5 @@
 import { CancelToken } from 'axios';
+import { XmlDocument } from 'xmldoc';
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
@@ -13,6 +14,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
@@ -48,6 +50,8 @@ import {
     CARDSET_UPLOAD_IMAGE,
     CARDSET_UPLOAD_IMAGE_FAILURE,
     CARDSET_UPLOAD_IMAGE_SUCCESS,
+    CardSetChangeFitForActivePlaceholder,
+    CardSetChangeImage,
     CardSetCreateRequest,
     CardSetDeleteImage,
     CardSetDeleteRequest,
@@ -97,9 +101,11 @@ import {
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
     SignUpRequest,
+    cardSetChangeImageBase64,
     gameSelectRequest,
     messageDisplay,
 } from './actions';
+import { State } from './reducers';
 import {
     deleteAccessToken,
     deleteRefreshToken,
@@ -324,9 +330,9 @@ export function* handleGameRenameRequest(action: GameRenameRequest): SagaIterato
 
 export function* handleGameListRequest(): SagaIterator {
     try {
-        const data = yield call(authorizedGetRequest, '/api/games');
-        const allIds = data.games.map((g: GameType) => g.id);
-        const byId = data.games.reduce((obj: GamesCollection, g: GameType) => {
+        const resp = yield call(authorizedGetRequest, '/api/games');
+        const allIds = resp.data.games.map((g: GameType) => g.id);
+        const byId = resp.data.games.reduce((obj: GamesCollection, g: GameType) => {
             obj[g.id] = g;
             return obj;
         }, {});
@@ -343,15 +349,15 @@ export function* handleGameListRequest(): SagaIterator {
 
 export function* handleGameSelectRequest(action: GameSelectRequest): SagaIterator {
     try {
-        const data = yield call(authorizedGetRequest, '/api/games/' + action.id);
+        const resp = yield call(authorizedGetRequest, '/api/games/' + action.id);
         yield put({
             type: GAME_SELECT_SUCCESS,
             id: action.id,
         });
 
         if (action.updateCardSets) {
-            const allIds = data.cardsets.map((g: CardSetType) => g.id);
-            const byId = data.cardsets.reduce((obj: CardSetsCollection, g: CardSetType) => {
+            const allIds = resp.data.cardsets.map((g: CardSetType) => g.id);
+            const byId = resp.data.cardsets.reduce((obj: CardSetsCollection, g: CardSetType) => {
                 obj[g.id] = g;
                 return obj;
             }, {});
@@ -442,19 +448,19 @@ export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaI
 
 export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaIterator {
     try {
-        const data = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
-        const parsedData = JSON.parse(data.data);
+        const resp = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
+        const parsedData = JSON.parse(resp.data.data);
         if (!('placeholdersAllIds' in parsedData) && 'placeholders' in parsedData) {
             parsedData.placeholdersAllIds = Object.keys(parsedData.placeholders);
         }
         yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
             type: CARDSET_SELECT_SUCCESS,
-            id: data.id,
-            name: data.name,
+            id: resp.data.id,
+            name: resp.data.name,
             data: parsedData,
         });
-        yield put(gameSelectRequest(data.gameId, false));
+        yield put(gameSelectRequest(resp.data.gameId, false));
     } catch (e) {
         yield put({ type: CARDSET_SELECT_FAILURE });
         yield call(putError, e.message);
@@ -500,6 +506,69 @@ export function* handleCardSetDeleteImage(action: CardSetDeleteImage): SagaItera
         action.load();
     } catch (e) {
         action.error(e.message);
+    }
+}
+
+function adjustSvg(data: string): string {
+    const doc = new XmlDocument(data);
+    doc.attr['preserveAspectRatio'] = 'none';
+    return btoa(doc.toString({ compressed: true }));
+}
+
+export function* handleCardSetFitChange(action: CardSetChangeFitForActivePlaceholder): SagaIterator {
+    try {
+        yield call(delay, 100);
+        const state: State = yield select();
+
+        if (state.cardsets.activePlaceholder === null) {
+            return;
+        }
+
+        for (const cardId in state.cardsets.cardsById) {
+            const image = state.cardsets.images[cardId][state.cardsets.activePlaceholder];
+            const imageResp = yield call(authorizedGetRequest, image.url);
+            if (imageResp.headers['content-type'] === 'image/svg+xml') {
+                if (action.fit === 'stretch') {
+                    const svg = adjustSvg(imageResp.data);
+                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
+                } else {
+                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, undefined));
+                }
+            }
+        }
+    } catch (e) {
+        yield call(putError, e.message);
+    }
+}
+
+export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaIterator {
+    try {
+        yield call(delay, 100);
+        const state: State = yield select();
+
+        const placeholder = state.cardsets.placeholders[action.placeholderId];
+        if (placeholder.type === 'image') {
+            const imageResp = yield call(authorizedGetRequest, action.imageInfo.url);
+
+            if (imageResp.headers['content-type'] === 'image/svg+xml') {
+                const name = placeholder.name || placeholder.id;
+
+                for (const plId in state.cardsets.placeholders) {
+                    const pl = state.cardsets.placeholders[plId];
+
+                    if ((pl.name === name || pl.id === name) && pl.type === 'image') {
+                        if (pl.fit === 'stretch') {
+                            const svg = adjustSvg(imageResp.data);
+                            yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
+                        } else {
+                            yield put(cardSetChangeImageBase64(action.cardId, plId, undefined));
+                        }
+                    }
+                }
+            }
+        }
+    } catch (e) {
+        yield call(putError, e.message);
     }
 }
 
@@ -553,8 +622,8 @@ export function* handleImageListRequest(action: ImageListRequest): SagaIterator 
         const filter = encodeURIComponent(action.filter);
         const location = encodeURIComponent(action.location);
         const game = encodeURIComponent(state.games.active);
-        const data = yield call(authorizedGetRequest, `/api/images?name=${filter}&location=${location}&game=${game}`);
-        const images = data.images;
+        const resp = yield call(authorizedGetRequest, `/api/images?name=${filter}&location=${location}&game=${game}`);
+        const images = resp.data.images;
         yield put({
             type: IMAGE_LIST_SUCCESS,
             images,
@@ -585,6 +654,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_SELECT_REQUEST, handleCardSetSelectRequest),
         takeEvery(CARDSET_UPLOAD_IMAGE, handleCardSetUploadImage),
         takeEvery(CARDSET_DELETE_IMAGE, handleCardSetDeleteImage),
+        takeEvery(CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER, handleCardSetFitChange),
+        takeEvery(CARDSET_CHANGE_IMAGE, handleCardSetChangeImage),
 
         takeLatest(CARDSET_CREATE_CARD, handleCardSetChange),
         takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),
@@ -598,6 +669,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM, handleCardSetChange),
         takeLatest(CARDSET_LOCK_ACTIVE_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_UNLOCK_ACTIVE_PLACEHOLDER, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_WIDTH, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_HEIGHT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_POSITION, handleCardSetChange),

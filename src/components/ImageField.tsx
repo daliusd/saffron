@@ -128,7 +128,11 @@ class ImageField extends PureComponent<Props> {
                     }}
                 >
                     <img
-                        style={{ opacity: imageUrl.length > 0 ? 1 : 0.5, width: '100%', height: 'auto' }}
+                        style={{
+                            opacity: imageUrl.length > 0 ? 1 : 0.5,
+                            width: imagePlaceholder.fit === 'height' ? 'auto' : '100%',
+                            height: !imagePlaceholder.fit || imagePlaceholder.fit === 'width' ? 'auto' : '100%',
+                        }}
                         src={imageUrl || emptyImageImage}
                         alt=""
                     />
@@ -139,12 +143,20 @@ class ImageField extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const imageUrl =
+    const imageInfo =
         state.cardsets.images &&
         state.cardsets.images[props.cardId] &&
-        state.cardsets.images[props.cardId][props.imagePlaceholder.id]
-            ? state.cardsets.images[props.cardId][props.imagePlaceholder.id].url
-            : '';
+        state.cardsets.images[props.cardId][props.imagePlaceholder.id];
+
+    let imageUrl = '';
+    if (imageInfo) {
+        if (imageInfo.base64) {
+            imageUrl = 'data:image/svg+xml;base64,' + imageInfo.base64;
+        } else {
+            imageUrl = imageInfo.url;
+        }
+    }
+
     return {
         imageUrl,
     };

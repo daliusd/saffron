@@ -11,8 +11,10 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
+    CARDSET_CHANGE_IMAGE_BASE64,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
@@ -712,6 +714,24 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
 
             return state;
         }
+        case CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER: {
+            if (state.activePlaceholder) {
+                const placeholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    fit: action.fit,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: placeholder,
+                    },
+                };
+            }
+
+            return state;
+        }
         case CARDSET_CHANGE_WIDTH: {
             return {
                 ...state,
@@ -973,6 +993,26 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     placeholdersByCard[plId] = action.imageInfo;
                 }
             }
+
+            return {
+                ...state,
+                images: {
+                    ...state.images,
+                    [action.cardId]: placeholdersByCard,
+                },
+            };
+        }
+
+        case CARDSET_CHANGE_IMAGE_BASE64: {
+            let placeholdersByCard: PlaceholdersImageInfoCollection = {};
+            if (state.images && action.cardId in state.images) {
+                placeholdersByCard = { ...state.images[action.cardId] };
+            }
+
+            placeholdersByCard[action.placeholderId] = {
+                ...placeholdersByCard[action.placeholderId],
+                base64: action.base64,
+            };
 
             return {
                 ...state,

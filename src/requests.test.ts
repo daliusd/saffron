@@ -90,7 +90,7 @@ test('registerUser failure', async () => {
 
 test('getRequest success', () => {
     mockedAxios.get.mockResolvedValue({ data: 'data' });
-    expect(getRequest('/ok', 'token')).resolves.toEqual('data');
+    expect(getRequest('/ok', 'token')).resolves.toEqual({ data: 'data' });
 });
 
 test('getRequest failure', async () => {

@@ -89,7 +89,7 @@ export function getRequest(url: string, token: string) {
     return axios
         .get(url, config)
         .then(resp => {
-            return resp.data;
+            return resp;
         })
         .catch(error => {
             handleAxiosError(error);

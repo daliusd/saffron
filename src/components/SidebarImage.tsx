@@ -8,6 +8,7 @@ import {
     PlaceholderType,
     cardSetAddImagePlaceholder,
     cardSetChangeActivePlaceholderName,
+    cardSetChangeFitForActivePlaceholder,
     cardSetChangeImage,
     cardSetLockActivePlaceholder,
     cardSetLowerActivePlaceholderToBottom,
@@ -104,6 +105,13 @@ export class SidebarImage extends Component<Props, LocalState> {
         }
     };
 
+    handleFitOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        const fit = event.target.value;
+
+        dispatch(cardSetChangeFitForActivePlaceholder(fit));
+    };
+
     handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { filter, dispatch } = this.props;
         const location = event.target.value;
@@ -165,6 +173,41 @@ export class SidebarImage extends Component<Props, LocalState> {
                             title="Change name of image field."
                         />
                     )}
+
+                    {activePlaceholder && activePlaceholder.type === 'image' && (
+                        <form>
+                            <div>
+                                Fit:
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="width"
+                                        checked={!activePlaceholder.fit || activePlaceholder.fit === 'width'}
+                                        onChange={this.handleFitOptionChange}
+                                    />
+                                    width
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="height"
+                                        checked={activePlaceholder.fit === 'height'}
+                                        onChange={this.handleFitOptionChange}
+                                    />
+                                    height
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="stretch"
+                                        checked={activePlaceholder.fit === 'stretch'}
+                                        onChange={this.handleFitOptionChange}
+                                    />
+                                    stretch
+                                </label>
+                            </div>
+                        </form>
+                    )}
                 </div>
 
                 {activePlaceholder && activePlaceholder.type === 'image' && (
@@ -173,41 +216,35 @@ export class SidebarImage extends Component<Props, LocalState> {
                             <img src={imageUrl} alt="" />
                         </div>
                         <div>
-                            Where to look for images?
                             <form>
-                                <div>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            value="all"
-                                            checked={location === 'all'}
-                                            onChange={this.handleOptionChange}
-                                        />
-                                        All images
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            value="user"
-                                            checked={location === 'user'}
-                                            onChange={this.handleOptionChange}
-                                        />
-                                        User images
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        <input
-                                            type="radio"
-                                            value="game"
-                                            checked={location === 'game'}
-                                            onChange={this.handleOptionChange}
-                                        />
-                                        Game images
-                                    </label>
-                                </div>
+                                Source:
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="all"
+                                        checked={location === 'all'}
+                                        onChange={this.handleOptionChange}
+                                    />
+                                    All
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="user"
+                                        checked={location === 'user'}
+                                        onChange={this.handleOptionChange}
+                                    />
+                                    User
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        value="game"
+                                        checked={location === 'game'}
+                                        onChange={this.handleOptionChange}
+                                    />
+                                    Game
+                                </label>
                             </form>
                         </div>
                         <div>

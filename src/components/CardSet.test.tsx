@@ -39,6 +39,7 @@ describe('<CardSet />', () => {
                 isAuthenticated={true}
                 cardsAllIds={['1']}
                 cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
+                activeCardSet={null}
             />,
         );
     });
@@ -51,6 +52,7 @@ describe('<CardSet />', () => {
                 isAuthenticated={true}
                 cardsAllIds={['1']}
                 cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
+                activeCardSet={null}
             />,
         );
         wrapper
@@ -68,6 +70,7 @@ describe('<CardSet />', () => {
                 isAuthenticated={true}
                 cardsAllIds={['1']}
                 cardsById={{ '1': { id: '1', name: 'test', count: 1 } }}
+                activeCardSet={null}
             />,
         );
         wrapper

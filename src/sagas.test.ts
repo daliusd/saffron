@@ -389,8 +389,10 @@ test('handleGameListRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    const data: { games: GameType[] } = { games: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }] };
-    expect(gen.next(data).value).toEqual(
+    const resp: { data: { games: GameType[] } } = {
+        data: { games: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }] },
+    };
+    expect(gen.next(resp).value).toEqual(
         put({
             type: GAME_LIST_SUCCESS,
             allIds: ['2', '1'],
@@ -418,11 +420,11 @@ test('handleGameSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    const data: { cardsets: CardSetType[] } = {
-        cardsets: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }],
+    const resp: { data: { cardsets: CardSetType[] } } = {
+        data: { cardsets: [{ id: '2', name: 'test' }, { id: '1', name: 'test2' }] },
     };
 
-    expect(gen.next(data).value).toEqual(put({ type: GAME_SELECT_SUCCESS, id: '123' }));
+    expect(gen.next(resp).value).toEqual(put({ type: GAME_SELECT_SUCCESS, id: '123' }));
     expect(gen.next().value).toEqual(
         put({
             type: CARDSET_LIST_SUCCESS,
@@ -492,9 +494,9 @@ test('handleCardSetSelectRequest', () => {
     let clone = gen.clone();
 
     // Successful request
-    expect(gen.next({ id: '345', name: 'test', data: '{ "placeholders": {} }', gameId: '666' }).value).toEqual(
-        call(loadFontsUsedInPlaceholders, { placeholders: {}, placeholdersAllIds: [] }),
-    );
+    expect(
+        gen.next({ data: { id: '345', name: 'test', data: '{ "placeholders": {} }', gameId: '666' } }).value,
+    ).toEqual(call(loadFontsUsedInPlaceholders, { placeholders: {}, placeholdersAllIds: [] }));
 
     expect(gen.next().value).toEqual(
         put({
@@ -539,6 +541,7 @@ test('handleCardSetChange', () => {
                 height: 88.9,
                 cardsAllIds: [],
                 cardsById: {},
+                placeholdersAllIds: [],
                 placeholders: {},
                 texts: {},
                 images: {},
