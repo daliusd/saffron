@@ -165,8 +165,9 @@
 + Stretch image
 + SVG stretching
 + Remove image from field
-- Allow changing image's color if it is SVG
++ Allow changing image's color if it is SVG
 - Apply image to all cards (e.g. if we want to change background).
+- Add basic forms to collection
 
 - Allow to set line height
 
@@ -179,16 +180,17 @@
     - Special visual effects
     - Change add card button to fake card
     - Drag and drop for images would be cool
+    - Lower / Raise field one step
     + Give white shadow to rotate and resize controls
+
+- Add support for cutting edges
+    - Investigate make playing card templates. Change naming appropriately.
+    - Create some cards templates. Potentially with edges.
 
 - PDF Output improvements
     - cut marks outside of design
     - empty space between cards
     - Generate PDF for full game
-
-- Add support for cutting edges
-    - Investigate make playing card templates. Change naming appropriately.
-    - Create some cards templates. Potentially with edges.
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users

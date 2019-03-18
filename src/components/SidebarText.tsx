@@ -12,11 +12,13 @@ import {
     cardSetRaiseActivePlaceholderToTop,
     cardSetRemoveActivePlaceholder,
     cardSetUnlockActivePlaceholder,
+    cardSetChangeActiveTextPlaceholderColor,
 } from '../actions';
 import { State } from '../reducers';
 import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
 import style from './SidebarText.module.css';
+import { ColorResult } from 'react-color';
 
 interface StateProps {
     isAuthenticated: boolean;
@@ -89,8 +91,24 @@ export class SidebarText extends Component<Props> {
         }
     };
 
+    handleColorChange = (color: ColorResult) => {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        if (selection.rangeCount === 1 && range.collapsed) {
+            const { dispatch } = this.props;
+            dispatch(cardSetChangeActiveTextPlaceholderColor(color.hex));
+        } else {
+            document.execCommand('forecolor', false, color.hex);
+        }
+    };
+
     render() {
         const { activePlaceholder, visible } = this.props;
+
+        let color = '#000000';
+        if (activePlaceholder && activePlaceholder.type === 'text' && activePlaceholder.color) {
+            color = activePlaceholder.color;
+        }
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
@@ -150,7 +168,7 @@ export class SidebarText extends Component<Props> {
                     <button onClick={this.handleSetTextAlignRight} title="Align text right">
                         <i className="material-icons">format_align_right</i>
                     </button>
-                    <ColorButton />
+                    <ColorButton color={color} onChange={this.handleColorChange} />
                     <FontSelector />
                 </div>
             </div>

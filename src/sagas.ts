@@ -509,9 +509,20 @@ export function* handleCardSetDeleteImage(action: CardSetDeleteImage): SagaItera
     }
 }
 
-function adjustSvg(data: string): string {
+function adjustSvg(data: string, preserveAspectRatio: boolean, color?: string): string {
     const doc = new XmlDocument(data);
-    doc.attr['preserveAspectRatio'] = 'none';
+    if (!preserveAspectRatio) {
+        doc.attr['preserveAspectRatio'] = 'none';
+    }
+
+    if (color) {
+        for (let child of doc.children) {
+            if (child.type === 'element' && child.name === 'path' && 'fill' in child.attr) {
+                child.attr['fill'] = color;
+            }
+        }
+    }
+
     return btoa(doc.toString({ compressed: true }));
 }
 
@@ -529,7 +540,10 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActivePlaceho
             const imageResp = yield call(authorizedGetRequest, image.url);
             if (imageResp.headers['content-type'] === 'image/svg+xml') {
                 if (action.fit === 'stretch') {
-                    const svg = adjustSvg(imageResp.data);
+                    const svg = adjustSvg(imageResp.data, false, image.color);
+                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
+                } else if (image.color) {
+                    const svg = adjustSvg(imageResp.data, true, image.color);
                     yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
                 } else {
                     yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, undefined));
@@ -558,7 +572,10 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
 
                     if ((pl.name === name || pl.id === name) && pl.type === 'image') {
                         if (pl.fit === 'stretch') {
-                            const svg = adjustSvg(imageResp.data);
+                            const svg = adjustSvg(imageResp.data, false, action.imageInfo.color);
+                            yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
+                        } else if (action.imageInfo.color) {
+                            const svg = adjustSvg(imageResp.data, true, action.imageInfo.color);
                             yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
                         } else {
                             yield put(cardSetChangeImageBase64(action.cardId, plId, undefined));

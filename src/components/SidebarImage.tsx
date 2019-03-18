@@ -1,3 +1,4 @@
+import { ColorResult } from 'react-color';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
@@ -19,12 +20,13 @@ import {
 } from '../actions';
 import { DispatchProps, SidebarOwnProps } from '../types';
 import { State } from '../reducers';
+import ColorButton from './ColorButton';
 import style from './SidebarImage.module.css';
 
 interface StateProps {
     isAuthenticated: boolean;
     activePlaceholder: PlaceholderType | null;
-    imageUrl: string;
+    imageInfo?: ImageInfo;
     activeCard: CardType | null;
     filter: string;
     images: ImageArray;
@@ -77,10 +79,12 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleImageSelect = (imageName: string) => {
-        const { dispatch, activeCard, activePlaceholder } = this.props;
+        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
+
+        const color = imageInfo && imageInfo.color;
 
         if (activeCard && activePlaceholder) {
-            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}` };
+            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color };
             dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
         }
     };
@@ -128,8 +132,17 @@ export class SidebarImage extends Component<Props, LocalState> {
         dispatch(imageListRequest(filter, location));
     };
 
+    handleColorChange = (color: ColorResult) => {
+        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
+
+        if (activeCard && activePlaceholder && imageInfo) {
+            const ii: ImageInfo = { ...imageInfo, color: color.hex };
+            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+        }
+    };
+
     render() {
-        const { activePlaceholder, imageUrl, filter, visible } = this.props;
+        const { activePlaceholder, imageInfo, filter, visible } = this.props;
         const { location } = this.state;
 
         return (
@@ -146,7 +159,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                         <i className="material-icons">arrow_downward</i>
                     </button>
 
-                    {imageUrl !== '' && (
+                    {imageInfo && (
                         <button onClick={this.handleRemoveImageFromFieldClick} title="Remove image from field">
                             <i className="material-icons">remove_circle_outline</i>
                         </button>
@@ -227,7 +240,13 @@ export class SidebarImage extends Component<Props, LocalState> {
                 {activePlaceholder && activePlaceholder.type === 'image' && (
                     <>
                         <div className={style.image}>
-                            <img src={imageUrl} alt="" />
+                            <img src={imageInfo ? imageInfo.url : ''} alt="" />
+                        </div>
+                        <div>
+                            <ColorButton
+                                color={(imageInfo && imageInfo.color) || '#FFFFFF'}
+                                onChange={this.handleColorChange}
+                            />
                         </div>
                         <div>
                             <form>
@@ -296,20 +315,23 @@ const mapStateToProps = (state: State): StateProps => {
 
     const activeCard = state.cardsets.activeCard !== null ? state.cardsets.cardsById[state.cardsets.activeCard] : null;
 
-    const imageUrl =
+    let imageInfo = undefined;
+
+    if (
         state.cardsets.images &&
         activeCard &&
         state.cardsets.images[activeCard.id] &&
         activePlaceholder !== null &&
         activePlaceholder.type === 'image' &&
         state.cardsets.images[activeCard.id][activePlaceholder.id]
-            ? state.cardsets.images[activeCard.id][activePlaceholder.id].url
-            : '';
+    ) {
+        imageInfo = state.cardsets.images[activeCard.id][activePlaceholder.id];
+    }
 
     return {
         isAuthenticated: state.auth.isAuthenticated,
         activePlaceholder,
-        imageUrl,
+        imageInfo,
         activeCard,
         images: state.images.images,
         filter: state.images.filter,
