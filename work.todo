@@ -167,7 +167,7 @@
 + Remove image from field
 + Allow changing image's color if it is SVG
 + Remove image color
-- Apply image to all cards (e.g. if we want to change background).
++ Apply image to all cards (e.g. if we want to change background).
 - Add basic forms to collection
 
 - Allow to set line height

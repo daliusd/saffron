@@ -1,5 +1,5 @@
 import { CancelToken } from 'axios';
-import { XmlDocument } from 'xmldoc';
+import { XmlDocument, XmlNode } from 'xmldoc';
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
@@ -509,6 +509,18 @@ export function* handleCardSetDeleteImage(action: CardSetDeleteImage): SagaItera
     }
 }
 
+function walkChildren(node: XmlNode, color: string) {
+    if (node.type === 'element') {
+        for (let child of node.children) {
+            if (child.type === 'element')
+                if (child.name === 'path') {
+                    child.attr['fill'] = color;
+                }
+            walkChildren(child, color);
+        }
+    }
+}
+
 function adjustSvg(data: string, preserveAspectRatio: boolean, color?: string): string {
     const doc = new XmlDocument(data);
     if (!preserveAspectRatio) {
@@ -516,11 +528,7 @@ function adjustSvg(data: string, preserveAspectRatio: boolean, color?: string): 
     }
 
     if (color) {
-        for (let child of doc.children) {
-            if (child.type === 'element' && child.name === 'path' && 'fill' in child.attr) {
-                child.attr['fill'] = color;
-            }
-        }
+        walkChildren(doc, color);
     }
 
     return btoa(doc.toString({ compressed: true }));
