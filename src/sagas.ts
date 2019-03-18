@@ -537,16 +537,18 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActivePlaceho
 
         for (const cardId in state.cardsets.cardsById) {
             const image = state.cardsets.images[cardId][state.cardsets.activePlaceholder];
-            const imageResp = yield call(authorizedGetRequest, image.url);
-            if (imageResp.headers['content-type'] === 'image/svg+xml') {
-                if (action.fit === 'stretch') {
-                    const svg = adjustSvg(imageResp.data, false, image.color);
-                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
-                } else if (image.color) {
-                    const svg = adjustSvg(imageResp.data, true, image.color);
-                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
-                } else {
-                    yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, undefined));
+            if (image.url) {
+                const imageResp = yield call(authorizedGetRequest, image.url);
+                if (imageResp.headers['content-type'] === 'image/svg+xml') {
+                    if (action.fit === 'stretch') {
+                        const svg = adjustSvg(imageResp.data, false, image.color);
+                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
+                    } else if (image.color) {
+                        const svg = adjustSvg(imageResp.data, true, image.color);
+                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
+                    } else {
+                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, undefined));
+                    }
                 }
             }
         }
@@ -561,8 +563,9 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
         const state: State = yield select();
 
         const placeholder = state.cardsets.placeholders[action.placeholderId];
-        if (placeholder.type === 'image') {
-            const imageResp = yield call(authorizedGetRequest, action.imageInfo.url);
+        const imageInfo = state.cardsets.images[action.cardId][action.placeholderId];
+        if (placeholder.type === 'image' && imageInfo.url) {
+            const imageResp = yield call(authorizedGetRequest, imageInfo.url);
 
             if (imageResp.headers['content-type'] === 'image/svg+xml') {
                 const name = placeholder.name || placeholder.id;
@@ -572,10 +575,10 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
 
                     if ((pl.name === name || pl.id === name) && pl.type === 'image') {
                         if (pl.fit === 'stretch') {
-                            const svg = adjustSvg(imageResp.data, false, action.imageInfo.color);
+                            const svg = adjustSvg(imageResp.data, false, imageInfo.color);
                             yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
-                        } else if (action.imageInfo.color) {
-                            const svg = adjustSvg(imageResp.data, true, action.imageInfo.color);
+                        } else if (imageInfo.color) {
+                            const svg = adjustSvg(imageResp.data, true, imageInfo.color);
                             yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
                         } else {
                             yield put(cardSetChangeImageBase64(action.cardId, plId, undefined));

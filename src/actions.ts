@@ -150,7 +150,7 @@ export interface PlaceholdersTextInfoByCardCollection {
 }
 
 export interface ImageInfo {
-    url: string;
+    url?: string;
     global?: boolean;
     base64?: string;
     color?: string;

@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 
 import {
     CardType,
+    IdsArray,
     ImageArray,
     ImageInfo,
     PlaceholderType,
@@ -30,17 +31,20 @@ interface StateProps {
     activeCard: CardType | null;
     filter: string;
     images: ImageArray;
+    cardsAllIds: IdsArray;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 interface LocalState {
     location: string;
+    applyToAllCards: boolean;
 }
 
 export class SidebarImage extends Component<Props, LocalState> {
     state = {
         location: 'all',
+        applyToAllCards: false,
     };
 
     handleAddImageClick = () => {
@@ -48,12 +52,24 @@ export class SidebarImage extends Component<Props, LocalState> {
         dispatch(cardSetAddImagePlaceholder());
     };
 
-    handleRemoveImageFromFieldClick = () => {
-        const { activeCard, activePlaceholder, dispatch } = this.props;
-        if (activeCard && activePlaceholder) {
-            const ii: ImageInfo = { url: '' };
-            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+    changeImage = (ii: ImageInfo) => {
+        const { cardsAllIds, activeCard, activePlaceholder, dispatch } = this.props;
+        const { applyToAllCards } = this.state;
+
+        if (activePlaceholder) {
+            if (applyToAllCards) {
+                for (const cardId of cardsAllIds) {
+                    dispatch(cardSetChangeImage(cardId, activePlaceholder.id, ii));
+                }
+            } else if (activeCard) {
+                dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+            }
         }
+    };
+
+    handleRemoveImageFromFieldClick = () => {
+        const ii: ImageInfo = { url: '' };
+        this.changeImage(ii);
     };
 
     handleRemoveClick = () => {
@@ -79,14 +95,12 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleImageSelect = (imageName: string) => {
-        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
+        const { imageInfo } = this.props;
 
         const color = imageInfo && imageInfo.color;
 
-        if (activeCard && activePlaceholder) {
-            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color };
-            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
-        }
+        const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color };
+        this.changeImage(ii);
     };
 
     handleRaiseToTop = () => {
@@ -133,26 +147,22 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleColorChange = (color: ColorResult) => {
-        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
-
-        if (activeCard && activePlaceholder && imageInfo) {
-            const ii: ImageInfo = { ...imageInfo, color: color.hex };
-            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
-        }
+        const ii: ImageInfo = { color: color.hex };
+        this.changeImage(ii);
     };
 
     handleRemoveColorClick = () => {
-        const { dispatch, activeCard, activePlaceholder, imageInfo } = this.props;
+        const ii: ImageInfo = { color: undefined };
+        this.changeImage(ii);
+    };
 
-        if (activeCard && activePlaceholder && imageInfo) {
-            const ii: ImageInfo = { ...imageInfo, color: undefined };
-            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
-        }
+    handleApplyToAllCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ applyToAllCards: event.target.checked });
     };
 
     render() {
         const { activePlaceholder, imageInfo, filter, visible } = this.props;
-        const { location } = this.state;
+        const { location, applyToAllCards } = this.state;
 
         return (
             <div className={style.view} style={{ display: visible ? 'grid' : 'none' }}>
@@ -261,6 +271,14 @@ export class SidebarImage extends Component<Props, LocalState> {
                                     <i className="material-icons">remove_circle</i>
                                 </button>
                             )}
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={applyToAllCards}
+                                    onChange={this.handleApplyToAllCardChange}
+                                />
+                                Apply to all cards
+                            </label>
                         </div>
                         <div>
                             <form>
@@ -349,6 +367,7 @@ const mapStateToProps = (state: State): StateProps => {
         activeCard,
         images: state.images.images,
         filter: state.images.filter,
+        cardsAllIds: state.cardsets.cardsAllIds,
     };
 };
 

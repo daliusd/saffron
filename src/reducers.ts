@@ -990,7 +990,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 const pl = state.placeholders[plId];
 
                 if ((pl.name === name || pl.id === name) && pl.type === 'image') {
-                    placeholdersByCard[plId] = action.imageInfo;
+                    placeholdersByCard[plId] = {
+                        ...placeholdersByCard[plId],
+                        ...action.imageInfo,
+                    };
                 }
             }
 

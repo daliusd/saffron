@@ -54,7 +54,7 @@ export class SidebarImportExport extends Component<Props> {
             let imagesByCard = { ...images[cardId] };
             for (const placeholderId in imagesByCard) {
                 let imageInfo = { ...imagesByCard[placeholderId] };
-                let url = imageInfo.url;
+                let url = imageInfo.url || '';
                 if (url.endsWith(ending)) {
                     url = url.replace(ending, '');
                 } else {
@@ -129,7 +129,7 @@ export class SidebarImportExport extends Component<Props> {
                         dataRow.push(texts[cardId][plId].value);
                     } else if (placeholder.type === 'image') {
                         const image = preparedImages[cardId][plId];
-                        dataRow.push(image.url);
+                        dataRow.push(image.url || '');
                         dataRow.push(image.global ? 'y' : 'n');
                     }
                     written[name] = true;

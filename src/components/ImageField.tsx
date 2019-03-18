@@ -22,7 +22,7 @@ interface OwnProps {
 }
 
 interface StateProps {
-    imageUrl: string;
+    imageUrl?: string;
 }
 
 interface DispatchProps {
@@ -129,7 +129,7 @@ class ImageField extends PureComponent<Props> {
                 >
                     <img
                         style={{
-                            opacity: imageUrl.length > 0 ? 1 : 0.5,
+                            opacity: imageUrl && imageUrl.length > 0 ? 1 : 0.5,
                             width: imagePlaceholder.fit === 'height' ? 'auto' : '100%',
                             height: !imagePlaceholder.fit || imagePlaceholder.fit === 'width' ? 'auto' : '100%',
                         }}
@@ -148,12 +148,12 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         state.cardsets.images[props.cardId] &&
         state.cardsets.images[props.cardId][props.imagePlaceholder.id];
 
-    let imageUrl = '';
+    let imageUrl: string | undefined = '';
     if (imageInfo) {
         if (imageInfo.base64) {
             imageUrl = 'data:image/svg+xml;base64,' + imageInfo.base64;
         } else {
-            imageUrl = imageInfo.url;
+            imageUrl = imageInfo && imageInfo.url;
         }
     }
 
