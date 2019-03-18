@@ -46,6 +46,14 @@ export class SidebarImage extends Component<Props, LocalState> {
         dispatch(cardSetAddImagePlaceholder());
     };
 
+    handleRemoveImageFromFieldClick = () => {
+        const { activeCard, activePlaceholder, dispatch } = this.props;
+        if (activeCard && activePlaceholder) {
+            const ii: ImageInfo = { url: '' };
+            dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+        }
+    };
+
     handleRemoveClick = () => {
         const { activePlaceholder, dispatch } = this.props;
         if (activePlaceholder !== null) {
@@ -137,6 +145,12 @@ export class SidebarImage extends Component<Props, LocalState> {
                     <button onClick={this.handleLowerToBottom} title="Lower image to bottom">
                         <i className="material-icons">arrow_downward</i>
                     </button>
+
+                    {imageUrl !== '' && (
+                        <button onClick={this.handleRemoveImageFromFieldClick} title="Remove image from field">
+                            <i className="material-icons">remove_circle_outline</i>
+                        </button>
+                    )}
 
                     {activePlaceholder !== null && !activePlaceholder.locked && (
                         <button

@@ -164,7 +164,7 @@
 + Fit by height
 + Stretch image
 + SVG stretching
-- Remove image from field
++ Remove image from field
 - Allow changing image's color if it is SVG
 - Apply image to all cards (e.g. if we want to change background).
 
