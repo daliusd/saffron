@@ -68,7 +68,7 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleRemoveImageFromFieldClick = () => {
-        const ii: ImageInfo = { url: '' };
+        const ii: ImageInfo = { url: undefined, base64: undefined };
         this.changeImage(ii);
     };
 
@@ -99,7 +99,7 @@ export class SidebarImage extends Component<Props, LocalState> {
 
         const color = imageInfo && imageInfo.color;
 
-        const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color };
+        const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, base64: undefined };
         this.changeImage(ii);
     };
 
