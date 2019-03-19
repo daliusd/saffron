@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DEFAULT_FONT, DEFAULT_FONT_SIZE } from '../fontLoader';
+import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from '../fontLoader';
 import { Dispatch, TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 import { State } from '../reducers';
 
@@ -13,6 +13,7 @@ interface OwnProps {
     fontFamily: string;
     fontVariant: string;
     fontSize: number;
+    lineHeight: number;
 }
 
 interface StateProps {
@@ -34,6 +35,7 @@ class ContentEditable extends Component<Props> {
     currentFontFamily: string;
     currentFontVariant: string;
     currentFontSize: number;
+    currentLineHeight: number;
     timeout: NodeJS.Timeout | null;
     wasMoved: boolean;
 
@@ -46,6 +48,7 @@ class ContentEditable extends Component<Props> {
         this.currentFontFamily = '';
         this.currentFontVariant = '';
         this.currentFontSize = DEFAULT_FONT_SIZE;
+        this.currentLineHeight = DEFAULT_LINE_HEIGHT;
         this.timeout = null;
         this.wasMoved = false;
     }
@@ -75,19 +78,21 @@ class ContentEditable extends Component<Props> {
             nextProps.fontFamily !== this.currentFontFamily ||
             nextProps.fontVariant !== this.currentFontVariant ||
             nextProps.fontSize !== this.currentFontSize ||
+            nextProps.lineHeight !== this.currentLineHeight ||
             this.props.isActive !== nextProps.isActive;
 
         return shouldUpdate;
     }
 
     componentDidUpdate() {
-        const { textValue, align, color, fontFamily, fontVariant, fontSize } = this.props;
+        const { textValue, align, color, fontFamily, fontVariant, fontSize, lineHeight } = this.props;
         this.currentText = textValue;
         this.currentAlign = align;
         this.currentColor = color;
         this.currentFontFamily = fontFamily;
         this.currentFontVariant = fontVariant;
         this.currentFontSize = fontSize;
+        this.currentLineHeight = lineHeight;
     }
 
     handleMouseDown = (event: MouseEvent) => {
@@ -196,7 +201,7 @@ class ContentEditable extends Component<Props> {
     };
 
     render() {
-        const { color, align, fontFamily, fontVariant, fontSize } = this.props;
+        const { color, align, fontFamily, fontVariant, fontSize, lineHeight } = this.props;
         const isItalic = fontVariant && fontVariant.indexOf('italic') !== -1;
         const fontWeight = isItalic
             ? fontVariant === 'italic'
@@ -224,7 +229,7 @@ class ContentEditable extends Component<Props> {
                     fontSize: `${fontSize}px`,
                     outline: 'none',
                     overflowWrap: 'break-word',
-                    lineHeight: 1.27,
+                    lineHeight,
                 }}
                 dangerouslySetInnerHTML={{ __html: this.props.textValue }}
             />

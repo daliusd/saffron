@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import React, { PureComponent } from 'react';
 
+import { DEFAULT_LINE_HEIGHT } from '../fontLoader';
 import {
     Dispatch,
     TextPlaceholderType,
@@ -94,6 +95,7 @@ class TextField extends PureComponent<Props> {
                     fontFamily={textPlaceholder.fontFamily}
                     fontVariant={textPlaceholder.fontVariant}
                     fontSize={textPlaceholder.fontSize * ppmm}
+                    lineHeight={textPlaceholder.lineHeight || DEFAULT_LINE_HEIGHT}
                 />
             </FieldController>
         );

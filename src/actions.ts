@@ -67,6 +67,7 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT =
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT =
     'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE';
+export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT';
 export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
@@ -123,6 +124,7 @@ export interface TextPlaceholderType extends PlaceholderBase {
     fontFamily: string;
     fontVariant: string;
     fontSize: number;
+    lineHeight?: number;
 }
 
 export interface ImagePlaceholderType extends PlaceholderBase {
@@ -449,6 +451,10 @@ export interface CardSetChangeActiveTextPlaceholderFontSize {
     type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE;
     fontSize: number;
 }
+export interface CardSetChangeActiveTextPlaceholderLineHeight {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT;
+    lineHeight: number;
+}
 export interface CardSetChangeText {
     type: typeof CARDSET_CHANGE_TEXT;
     cardId: string;
@@ -559,6 +565,7 @@ export type CardSetModifyAction =
     | CardSetChangeActiveTextPlaceholderFontVariant
     | CardSetChangeActiveTextPlaceholderFontFamilyAndVariant
     | CardSetChangeActiveTextPlaceholderFontSize
+    | CardSetChangeActiveTextPlaceholderLineHeight
     | CardSetChangeText
     | CardSetChangeImage
     | CardSetChangeImageBase64
@@ -917,6 +924,15 @@ export const cardSetChangeActiveTextPlaceholderFontSize = (
     return {
         type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
         fontSize,
+    };
+};
+
+export const cardSetChangeActiveTextPlaceholderLineHeight = (
+    lineHeight: number,
+): CardSetChangeActiveTextPlaceholderLineHeight => {
+    return {
+        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
+        lineHeight,
     };
 };
 

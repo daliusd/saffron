@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import WebFont from 'webfontloader';
 
+import { DEFAULT_LINE_HEIGHT } from '../fontLoader';
 import {
     Dispatch,
     cardSetChangeActiveTextPlaceholderFontFamilyAndVariant,
     cardSetChangeActiveTextPlaceholderFontSize,
     cardSetChangeActiveTextPlaceholderFontVariant,
+    cardSetChangeActiveTextPlaceholderLineHeight,
 } from '../actions';
 import { State } from '../reducers';
 import style from './FontSelector.module.css';
@@ -32,6 +34,7 @@ interface StateProps {
     activeFont: string;
     activeFontVariant: string;
     activeFontSize: number;
+    activeLineHeight: number;
 }
 
 interface DispatchProps {
@@ -91,6 +94,11 @@ class FontSelector extends Component<Props> {
         dispatch(cardSetChangeActiveTextPlaceholderFontSize(parseFloat(event.target.value)));
     };
 
+    handleLineHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeActiveTextPlaceholderLineHeight(parseFloat(event.target.value)));
+    };
+
     render() {
         const selectedFontFamily = options.find(f => f.value === this.props.activeFont);
 
@@ -120,6 +128,13 @@ class FontSelector extends Component<Props> {
                     onChange={this.handleFontVariantChange}
                     options={fontVariantOptions}
                 />
+                <input
+                    type="number"
+                    value={this.props.activeLineHeight}
+                    onChange={this.handleLineHeightChange}
+                    title="Line height"
+                    step="0.01"
+                />
             </>
         );
     }
@@ -129,11 +144,13 @@ const mapStateToProps = (state: State): StateProps => {
     let activeFont = state.cardsets.textSettings.fontFamily;
     let activeFontVariant = state.cardsets.textSettings.fontVariant;
     let activeFontSize = state.cardsets.textSettings.fontSize;
+    let activeLineHeight = state.cardsets.textSettings.lineHeight || DEFAULT_LINE_HEIGHT;
 
     return {
         activeFont,
         activeFontVariant,
         activeFontSize,
+        activeLineHeight,
     };
 };
 

@@ -11,6 +11,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
     CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
@@ -94,7 +95,7 @@ import {
     SignUpAction,
     TextPlaceholderType,
 } from './actions';
-import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT } from './fontLoader';
+import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT, DEFAULT_LINE_HEIGHT } from './fontLoader';
 
 export const ACTIVITY_CREATING = 0x1;
 export const ACTIVITY_LISTING = 0x2;
@@ -148,6 +149,7 @@ export interface TextSettings {
     fontFamily: string;
     fontVariant: string;
     fontSize: number;
+    lineHeight?: number;
 }
 
 export interface CardSetState {
@@ -191,6 +193,7 @@ export const DefaultCardSetState: CardSetState = {
         fontFamily: DEFAULT_FONT,
         fontVariant: DEFAULT_FONT_VARIANT,
         fontSize: DEFAULT_FONT_SIZE,
+        lineHeight: DEFAULT_LINE_HEIGHT,
     },
     activeSidebar: null,
     zoom: 1,
@@ -552,6 +555,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 fontFamily: textSettings.fontFamily,
                 fontVariant: textSettings.fontVariant,
                 fontSize: textSettings.fontSize,
+                lineHeight: textSettings.lineHeight || DEFAULT_LINE_HEIGHT,
             };
 
             return {
@@ -952,6 +956,33 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 };
             }
         }
+        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT: {
+            let textSettings = {
+                ...state.textSettings,
+                lineHeight: action.lineHeight,
+            };
+
+            if (state.activePlaceholder) {
+                const textPlaceholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    lineHeight: action.lineHeight,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: textPlaceholder,
+                    },
+                    textSettings,
+                };
+            } else {
+                return {
+                    ...state,
+                    textSettings,
+                };
+            }
+        }
         case CARDSET_CHANGE_TEXT: {
             let placeholdersByCard: PlaceholdersTextInfoCollection = {};
             if (state.texts && action.cardId in state.texts) {
@@ -1036,6 +1067,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     textSettings.fontFamily = placeholder.fontFamily;
                     textSettings.fontVariant = placeholder.fontVariant;
                     textSettings.fontSize = placeholder.fontSize;
+                    textSettings.lineHeight = placeholder.lineHeight;
 
                     activeSidebar = SidebarState.Text;
                 } else {

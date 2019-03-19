@@ -6,6 +6,10 @@
     text-align: center;
 }
 
+.view input[step='0.01'] {
+    width: 4em;
+}
+
 .view input[type='text'] {
     text-align: left;
     width: 9em;
