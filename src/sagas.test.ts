@@ -539,6 +539,7 @@ test('handleCardSetChange', () => {
             data: JSON.stringify({
                 width: 63.5,
                 height: 88.9,
+                isTwoSided: false,
                 cardsAllIds: [],
                 cardsById: {},
                 placeholdersAllIds: [],

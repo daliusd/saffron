@@ -10,11 +10,12 @@ import style from './Card.module.css';
 
 interface OwnProps {
     card: CardType;
+    isBack: boolean;
 }
 
 interface StateProps {
     placeholders: PlaceholdersCollection;
-    placeholdersAllIds: IdsArray;
+    placeholdersIds: IdsArray;
     width: number;
     height: number;
     isActiveCard: boolean;
@@ -43,16 +44,16 @@ class Card extends Component<Props, LocalState> {
     };
 
     handleFieldDeselect = (event: React.MouseEvent | React.TouchEvent) => {
-        const { dispatch, card } = this.props;
+        const { dispatch, card, isBack } = this.props;
         const el = event.target as HTMLElement;
         if (el.getAttribute('id') === `card_${card.id}`) {
-            dispatch(cardSetActiveCardAndPlaceholder(card.id, null));
+            dispatch(cardSetActiveCardAndPlaceholder(card.id, isBack, null));
             event.stopPropagation();
         }
     };
 
     render() {
-        const { placeholders, placeholdersAllIds, card, width, height, isActiveCard, zoom } = this.props;
+        const { placeholders, placeholdersIds, card, isBack, width, height, isActiveCard, zoom } = this.props;
         const ppmm = this.state.dimensions.width / width;
 
         return (
@@ -79,13 +80,14 @@ class Card extends Component<Props, LocalState> {
                         onMouseDown={this.handleFieldDeselect}
                         onTouchStart={this.handleFieldDeselect}
                     >
-                        {placeholdersAllIds.map(id => {
+                        {placeholdersIds.map(id => {
                             const p = placeholders[id];
                             if (p.type === 'image') {
                                 return (
                                     <ImageField
                                         key={p.id}
                                         cardId={card.id}
+                                        isOnBack={isBack}
                                         imagePlaceholder={p}
                                         ppmm={ppmm}
                                         cardWidth={this.state.dimensions.width}
@@ -97,6 +99,7 @@ class Card extends Component<Props, LocalState> {
                                     <TextField
                                         key={p.id}
                                         cardId={card.id}
+                                        isOnBack={isBack}
                                         textPlaceholder={p}
                                         ppmm={ppmm}
                                         cardWidth={this.state.dimensions.width}
@@ -116,10 +119,12 @@ class Card extends Component<Props, LocalState> {
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     return {
         placeholders: state.cardsets.placeholders,
-        placeholdersAllIds: state.cardsets.placeholdersAllIds,
+        placeholdersIds: state.cardsets.placeholdersAllIds.filter(
+            id => (state.cardsets.placeholders[id].isOnBack || false) === props.isBack,
+        ),
         width: state.cardsets.width,
         height: state.cardsets.height,
-        isActiveCard: state.cardsets.activeCard === props.card.id,
+        isActiveCard: state.cardsets.activeCard === props.card.id && state.cardsets.isBackActive === props.isBack,
         zoom: state.cardsets.zoom,
     };
 };

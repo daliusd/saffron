@@ -9,6 +9,7 @@ import { downloadBlob } from './utils';
 export const generatePdfUsingWorker = (
     width: number,
     height: number,
+    isTwoSided: boolean,
     cardsAllIds: string[],
     cardsById: CardsCollection,
     placeholders: PlaceholdersCollection,
@@ -36,6 +37,7 @@ export const generatePdfUsingWorker = (
             worker.postMessage({
                 width,
                 height,
+                isTwoSided,
                 cardsAllIds,
                 cardsById,
                 placeholders,

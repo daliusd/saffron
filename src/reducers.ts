@@ -16,6 +16,7 @@ import {
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_IMAGE_BASE64,
+    CARDSET_CHANGE_IS_TWO_SIDED,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
@@ -155,6 +156,7 @@ export interface TextSettings {
 export interface CardSetState {
     width: number;
     height: number;
+    isTwoSided: boolean;
     byId: CardSetsCollection;
     allIds: IdsArray;
     activity: number;
@@ -162,6 +164,7 @@ export interface CardSetState {
     cardsAllIds: IdsArray;
     cardsById: CardsCollection;
     activeCard: string | null;
+    isBackActive: boolean;
     activePlaceholder: string | null;
     placeholders: PlaceholdersCollection;
     placeholdersAllIds: IdsArray;
@@ -175,6 +178,7 @@ export interface CardSetState {
 export const DefaultCardSetState: CardSetState = {
     width: 63.5,
     height: 88.9,
+    isTwoSided: false,
     byId: {},
     allIds: [],
     activity: 0,
@@ -184,6 +188,7 @@ export const DefaultCardSetState: CardSetState = {
     cardsById: {},
     cardsAllIds: [],
     activeCard: null,
+    isBackActive: false,
     activePlaceholder: null,
     texts: {},
     images: {},
@@ -439,6 +444,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 }),
                 width: action.data.width || 63.5,
                 height: action.data.height || 88.9,
+                isTwoSided: action.data.isTwoSided || false,
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
                 placeholders: action.data.placeholders || {},
@@ -447,6 +453,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 images: action.data.images || {},
                 activeCard: null,
                 activePlaceholder: null,
+                isBackActive: false,
                 zoom: action.data.zoom || 1,
             });
         case CARDSET_SELECT_FAILURE:
@@ -556,6 +563,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 fontVariant: textSettings.fontVariant,
                 fontSize: textSettings.fontSize,
                 lineHeight: textSettings.lineHeight || DEFAULT_LINE_HEIGHT,
+                isOnBack: state.isBackActive,
             };
 
             return {
@@ -577,6 +585,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: 20,
                 height: 20,
                 angle: 0,
+                isOnBack: state.isBackActive,
             };
 
             return {
@@ -746,6 +755,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             return {
                 ...state,
                 height: action.height,
+            };
+        }
+        case CARDSET_CHANGE_IS_TWO_SIDED: {
+            return {
+                ...state,
+                isTwoSided: action.isTwoSided,
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_POSITION: {
@@ -1078,6 +1093,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             return {
                 ...state,
                 activeCard: action.cardId,
+                isBackActive: action.isBackActive,
                 activePlaceholder: action.placeholderId,
                 textSettings,
                 activeSidebar,

@@ -56,6 +56,7 @@ export const CARDSET_UNLOCK_ACTIVE_PLACEHOLDER = 'CARDSET_UNLOCK_ACTIVE_PLACEHOL
 export const CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
+export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
@@ -115,6 +116,7 @@ export interface PlaceholderBase {
     angle: number;
     locked?: boolean;
     name?: string;
+    isOnBack?: boolean;
 }
 
 export interface TextPlaceholderType extends PlaceholderBase {
@@ -342,6 +344,7 @@ export interface CardSetSelectSuccess {
     data: {
         width: number;
         height: number;
+        isTwoSided: boolean;
         cardsAllIds: IdsArray;
         cardsById: CardsCollection;
         placeholders: PlaceholdersCollection;
@@ -407,6 +410,11 @@ export interface CardSetChangeWidth {
 export interface CardSetChangeHeight {
     type: typeof CARDSET_CHANGE_HEIGHT;
     height: number;
+}
+
+export interface CardSetChangeIsTwoSided {
+    type: typeof CARDSET_CHANGE_IS_TWO_SIDED;
+    isTwoSided: boolean;
 }
 
 export interface CardSetChangePlaceholderPosition {
@@ -476,6 +484,7 @@ export interface CardSetChangeImageBase64 {
 export interface CardSetSetActiveCardAndPlaceholder {
     type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER;
     cardId: string | null;
+    isBackActive: boolean;
     placeholderId: string | null;
 }
 
@@ -556,6 +565,7 @@ export type CardSetModifyAction =
     | CardSetChangeFitForActivePlaceholder
     | CardSetChangeWidth
     | CardSetChangeHeight
+    | CardSetChangeIsTwoSided
     | CardSetChangePlaceholderPosition
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
@@ -838,6 +848,13 @@ export const cardSetChangeHeight = (height: number): CardSetChangeHeight => {
     };
 };
 
+export const cardSetChangeIsTwoSided = (isTwoSided: boolean): CardSetChangeIsTwoSided => {
+    return {
+        type: CARDSET_CHANGE_IS_TWO_SIDED,
+        isTwoSided,
+    };
+};
+
 export const cardSetChangePlaceholderPosition = (
     placeholder: PlaceholderType,
     x: number,
@@ -969,11 +986,13 @@ export const cardSetChangeImageBase64 = (
 
 export const cardSetActiveCardAndPlaceholder = (
     cardId: string | null,
+    isBackActive: boolean,
     placeholderId: string | null,
 ): CardSetSetActiveCardAndPlaceholder => {
     return {
         type: CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
         cardId,
+        isBackActive,
         placeholderId,
     };
 };

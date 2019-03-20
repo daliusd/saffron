@@ -7,6 +7,7 @@ import { State } from '../reducers';
 
 interface OwnProps {
     cardId: string;
+    isOnBack: boolean;
     placeholderId: string;
     align: string;
     color: string;
@@ -140,12 +141,12 @@ class ContentEditable extends Component<Props> {
     };
 
     handleComplete = (event: Event) => {
-        const { dispatch, cardId, placeholderId, isActive } = this.props;
+        const { dispatch, cardId, isOnBack, placeholderId, isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
         } else if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndPlaceholder(cardId, placeholderId));
+            dispatch(cardSetActiveCardAndPlaceholder(cardId, isOnBack, placeholderId));
 
             if (!this.editDiv.current) return;
             this.editDiv.current.focus();

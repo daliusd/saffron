@@ -15,6 +15,7 @@ import emptyImageImage from './image.svg';
 
 interface OwnProps {
     cardId: string;
+    isOnBack: boolean;
     ppmm: number;
     imagePlaceholder: ImagePlaceholderType;
     cardWidth: number;
@@ -95,10 +96,10 @@ class ImageField extends PureComponent<Props> {
     };
 
     handleComplete = (event: Event) => {
-        const { dispatch, cardId, imagePlaceholder } = this.props;
+        const { dispatch, cardId, isOnBack, imagePlaceholder } = this.props;
         if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndPlaceholder(cardId, imagePlaceholder.id));
+            dispatch(cardSetActiveCardAndPlaceholder(cardId, isOnBack, imagePlaceholder.id));
         }
     };
 

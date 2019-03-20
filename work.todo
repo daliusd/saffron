@@ -173,16 +173,10 @@
 + Allow to set line height
 
 - Cards can have two sides
-
-- UI ideas
-    - Manual control of field (separate sidebar control)
-    - Snapping
-    - Keyboard manipulation
-    - Special visual effects
-    - Change add card button to fake card
-    - Drag and drop for images would be cool
-    - Lower / Raise field one step
-    + Give white shadow to rotate and resize controls
+    + Change sideness
+    + Handle cardSetActiveCardAndPlaceholder properly
+    - fix worker (isTwoSided is new parameter)
+    - Front or Back title
 
 - Add support for cutting edges
     - Investigate make playing card templates. Change naming appropriately.
@@ -192,6 +186,19 @@
     - cut marks outside of design
     - empty space between cards
     - Generate PDF for full game
+    - clip everything outside of card
+
+- UI ideas
+    + Give white shadow to rotate and resize controls
+    - Manual control of field (separate sidebar control)
+    - Snapping
+    - Keyboard manipulation
+    - Special visual effects
+    - Change add card button to fake card
+    - Drag and drop for images would be cool
+    - Lower / Raise field one step
+    - Prevent close of browser window while save is not complete
+    - Saving displayed constantly bug
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users

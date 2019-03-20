@@ -31,6 +31,7 @@ interface StateProps {
     activeGame: string | null;
     width: number;
     height: number;
+    isTwoSided: boolean;
     cardsAllIds: IdsArray;
     cardsById: CardsCollection;
     placeholders: PlaceholdersCollection;
@@ -72,13 +73,14 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleExportJson = () => {
-        const { width, height, cardsAllIds, cardsById, placeholders, placeholdersAllIds, texts, images } = this.props;
+        const { width, height, isTwoSided, cardsAllIds, cardsById, placeholders, placeholdersAllIds, texts, images } = this.props;
 
         const preparedImages = this.prepareImagePaths(images);
 
         const data = {
             width,
             height,
+            isTwoSided,
             cardsAllIds,
             cardsById,
             placeholders,
@@ -272,6 +274,7 @@ const mapStateToProps = (state: State): StateProps => {
         activeGame: state.games.active,
         width: state.cardsets.width,
         height: state.cardsets.height,
+        isTwoSided: state.cardsets.isTwoSided,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
         placeholders: state.cardsets.placeholders,

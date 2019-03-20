@@ -10,6 +10,7 @@ import {
     Dispatch,
     cardSetActiveCardAndPlaceholder,
     cardSetChangeHeight,
+    cardSetChangeIsTwoSided,
     cardSetChangeWidth,
     cardSetCreateCard,
     cardSetRenameRequest,
@@ -26,6 +27,7 @@ import style from './CardSet.module.css';
 interface StateProps {
     width: number;
     height: number;
+    isTwoSided: boolean;
     isAuthenticated: boolean;
     cardsAllIds: string[];
     cardsById: CardsCollection;
@@ -81,6 +83,11 @@ export class CardSet extends Component<Props, LocalState> {
         dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
     };
 
+    handleIsTwoSidedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeIsTwoSided(event.target.checked));
+    };
+
     handleZoom = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
         dispatch(cardSetSetZoom(parseFloat(event.target.value)));
@@ -104,7 +111,7 @@ export class CardSet extends Component<Props, LocalState> {
 
     handleClickOutsideOfCard = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetActiveCardAndPlaceholder(null, null));
+        dispatch(cardSetActiveCardAndPlaceholder(null, false, null));
     };
 
     handleCardSetNameChange = (newName: string) => {
@@ -121,6 +128,7 @@ export class CardSet extends Component<Props, LocalState> {
             cardsById,
             width,
             height,
+            isTwoSided,
             isCreatingPdf,
             activity,
             zoom,
@@ -166,6 +174,15 @@ export class CardSet extends Component<Props, LocalState> {
                                     placeholder="height"
                                     value={height}
                                 />
+                                <label>
+                                    Cards have two sides:{' '}
+                                    <input
+                                        type="checkbox"
+                                        onChange={this.handleIsTwoSidedChange}
+                                        className="form-control"
+                                        checked={isTwoSided}
+                                    />
+                                </label>
                             </div>
                             <div className="form">
                                 <label htmlFor="zoom">Zoom (if you want to see details or big picture)</label>
@@ -188,11 +205,16 @@ export class CardSet extends Component<Props, LocalState> {
                                     }}
                                 >
                                     {cardsAllIds &&
-                                        cardsAllIds.map(cardId => (
+                                        cardsAllIds.map(cardId => [
                                             <li key={cardId}>
-                                                <Card card={cardsById[cardId]} />
-                                            </li>
-                                        ))}
+                                                <Card card={cardsById[cardId]} isBack={false} />
+                                            </li>,
+                                            isTwoSided && (
+                                                <li key={`${cardId}back`}>
+                                                    <Card card={cardsById[cardId]} isBack={true} />
+                                                </li>
+                                            ),
+                                        ])}
                                 </ul>
                             </div>
                             <div className="form">
@@ -255,6 +277,7 @@ const mapStateToProps = (state: State): StateProps => {
         activity: state.cardsets.activity,
         width: state.cardsets.width,
         height: state.cardsets.height,
+        isTwoSided: state.cardsets.isTwoSided,
         zoom: state.cardsets.zoom,
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,

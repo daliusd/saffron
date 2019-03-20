@@ -16,6 +16,7 @@ import emptyTextImage from './text.svg';
 
 interface OwnProps {
     cardId: string;
+    isOnBack: boolean;
     ppmm: number;
     textPlaceholder: TextPlaceholderType;
     cardWidth: number;
@@ -89,6 +90,7 @@ class TextField extends PureComponent<Props> {
 
                 <ContentEditable
                     cardId={this.props.cardId}
+                    isOnBack={this.props.isOnBack}
                     placeholderId={textPlaceholder.id}
                     align={textPlaceholder.align}
                     color={textPlaceholder.color}
