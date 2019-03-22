@@ -193,6 +193,7 @@
 
 - UI ideas
     + Give white shadow to rotate and resize controls
+    + Saving displayed constantly bug
     - Manual control of field (separate sidebar control)
     - Snapping
     - Keyboard manipulation
@@ -201,7 +202,6 @@
     - Drag and drop for images would be cool
     - Lower / Raise field one step
     - Prevent close of browser window while save is not complete
-    - Saving displayed constantly bug
 
 - Create some cards templates. Potentially with edges.
 

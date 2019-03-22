@@ -620,11 +620,11 @@ export type Action =
 
 export type Dispatch = ReduxDispatch<Action>;
 
-export const messageDisplay = (type: string, text: string): MessageDisplay => {
+export const messageDisplay = (type: string, text: string, id?: string): MessageDisplay => {
     return {
         type: MESSAGE_DISPLAY,
         message: {
-            id: shortid.generate(),
+            id: id || shortid.generate(),
             type: type,
             text: text,
         },

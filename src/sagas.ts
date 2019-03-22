@@ -135,7 +135,7 @@ export function* putInfo(message: string): SagaIterator {
 }
 
 export function* putProgress(text: string): SagaIterator {
-    const message = messageDisplay('progress', text);
+    const message = messageDisplay('progress', text, text);
     yield put(message);
     return message.message.id;
 }
