@@ -172,11 +172,11 @@
 
 + Allow to set line height
 
-- Cards can have two sides
++ Cards can have two sides
     + Change sideness
     + Handle cardSetActiveCardAndPlaceholder properly
     + fix worker (isTwoSided is new parameter)
-    - Front or Back title
+    + Front or Back title
 
 + Add support for cutting edges
     + Investigate make playing card templates.

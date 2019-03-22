@@ -4,6 +4,11 @@
     border: 1px solid black;
 }
 
+.title {
+    text-align: center;
+    margin: 1em;
+}
+
 .active {
     border: 1px dotted hotpink;
 }
