@@ -16,6 +16,7 @@ import { State } from '../reducers';
 import ConfirmedDelete from './ConfirmedDelete';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
+import PDFGenerator from './PDFGenerator';
 
 interface Props {
     dispatch: Dispatch;
@@ -144,6 +145,8 @@ export class CardSets extends Component<Props, LocalState> {
                         Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 56mm x 88.9mm. But you can cards of any
                         size.
                     </KawaiiMessage>
+
+                    <PDFGenerator type="games" id={activeGame.id} />
                 </div>
             )
         );

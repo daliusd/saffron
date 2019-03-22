@@ -128,6 +128,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="page_width"
                         type="number"
+                        step="0.1"
                         onChange={this.handlePageWidthChange}
                         placeholder="Page width"
                         value={this.state.pageWidth}
@@ -136,6 +137,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="page_height"
                         type="number"
+                        step="0.1"
                         onChange={this.handlePageHeightChange}
                         placeholder="Page Height"
                         value={this.state.pageHeight}
@@ -144,6 +146,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="page_topbottom_margin"
                         type="number"
+                        step="0.1"
                         onChange={this.handleTopBottomMarginChange}
                         placeholder="Top/Bottom margin"
                         value={this.state.topBottomMargin}
@@ -152,6 +155,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="page_leftright_margin"
                         type="number"
+                        step="0.1"
                         onChange={this.handleLeftRightMarginChange}
                         placeholder="Left/Right margin"
                         value={this.state.leftRightMargin}
@@ -161,6 +165,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="card_vertical_space"
                         type="number"
+                        step="0.1"
                         onChange={this.handleVerticalSpaceChange}
                         placeholder="Vertical space"
                         value={this.state.verticalSpace}
@@ -170,6 +175,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                     <input
                         id="card_horizontal_space"
                         type="number"
+                        step="0.1"
                         onChange={this.handleHorizontalSpaceChange}
                         placeholder="Horizontal space"
                         value={this.state.horizontalSpace}

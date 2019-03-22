@@ -184,14 +184,14 @@
     + Show Safe Area Line
     + Show Cut Area Line
 
-- PDF Output improvements
++ PDF Output improvements
     + clip everything outside of card
     + Pass less info to pdf generator
     + Generate with/without bleeding area
     + empty space between cards
     + cut marks for scissors
     + cut marks outside of design
-    - Generate PDF for full game
+    + Generate PDF for full game
 
 - UI ideas
     + Give white shadow to rotate and resize controls

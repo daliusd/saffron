@@ -17,6 +17,8 @@ export default class KawaiiMessage extends Component<Props> {
         return (
             <div
                 style={{
+                    marginTop: '1em',
+                    marginBottom: '1em',
                     padding: '1em',
                     borderRadius: '1em',
                     backgroundColor: 'var(--color-2)',
