@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import shortid from 'shortid';
 
-import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, State } from '../reducers';
+import { ACTIVITY_SELECTING, State } from '../reducers';
 import { BLEED_WIDTH } from '../constants';
 import {
     CardSetType,
@@ -16,12 +16,12 @@ import {
     cardSetCreateCard,
     cardSetRenameRequest,
     cardSetSetZoom,
-    gameCreatePdfRequest,
 } from '../actions';
 import Card from './Card';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import Loader from './Loader';
+import PDFGenerator from './PDFGenerator';
 import Sidebar from './Sidebar';
 import style from './CardSet.module.css';
 
@@ -32,7 +32,6 @@ interface StateProps {
     isAuthenticated: boolean;
     cardsAllIds: string[];
     cardsById: CardsCollection;
-    isCreatingPdf: boolean;
     activity: number;
     zoom: number;
     activeCardSet: CardSetType | null;
@@ -67,19 +66,6 @@ export class CardSet extends Component<Props, LocalState> {
         dispatch(cardSetCreateCard(newCard));
     };
 
-    handleGeneratePdfClick = () => {
-        const { dispatch, activeCardSet } = this.props;
-        const { pageWidth, pageHeight, topBottomMargin, leftRightMargin } = this.state;
-
-        if (activeCardSet === null) {
-            return;
-        }
-
-        dispatch(
-            gameCreatePdfRequest('cardsets', activeCardSet.id, pageWidth, pageHeight, topBottomMargin, leftRightMargin),
-        );
-    };
-
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
         dispatch(cardSetChangeWidth(parseFloat(event.target.value)));
@@ -98,22 +84,6 @@ export class CardSet extends Component<Props, LocalState> {
     handleZoom = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
         dispatch(cardSetSetZoom(parseFloat(event.target.value)));
-    };
-
-    handlePageWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ pageWidth: parseFloat(event.target.value) });
-    };
-
-    handlePageHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ pageHeight: parseFloat(event.target.value) });
-    };
-
-    handleTopBottomMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ topBottomMargin: parseFloat(event.target.value) });
-    };
-
-    handleLeftRightMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ leftRightMargin: parseFloat(event.target.value) });
     };
 
     handleClickOutsideOfCard = () => {
@@ -136,7 +106,6 @@ export class CardSet extends Component<Props, LocalState> {
             width,
             height,
             isTwoSided,
-            isCreatingPdf,
             activity,
             zoom,
             activeCardSet,
@@ -233,49 +202,7 @@ export class CardSet extends Component<Props, LocalState> {
                         </div>
                     </div>
 
-                    <KawaiiMessage character={Character.Ghost} mood="excited">
-                        <p>Here you can generate PDF for your cardset.</p>
-                        <p>Hint 1: A4 page size is 210 mm x 297 mm. Letter page size is 215.9 x 279.4 mm.</p>
-                        <p>Hint 2: 1 inch is equal to 25.4 mm.</p>
-                    </KawaiiMessage>
-
-                    <div className="form">
-                        <label htmlFor="page_width">Page width (mm):</label>
-                        <input
-                            id="page_width"
-                            type="number"
-                            onChange={this.handlePageWidthChange}
-                            placeholder="Page width"
-                            value={this.state.pageWidth}
-                        />
-                        <label htmlFor="page_height">Page height (mm):</label>
-                        <input
-                            id="page_height"
-                            type="number"
-                            onChange={this.handlePageHeightChange}
-                            placeholder="Page Height"
-                            value={this.state.pageHeight}
-                        />
-                        <label htmlFor="page_topbottom_margin">Margin from top/bottom (mm):</label>
-                        <input
-                            id="page_topbottom_margin"
-                            type="number"
-                            onChange={this.handleTopBottomMarginChange}
-                            placeholder="Top/Bottom margin"
-                            value={this.state.topBottomMargin}
-                        />
-                        <label htmlFor="page_leftright_margin">Margin from left/right (mm):</label>
-                        <input
-                            id="page_leftright_margin"
-                            type="number"
-                            onChange={this.handleLeftRightMarginChange}
-                            placeholder="Left/Right margin"
-                            value={this.state.leftRightMargin}
-                        />
-                        <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
-                            Generate PDF
-                        </button>
-                    </div>
+                    {activeCardSet !== null && <PDFGenerator type="cardsets" id={activeCardSet.id} />}
                 </div>
             )
         );
@@ -292,7 +219,6 @@ const mapStateToProps = (state: State): StateProps => {
         isAuthenticated: state.auth.isAuthenticated,
         cardsAllIds: state.cardsets.cardsAllIds,
         cardsById: state.cardsets.cardsById,
-        isCreatingPdf: (state.games.activity & ACTIVITY_CREATING_PDF) === ACTIVITY_CREATING_PDF,
         activeCardSet:
             state.cardsets.active && state.cardsets.byId[state.cardsets.active]
                 ? state.cardsets.byId[state.cardsets.active]
