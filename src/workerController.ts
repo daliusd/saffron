@@ -11,6 +11,8 @@ export const generatePdfUsingWorker = (
     verticalSpace: number,
     horizontalSpace: number,
     includeBleedingArea: boolean,
+    cutMarksForScissors: boolean,
+    cutMarksForGuillotine: boolean,
 ) => {
     // @ts-ignore
     if (!window.Worker) {
@@ -36,6 +38,8 @@ export const generatePdfUsingWorker = (
                 verticalSpace,
                 horizontalSpace,
                 includeBleedingArea,
+                cutMarksForScissors,
+                cutMarksForGuillotine,
             });
         } catch (e) {
             reject(e);

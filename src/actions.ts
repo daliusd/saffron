@@ -284,6 +284,8 @@ export interface GameCreatePdfRequest {
     verticalSpace: number;
     horizontalSpace: number;
     includeBleedingArea: boolean;
+    cutMarksForScissors: boolean;
+    cutMarksForGuillotine: boolean;
 }
 
 export type GameCreatePdfAction =
@@ -706,6 +708,8 @@ export const gameCreatePdfRequest = (
     verticalSpace: number,
     horizontalSpace: number,
     includeBleedingArea: boolean,
+    cutMarksForScissors: boolean,
+    cutMarksForGuillotine: boolean,
 ): GameCreatePdfRequest => {
     return {
         type: GAME_CREATE_PDF_REQUEST,
@@ -718,6 +722,8 @@ export const gameCreatePdfRequest = (
         verticalSpace,
         horizontalSpace,
         includeBleedingArea,
+        cutMarksForScissors,
+        cutMarksForGuillotine,
     };
 };
 

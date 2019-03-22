@@ -395,6 +395,8 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
             action.verticalSpace,
             action.horizontalSpace,
             action.includeBleedingArea,
+            action.cutMarksForScissors,
+            action.cutMarksForGuillotine,
         );
         yield call(hideProgress, progressId);
         yield call(putInfo, 'PDF generated.');

@@ -28,6 +28,8 @@ interface LocalState {
     verticalSpace: number;
     horizontalSpace: number;
     includeBleedingArea: boolean;
+    cutMarksForScissors: boolean;
+    cutMarksForGuillotine: boolean;
 }
 
 export class PDFGenerator extends Component<Props, LocalState> {
@@ -39,6 +41,8 @@ export class PDFGenerator extends Component<Props, LocalState> {
         verticalSpace: 0,
         horizontalSpace: 0,
         includeBleedingArea: false,
+        cutMarksForScissors: true,
+        cutMarksForGuillotine: false,
     };
 
     handleGeneratePdfClick = () => {
@@ -51,6 +55,8 @@ export class PDFGenerator extends Component<Props, LocalState> {
             verticalSpace,
             horizontalSpace,
             includeBleedingArea,
+            cutMarksForScissors,
+            cutMarksForGuillotine,
         } = this.state;
 
         dispatch(
@@ -64,6 +70,8 @@ export class PDFGenerator extends Component<Props, LocalState> {
                 verticalSpace,
                 horizontalSpace,
                 includeBleedingArea,
+                cutMarksForScissors,
+                cutMarksForGuillotine,
             ),
         );
     };
@@ -94,6 +102,14 @@ export class PDFGenerator extends Component<Props, LocalState> {
 
     handleIncludeBleedingAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ includeBleedingArea: event.target.checked });
+    };
+
+    handleCutMarksForScissors = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ cutMarksForScissors: event.target.checked });
+    };
+
+    handleCutMarksForGuillotine = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ cutMarksForGuillotine: event.target.checked });
     };
 
     render() {
@@ -169,6 +185,24 @@ export class PDFGenerator extends Component<Props, LocalState> {
                             onChange={this.handleIncludeBleedingAreaChange}
                         />
                         Generate with bleeding area.
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={this.state.cutMarksForScissors}
+                            onChange={this.handleCutMarksForScissors}
+                        />
+                        Generate with cut marks for paper scissors.
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={this.state.cutMarksForGuillotine}
+                            onChange={this.handleCutMarksForGuillotine}
+                        />
+                        Generate with cut marks for paper guillotine (in margin area).
                     </label>
 
                     <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
