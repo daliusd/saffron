@@ -8,6 +8,8 @@ export const generatePdfUsingWorker = (
     pageHeight: number,
     topBottomMargin: number,
     leftRightMargin: number,
+    verticalSpace: number,
+    horizontalSpace: number,
     includeBleedingArea: boolean,
 ) => {
     // @ts-ignore
@@ -31,6 +33,8 @@ export const generatePdfUsingWorker = (
                 pageHeight,
                 topBottomMargin,
                 leftRightMargin,
+                verticalSpace,
+                horizontalSpace,
                 includeBleedingArea,
             });
         } catch (e) {

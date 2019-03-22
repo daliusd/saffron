@@ -25,6 +25,8 @@ interface LocalState {
     pageHeight: number;
     topBottomMargin: number;
     leftRightMargin: number;
+    verticalSpace: number;
+    horizontalSpace: number;
     includeBleedingArea: boolean;
 }
 
@@ -34,12 +36,22 @@ export class PDFGenerator extends Component<Props, LocalState> {
         pageHeight: 297,
         topBottomMargin: 15,
         leftRightMargin: 9,
+        verticalSpace: 0,
+        horizontalSpace: 0,
         includeBleedingArea: false,
     };
 
     handleGeneratePdfClick = () => {
         const { dispatch } = this.props;
-        const { pageWidth, pageHeight, topBottomMargin, leftRightMargin, includeBleedingArea } = this.state;
+        const {
+            pageWidth,
+            pageHeight,
+            topBottomMargin,
+            leftRightMargin,
+            verticalSpace,
+            horizontalSpace,
+            includeBleedingArea,
+        } = this.state;
 
         dispatch(
             gameCreatePdfRequest(
@@ -49,6 +61,8 @@ export class PDFGenerator extends Component<Props, LocalState> {
                 pageHeight,
                 topBottomMargin,
                 leftRightMargin,
+                verticalSpace,
+                horizontalSpace,
                 includeBleedingArea,
             ),
         );
@@ -68,6 +82,14 @@ export class PDFGenerator extends Component<Props, LocalState> {
 
     handleLeftRightMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ leftRightMargin: parseFloat(event.target.value) });
+    };
+
+    handleVerticalSpaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ verticalSpace: parseFloat(event.target.value) });
+    };
+
+    handleHorizontalSpaceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ horizontalSpace: parseFloat(event.target.value) });
     };
 
     handleIncludeBleedingAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,6 +139,24 @@ export class PDFGenerator extends Component<Props, LocalState> {
                         onChange={this.handleLeftRightMarginChange}
                         placeholder="Left/Right margin"
                         value={this.state.leftRightMargin}
+                    />
+
+                    <label htmlFor="card_vertical_space">Vertical space between cards (mm):</label>
+                    <input
+                        id="card_vertical_space"
+                        type="number"
+                        onChange={this.handleVerticalSpaceChange}
+                        placeholder="Vertical space"
+                        value={this.state.verticalSpace}
+                    />
+
+                    <label htmlFor="card_horizontal_space">Horizontal space between cards (mm):</label>
+                    <input
+                        id="card_horizontal_space"
+                        type="number"
+                        onChange={this.handleHorizontalSpaceChange}
+                        placeholder="Horizontal space"
+                        value={this.state.horizontalSpace}
                     />
 
                     <label

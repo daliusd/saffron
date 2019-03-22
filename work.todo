@@ -187,9 +187,10 @@
 - PDF Output improvements
     + clip everything outside of card
     + Pass less info to pdf generator
-    - Generate with/without bleeding area
+    + Generate with/without bleeding area
+    + empty space between cards
+    - cut marks for scissors
     - cut marks outside of design
-    - empty space between cards
     - Generate PDF for full game
 
 - UI ideas

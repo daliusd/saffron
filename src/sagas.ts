@@ -392,6 +392,8 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
             action.pageHeight,
             action.topBottomMargin,
             action.leftRightMargin,
+            action.verticalSpace,
+            action.horizontalSpace,
             action.includeBleedingArea,
         );
         yield call(hideProgress, progressId);
