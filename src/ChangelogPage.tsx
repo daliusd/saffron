@@ -10,16 +10,24 @@ export default class ChangelogPage extends Component {
                     <li>
                         Image improvements:
                         <ul>
-                            <li>Change color of images (for SVG images).</li>
                             <li>Generating list of author's of icons if attribution is required.</li>
                             <li>Various ideas for advanced images controls.</li>
                         </ul>
                     </li>
                     <li>Card templates.</li>
-                    <li>Two-sided cards.</li>
                     <li>UI improvements (snapping, keyboard support and etc.).</li>
-                    <li>PDF generation for all the game.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
+                </ul>
+                <h2>2019-03-22</h2>
+                <ul>
+                    <li>Two-sided cards.</li>
+                    <li>PDF generation for all the game.</li>
+                    <li>More PDF generation options added</li>
+                    <li>Change color of images (for SVG images only, e.g. try using with "forms" images).</li>
+                    <li>Game rename and delete</li>
+                    <li>Card Set rename and delete</li>
+                    <li>Text: line height support</li>
+                    <li>UI/UX improvements</li>
                 </ul>
                 <h2>2019-03-03</h2>
                 <ul>
