@@ -1,21 +1,9 @@
-import {
-    CardsCollection,
-    PlaceholdersCollection,
-    PlaceholdersImageInfoByCardCollection,
-    PlaceholdersTextInfoByCardCollection,
-} from './actions';
 import { downloadBlob } from './utils';
 
 export const generatePdfUsingWorker = (
-    width: number,
-    height: number,
-    isTwoSided: boolean,
-    cardsAllIds: string[],
-    cardsById: CardsCollection,
-    placeholders: PlaceholdersCollection,
-    placeholdersAllIds: string[],
-    texts: PlaceholdersTextInfoByCardCollection,
-    images: PlaceholdersImageInfoByCardCollection,
+    accessToken: string,
+    collectionType: string,
+    collectionId: string,
     pageWidth: number,
     pageHeight: number,
     topBottomMargin: number,
@@ -35,15 +23,9 @@ export const generatePdfUsingWorker = (
             });
 
             worker.postMessage({
-                width,
-                height,
-                isTwoSided,
-                cardsAllIds,
-                cardsById,
-                placeholders,
-                placeholdersAllIds,
-                texts,
-                images,
+                accessToken,
+                collectionType,
+                collectionId,
                 pageWidth,
                 pageHeight,
                 topBottomMargin,

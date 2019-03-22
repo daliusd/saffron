@@ -275,6 +275,8 @@ export type GameSelectAction =
 
 export interface GameCreatePdfRequest {
     type: typeof GAME_CREATE_PDF_REQUEST;
+    collectionType: string;
+    collectionId: string;
     pageWidth: number;
     pageHeight: number;
     topBottomMargin: number;
@@ -692,6 +694,8 @@ export const gameSelectRequest = (id: string, updateCardSets: boolean): GameActi
 };
 
 export const gameCreatePdfRequest = (
+    collectionType: string,
+    collectionId: string,
     pageWidth: number,
     pageHeight: number,
     topBottomMargin: number,
@@ -699,6 +703,8 @@ export const gameCreatePdfRequest = (
 ): GameCreatePdfRequest => {
     return {
         type: GAME_CREATE_PDF_REQUEST,
+        collectionType,
+        collectionId,
         pageWidth,
         pageHeight,
         topBottomMargin,

@@ -68,10 +68,16 @@ export class CardSet extends Component<Props, LocalState> {
     };
 
     handleGeneratePdfClick = () => {
-        const { dispatch } = this.props;
+        const { dispatch, activeCardSet } = this.props;
         const { pageWidth, pageHeight, topBottomMargin, leftRightMargin } = this.state;
 
-        dispatch(gameCreatePdfRequest(pageWidth, pageHeight, topBottomMargin, leftRightMargin));
+        if (activeCardSet === null) {
+            return;
+        }
+
+        dispatch(
+            gameCreatePdfRequest('cardsets', activeCardSet.id, pageWidth, pageHeight, topBottomMargin, leftRightMargin),
+        );
     };
 
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {

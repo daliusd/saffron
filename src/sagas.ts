@@ -164,9 +164,9 @@ export function validateToken(token: string): boolean {
     }
 }
 
-export function* getToken(withErrorIfMissing: boolean): SagaIterator {
+export function* getToken(withErrorIfMissing: boolean, getFreshToken = false): SagaIterator {
     const token = yield call(getTokenFromStorage);
-    if (token) {
+    if (token && !getFreshToken) {
         const tokenValid = yield call(validateToken, token);
         if (tokenValid) return token;
     }
@@ -379,20 +379,15 @@ export function* handleGameSelectRequest(action: GameSelectRequest): SagaIterato
 export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaIterator {
     let progressId = null;
     try {
-        const state = yield select();
         progressId = yield call(putProgress, 'Generating PDF');
+
+        const token = yield call(getToken, true, true);
 
         yield call(
             generatePdfUsingWorker,
-            state.cardsets.width,
-            state.cardsets.height,
-            state.cardsets.isTwoSided,
-            state.cardsets.cardsAllIds,
-            state.cardsets.cardsById,
-            state.cardsets.placeholders,
-            state.cardsets.placeholdersAllIds,
-            state.cardsets.texts,
-            state.cardsets.images,
+            token,
+            action.collectionType,
+            action.collectionId,
             action.pageWidth,
             action.pageHeight,
             action.topBottomMargin,
