@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import WebFont from 'webfontloader';
 
-import { DEFAULT_LINE_HEIGHT } from '../fontLoader';
+import { DEFAULT_LINE_HEIGHT } from '../constants';
 import {
     Dispatch,
     cardSetChangeActiveTextPlaceholderFontFamilyAndVariant,

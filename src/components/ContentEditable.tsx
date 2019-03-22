@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from '../fontLoader';
+import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from '../constants';
 import { Dispatch, TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 import { State } from '../reducers';
 

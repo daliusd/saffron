@@ -96,7 +96,13 @@ import {
     SignUpAction,
     TextPlaceholderType,
 } from './actions';
-import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_FONT_VARIANT, DEFAULT_LINE_HEIGHT } from './fontLoader';
+import {
+    CURRENT_CARDSET_VERSION,
+    DEFAULT_FONT,
+    DEFAULT_FONT_SIZE,
+    DEFAULT_FONT_VARIANT,
+    DEFAULT_LINE_HEIGHT,
+} from './constants';
 
 export const ACTIVITY_CREATING = 0x1;
 export const ACTIVITY_LISTING = 0x2;
@@ -157,6 +163,7 @@ export interface CardSetState {
     width: number;
     height: number;
     isTwoSided: boolean;
+    version: number;
     byId: CardSetsCollection;
     allIds: IdsArray;
     activity: number;
@@ -179,6 +186,7 @@ export const DefaultCardSetState: CardSetState = {
     width: 63.5,
     height: 88.9,
     isTwoSided: false,
+    version: CURRENT_CARDSET_VERSION,
     byId: {},
     allIds: [],
     activity: 0,
@@ -445,6 +453,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: action.data.width || 63.5,
                 height: action.data.height || 88.9,
                 isTwoSided: action.data.isTwoSided || false,
+                version: action.data.version,
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
                 placeholders: action.data.placeholders || {},

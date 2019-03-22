@@ -175,18 +175,21 @@
 - Cards can have two sides
     + Change sideness
     + Handle cardSetActiveCardAndPlaceholder properly
-    - fix worker (isTwoSided is new parameter)
+    + fix worker (isTwoSided is new parameter)
     - Front or Back title
 
-- Add support for cutting edges
-    - Investigate make playing card templates. Change naming appropriately.
-    - Create some cards templates. Potentially with edges.
++ Add support for cutting edges
+    + Investigate make playing card templates.
+    + Support Bleeding Area
+    + Show Safe Area Line
+    + Show Cut Area Line
 
 - PDF Output improvements
+    + clip everything outside of card
+    - Generate with/without bleeding area
     - cut marks outside of design
     - empty space between cards
     - Generate PDF for full game
-    - clip everything outside of card
 
 - UI ideas
     + Give white shadow to rotate and resize controls
@@ -199,6 +202,8 @@
     - Lower / Raise field one step
     - Prevent close of browser window while save is not complete
     - Saving displayed constantly bug
+
+- Create some cards templates. Potentially with edges.
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users

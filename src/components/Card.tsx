@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import Measure from 'react-measure';
 import React, { Component } from 'react';
 
+import { BLEED_WIDTH } from '../constants';
 import { CardType, Dispatch, PlaceholdersCollection, cardSetActiveCardAndPlaceholder, IdsArray } from '../actions';
 import { State } from '../reducers';
 import ImageField from './ImageField';
@@ -54,7 +55,10 @@ class Card extends Component<Props, LocalState> {
 
     render() {
         const { placeholders, placeholdersIds, card, isBack, width, height, isActiveCard, zoom } = this.props;
-        const ppmm = this.state.dimensions.width / width;
+        const widthWithBleeds = width + BLEED_WIDTH * 2;
+        const heightWithBleeds = height + BLEED_WIDTH * 2;
+
+        const ppmm = this.state.dimensions.width / widthWithBleeds;
 
         return (
             <Measure
@@ -72,8 +76,8 @@ class Card extends Component<Props, LocalState> {
                         id={`card_${card.id}`}
                         ref={measureRef}
                         style={{
-                            width: `${width * zoom}mm`,
-                            height: `${height * zoom}mm`,
+                            width: `${widthWithBleeds * zoom}mm`,
+                            height: `${heightWithBleeds * zoom}mm`,
                             position: 'relative',
                             overflow: 'hidden',
                         }}
@@ -109,6 +113,32 @@ class Card extends Component<Props, LocalState> {
                             }
                             return null;
                         })}
+
+                        <div
+                            style={{
+                                position: 'absolute',
+                                width: `${width * zoom}mm`,
+                                height: `${height * zoom}mm`,
+                                left: `${BLEED_WIDTH * zoom}mm`,
+                                top: `${BLEED_WIDTH * zoom}mm`,
+                                border: '1px dashed black',
+                                borderRadius: '5mm',
+                                pointerEvents: 'none',
+                            }}
+                        />
+
+                        <div
+                            style={{
+                                position: 'absolute',
+                                width: `${(width - BLEED_WIDTH * 2) * zoom}mm`,
+                                height: `${(height - BLEED_WIDTH * 2) * zoom}mm`,
+                                left: `${BLEED_WIDTH * 2 * zoom}mm`,
+                                top: `${BLEED_WIDTH * 2 * zoom}mm`,
+                                border: '1px dashed red',
+                                borderRadius: '5mm',
+                                pointerEvents: 'none',
+                            }}
+                        />
                     </div>
                 )}
             </Measure>

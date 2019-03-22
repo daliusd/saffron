@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import shortid from 'shortid';
 
 import { ACTIVITY_CREATING_PDF, ACTIVITY_SELECTING, State } from '../reducers';
+import { BLEED_WIDTH } from '../constants';
 import {
     CardSetType,
     CardType,
@@ -135,6 +136,8 @@ export class CardSet extends Component<Props, LocalState> {
             activeCardSet,
         } = this.props;
 
+        const widthWithBleeds = width + BLEED_WIDTH * 2;
+
         return (
             isAuthenticated && (
                 <div>
@@ -201,7 +204,8 @@ export class CardSet extends Component<Props, LocalState> {
                             <div className={style.cardset}>
                                 <ul
                                     style={{
-                                        gridTemplateColumns: `repeat(auto-fill, minmax(${width * zoom}mm, 1fr))`,
+                                        gridTemplateColumns: `repeat(auto-fill, minmax(${widthWithBleeds *
+                                            zoom}mm, 1fr))`,
                                     }}
                                 >
                                     {cardsAllIds &&

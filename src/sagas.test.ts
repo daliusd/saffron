@@ -45,6 +45,7 @@ import {
     gameSelectRequest,
     messageDisplay,
 } from './actions';
+import { CURRENT_CARDSET_VERSION } from './constants';
 import { CardSetState, DefaultCardSetState } from './reducers';
 import {
     authorizedGetRequest,
@@ -496,14 +497,20 @@ test('handleCardSetSelectRequest', () => {
     // Successful request
     expect(
         gen.next({ data: { id: '345', name: 'test', data: '{ "placeholders": {} }', gameId: '666' } }).value,
-    ).toEqual(call(loadFontsUsedInPlaceholders, { placeholders: {}, placeholdersAllIds: [] }));
+    ).toEqual(
+        call(loadFontsUsedInPlaceholders, {
+            placeholders: {},
+            placeholdersAllIds: [],
+            version: CURRENT_CARDSET_VERSION,
+        }),
+    );
 
     expect(gen.next().value).toEqual(
         put({
             type: CARDSET_SELECT_SUCCESS,
             id: '345',
             name: 'test',
-            data: { placeholders: {}, placeholdersAllIds: [] },
+            data: { placeholders: {}, placeholdersAllIds: [], version: CURRENT_CARDSET_VERSION },
         }),
     );
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
@@ -540,6 +547,7 @@ test('handleCardSetChange', () => {
                 width: 63.5,
                 height: 88.9,
                 isTwoSided: false,
+                version: CURRENT_CARDSET_VERSION,
                 cardsAllIds: [],
                 cardsById: {},
                 placeholdersAllIds: [],

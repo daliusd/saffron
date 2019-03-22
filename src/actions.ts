@@ -342,6 +342,7 @@ export interface CardSetSelectSuccess {
     id: string;
     name: string;
     data: {
+        version: number;
         width: number;
         height: number;
         isTwoSided: boolean;

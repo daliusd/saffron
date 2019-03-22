@@ -4,6 +4,7 @@ import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effect
 import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
 
+import { BLEED_WIDTH } from './constants';
 import {
     CARDSET_ADD_IMAGE_PLACEHOLDER,
     CARDSET_ADD_TEXT_PLACEHOLDER,
@@ -456,6 +457,16 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
         if (!('placeholdersAllIds' in parsedData) && 'placeholders' in parsedData) {
             parsedData.placeholdersAllIds = Object.keys(parsedData.placeholders);
         }
+
+        if (!('version' in parsedData)) {
+            parsedData.version = 2;
+            for (const plId in parsedData.placeholders) {
+                const placeholder = parsedData.placeholders[plId];
+                placeholder.x += BLEED_WIDTH;
+                placeholder.y += BLEED_WIDTH;
+            }
+        }
+
         yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
             type: CARDSET_SELECT_SUCCESS,
@@ -620,6 +631,7 @@ export function* handleCardSetChange(): SagaIterator {
             width: state.cardsets.width,
             height: state.cardsets.height,
             isTwoSided: state.cardsets.isTwoSided,
+            version: state.cardsets.version,
             cardsAllIds: state.cardsets.cardsAllIds,
             cardsById: state.cardsets.cardsById,
             placeholdersAllIds: state.cardsets.placeholdersAllIds,

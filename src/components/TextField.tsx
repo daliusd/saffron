@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { PureComponent } from 'react';
 
-import { DEFAULT_LINE_HEIGHT } from '../fontLoader';
+import { DEFAULT_LINE_HEIGHT } from '../constants';
 import {
     Dispatch,
     TextPlaceholderType,
