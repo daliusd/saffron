@@ -281,6 +281,7 @@ export interface GameCreatePdfRequest {
     pageHeight: number;
     topBottomMargin: number;
     leftRightMargin: number;
+    includeBleedingArea: boolean;
 }
 
 export type GameCreatePdfAction =
@@ -700,6 +701,7 @@ export const gameCreatePdfRequest = (
     pageHeight: number,
     topBottomMargin: number,
     leftRightMargin: number,
+    includeBleedingArea: boolean,
 ): GameCreatePdfRequest => {
     return {
         type: GAME_CREATE_PDF_REQUEST,
@@ -709,6 +711,7 @@ export const gameCreatePdfRequest = (
         pageHeight,
         topBottomMargin,
         leftRightMargin,
+        includeBleedingArea,
     };
 };
 

@@ -25,6 +25,7 @@ interface LocalState {
     pageHeight: number;
     topBottomMargin: number;
     leftRightMargin: number;
+    includeBleedingArea: boolean;
 }
 
 export class PDFGenerator extends Component<Props, LocalState> {
@@ -33,11 +34,12 @@ export class PDFGenerator extends Component<Props, LocalState> {
         pageHeight: 297,
         topBottomMargin: 15,
         leftRightMargin: 9,
+        includeBleedingArea: false,
     };
 
     handleGeneratePdfClick = () => {
         const { dispatch } = this.props;
-        const { pageWidth, pageHeight, topBottomMargin, leftRightMargin } = this.state;
+        const { pageWidth, pageHeight, topBottomMargin, leftRightMargin, includeBleedingArea } = this.state;
 
         dispatch(
             gameCreatePdfRequest(
@@ -47,6 +49,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                 pageHeight,
                 topBottomMargin,
                 leftRightMargin,
+                includeBleedingArea,
             ),
         );
     };
@@ -65,6 +68,10 @@ export class PDFGenerator extends Component<Props, LocalState> {
 
     handleLeftRightMarginChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ leftRightMargin: parseFloat(event.target.value) });
+    };
+
+    handleIncludeBleedingAreaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ includeBleedingArea: event.target.checked });
     };
 
     render() {
@@ -111,6 +118,19 @@ export class PDFGenerator extends Component<Props, LocalState> {
                         placeholder="Left/Right margin"
                         value={this.state.leftRightMargin}
                     />
+
+                    <label
+                        title="You might need this for Cardmogrifier or professional printing. Do
+                        not check this if all you are interested in is card (area inside black dashed rectangle)."
+                    >
+                        <input
+                            type="checkbox"
+                            checked={this.state.includeBleedingArea}
+                            onChange={this.handleIncludeBleedingAreaChange}
+                        />
+                        Generate with bleeding area.
+                    </label>
+
                     <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
                         Generate PDF
                     </button>

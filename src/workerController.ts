@@ -8,6 +8,7 @@ export const generatePdfUsingWorker = (
     pageHeight: number,
     topBottomMargin: number,
     leftRightMargin: number,
+    includeBleedingArea: boolean,
 ) => {
     // @ts-ignore
     if (!window.Worker) {
@@ -30,6 +31,7 @@ export const generatePdfUsingWorker = (
                 pageHeight,
                 topBottomMargin,
                 leftRightMargin,
+                includeBleedingArea,
             });
         } catch (e) {
             reject(e);
