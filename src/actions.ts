@@ -498,6 +498,7 @@ export interface CardSetSetActiveCardAndPlaceholder {
 
 export enum SidebarState {
     Details,
+    Measurements,
     Image,
     Text,
     Upload,

@@ -7,6 +7,7 @@ import { State } from '../reducers';
 import SidebarDetails from './SidebarDetails';
 import SidebarImage from './SidebarImage';
 import SidebarImportExport from './SidebarImportExport';
+import SidebarMeasurements from './SidebarMeasurements';
 import SidebarText from './SidebarText';
 import SidebarUpload from './SidebarUpload';
 import style from './Sidebar.module.css';
@@ -31,6 +32,12 @@ const SIDEBARS: SidebarInfo[] = [
         title: 'Details',
         icon: 'details',
         component: SidebarDetails,
+    },
+    {
+        state: SidebarState.Measurements,
+        title: 'Measurements',
+        icon: 'format_shapes',
+        component: SidebarMeasurements,
     },
     {
         state: SidebarState.Image,

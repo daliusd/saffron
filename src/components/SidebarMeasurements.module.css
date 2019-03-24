@@ -1,0 +1,20 @@
+.view {
+}
+
+.view input {
+    width: 9em;
+    text-align: center;
+}
+
+.view input[step='0.01'] {
+    width: 9em;
+}
+
+.view input[type='text'] {
+    text-align: left;
+    width: 9em;
+}
+
+.disabled i {
+    color: #cccccc;
+}

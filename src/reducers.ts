@@ -1082,7 +1082,12 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         }
         case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
             let textSettings = { ...state.textSettings };
-            let activeSidebar = action.cardId !== null ? SidebarState.Details : state.activeSidebar;
+            let activeSidebar = state.activeSidebar;
+
+            if (activeSidebar !== SidebarState.Measurements && action.cardId !== null) {
+                activeSidebar = SidebarState.Details;
+            }
+
             if (action.placeholderId !== null) {
                 const placeholder = state.placeholders[action.placeholderId];
                 if (placeholder.type === 'text') {
@@ -1093,9 +1098,13 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     textSettings.fontSize = placeholder.fontSize;
                     textSettings.lineHeight = placeholder.lineHeight;
 
-                    activeSidebar = SidebarState.Text;
+                    if (activeSidebar !== SidebarState.Measurements) {
+                        activeSidebar = SidebarState.Text;
+                    }
                 } else {
-                    activeSidebar = SidebarState.Image;
+                    if (activeSidebar !== SidebarState.Measurements) {
+                        activeSidebar = SidebarState.Image;
+                    }
                 }
             }
 
