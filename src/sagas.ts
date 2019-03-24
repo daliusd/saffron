@@ -614,12 +614,27 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
     }
 }
 
+function closeHandler(e: Event) {
+    e.preventDefault();
+    e.returnValue = true;
+}
+
+function preventWindowClose() {
+    window.addEventListener('beforeunload', closeHandler);
+}
+
+function allowWindowClose() {
+    window.removeEventListener('beforeunload', closeHandler);
+}
+
 export function* handleCardSetChange(): SagaIterator {
     let progressId = null;
 
     try {
-        yield call(delay, 1000);
+        preventWindowClose();
         progressId = yield call(putProgress, 'Saving Card Set');
+
+        yield call(delay, 1000);
         const state = yield select();
 
         yield put({
@@ -650,10 +665,12 @@ export function* handleCardSetChange(): SagaIterator {
         yield put({
             type: CARDSET_UPDATE_DATA_SUCCESS,
         });
+        allowWindowClose();
     } catch (e) {
         yield put({ type: CARDSET_UPDATE_DATA_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
+        allowWindowClose();
     }
 }
 

@@ -245,9 +245,13 @@ export const DefaultState: State = {
 export function message(state: MessageState = DefaultMessageState, action: MessageAction): MessageState {
     switch (action.type) {
         case MESSAGE_DISPLAY:
-            return Object.assign({}, state, {
+            const found = state.messages.find(m => m.id === action.message.id);
+            if (found) return state;
+
+            return {
+                ...state,
                 messages: state.messages.concat(action.message),
-            });
+            };
         case MESSAGE_HIDE:
             return Object.assign({}, state, {
                 messages: state.messages.filter(m => m.id !== action.messageId),

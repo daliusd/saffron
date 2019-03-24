@@ -198,12 +198,12 @@
     + Saving displayed constantly bug
     + Manual control of field (separate sidebar control)
     + Change add card button to fake card
-    - Snapping
-    - Keyboard manipulation
-    - Special visual effects
-    - Drag and drop for images would be cool
+    + Prevent close of browser window while save is not complete
     - Lower / Raise field one step
-    - Prevent close of browser window while save is not complete
+    - Snapping
+    - Drag and drop for images would be cool
+    - Special visual effects
+    - Keyboard manipulation
 
 - Create some cards templates. Potentially with edges.
 
