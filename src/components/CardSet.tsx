@@ -197,6 +197,7 @@ export class CardSet extends Component<Props, LocalState> {
                                         ])}
                                     <li key="newCard">
                                         <div
+                                            id="newCard"
                                             className={style.createCard}
                                             style={{
                                                 width: `${widthWithBleeds * zoom}mm`,

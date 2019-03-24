@@ -52,7 +52,7 @@ describe('<CardSets />', () => {
 
     it('simulates create click event', () => {
         const cardsetCreate = jest.fn();
-        const wrapper = mount(
+        const wrapper = shallow(
             <CardSets dispatch={cardsetCreate} isAuthenticated={true} allIds={[]} byId={{}} activeGame={'1'} />,
         );
         wrapper.find('button').simulate('click');

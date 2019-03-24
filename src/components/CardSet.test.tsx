@@ -56,7 +56,7 @@ describe('<CardSet />', () => {
             />,
         );
         wrapper
-            .find('button')
+            .find('div#newCard')
             .first()
             .simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
@@ -74,7 +74,7 @@ describe('<CardSet />', () => {
             />,
         );
         wrapper
-            .find('button')
+            .find('div#newCard')
             .first()
             .simulate('click');
         expect(dispatch.mock.calls.length).toBe(1);
