@@ -112,6 +112,7 @@ export class CardSet extends Component<Props, LocalState> {
         } = this.props;
 
         const widthWithBleeds = width + BLEED_WIDTH * 2;
+        const heightWithBleeds = height + BLEED_WIDTH * 2;
 
         return (
             isAuthenticated && (
@@ -194,10 +195,24 @@ export class CardSet extends Component<Props, LocalState> {
                                                 </li>
                                             ),
                                         ])}
+                                    <li key="newCard">
+                                        <div
+                                            className={style.createCard}
+                                            style={{
+                                                width: `${widthWithBleeds * zoom}mm`,
+                                                height: `${heightWithBleeds * zoom}mm`,
+                                                position: 'relative',
+                                                overflow: 'hidden',
+                                            }}
+                                            onClick={this.handleCreateCardClick}
+                                        >
+                                            <div>
+                                                <i className="material-icons">add</i>
+                                                <div>Add Card</div>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </ul>
-                            </div>
-                            <div className="form">
-                                <button onClick={this.handleCreateCardClick}>Create Card</button>
                             </div>
                         </div>
                     </div>

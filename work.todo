@@ -197,10 +197,10 @@
     + Give white shadow to rotate and resize controls
     + Saving displayed constantly bug
     + Manual control of field (separate sidebar control)
+    + Change add card button to fake card
     - Snapping
     - Keyboard manipulation
     - Special visual effects
-    - Change add card button to fake card
     - Drag and drop for images would be cool
     - Lower / Raise field one step
     - Prevent close of browser window while save is not complete

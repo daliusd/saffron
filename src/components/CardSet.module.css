@@ -20,3 +20,30 @@
     box-sizing: border-box;
     border-radius: 1em;
 }
+
+.createCard {
+    margin: 1em;
+    background-color: #ffffff;
+    border: 1px solid black;
+    text-align: center;
+    color: #ccc;
+}
+
+.createCard:hover {
+    color: #000;
+}
+
+.createCard > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 50%;
+    height: 30%;
+    margin: auto;
+}
+
+.createCard i {
+    font-size: 4em;
+}
