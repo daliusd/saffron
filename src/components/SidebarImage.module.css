@@ -1,8 +1,7 @@
 .view {
-    height: 98%;
-    max-height: 98%;
+    height: 98vh;
     display: grid;
-    grid-template-rows: auto auto auto auto auto 1fr;
+    grid-template-rows: auto auto auto auto 1fr;
 }
 
 .disabled i {
@@ -17,7 +16,6 @@
     overflow: scroll;
 }
 
-.image img,
 .images img {
     width: 6.5em;
     margin-right: 0.25em;

@@ -57,7 +57,6 @@
     + Font size focus loss problem
     + Set default font
 
-+ Show active selection
 + Clone texts on card clone
 + Remove texts on card remove
 + Auto-save Card Sets
@@ -193,7 +192,7 @@
     + cut marks outside of design
     + Generate PDF for full game
 
-- UI ideas
++ UI ideas
     + Give white shadow to rotate and resize controls
     + Saving displayed constantly bug
     + Manual control of field (separate sidebar control)
@@ -201,7 +200,7 @@
     + Prevent close of browser window while save is not complete
     + Snapping
     + Images shouldn't be aligned to bottom
-    - Drag and drop for images would be cool
+    + Drag and drop for images would be cool
 
 - Repeated image control or images in text control
     - Allow assigning letters to user images

@@ -264,9 +264,6 @@ export class SidebarImage extends Component<Props, LocalState> {
 
                 {activePlaceholder && activePlaceholder.type === 'image' && (
                     <>
-                        <div className={style.image}>
-                            <img src={imageInfo ? imageInfo.url : ''} alt="" />
-                        </div>
                         <div>
                             <ColorButton
                                 color={(imageInfo && imageInfo.color) || '#FFFFFF'}
@@ -286,40 +283,40 @@ export class SidebarImage extends Component<Props, LocalState> {
                                 Apply to all cards
                             </label>
                         </div>
-                        <div>
-                            <form>
-                                Source:
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="all"
-                                        checked={location === 'all'}
-                                        onChange={this.handleOptionChange}
-                                    />
-                                    All
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="user"
-                                        checked={location === 'user'}
-                                        onChange={this.handleOptionChange}
-                                    />
-                                    User
-                                </label>
-                                <label>
-                                    <input
-                                        type="radio"
-                                        value="game"
-                                        checked={location === 'game'}
-                                        onChange={this.handleOptionChange}
-                                    />
-                                    Game
-                                </label>
-                            </form>
-                        </div>
                     </>
                 )}
+                <div>
+                    <form>
+                        Source:
+                        <label>
+                            <input
+                                type="radio"
+                                value="all"
+                                checked={location === 'all'}
+                                onChange={this.handleOptionChange}
+                            />
+                            All
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="user"
+                                checked={location === 'user'}
+                                onChange={this.handleOptionChange}
+                            />
+                            User
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="game"
+                                checked={location === 'game'}
+                                onChange={this.handleOptionChange}
+                            />
+                            Game
+                        </label>
+                    </form>
+                </div>
 
                 <div>
                     <input type="text" placeholder="Search..." value={filter} onChange={this.handleFilterChange} />
