@@ -202,10 +202,10 @@
     + Images shouldn't be aligned to bottom
     + Drag and drop for images would be cool
 
-- Repeated image control or images in text control
-    - Allow assigning letters to user images
-    - Change size, should work like text
-    - Emoji support
+- Images in text
+    + Show dragged and dropped images properly in UI
+    - Allow changing font size, aligment, color and font for selected text
+    - Render with images
 
 - Guillotine mode lacks cutting marks on card edges
 

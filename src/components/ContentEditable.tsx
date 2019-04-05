@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from '../constants';
 import { Dispatch, TextInfo, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
 import { State } from '../reducers';
+import style from './ContentEditable.module.css';
 
 interface OwnProps {
     cardId: string;
@@ -215,6 +216,7 @@ class ContentEditable extends Component<Props> {
         return (
             <div
                 ref={this.editDiv}
+                className={style.content}
                 contentEditable={true}
                 onFocus={this.onFocus}
                 onBlur={this.handleBlur}
