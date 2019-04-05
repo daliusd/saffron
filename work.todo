@@ -200,6 +200,7 @@
     + Change add card button to fake card
     + Prevent close of browser window while save is not complete
     + Snapping
+    + Images shouldn't be aligned to bottom
     - Drag and drop for images would be cool
 
 - Repeated image control or images in text control

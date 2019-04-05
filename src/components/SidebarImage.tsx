@@ -95,12 +95,14 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleImageSelect = (imageName: string) => {
-        const { imageInfo } = this.props;
+        const { imageInfo, activePlaceholder } = this.props;
 
-        const color = imageInfo && imageInfo.color;
+        if (activePlaceholder !== null) {
+            const color = imageInfo && imageInfo.color;
 
-        const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, base64: undefined };
-        this.changeImage(ii);
+            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, base64: undefined };
+            this.changeImage(ii);
+        }
     };
 
     handleRaiseToTop = () => {
@@ -312,28 +314,24 @@ export class SidebarImage extends Component<Props, LocalState> {
                                 </label>
                             </form>
                         </div>
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={filter}
-                                onChange={this.handleFilterChange}
-                            />
-                        </div>
-                        <div className={style.images}>
-                            {this.props.images.map(im => {
-                                return (
-                                    <img
-                                        key={im.id}
-                                        src={`/api/imagefiles/${im.name}`}
-                                        onClick={() => this.handleImageSelect(im.name)}
-                                        alt=""
-                                    />
-                                );
-                            })}
-                        </div>
                     </>
                 )}
+
+                <div>
+                    <input type="text" placeholder="Search..." value={filter} onChange={this.handleFilterChange} />
+                </div>
+                <div className={style.images}>
+                    {this.props.images.map(im => {
+                        return (
+                            <img
+                                key={im.id}
+                                src={`/api/imagefiles/${im.name}`}
+                                onClick={() => this.handleImageSelect(im.name)}
+                                alt=""
+                            />
+                        );
+                    })}
+                </div>
             </div>
         );
     }
