@@ -173,12 +173,16 @@ export class SidebarImage extends Component<Props, LocalState> {
                         <i className="material-icons">add_photo_alternate</i>
                     </button>
 
-                    <button onClick={this.handleRaiseToTop} title="Raise image to top">
-                        <i className="material-icons">arrow_upward</i>
-                    </button>
-                    <button onClick={this.handleLowerToBottom} title="Lower image to bottom">
-                        <i className="material-icons">arrow_downward</i>
-                    </button>
+                    {activePlaceholder !== null && (
+                        <>
+                            <button onClick={this.handleRaiseToTop} title="Raise image to top">
+                                <i className="material-icons">arrow_upward</i>
+                            </button>
+                            <button onClick={this.handleLowerToBottom} title="Lower image to bottom">
+                                <i className="material-icons">arrow_downward</i>
+                            </button>
+                        </>
+                    )}
 
                     {imageInfo && (
                         <button onClick={this.handleRemoveImageFromFieldClick} title="Remove image from field">
@@ -215,7 +219,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                     {activePlaceholder !== null && (
                         <input
                             type="text"
-                            value={activePlaceholder.type === 'image' ? activePlaceholder.name || '' : ''}
+                            value={activePlaceholder.name || ''}
                             placeholder={activePlaceholder.id}
                             onChange={this.handleNameChange}
                             title="Change name of image field."

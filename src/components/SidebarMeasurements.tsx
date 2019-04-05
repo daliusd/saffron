@@ -144,23 +144,31 @@ export class SidebarMeasurements extends Component<Props> {
     };
 
     render() {
-        const { activePlaceholder, visible } = this.props;
+        const { activeCard, activePlaceholder, visible } = this.props;
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
-                <button onClick={this.handlePrevPlaceholder} title="Previous placeholder">
-                    <i className="material-icons">arrow_back</i>
-                </button>
-                <button onClick={this.handleNextPlaceholder} title="Next placeholder">
-                    <i className="material-icons">arrow_forward</i>
-                </button>
+                {activeCard !== null && (
+                    <>
+                        <button onClick={this.handlePrevPlaceholder} title="Previous placeholder">
+                            <i className="material-icons">arrow_back</i>
+                        </button>
+                        <button onClick={this.handleNextPlaceholder} title="Next placeholder">
+                            <i className="material-icons">arrow_forward</i>
+                        </button>
+                    </>
+                )}
 
-                <button onClick={this.handleRaiseToTop} title="Raise to top">
-                    <i className="material-icons">arrow_upward</i>
-                </button>
-                <button onClick={this.handleLowerToBottom} title="Lower to bottom">
-                    <i className="material-icons">arrow_downward</i>
-                </button>
+                {activePlaceholder !== null && (
+                    <>
+                        <button onClick={this.handleRaiseToTop} title="Raise to top">
+                            <i className="material-icons">arrow_upward</i>
+                        </button>
+                        <button onClick={this.handleLowerToBottom} title="Lower to bottom">
+                            <i className="material-icons">arrow_downward</i>
+                        </button>
+                    </>
+                )}
 
                 {activePlaceholder !== null && !activePlaceholder.locked && (
                     <button
@@ -186,7 +194,7 @@ export class SidebarMeasurements extends Component<Props> {
                             Field name:
                             <input
                                 type="text"
-                                value={activePlaceholder.type === 'text' ? activePlaceholder.name || '' : ''}
+                                value={activePlaceholder.name || ''}
                                 placeholder={activePlaceholder.id}
                                 onChange={this.handleNameChange}
                                 title="Change name of field."

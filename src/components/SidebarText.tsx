@@ -115,12 +115,16 @@ export class SidebarText extends Component<Props> {
                 <button onClick={this.handleAddTextClick} title="Add text field">
                     <i className="material-icons">text_fields</i>
                 </button>
-                <button onClick={this.handleRaiseToTop} title="Raise text to top">
-                    <i className="material-icons">arrow_upward</i>
-                </button>
-                <button onClick={this.handleLowerToBottom} title="Lower text to bottom">
-                    <i className="material-icons">arrow_downward</i>
-                </button>
+                {activePlaceholder !== null && (
+                    <>
+                        <button onClick={this.handleRaiseToTop} title="Raise text to top">
+                            <i className="material-icons">arrow_upward</i>
+                        </button>
+                        <button onClick={this.handleLowerToBottom} title="Lower text to bottom">
+                            <i className="material-icons">arrow_downward</i>
+                        </button>
+                    </>
+                )}
 
                 {activePlaceholder !== null && !activePlaceholder.locked && (
                     <button
@@ -151,7 +155,7 @@ export class SidebarText extends Component<Props> {
                 {activePlaceholder !== null && (
                     <input
                         type="text"
-                        value={activePlaceholder.type === 'text' ? activePlaceholder.name || '' : ''}
+                        value={activePlaceholder.name || ''}
                         placeholder={activePlaceholder.id}
                         onChange={this.handleNameChange}
                         title="Change name of text field."
