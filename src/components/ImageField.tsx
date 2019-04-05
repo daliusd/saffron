@@ -3,8 +3,10 @@ import React, { PureComponent } from 'react';
 
 import {
     Dispatch,
+    ImageInfo,
     ImagePlaceholderType,
     cardSetActiveCardAndPlaceholder,
+    cardSetChangeImage,
     cardSetChangePlaceholderAngle,
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
@@ -103,6 +105,26 @@ class ImageField extends PureComponent<Props> {
         }
     };
 
+    handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+    };
+
+    handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const url = event.dataTransfer.getData('URL');
+        const imagefilesPos = url.indexOf('/api/imagefiles/');
+
+        if (imagefilesPos !== -1) {
+            const { cardId, imagePlaceholder, dispatch } = this.props;
+
+            const ii: ImageInfo = { url: url.substr(imagefilesPos) };
+            dispatch(cardSetChangeImage(cardId, imagePlaceholder.id, ii));
+        }
+    };
+
     render() {
         const { imagePlaceholder, imageUrl, ppmm, cardWidth, cardHeight } = this.props;
 
@@ -128,6 +150,8 @@ class ImageField extends PureComponent<Props> {
                         width: '100%',
                         height: '100%',
                     }}
+                    onDragOver={this.handleDragOver}
+                    onDrop={this.handleDrop}
                 >
                     <img
                         style={{
