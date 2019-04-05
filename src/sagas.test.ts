@@ -547,6 +547,7 @@ test('handleCardSetChange', () => {
                 width: 63.5,
                 height: 88.9,
                 isTwoSided: false,
+                snappingDistance: 1,
                 version: CURRENT_CARDSET_VERSION,
                 cardsAllIds: [],
                 cardsById: {},

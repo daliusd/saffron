@@ -21,12 +21,14 @@ interface OwnProps {
     onRotate: (angle: number) => void;
     cardWidth: number;
     cardHeight: number;
+    ppmm: number;
 }
 
 interface StateProps {
     isActive: boolean;
     isActivePlaceholder: boolean;
     isLocked: boolean;
+    snappingDistance: number;
 }
 
 interface DispatchProps {
@@ -170,20 +172,20 @@ class FieldController extends React.Component<Props> {
     };
 
     handleMouseMove = (event: MouseEvent) => {
-        this.handleDragMove(event);
+        this.handleDragMove(event, event.ctrlKey);
         event.preventDefault();
     };
 
     handleTouchMove = (event: TouchEvent) => {
-        this.handleDragMove(event.changedTouches[0]);
+        this.handleDragMove(event.changedTouches[0], event.ctrlKey);
         event.preventDefault();
     };
 
-    handleDragMove = (co: { clientX: number; clientY: number }) => {
+    handleDragMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
-        const { width, height, cardWidth, cardHeight } = this.props;
+        const { width, height, cardWidth, cardHeight, ppmm, snappingDistance } = this.props;
         this.moving = true;
 
         const { rx, ry } = this.rotateVec(width / 2, height / 2, this.currentAngle);
@@ -193,8 +195,14 @@ class FieldController extends React.Component<Props> {
         const dx2 = Math.abs(rx) + width / 2;
         const dy2 = Math.abs(ry) + height / 2;
 
-        const x = Math.min(Math.max(co.clientX - this.relX, dx), cardWidth - dx2);
-        const y = Math.min(Math.max(co.clientY - this.relY, dy), cardHeight - dy2);
+        let x = Math.min(Math.max(co.clientX - this.relX, dx), cardWidth - dx2);
+        let y = Math.min(Math.max(co.clientY - this.relY, dy), cardHeight - dy2);
+
+        if (!disableSnapping && snappingDistance !== 0) {
+            x = Math.round(x / ppmm / snappingDistance) * snappingDistance * ppmm;
+            y = Math.round(y / ppmm / snappingDistance) * snappingDistance * ppmm;
+        }
+
         this.cDiv.current.style.left = x + 'px';
         this.cDiv.current.style.top = y + 'px';
     };
@@ -271,17 +279,17 @@ class FieldController extends React.Component<Props> {
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
-        this.handleResizeMove(event);
+        this.handleResizeMove(event, event.ctrlKey);
         event.preventDefault();
     };
 
     handleResizeTouchMove = (event: TouchEvent) => {
-        this.handleResizeMove(event.changedTouches[0]);
+        this.handleResizeMove(event.changedTouches[0], event.ctrlKey);
         event.preventDefault();
     };
 
-    handleResizeMove = (co: { clientX: number; clientY: number }) => {
-        const { isLocked } = this.props;
+    handleResizeMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
+        const { isLocked, ppmm, snappingDistance } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
         this.moving = true;
@@ -291,8 +299,14 @@ class FieldController extends React.Component<Props> {
 
         const { rx, ry } = this.rotateVec(vx, vy, -this.currentAngle);
 
-        const w = this.originalW + rx;
-        const h = this.originalH + ry;
+        let w = this.originalW + rx;
+        let h = this.originalH + ry;
+
+        if (!disableSnapping && snappingDistance !== 0) {
+            w = Math.round(w / ppmm / snappingDistance) * snappingDistance * ppmm;
+            h = Math.round(h / ppmm / snappingDistance) * snappingDistance * ppmm;
+        }
+
         this.cDiv.current.style.width = w + 'px';
         this.cDiv.current.style.height = h + 'px';
 
@@ -365,23 +379,29 @@ class FieldController extends React.Component<Props> {
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {
-        this.handleRotateMove(event);
+        this.handleRotateMove(event, event.ctrlKey);
         event.preventDefault();
     };
 
     handleRotateTouchMove = (event: TouchEvent) => {
-        this.handleRotateMove(event.changedTouches[0]);
+        this.handleRotateMove(event.changedTouches[0], event.ctrlKey);
         event.preventDefault();
     };
 
-    handleRotateMove = (co: { clientX: number; clientY: number }) => {
+    handleRotateMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
         this.moving = true;
 
-        const angle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY);
-        this.currentAngle = this.originalAngle - angle;
+        let angle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY);
+
+        angle = this.originalAngle - angle;
+        if (!disableSnapping) {
+            angle = ((Math.round(((angle / Math.PI) * 180) / 5) * 5) / 180) * Math.PI;
+        }
+
+        this.currentAngle = angle;
 
         this.cDiv.current.style.transform = `rotate(${this.currentAngle}rad)`;
     };
@@ -451,6 +471,7 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         isActive,
         isActivePlaceholder,
         isLocked,
+        snappingDistance: state.cardsets.snappingDistance,
     };
 };
 

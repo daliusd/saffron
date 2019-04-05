@@ -199,22 +199,25 @@
     + Manual control of field (separate sidebar control)
     + Change add card button to fake card
     + Prevent close of browser window while save is not complete
-    - Lower / Raise field one step
-    - Snapping
+    + Snapping
     - Drag and drop for images would be cool
-    - Special visual effects
-    - Keyboard manipulation
-
-- Create some cards templates. Potentially with edges.
-
-- Generate list with authors of icons
-- Find more icons or give instructions to users
-    Where to get them. https://thenounproject.com/developers/ looks
-    like an option but it is not free.
 
 - Repeated image control or images in text control
     - Allow assigning letters to user images
     - Change size, should work like text
     - Emoji support
 
+- Guillotine mode lacks cutting marks on card edges
+
+- Generate list with authors of icons
+- Find more icons or give instructions to users
+    Where to get them. https://thenounproject.com/developers/ looks
+    like an option but it is not free.
+
+- Create some cards templates. Potentially with edges.
+
 - Open (statistics) page
+
+- Lower / Raise field one step
+- Special visual effects
+- Keyboard manipulation

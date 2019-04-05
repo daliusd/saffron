@@ -57,6 +57,7 @@ export const CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_FIT_FOR
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
+export const CARDSET_CHANGE_SNAPPING_DISTANCE = 'CARDSET_CHANGE_SNAPPING_DISTANCE';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
@@ -353,6 +354,7 @@ export interface CardSetSelectSuccess {
         width: number;
         height: number;
         isTwoSided: boolean;
+        snappingDistance: number;
         cardsAllIds: IdsArray;
         cardsById: CardsCollection;
         placeholders: PlaceholdersCollection;
@@ -423,6 +425,11 @@ export interface CardSetChangeHeight {
 export interface CardSetChangeIsTwoSided {
     type: typeof CARDSET_CHANGE_IS_TWO_SIDED;
     isTwoSided: boolean;
+}
+
+export interface CardSetChangeSnappingDistance {
+    type: typeof CARDSET_CHANGE_SNAPPING_DISTANCE;
+    snappingDistance: number;
 }
 
 export interface CardSetChangePlaceholderPosition {
@@ -497,6 +504,7 @@ export interface CardSetSetActiveCardAndPlaceholder {
 }
 
 export enum SidebarState {
+    Settings,
     Details,
     Measurements,
     Image,
@@ -575,6 +583,7 @@ export type CardSetModifyAction =
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangeIsTwoSided
+    | CardSetChangeSnappingDistance
     | CardSetChangePlaceholderPosition
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
@@ -875,6 +884,13 @@ export const cardSetChangeIsTwoSided = (isTwoSided: boolean): CardSetChangeIsTwo
     return {
         type: CARDSET_CHANGE_IS_TWO_SIDED,
         isTwoSided,
+    };
+};
+
+export const cardSetChangeSnappingDistance = (snappingDistance: number): CardSetChangeSnappingDistance => {
+    return {
+        type: CARDSET_CHANGE_SNAPPING_DISTANCE,
+        snappingDistance,
     };
 };
 

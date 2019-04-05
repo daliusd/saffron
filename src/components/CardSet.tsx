@@ -10,12 +10,8 @@ import {
     CardsCollection,
     Dispatch,
     cardSetActiveCardAndPlaceholder,
-    cardSetChangeHeight,
-    cardSetChangeIsTwoSided,
-    cardSetChangeWidth,
     cardSetCreateCard,
     cardSetRenameRequest,
-    cardSetSetZoom,
 } from '../actions';
 import Card from './Card';
 import EditableTitle from './EditableTitle';
@@ -66,26 +62,6 @@ export class CardSet extends Component<Props, LocalState> {
         dispatch(cardSetCreateCard(newCard));
     };
 
-    handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeWidth(parseFloat(event.target.value)));
-    };
-
-    handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
-    };
-
-    handleIsTwoSidedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeIsTwoSided(event.target.checked));
-    };
-
-    handleZoom = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { dispatch } = this.props;
-        dispatch(cardSetSetZoom(parseFloat(event.target.value)));
-    };
-
     handleClickOutsideOfCard = () => {
         const { dispatch } = this.props;
         dispatch(cardSetActiveCardAndPlaceholder(null, false, null));
@@ -121,61 +97,15 @@ export class CardSet extends Component<Props, LocalState> {
                         <p>Here you can design your cards.</p>
                     </KawaiiMessage>
 
+                    {activeCardSet !== null && (
+                        <EditableTitle title={activeCardSet.name} onChange={this.handleCardSetNameChange} />
+                    )}
+
                     <div className={style.cardsetview}>
                         <div className={style.sidebar}>
                             <Sidebar />
                         </div>
                         <div onMouseDown={this.handleClickOutsideOfCard} onTouchStart={this.handleClickOutsideOfCard}>
-                            {activeCardSet !== null && (
-                                <EditableTitle title={activeCardSet.name} onChange={this.handleCardSetNameChange} />
-                            )}
-
-                            <div className="form">
-                                <label htmlFor="card_width">Card width (mm):</label>
-                                <input
-                                    id="card_width"
-                                    type="number"
-                                    min="0"
-                                    step="0.1"
-                                    onChange={this.handleWidthChange}
-                                    className="form-control"
-                                    placeholder="width"
-                                    value={width}
-                                />
-                                <label htmlFor="card_height">Card height (mm):</label>
-                                <input
-                                    id="card_height"
-                                    type="number"
-                                    min="0"
-                                    step="0.1"
-                                    onChange={this.handleHeightChange}
-                                    className="form-control"
-                                    placeholder="height"
-                                    value={height}
-                                />
-                                <label>
-                                    Cards have two sides:{' '}
-                                    <input
-                                        type="checkbox"
-                                        onChange={this.handleIsTwoSidedChange}
-                                        className="form-control"
-                                        checked={isTwoSided}
-                                    />
-                                </label>
-                            </div>
-                            <div className="form">
-                                <label htmlFor="zoom">Zoom (if you want to see details or big picture)</label>
-                                <input
-                                    id="zoom"
-                                    type="number"
-                                    min="0.1"
-                                    step="0.1"
-                                    onChange={this.handleZoom}
-                                    className="form-control"
-                                    placeholder="zoom"
-                                    value={zoom}
-                                />
-                            </div>
                             {(activity & ACTIVITY_SELECTING) === ACTIVITY_SELECTING && <Loader />}
                             <div className={style.cardset}>
                                 <ul

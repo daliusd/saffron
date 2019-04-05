@@ -120,6 +120,7 @@ class ImageField extends PureComponent<Props> {
                 onRotate={this.handleRotate}
                 cardWidth={cardWidth}
                 cardHeight={cardHeight}
+                ppmm={ppmm}
             >
                 <div
                     ref={this.imageDiv}

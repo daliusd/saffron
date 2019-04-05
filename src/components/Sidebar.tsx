@@ -8,6 +8,7 @@ import SidebarDetails from './SidebarDetails';
 import SidebarImage from './SidebarImage';
 import SidebarImportExport from './SidebarImportExport';
 import SidebarMeasurements from './SidebarMeasurements';
+import SidebarSettings from './SidebarSettings';
 import SidebarText from './SidebarText';
 import SidebarUpload from './SidebarUpload';
 import style from './Sidebar.module.css';
@@ -27,6 +28,12 @@ interface SidebarInfo {
 }
 
 const SIDEBARS: SidebarInfo[] = [
+    {
+        state: SidebarState.Settings,
+        title: 'Settings',
+        icon: 'settings',
+        component: SidebarSettings,
+    },
     {
         state: SidebarState.Details,
         title: 'Details',

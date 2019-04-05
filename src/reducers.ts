@@ -20,6 +20,7 @@ import {
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
     CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
+    CARDSET_CHANGE_SNAPPING_DISTANCE,
     CARDSET_CHANGE_TEXT,
     CARDSET_CHANGE_WIDTH,
     CARDSET_CLONE_CARD,
@@ -163,6 +164,7 @@ export interface CardSetState {
     width: number;
     height: number;
     isTwoSided: boolean;
+    snappingDistance: number;
     version: number;
     byId: CardSetsCollection;
     allIds: IdsArray;
@@ -186,6 +188,7 @@ export const DefaultCardSetState: CardSetState = {
     width: 63.5,
     height: 88.9,
     isTwoSided: false,
+    snappingDistance: 1,
     version: CURRENT_CARDSET_VERSION,
     byId: {},
     allIds: [],
@@ -457,6 +460,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: action.data.width || 63.5,
                 height: action.data.height || 88.9,
                 isTwoSided: action.data.isTwoSided || false,
+                snappingDistance: action.data.snappingDistance || 1,
                 version: action.data.version,
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
@@ -776,11 +780,26 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 isTwoSided: action.isTwoSided,
             };
         }
+        case CARDSET_CHANGE_SNAPPING_DISTANCE: {
+            return {
+                ...state,
+                snappingDistance: action.snappingDistance,
+            };
+        }
         case CARDSET_CHANGE_PLACEHOLDER_POSITION: {
+            let x = action.x;
+            let y = action.y;
+            let snappingDistance = state.snappingDistance;
+
+            if (snappingDistance !== 0) {
+                x = Math.round(x / snappingDistance) * snappingDistance;
+                y = Math.round(y / snappingDistance) * snappingDistance;
+            }
+
             const placeholder = {
                 ...state.placeholders[action.placeholder.id],
-                x: action.x,
-                y: action.y,
+                x,
+                y,
             };
 
             return {
@@ -792,10 +811,19 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_SIZE: {
+            let width = action.width;
+            let height = action.height;
+            let snappingDistance = state.snappingDistance;
+
+            if (snappingDistance !== 0) {
+                width = Math.round(width / snappingDistance) * snappingDistance;
+                height = Math.round(height / snappingDistance) * snappingDistance;
+            }
+
             const placeholder = {
                 ...state.placeholders[action.placeholder.id],
-                width: action.width,
-                height: action.height,
+                width,
+                height,
             };
 
             return {

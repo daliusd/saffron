@@ -385,6 +385,7 @@ test('CARDSET_SELECT', () => {
                     placeholdersAllIds: [],
                     zoom: 1,
                     isTwoSided: false,
+                    snappingDistance: 1,
                 },
                 gameId: '2',
             },
