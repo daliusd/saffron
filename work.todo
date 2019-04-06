@@ -204,8 +204,17 @@
 
 - Images in text
     + Show dragged and dropped images properly in UI
-    - Allow changing font size, aligment, color and font for selected text
-    - Render with images
+    + Allow changing for selected text
+        + Alignment
+        + Color
+        + Bold
+        + Italic
+    - Render
+        - Alignment <div style="text-align: right;">, <div align="left">
+        - Color <font color="#19199a">
+        - Bold <b></b>
+        - Italic <i></i>
+        - Images in text
 
 - Guillotine mode lacks cutting marks on card edges
 

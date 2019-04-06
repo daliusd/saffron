@@ -328,7 +328,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                                 key={im.id}
                                 src={`/api/imagefiles/${im.name}`}
                                 onClick={() => this.handleImageSelect(im.name)}
-                                alt=""
+                                alt={im.name}
                             />
                         );
                     })}

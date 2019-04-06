@@ -34,18 +34,44 @@ export class SidebarText extends Component<Props> {
     };
 
     handleSetTextAlignLeft = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('left'));
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        if (selection.rangeCount === 1 && range.collapsed) {
+            const { dispatch } = this.props;
+            dispatch(cardSetChangeActiveTextPlaceholderAlign('left'));
+        } else {
+            document.execCommand('justifyleft');
+        }
     };
 
     handleSetTextAlignCenter = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('center'));
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        if (selection.rangeCount === 1 && range.collapsed) {
+            const { dispatch } = this.props;
+            dispatch(cardSetChangeActiveTextPlaceholderAlign('center'));
+        } else {
+            document.execCommand('justifycenter');
+        }
     };
 
     handleSetTextAlignRight = () => {
-        const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        if (selection.rangeCount === 1 && range.collapsed) {
+            const { dispatch } = this.props;
+            dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
+        } else {
+            document.execCommand('justifyright');
+        }
+    };
+
+    handleSetTextBold = () => {
+        document.execCommand('bold');
+    };
+
+    handleSetTextItalic = () => {
+        document.execCommand('italic');
     };
 
     handleRemoveClick = () => {
@@ -171,6 +197,12 @@ export class SidebarText extends Component<Props> {
                     </button>
                     <button onClick={this.handleSetTextAlignRight} title="Align text right">
                         <i className="material-icons">format_align_right</i>
+                    </button>
+                    <button onClick={this.handleSetTextBold} title="Makes selected text bold">
+                        <i className="material-icons">format_bold</i>
+                    </button>
+                    <button onClick={this.handleSetTextItalic} title="Makes selected text italic">
+                        <i className="material-icons">format_italic</i>
                     </button>
                     <ColorButton color={color} onChange={this.handleColorChange} />
                     <FontSelector />
