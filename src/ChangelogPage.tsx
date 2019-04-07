@@ -18,6 +18,17 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (snapping, keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-04-07</h2>
+                <ul>
+                    <li>Snapping implemented for move, rotation and resize operations.</li>
+                    <li>Image search changes and improvements.</li>
+                    <li>
+                        Drag&Drop support for images. Images can be dropped to text field as well but it is assumed that
+                        dropped images are square when generating PDF.
+                    </li>
+                    <li>Bold and Italic support in text added.</li>
+                    <li>Other minor fixes.</li>
+                </ul>
                 <h2>2019-03-22</h2>
                 <ul>
                     <li>Two-sided cards.</li>
