@@ -230,3 +230,6 @@
 - Lower / Raise field one step
 - Special visual effects
 - Keyboard manipulation
+
+- PDF generation log and reporting of failures via e-mail.
+- Generate PNG files of cards (vs PDF).

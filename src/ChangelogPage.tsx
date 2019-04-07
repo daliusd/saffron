@@ -15,7 +15,7 @@ export default class ChangelogPage extends Component {
                         </ul>
                     </li>
                     <li>Card templates.</li>
-                    <li>UI improvements (snapping, keyboard support and etc.).</li>
+                    <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
                 <h2>2019-04-07</h2>
