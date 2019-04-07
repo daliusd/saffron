@@ -202,19 +202,19 @@
     + Images shouldn't be aligned to bottom
     + Drag and drop for images would be cool
 
-- Images in text
++ Images in text
     + Show dragged and dropped images properly in UI
     + Allow changing for selected text
         + Alignment
         + Color
         + Bold
         + Italic
-    - Render
-        - Alignment <div style="text-align: right;">, <div align="left">
-        - Color <font color="#19199a">
-        - Bold <b></b>
-        - Italic <i></i>
-        - Images in text
+    + Render
+        + Alignment <div style="text-align: right;">, <div align="left">
+        + Color <font color="#19199a">
+        + Bold <b></b>
+        + Italic <i></i>
+        + Images in text
 
 - Guillotine mode lacks cutting marks on card edges
 
@@ -223,7 +223,7 @@
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
 
-- Create some cards templates. Potentially with edges.
+- Create some cards templates.
 
 - Open (statistics) page
 
