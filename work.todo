@@ -217,6 +217,7 @@
         + Images in text
 
 - Guillotine mode lacks cutting marks on card edges
+- Cutting marks only on front side if user prefers
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users
@@ -233,3 +234,13 @@
 
 - PDF generation log and reporting of failures via e-mail.
 - Generate PNG files of cards (vs PDF).
+- Process images on upload
+    - Convert webm to png
+    - Save image dimensions in meta data
+    - Use image meta data for images in text
+
+- Fonts improvements
+    - font images
+    - custom fonts
+    - ttfs
+    - replace emojis with images
