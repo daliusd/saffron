@@ -244,3 +244,5 @@
     - custom fonts
     - ttfs
     - replace emojis with images
+
+- Image drag and drop should show element that will receive dropped image
