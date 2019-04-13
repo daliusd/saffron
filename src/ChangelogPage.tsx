@@ -18,6 +18,16 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-04-13</h2>
+                <ul>
+                    <li>Option to generate cutting marks on front side only.</li>
+                    <li>Guillotine cuttings marks on card edges.</li>
+                    <li>
+                        Field move limitation is removed because if drag field outside of view you can return it using
+                        custom positions and size controls.
+                    </li>
+                    <li>Drag and drop improvement.</li>
+                </ul>
                 <h2>2019-04-07</h2>
                 <ul>
                     <li>Snapping implemented for move, rotation and resize operations.</li>
