@@ -185,18 +185,11 @@ class FieldController extends React.Component<Props> {
         const { isLocked } = this.props;
 
         if (this.cDiv.current === null || isLocked) return;
-        const { width, height, cardWidth, cardHeight, ppmm, snappingDistance } = this.props;
+        const { ppmm, snappingDistance } = this.props;
         this.moving = true;
 
-        const { rx, ry } = this.rotateVec(width / 2, height / 2, this.currentAngle);
-
-        const dx = Math.abs(rx) - width / 2;
-        const dy = Math.abs(ry) - height / 2;
-        const dx2 = Math.abs(rx) + width / 2;
-        const dy2 = Math.abs(ry) + height / 2;
-
-        let x = Math.min(Math.max(co.clientX - this.relX, dx), cardWidth - dx2);
-        let y = Math.min(Math.max(co.clientY - this.relY, dy), cardHeight - dy2);
+        let x = co.clientX - this.relX;
+        let y = co.clientY - this.relY;
 
         if (!disableSnapping && snappingDistance !== 0) {
             x = Math.round(x / ppmm / snappingDistance) * snappingDistance * ppmm;

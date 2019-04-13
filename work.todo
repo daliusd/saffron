@@ -218,7 +218,7 @@
 
 + Guillotine mode lacks cutting marks on card edges
 + Cutting marks only on front side if user prefers
-- Do not limit where field can be dragged
++ Do not limit where field can be dragged
 - Image drag and drop should show element that will receive dropped image
 
 - Generate list with authors of icons
@@ -246,3 +246,5 @@
     - custom fonts
     - ttfs
     - replace emojis with images
+
+- Undo/Redo
