@@ -14,6 +14,7 @@ import {
 import { State } from '../reducers';
 import FieldController from './FieldController';
 import emptyImageImage from './image.svg';
+import style from './ImageField.module.css';
 
 interface OwnProps {
     cardId: string;
@@ -106,11 +107,25 @@ class ImageField extends PureComponent<Props> {
     };
 
     handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+        if (this.imageDiv.current !== null) {
+            this.imageDiv.current.classList.add(style.over);
+        }
+        event.preventDefault();
+        event.stopPropagation();
+    };
+
+    handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+        if (this.imageDiv.current !== null) {
+            this.imageDiv.current.classList.remove(style.over);
+        }
         event.preventDefault();
         event.stopPropagation();
     };
 
     handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+        if (this.imageDiv.current !== null) {
+            this.imageDiv.current.classList.remove(style.over);
+        }
         event.preventDefault();
         event.stopPropagation();
 
@@ -151,6 +166,7 @@ class ImageField extends PureComponent<Props> {
                         height: '100%',
                     }}
                     onDragOver={this.handleDragOver}
+                    onDragLeave={this.handleDragLeave}
                     onDrop={this.handleDrop}
                 >
                     <img
