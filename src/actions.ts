@@ -287,6 +287,7 @@ export interface GameCreatePdfRequest {
     includeBleedingArea: boolean;
     cutMarksForScissors: boolean;
     cutMarksForGuillotine: boolean;
+    cutMarksOnFrontSideOnly: boolean;
 }
 
 export type GameCreatePdfAction =
@@ -720,6 +721,7 @@ export const gameCreatePdfRequest = (
     includeBleedingArea: boolean,
     cutMarksForScissors: boolean,
     cutMarksForGuillotine: boolean,
+    cutMarksOnFrontSideOnly: boolean,
 ): GameCreatePdfRequest => {
     return {
         type: GAME_CREATE_PDF_REQUEST,
@@ -734,6 +736,7 @@ export const gameCreatePdfRequest = (
         includeBleedingArea,
         cutMarksForScissors,
         cutMarksForGuillotine,
+        cutMarksOnFrontSideOnly,
     };
 };
 

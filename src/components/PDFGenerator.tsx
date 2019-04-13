@@ -30,6 +30,7 @@ interface LocalState {
     includeBleedingArea: boolean;
     cutMarksForScissors: boolean;
     cutMarksForGuillotine: boolean;
+    cutMarksOnFrontSideOnly: boolean;
 }
 
 export class PDFGenerator extends Component<Props, LocalState> {
@@ -43,6 +44,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
         includeBleedingArea: false,
         cutMarksForScissors: true,
         cutMarksForGuillotine: false,
+        cutMarksOnFrontSideOnly: false,
     };
 
     handleGeneratePdfClick = () => {
@@ -57,6 +59,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
             includeBleedingArea,
             cutMarksForScissors,
             cutMarksForGuillotine,
+            cutMarksOnFrontSideOnly,
         } = this.state;
 
         dispatch(
@@ -72,6 +75,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                 includeBleedingArea,
                 cutMarksForScissors,
                 cutMarksForGuillotine,
+                cutMarksOnFrontSideOnly,
             ),
         );
     };
@@ -110,6 +114,10 @@ export class PDFGenerator extends Component<Props, LocalState> {
 
     handleCutMarksForGuillotine = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ cutMarksForGuillotine: event.target.checked });
+    };
+
+    handleCutMarksOnFrontSideOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ cutMarksOnFrontSideOnly: event.target.checked });
     };
 
     render() {
@@ -208,7 +216,16 @@ export class PDFGenerator extends Component<Props, LocalState> {
                             checked={this.state.cutMarksForGuillotine}
                             onChange={this.handleCutMarksForGuillotine}
                         />
-                        Generate with cut marks for paper guillotine (in margin area).
+                        Generate with cut marks for paper guillotine.
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={this.state.cutMarksOnFrontSideOnly}
+                            onChange={this.handleCutMarksOnFrontSideOnly}
+                        />
+                        Generate cut marks on front side only (useful for printing on both sides).
                     </label>
 
                     <button disabled={isCreatingPdf} onClick={this.handleGeneratePdfClick}>
