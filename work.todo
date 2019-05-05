@@ -235,7 +235,9 @@
 - Keyboard manipulation
 
 - PDF generation log and reporting of failures via e-mail.
+    E.g. there are unhandled exceptions
 - Generate PNG files of cards (vs PDF).
+- Do not generate cut marks in margin area
 - Process images on upload
     - Convert webm to png
     - Save image dimensions in meta data
@@ -248,3 +250,6 @@
     - replace emojis with images
 
 - Undo/Redo
+
+- Blog entry about free graphics and etc.
+    https://publicdomainvectors.org/

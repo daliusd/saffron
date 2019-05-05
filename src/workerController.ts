@@ -24,11 +24,14 @@ export const generatePdfUsingWorker = (
         try {
             const worker = new Worker('/js/worker.js');
             worker.addEventListener('message', event => {
-                const blobURL = event.data;
-                downloadBlob(blobURL, 'card.pdf', resolve);
+                if (event.data.type === 'generatePdf') {
+                    const blobURL = event.data.url;
+                    downloadBlob(blobURL, 'card.pdf', resolve);
+                }
             });
 
             worker.postMessage({
+                type: 'generatePdf',
                 accessToken,
                 collectionType,
                 collectionId,
