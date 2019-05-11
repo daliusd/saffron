@@ -5,6 +5,7 @@ import { DispatchProps, SidebarOwnProps } from '../types';
 import { SidebarState, cardSetSetSidebarState } from '../actions';
 import { State } from '../reducers';
 import SidebarDetails from './SidebarDetails';
+import SidebarGeneratePng from './SidebarGeneratePng';
 import SidebarImage from './SidebarImage';
 import SidebarImportExport from './SidebarImportExport';
 import SidebarMeasurements from './SidebarMeasurements';
@@ -69,6 +70,12 @@ const SIDEBARS: SidebarInfo[] = [
         title: 'Import/Export',
         icon: 'import_export',
         component: SidebarImportExport,
+    },
+    {
+        state: SidebarState.Png,
+        title: 'Generate as PNG',
+        icon: 'photo_library',
+        component: SidebarGeneratePng,
     },
     // picture_as_pdf
 ];

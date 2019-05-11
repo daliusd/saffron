@@ -73,7 +73,17 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleExportJson = () => {
-        const { width, height, isTwoSided, cardsAllIds, cardsById, placeholders, placeholdersAllIds, texts, images } = this.props;
+        const {
+            width,
+            height,
+            isTwoSided,
+            cardsAllIds,
+            cardsById,
+            placeholders,
+            placeholdersAllIds,
+            texts,
+            images,
+        } = this.props;
 
         const preparedImages = this.prepareImagePaths(images);
 

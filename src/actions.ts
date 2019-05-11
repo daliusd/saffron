@@ -29,6 +29,9 @@ export const GAME_SELECT_FAILURE = 'GAME_SELECT_FAILURE';
 export const GAME_CREATE_PDF_REQUEST = 'GAME_CREATE_PDF_REQUEST';
 export const GAME_CREATE_PDF_SUCCESS = 'GAME_CREATE_PDF_SUCCESS';
 export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
+export const GAME_CREATE_PNG_REQUEST = 'GAME_CREATE_PNG_REQUEST';
+export const GAME_CREATE_PNG_SUCCESS = 'GAME_CREATE_PNG_SUCCESS';
+export const GAME_CREATE_PNG_FAILURE = 'GAME_CREATE_PNG_FAILURE';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
 export const CARDSET_CREATE_FAILURE = 'CARDSET_CREATE_FAILURE';
@@ -295,13 +298,24 @@ export type GameCreatePdfAction =
     | { type: typeof GAME_CREATE_PDF_SUCCESS }
     | { type: typeof GAME_CREATE_PDF_FAILURE };
 
+export interface GameCreatePngRequest {
+    type: typeof GAME_CREATE_PNG_REQUEST;
+    dpi: number;
+}
+
+export type GameCreatePngAction =
+    | GameCreatePngRequest
+    | { type: typeof GAME_CREATE_PNG_SUCCESS }
+    | { type: typeof GAME_CREATE_PNG_FAILURE };
+
 export type GameAction =
     | GameCreateAction
     | GameDeleteAction
     | GameRenameAction
     | GameListAction
     | GameSelectAction
-    | GameCreatePdfAction;
+    | GameCreatePdfAction
+    | GameCreatePngAction;
 
 export interface CardSetCreateRequest {
     type: typeof CARDSET_CREATE_REQUEST;
@@ -512,6 +526,7 @@ export enum SidebarState {
     Text,
     Upload,
     ImportExport,
+    Png,
 }
 export interface CardSetSetSidebarState {
     type: typeof CARDSET_SET_SIDEBAR_STATE;
@@ -737,6 +752,13 @@ export const gameCreatePdfRequest = (
         cutMarksForScissors,
         cutMarksForGuillotine,
         cutMarksOnFrontSideOnly,
+    };
+};
+
+export const gameCreatePngRequest = (dpi: number): GameCreatePngRequest => {
+    return {
+        type: GAME_CREATE_PNG_REQUEST,
+        dpi,
     };
 };
 

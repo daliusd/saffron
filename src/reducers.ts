@@ -57,6 +57,9 @@ import {
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
     GAME_CREATE_PDF_SUCCESS,
+    GAME_CREATE_PNG_FAILURE,
+    GAME_CREATE_PNG_REQUEST,
+    GAME_CREATE_PNG_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
     GAME_LIST_FAILURE,
@@ -110,6 +113,7 @@ export const ACTIVITY_LISTING = 0x2;
 export const ACTIVITY_SELECTING = 0x4;
 export const ACTIVITY_CREATING_PDF = 0x8;
 export const ACTIVITY_UPDATING = 0x10;
+export const ACTIVITY_CREATING_PNG = 0x20;
 
 export interface MessageState {
     messages: MessageType[];
@@ -378,6 +382,18 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
         case GAME_CREATE_PDF_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING_PDF,
+            });
+        case GAME_CREATE_PNG_REQUEST:
+            return Object.assign({}, state, {
+                activity: state.activity | ACTIVITY_CREATING_PNG,
+            });
+        case GAME_CREATE_PNG_SUCCESS:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING_PNG,
+            });
+        case GAME_CREATE_PNG_FAILURE:
+            return Object.assign({}, state, {
+                activity: state.activity & ~ACTIVITY_CREATING_PNG,
             });
         default:
             return state;

@@ -142,8 +142,8 @@ export class CardSets extends Component<Props, LocalState> {
                     </div>
 
                     <KawaiiMessage character={Character.Ghost} mood="excited">
-                        Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 56mm x 88.9mm. But you can cards of any
-                        size.
+                        Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 57.15mm x 88.9mm. But you can cards of
+                        any size.
                     </KawaiiMessage>
 
                     <PDFGenerator type="games" id={activeGame.id} />

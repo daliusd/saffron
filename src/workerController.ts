@@ -1,4 +1,27 @@
 import { downloadBlob } from './utils';
+import { CardSetState } from './reducers';
+import { delay } from 'redux-saga';
+
+enum ImageType {
+    SVG,
+    SVG_PATH,
+    IMAGE,
+    BLOCK_START,
+    BLOCK_END,
+}
+
+interface ImageToDraw {
+    type: ImageType;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    angle: number;
+    fit?: string;
+    data: string;
+    color?: string;
+    scale?: number;
+}
 
 export const generatePdfUsingWorker = (
     accessToken: string,
@@ -50,4 +73,134 @@ export const generatePdfUsingWorker = (
             reject(e);
         }
     });
+};
+
+function getCanvasBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
+    return new Promise(function(resolve) {
+        canvas.toBlob(function(blob) {
+            resolve(blob);
+        });
+    });
+}
+
+function loadImage(url: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject();
+
+        img.src = url;
+    });
+}
+
+function prepareImageToDrawSpace(context: CanvasRenderingContext2D, imageToDraw: ImageToDraw, ptpmm: number) {
+    context.save();
+    let x = (imageToDraw.x + imageToDraw.width / 2) * ptpmm;
+    let y = (imageToDraw.y + imageToDraw.height / 2) * ptpmm;
+    context.translate(x, y);
+    context.rotate(imageToDraw.angle);
+    let ax = (-imageToDraw.width / 2) * ptpmm;
+    let ay = (-imageToDraw.height / 2) * ptpmm;
+    context.translate(ax, ay);
+}
+
+export const generatePngUsingWorker = async (cardSetData: CardSetState, cardId: string, dpi: number) => {
+    // @ts-ignore
+    if (!window.Worker) {
+        throw new Error('We can not generate PNG because of browser you use. Try using different browser');
+    }
+
+    let tasksQueue: { type: string; subType: string; imageToDraw?: ImageToDraw }[] = [];
+
+    const worker = new Worker('/js/worker.js');
+    worker.addEventListener('message', event => {
+        if (event.data.type === 'generateCard') {
+            tasksQueue.push(event.data);
+        }
+    });
+
+    worker.postMessage({
+        type: 'generateCard',
+        cardSetData,
+        cardId,
+        isBack: false,
+    });
+
+    let offscreenCanvas = document.createElement('canvas');
+
+    const calculatedWidth = Math.round(dpi * (cardSetData.width / 25.4 + 1 / 4));
+    const calculatedHeight = Math.round(dpi * (cardSetData.height / 25.4 + 1 / 4));
+
+    offscreenCanvas.width = calculatedWidth;
+    offscreenCanvas.height = calculatedHeight;
+    var context = offscreenCanvas.getContext('2d');
+    if (context === null) {
+        throw new Error('We cannot generate PNG because of unknown reason. Try different browser.');
+    }
+    context.fillStyle = 'white';
+    context.fillRect(0, 0, calculatedWidth, calculatedHeight);
+
+    let stopped = false;
+
+    const ptpmm = dpi / 25.4;
+
+    while (!stopped) {
+        while (tasksQueue.length > 0) {
+            let task = tasksQueue.shift();
+
+            if (task && task.imageToDraw) {
+                const imageToDraw = task.imageToDraw;
+
+                if (imageToDraw.type === ImageType.SVG_PATH) {
+                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+                    if (imageToDraw.scale && imageToDraw.color) {
+                        context.fillStyle = imageToDraw.color;
+                        context.scale(imageToDraw.scale * ptpmm, imageToDraw.scale * ptpmm);
+                        var p = new Path2D(imageToDraw.data);
+                        context.fill(p);
+                    }
+                    context.restore();
+                } else if (imageToDraw.type === ImageType.IMAGE || imageToDraw.type === ImageType.SVG) {
+                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+
+                    let image;
+                    if (imageToDraw.type === ImageType.SVG) {
+                        let b64Start = 'data:image/svg+xml;base64,';
+                        let image64 = b64Start + imageToDraw.data;
+                        image = await loadImage(image64);
+                    } else {
+                        image = await loadImage(imageToDraw.data);
+                    }
+
+                    let scaledWidth = imageToDraw.width * ptpmm;
+                    let scaledHeight = imageToDraw.height * ptpmm;
+
+                    if (!imageToDraw.fit || imageToDraw.fit === 'width') {
+                        scaledHeight = image.height * (scaledWidth / image.width);
+                    } else if (imageToDraw.fit === 'height') {
+                        scaledWidth = image.width * (scaledHeight / image.height);
+                    }
+
+                    context.drawImage(image, 0, 0, scaledWidth, scaledHeight);
+
+                    context.restore();
+                } else if (imageToDraw.type === ImageType.BLOCK_START) {
+                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+                } else if (imageToDraw.type === ImageType.BLOCK_END) {
+                    context.restore();
+                }
+            }
+
+            if (task && task.subType === 'stop') {
+                stopped = true;
+            }
+        }
+        if (!stopped) {
+            await delay(100);
+        }
+    }
+
+    let blob = await getCanvasBlob(offscreenCanvas);
+    let url = window.URL.createObjectURL(blob);
+    downloadBlob(url, 'card.png');
 };

@@ -68,6 +68,9 @@ import {
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
     GAME_CREATE_PDF_SUCCESS,
+    GAME_CREATE_PNG_FAILURE,
+    GAME_CREATE_PNG_REQUEST,
+    GAME_CREATE_PNG_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
     GAME_DELETE_REQUEST,
@@ -80,6 +83,7 @@ import {
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
     GameCreatePdfRequest,
+    GameCreatePngRequest,
     GameCreateRequest,
     GameDeleteRequest,
     GameRenameRequest,
@@ -122,7 +126,7 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
-import { generatePdfUsingWorker } from './workerController';
+import { generatePdfUsingWorker, generatePngUsingWorker } from './workerController';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
 
@@ -407,6 +411,25 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
         });
     } catch (e) {
         yield put({ type: GAME_CREATE_PDF_FAILURE });
+        if (progressId !== null) yield call(hideProgress, progressId);
+        yield call(putError, e.message);
+    }
+}
+
+export function* handleGameCreatePngRequest(action: GameCreatePngRequest): SagaIterator {
+    let progressId = null;
+    try {
+        progressId = yield call(putProgress, 'Generating PNG');
+
+        const state = yield select();
+        yield call(generatePngUsingWorker, state.cardsets, state.cardsets.cardsAllIds[0], action.dpi);
+        yield call(hideProgress, progressId);
+        yield call(putInfo, 'PNG generated.');
+        yield put({
+            type: GAME_CREATE_PNG_SUCCESS,
+        });
+    } catch (e) {
+        yield put({ type: GAME_CREATE_PNG_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
     }
@@ -712,6 +735,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(GAME_LIST_REQUEST, handleGameListRequest),
         takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
         takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),
+        takeLatest(GAME_CREATE_PNG_REQUEST, handleGameCreatePngRequest),
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
         takeLatest(CARDSET_DELETE_REQUEST, handleCardSetDeleteRequest),
         takeLatest(CARDSET_RENAME_REQUEST, handleCardSetRenameRequest),

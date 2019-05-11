@@ -1,0 +1,6 @@
+.view {
+}
+
+.view input[type='number'] {
+    width: 9em;
+}
