@@ -223,7 +223,7 @@
 
 - Generate PNG files of cards (vs PDF).
     + Generate single card
-    - Generate for a card set
+    + Generate for a card set
     - Generate for a game
 
 + Firefox does not draw svg on canvas if width and height is missing

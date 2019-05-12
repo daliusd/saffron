@@ -422,7 +422,7 @@ export function* handleGameCreatePngRequest(action: GameCreatePngRequest): SagaI
         progressId = yield call(putProgress, 'Generating PNG');
 
         const state = yield select();
-        yield call(generatePngUsingWorker, state.cardsets, state.cardsets.cardsAllIds[0], action.dpi);
+        yield call(generatePngUsingWorker, state.cardsets, action.dpi);
         yield call(hideProgress, progressId);
         yield call(putInfo, 'PNG generated.');
         yield put({

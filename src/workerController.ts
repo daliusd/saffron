@@ -3,6 +3,7 @@ import { downloadBlob } from './utils';
 import { CardSetState } from './reducers';
 import { delay } from 'redux-saga';
 import { XmlDocument } from 'xmldoc';
+import JSZip from 'jszip';
 
 const SVG_B64_START = 'data:image/svg+xml;base64,';
 
@@ -79,14 +80,6 @@ export const generatePdfUsingWorker = (
     });
 };
 
-function getCanvasBlob(canvas: HTMLCanvasElement): Promise<Blob | null> {
-    return new Promise(function(resolve) {
-        canvas.toBlob(function(blob) {
-            resolve(blob);
-        });
-    });
-}
-
 function loadImage(url: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -119,7 +112,7 @@ function fixWidthAndHeightInSvg(data: string) {
     return btoa(doc.toString({ compressed: true }));
 }
 
-export const generatePngUsingWorker = async (cardSetData: CardSetState, cardId: string, dpi: number) => {
+export const generatePngUsingWorker = async (cardSetData: CardSetState, dpi: number) => {
     // @ts-ignore
     if (!window.Worker) {
         throw new Error('We can not generate PNG because of browser you use. Try using different browser');
@@ -134,93 +127,102 @@ export const generatePngUsingWorker = async (cardSetData: CardSetState, cardId: 
         }
     });
 
-    worker.postMessage({
-        type: 'generateCard',
-        cardSetData,
-        cardId,
-        isBack: false,
-    });
+    let zip = new JSZip();
+    let cardsetFolder = zip.folder(cardSetData.active ? cardSetData.byId[cardSetData.active].name : 'cards');
 
-    let offscreenCanvas = document.createElement('canvas');
+    for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
+        worker.postMessage({
+            type: 'generateCard',
+            cardSetData,
+            cardId,
+            isBack: false,
+        });
 
-    const calculatedWidth = Math.round(dpi * (cardSetData.width / 25.4 + 1 / 4));
-    const calculatedHeight = Math.round(dpi * (cardSetData.height / 25.4 + 1 / 4));
+        let offscreenCanvas = document.createElement('canvas');
 
-    offscreenCanvas.width = calculatedWidth;
-    offscreenCanvas.height = calculatedHeight;
-    var context = offscreenCanvas.getContext('2d');
-    if (context === null) {
-        throw new Error('We cannot generate PNG because of unknown reason. Try different browser.');
-    }
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, calculatedWidth, calculatedHeight);
+        const calculatedWidth = Math.round(dpi * (cardSetData.width / 25.4 + 1 / 4));
+        const calculatedHeight = Math.round(dpi * (cardSetData.height / 25.4 + 1 / 4));
 
-    let stopped = false;
+        offscreenCanvas.width = calculatedWidth;
+        offscreenCanvas.height = calculatedHeight;
+        var context = offscreenCanvas.getContext('2d');
+        if (context === null) {
+            throw new Error('We cannot generate PNG because of unknown reason. Try different browser.');
+        }
+        context.fillStyle = 'white';
+        context.fillRect(0, 0, calculatedWidth, calculatedHeight);
 
-    const ptpmm = dpi / 25.4;
+        let stopped = false;
 
-    while (!stopped) {
-        while (tasksQueue.length > 0) {
-            let task = tasksQueue.shift();
+        const ptpmm = dpi / 25.4;
 
-            if (task && task.imageToDraw) {
-                const imageToDraw = task.imageToDraw;
+        while (!stopped) {
+            while (tasksQueue.length > 0) {
+                let task = tasksQueue.shift();
 
-                if (imageToDraw.type === ImageType.SVG_PATH) {
-                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
-                    if (imageToDraw.scale && imageToDraw.color) {
-                        context.fillStyle = imageToDraw.color;
-                        context.scale(imageToDraw.scale * ptpmm, imageToDraw.scale * ptpmm);
-                        var p = new Path2D(imageToDraw.data);
-                        context.fill(p);
-                    }
-                    context.restore();
-                } else if (imageToDraw.type === ImageType.IMAGE || imageToDraw.type === ImageType.SVG) {
-                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+                if (task && task.imageToDraw) {
+                    const imageToDraw = task.imageToDraw;
 
-                    let image;
-                    if (imageToDraw.type === ImageType.SVG) {
-                        let svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
-                        image = await loadImage(SVG_B64_START + svgData);
-                    } else {
-                        let resp = await axios.get(imageToDraw.data);
-                        if (resp.headers['content-type'] === 'image/svg+xml') {
-                            let svgData = fixWidthAndHeightInSvg(resp.data);
+                    if (imageToDraw.type === ImageType.SVG_PATH) {
+                        prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+                        if (imageToDraw.scale && imageToDraw.color) {
+                            context.fillStyle = imageToDraw.color;
+                            context.scale(imageToDraw.scale * ptpmm, imageToDraw.scale * ptpmm);
+                            var p = new Path2D(imageToDraw.data);
+                            context.fill(p);
+                        }
+                        context.restore();
+                    } else if (imageToDraw.type === ImageType.IMAGE || imageToDraw.type === ImageType.SVG) {
+                        prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+
+                        let image;
+                        if (imageToDraw.type === ImageType.SVG) {
+                            let svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
                             image = await loadImage(SVG_B64_START + svgData);
                         } else {
-                            image = await loadImage(imageToDraw.data);
+                            let resp = await axios.get(imageToDraw.data);
+                            if (resp.headers['content-type'] === 'image/svg+xml') {
+                                let svgData = fixWidthAndHeightInSvg(resp.data);
+                                image = await loadImage(SVG_B64_START + svgData);
+                            } else {
+                                image = await loadImage(imageToDraw.data);
+                            }
                         }
+
+                        let scaledWidth = imageToDraw.width * ptpmm;
+                        let scaledHeight = imageToDraw.height * ptpmm;
+
+                        if (!imageToDraw.fit || imageToDraw.fit === 'width') {
+                            scaledHeight = image.height * (scaledWidth / image.width);
+                        } else if (imageToDraw.fit === 'height') {
+                            scaledWidth = image.width * (scaledHeight / image.height);
+                        }
+
+                        context.drawImage(image, 0, 0, scaledWidth, scaledHeight);
+
+                        context.restore();
+                    } else if (imageToDraw.type === ImageType.BLOCK_START) {
+                        prepareImageToDrawSpace(context, imageToDraw, ptpmm);
+                    } else if (imageToDraw.type === ImageType.BLOCK_END) {
+                        context.restore();
                     }
+                }
 
-                    let scaledWidth = imageToDraw.width * ptpmm;
-                    let scaledHeight = imageToDraw.height * ptpmm;
-
-                    if (!imageToDraw.fit || imageToDraw.fit === 'width') {
-                        scaledHeight = image.height * (scaledWidth / image.width);
-                    } else if (imageToDraw.fit === 'height') {
-                        scaledWidth = image.width * (scaledHeight / image.height);
-                    }
-
-                    context.drawImage(image, 0, 0, scaledWidth, scaledHeight);
-
-                    context.restore();
-                } else if (imageToDraw.type === ImageType.BLOCK_START) {
-                    prepareImageToDrawSpace(context, imageToDraw, ptpmm);
-                } else if (imageToDraw.type === ImageType.BLOCK_END) {
-                    context.restore();
+                if (task && task.subType === 'stop') {
+                    stopped = true;
                 }
             }
-
-            if (task && task.subType === 'stop') {
-                stopped = true;
+            if (!stopped) {
+                await delay(100);
             }
         }
-        if (!stopped) {
-            await delay(100);
-        }
+
+        let dataUrl = offscreenCanvas.toDataURL();
+        dataUrl = dataUrl.slice('data:image/png;base64,'.length);
+        cardsetFolder.file(`${cardIdx.toString().padStart(4, '0')}_${cardId}.png`, dataUrl, { base64: true });
     }
 
-    let blob = await getCanvasBlob(offscreenCanvas);
+    let blob = await zip.generateAsync({ type: 'blob' });
     let url = window.URL.createObjectURL(blob);
-    downloadBlob(url, 'card.png');
+    downloadBlob(url, 'cards.zip');
 };
