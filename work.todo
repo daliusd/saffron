@@ -222,16 +222,18 @@
 + Image drag and drop should show element that will receive dropped image
 
 - Generate PNG files of cards (vs PDF).
-    + generate single card
+    + Generate single card
+    - Generate for a card set
+    - Generate for a game
+
++ Firefox does not draw svg on canvas if width and height is missing
+- Images in text ignores zoom
+- Images in text have full URL (can we fix that?)
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
-
-- Images in text ignores zoom
-- Images in text have full URL (can we fix that?)
-- Firefox does not draw svg on canvas if width and height is missing
 
 - Create some cards templates.
 

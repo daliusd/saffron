@@ -1,6 +1,10 @@
+import axios from 'axios';
 import { downloadBlob } from './utils';
 import { CardSetState } from './reducers';
 import { delay } from 'redux-saga';
+import { XmlDocument } from 'xmldoc';
+
+const SVG_B64_START = 'data:image/svg+xml;base64,';
 
 enum ImageType {
     SVG,
@@ -104,6 +108,17 @@ function prepareImageToDrawSpace(context: CanvasRenderingContext2D, imageToDraw:
     context.translate(ax, ay);
 }
 
+function fixWidthAndHeightInSvg(data: string) {
+    const doc = new XmlDocument(data);
+    if (!('width' in doc.attr) || !('height' in doc.attr)) {
+        const viewBox = doc.attr['viewBox'].split(' ');
+        doc.attr['width'] = viewBox[2];
+        doc.attr['height'] = viewBox[3];
+    }
+
+    return btoa(doc.toString({ compressed: true }));
+}
+
 export const generatePngUsingWorker = async (cardSetData: CardSetState, cardId: string, dpi: number) => {
     // @ts-ignore
     if (!window.Worker) {
@@ -165,11 +180,16 @@ export const generatePngUsingWorker = async (cardSetData: CardSetState, cardId: 
 
                     let image;
                     if (imageToDraw.type === ImageType.SVG) {
-                        let b64Start = 'data:image/svg+xml;base64,';
-                        let image64 = b64Start + imageToDraw.data;
-                        image = await loadImage(image64);
+                        let svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
+                        image = await loadImage(SVG_B64_START + svgData);
                     } else {
-                        image = await loadImage(imageToDraw.data);
+                        let resp = await axios.get(imageToDraw.data);
+                        if (resp.headers['content-type'] === 'image/svg+xml') {
+                            let svgData = fixWidthAndHeightInSvg(resp.data);
+                            image = await loadImage(SVG_B64_START + svgData);
+                        } else {
+                            image = await loadImage(imageToDraw.data);
+                        }
                     }
 
                     let scaledWidth = imageToDraw.width * ptpmm;
