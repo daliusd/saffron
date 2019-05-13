@@ -227,8 +227,9 @@
     - Generate for a game
 
 + Firefox does not draw svg on canvas if width and height is missing
-- Images in text ignores zoom
-- Images in text have full URL (can we fix that?)
++ Images in text ignores zoom
+    Strange unexplainable case.
++ Images in text have full URL (can we fix that?)
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users

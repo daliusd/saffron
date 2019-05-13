@@ -178,6 +178,11 @@ class ContentEditable extends Component<Props> {
         let value = this.editDiv.current.innerHTML;
         value = value.replace(/<br>/g, '');
 
+        let imgUrlIdx = -1;
+        while ((imgUrlIdx = value.indexOf('<img src="http')) !== -1) {
+            value = value.slice(0, imgUrlIdx + 10) + value.slice(value.indexOf('/', imgUrlIdx + 18));
+        }
+
         if (value !== this.currentText) {
             this.currentText = value;
 
