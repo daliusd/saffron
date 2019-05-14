@@ -18,6 +18,8 @@ import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import PDFGenerator from './PDFGenerator';
 
+import style from './CardSets.module.css';
+
 interface Props {
     dispatch: Dispatch;
     isAuthenticated: boolean;
@@ -97,7 +99,7 @@ export class CardSets extends Component<Props, LocalState> {
         return (
             isAuthenticated &&
             activeGame !== null && (
-                <div>
+                <div className={style.cardsets}>
                     <KawaiiMessage character={Character.Ghost}>
                         Each game is made from card sets. Card set is collection of cards that share the same properties
                         but have different text and images.
@@ -142,11 +144,11 @@ export class CardSets extends Component<Props, LocalState> {
                     </div>
 
                     <KawaiiMessage character={Character.Ghost} mood="excited">
-                        Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 57.15mm x 88.9mm. But you can cards of
-                        any size.
+                        Hint: Poker card size 63.5mm x 88.9mm. Bridge card size 57.15mm x 88.9mm. But you can have cards
+                        of any size.
                     </KawaiiMessage>
 
-                    <PDFGenerator type="games" id={activeGame.id} />
+                    <PDFGenerator type="games" id={activeGame.id} withHelp={true} />
                 </div>
             )
         );

@@ -23,7 +23,7 @@
 }
 
 .form {
-    width: 20em;
+    width: 100%;
     display: grid;
     grid: auto-flow / 1fr;
 }

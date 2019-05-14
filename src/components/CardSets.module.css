@@ -1,0 +1,7 @@
+.cardsets {
+    max-width: 40em;
+}
+
+.cardsets input {
+    max-width: 10em;
+}

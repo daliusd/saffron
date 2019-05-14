@@ -8,6 +8,7 @@ import KawaiiMessage, { Character } from './KawaiiMessage';
 interface OwnProps {
     type: string;
     id: string;
+    withHelp?: boolean;
 }
 
 interface StateProps {
@@ -121,15 +122,17 @@ export class PDFGenerator extends Component<Props, LocalState> {
     };
 
     render() {
-        const { isCreatingPdf } = this.props;
+        const { isCreatingPdf, withHelp } = this.props;
 
         return (
             <>
-                <KawaiiMessage character={Character.Ghost} mood="excited">
-                    <p>Here you can generate PDF.</p>
-                    <p>Hint 1: A4 page size is 210 mm x 297 mm. Letter page size is 215.9 x 279.4 mm.</p>
-                    <p>Hint 2: 1 inch is equal to 25.4 mm.</p>
-                </KawaiiMessage>
+                {withHelp && (
+                    <KawaiiMessage character={Character.Ghost} mood="excited">
+                        <p>Here you can generate PDF.</p>
+                        <p>Hint 1: A4 page size is 210 mm x 297 mm. Letter page size is 215.9 x 279.4 mm.</p>
+                        <p>Hint 2: 1 inch is equal to 25.4 mm.</p>
+                    </KawaiiMessage>
+                )}
 
                 <div className="form">
                     <label htmlFor="page_width">Page width (mm):</label>

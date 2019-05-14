@@ -6,6 +6,7 @@ import { SidebarState, cardSetSetSidebarState } from '../actions';
 import { State } from '../reducers';
 import SidebarDetails from './SidebarDetails';
 import SidebarGeneratePng from './SidebarGeneratePng';
+import SidebarGeneratePdf from './SidebarGeneratePdf';
 import SidebarImage from './SidebarImage';
 import SidebarImportExport from './SidebarImportExport';
 import SidebarMeasurements from './SidebarMeasurements';
@@ -77,7 +78,12 @@ const SIDEBARS: SidebarInfo[] = [
         icon: 'photo_library',
         component: SidebarGeneratePng,
     },
-    // picture_as_pdf
+    {
+        state: SidebarState.Pdf,
+        title: 'Generate as PDF',
+        icon: 'picture_as_pdf',
+        component: SidebarGeneratePdf,
+    },
 ];
 
 export class Sidebar extends Component<Props> {

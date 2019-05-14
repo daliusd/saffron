@@ -17,7 +17,6 @@ import Card from './Card';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import Loader from './Loader';
-import PDFGenerator from './PDFGenerator';
 import Sidebar from './Sidebar';
 import style from './CardSet.module.css';
 
@@ -147,8 +146,6 @@ export class CardSet extends Component<Props, LocalState> {
                             </div>
                         </div>
                     </div>
-
-                    {activeCardSet !== null && <PDFGenerator type="cardsets" id={activeCardSet.id} />}
                 </div>
             )
         );

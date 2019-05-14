@@ -224,8 +224,12 @@
 - Generate PNG files of cards (vs PDF).
     + Generate single card
     + Generate for a card set
+    + Move pdf generation to sidebar
     - Generate for a game
-    - Move pdf generation to sidebar
+    - Generate single card
+
+- Separate cuttings marks in edges and near cards
+- BW cutting marks for visibility
 
 + Firefox does not draw svg on canvas if width and height is missing
 + Images in text ignores zoom
@@ -252,6 +256,8 @@
     - Convert webm to png
     - Save image dimensions in meta data
     - Use image meta data for images in text
+
+- Image clipping, shift and zoom
 
 - Fonts improvements
     - font images

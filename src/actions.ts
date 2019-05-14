@@ -527,6 +527,7 @@ export enum SidebarState {
     Upload,
     ImportExport,
     Png,
+    Pdf,
 }
 export interface CardSetSetSidebarState {
     type: typeof CARDSET_SET_SIDEBAR_STATE;
