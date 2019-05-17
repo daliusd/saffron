@@ -18,6 +18,14 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-05-16</h2>
+                <ul>
+                    <li>
+                        PNG generation for card set or the whole game. This will benefit if you want to publish game via{' '}
+                        <a href="https://www.thegamecrafter.com/">The Game Crafter</a>,{' '}
+                        <a href="makeplayingcards.com">Make Playing Cards</a> or any other place.
+                    </li>
+                </ul>
                 <h2>2019-04-13</h2>
                 <ul>
                     <li>Option to generate cutting marks on front side only.</li>
