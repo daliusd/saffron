@@ -196,6 +196,7 @@ export interface GameCreatePdfRequest {
     includeBleedingArea: boolean;
     cutMarksForScissors: boolean;
     cutMarksForGuillotine: boolean;
+    cutMarksInMarginArea: boolean;
     cutMarksOnFrontSideOnly: boolean;
 }
 
@@ -645,6 +646,7 @@ export const gameCreatePdfRequest = (
     includeBleedingArea: boolean,
     cutMarksForScissors: boolean,
     cutMarksForGuillotine: boolean,
+    cutMarksInMarginArea: boolean,
     cutMarksOnFrontSideOnly: boolean,
 ): GameCreatePdfRequest => {
     return {
@@ -660,6 +662,7 @@ export const gameCreatePdfRequest = (
         includeBleedingArea,
         cutMarksForScissors,
         cutMarksForGuillotine,
+        cutMarksInMarginArea,
         cutMarksOnFrontSideOnly,
     };
 };

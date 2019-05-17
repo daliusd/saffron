@@ -42,6 +42,7 @@ export const generatePdfUsingWorker = (
     includeBleedingArea: boolean,
     cutMarksForScissors: boolean,
     cutMarksForGuillotine: boolean,
+    cutMarksInMarginArea: boolean,
     cutMarksOnFrontSideOnly: boolean,
 ) => {
     // @ts-ignore
@@ -73,6 +74,7 @@ export const generatePdfUsingWorker = (
                 includeBleedingArea,
                 cutMarksForScissors,
                 cutMarksForGuillotine,
+                cutMarksInMarginArea,
                 cutMarksOnFrontSideOnly,
             });
         } catch (e) {

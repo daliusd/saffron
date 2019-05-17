@@ -31,6 +31,7 @@ interface LocalState {
     includeBleedingArea: boolean;
     cutMarksForScissors: boolean;
     cutMarksForGuillotine: boolean;
+    cutMarksInMarginArea: boolean;
     cutMarksOnFrontSideOnly: boolean;
 }
 
@@ -45,6 +46,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
         includeBleedingArea: false,
         cutMarksForScissors: true,
         cutMarksForGuillotine: false,
+        cutMarksInMarginArea: false,
         cutMarksOnFrontSideOnly: false,
     };
 
@@ -60,6 +62,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
             includeBleedingArea,
             cutMarksForScissors,
             cutMarksForGuillotine,
+            cutMarksInMarginArea,
             cutMarksOnFrontSideOnly,
         } = this.state;
 
@@ -76,6 +79,7 @@ export class PDFGenerator extends Component<Props, LocalState> {
                 includeBleedingArea,
                 cutMarksForScissors,
                 cutMarksForGuillotine,
+                cutMarksInMarginArea,
                 cutMarksOnFrontSideOnly,
             ),
         );
@@ -115,6 +119,10 @@ export class PDFGenerator extends Component<Props, LocalState> {
 
     handleCutMarksForGuillotine = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({ cutMarksForGuillotine: event.target.checked });
+    };
+
+    handleCutMarksInMarginArea = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ cutMarksInMarginArea: event.target.checked });
     };
 
     handleCutMarksOnFrontSideOnly = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -220,6 +228,15 @@ export class PDFGenerator extends Component<Props, LocalState> {
                             onChange={this.handleCutMarksForGuillotine}
                         />
                         Generate with cut marks for paper guillotine.
+                    </label>
+
+                    <label>
+                        <input
+                            type="checkbox"
+                            checked={this.state.cutMarksInMarginArea}
+                            onChange={this.handleCutMarksInMarginArea}
+                        />
+                        Generate with cut marks for paper guillotine in margin area.
                     </label>
 
                     <label>
