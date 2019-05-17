@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Credentials, Dispatch, messageDisplay } from '../actions';
+import { Credentials } from '../types';
+import { Dispatch, messageDisplay } from '../actions';
 
 interface Props {
     dispatch: Dispatch;

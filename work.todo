@@ -221,15 +221,16 @@
 + Do not limit where field can be dragged
 + Image drag and drop should show element that will receive dropped image
 
-- Generate PNG files of cards (vs PDF).
++ Generate PNG files of cards (vs PDF).
     + Generate single card
     + Generate for a card set
     + Move pdf generation to sidebar
-    - Generate for a game
-    - Generate single card
+    + Generate for a game
 
 - Separate cuttings marks in edges and near cards
 - BW cutting marks for visibility
+- Change cutting marks to be outside not inside the card if generated with bleeding area
+- Sort cardsets
 
 + Firefox does not draw svg on canvas if width and height is missing
 + Images in text ignores zoom

@@ -4,15 +4,8 @@ import shortid from 'shortid';
 
 import { ACTIVITY_SELECTING, State } from '../reducers';
 import { BLEED_WIDTH } from '../constants';
-import {
-    CardSetType,
-    CardType,
-    CardsCollection,
-    Dispatch,
-    cardSetActiveCardAndPlaceholder,
-    cardSetCreateCard,
-    cardSetRenameRequest,
-} from '../actions';
+import { CardSetType, CardType, CardsCollection } from '../types';
+import { Dispatch, cardSetActiveCardAndPlaceholder, cardSetCreateCard, cardSetRenameRequest } from '../actions';
 import Card from './Card';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';

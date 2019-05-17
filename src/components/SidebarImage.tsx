@@ -2,12 +2,9 @@ import { ColorResult } from 'react-color';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import { CardType, DispatchProps, IdsArray, ImageArray, ImageInfo, PlaceholderType, SidebarOwnProps } from '../types';
+import { State } from '../reducers';
 import {
-    CardType,
-    IdsArray,
-    ImageArray,
-    ImageInfo,
-    PlaceholderType,
     cardSetAddImagePlaceholder,
     cardSetChangeActivePlaceholderName,
     cardSetChangeFitForActivePlaceholder,
@@ -19,8 +16,6 @@ import {
     cardSetUnlockActivePlaceholder,
     imageListRequest,
 } from '../actions';
-import { DispatchProps, SidebarOwnProps } from '../types';
-import { State } from '../reducers';
 import ColorButton from './ColorButton';
 import style from './SidebarImage.module.css';
 

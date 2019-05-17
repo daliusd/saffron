@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { Dispatch, GamesCollection, IdsArray, gameCreateRequest, gameDeleteRequest, messageDisplay } from '../actions';
+import { Dispatch, gameCreateRequest, gameDeleteRequest, messageDisplay } from '../actions';
+import { GamesCollection, IdsArray } from '../types';
 import { State } from '../reducers';
 import ConfirmedDelete from './ConfirmedDelete';
 import KawaiiMessage, { Character } from './KawaiiMessage';

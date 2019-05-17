@@ -2,22 +2,20 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
+import { CardSetsCollection, GameType, IdsArray } from '../types';
 import {
-    CardSetsCollection,
     Dispatch,
-    GameType,
-    IdsArray,
     cardSetCreateRequest,
     cardSetDeleteRequest,
     gameRenameRequest,
     messageDisplay,
+    gameCreatePngRequest,
 } from '../actions';
-import { State } from '../reducers';
+import { State, ACTIVITY_CREATING_PNG } from '../reducers';
 import ConfirmedDelete from './ConfirmedDelete';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
 import PDFGenerator from './PDFGenerator';
-
 import style from './CardSets.module.css';
 
 interface Props {
@@ -26,12 +24,14 @@ interface Props {
     activeGame: GameType | null;
     allIds: IdsArray;
     byId: CardSetsCollection;
+    isCreatingPng: boolean;
 }
 
 interface LocalState {
     cardSetName: string;
     width: number;
     height: number;
+    dpi: number;
 }
 
 export class CardSets extends Component<Props, LocalState> {
@@ -39,6 +39,7 @@ export class CardSets extends Component<Props, LocalState> {
         cardSetName: '',
         width: 63.5,
         height: 88.9,
+        dpi: 300,
     };
 
     handleGameNameChange = (newName: string) => {
@@ -81,8 +82,22 @@ export class CardSets extends Component<Props, LocalState> {
         dispatch(cardSetDeleteRequest(cardSetId));
     };
 
+    handleDpiChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({ dpi: parseInt(event.target.value) });
+    };
+
+    handleGenerate = () => {
+        const { dispatch, activeGame } = this.props;
+        const { dpi } = this.state;
+
+        if (activeGame !== null) {
+            dispatch(gameCreatePngRequest(dpi, 'games', activeGame.id));
+        }
+    };
+
     render() {
-        const { isAuthenticated, activeGame, allIds, byId } = this.props;
+        const { isAuthenticated, activeGame, allIds, byId, isCreatingPng } = this.props;
+        const { dpi } = this.state;
 
         const cardsetItems = allIds
             .map(gameId => byId[gameId])
@@ -149,6 +164,24 @@ export class CardSets extends Component<Props, LocalState> {
                     </KawaiiMessage>
 
                     <PDFGenerator type="games" id={activeGame.id} withHelp={true} />
+
+                    <div className="form">
+                        Or you can generate PNG files for all the game:
+                        <label htmlFor="dpi">DPI:</label>
+                        <input
+                            id="dpi"
+                            type="number"
+                            min="1"
+                            step="1"
+                            onChange={this.handleDpiChange}
+                            className="form-control"
+                            placeholder="DPI"
+                            value={dpi}
+                        />
+                        <button disabled={isCreatingPng} onClick={this.handleGenerate}>
+                            Generate PNG files
+                        </button>
+                    </div>
                 </div>
             )
         );
@@ -162,6 +195,7 @@ const mapStateToProps = (state: State) => {
             state.games.active && state.games.byId[state.games.active] ? state.games.byId[state.games.active] : null,
         allIds: state.cardsets.allIds,
         byId: state.cardsets.byId,
+        isCreatingPng: (state.games.activity & ACTIVITY_CREATING_PNG) === ACTIVITY_CREATING_PNG,
     };
 };
 

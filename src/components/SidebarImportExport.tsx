@@ -11,16 +11,14 @@ import shortid from 'shortid';
 import {
     CardType,
     CardsCollection,
-    FPLoadCallback,
-    FPRevertLoadCallback,
+    DispatchProps,
     IdsArray,
     PlaceholdersCollection,
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
-    cardSetImportData,
-    messageDisplay,
-} from '../actions';
-import { DispatchProps, SidebarOwnProps } from '../types';
+    SidebarOwnProps,
+} from '../types';
+import { FPLoadCallback, FPRevertLoadCallback, cardSetImportData, messageDisplay } from '../actions';
 import { State } from '../reducers';
 import { downloadBlob } from '../utils';
 import style from './SidebarImportExport.module.css';

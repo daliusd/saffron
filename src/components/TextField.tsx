@@ -4,12 +4,12 @@ import React, { PureComponent } from 'react';
 import { DEFAULT_LINE_HEIGHT } from '../constants';
 import {
     Dispatch,
-    TextPlaceholderType,
     cardSetChangePlaceholderAngle,
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
 } from '../actions';
 import { State } from '../reducers';
+import { TextPlaceholderType } from '../types';
 import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
 import emptyTextImage from './text.svg';

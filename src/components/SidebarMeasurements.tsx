@@ -1,11 +1,9 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DispatchProps, SidebarOwnProps } from '../types';
+import { DispatchProps, IdsArray, PlaceholderType, PlaceholdersCollection, SidebarOwnProps } from '../types';
+import { State } from '../reducers';
 import {
-    IdsArray,
-    PlaceholderType,
-    PlaceholdersCollection,
     cardSetActiveCardAndPlaceholder,
     cardSetChangeActivePlaceholderName,
     cardSetChangePlaceholderAngle,
@@ -16,7 +14,6 @@ import {
     cardSetRaiseActivePlaceholderToTop,
     cardSetUnlockActivePlaceholder,
 } from '../actions';
-import { State } from '../reducers';
 import style from './SidebarMeasurements.module.css';
 
 interface StateProps {

@@ -1,9 +1,9 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardType, cardSetCloneCard, cardSetRemoveCard, cardSetUpdateCardCount } from '../actions';
-import { DispatchProps, SidebarOwnProps } from '../types';
+import { CardType, DispatchProps, SidebarOwnProps } from '../types';
 import { State } from '../reducers';
+import { cardSetCloneCard, cardSetRemoveCard, cardSetUpdateCardCount } from '../actions';
 import style from './SidebarDetails.module.css';
 
 interface StateProps {

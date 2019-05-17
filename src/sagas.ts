@@ -61,9 +61,7 @@ import {
     CardSetDeleteRequest,
     CardSetRenameRequest,
     CardSetSelectRequest,
-    CardSetType,
     CardSetUploadImage,
-    CardSetsCollection,
     GAME_CREATE_FAILURE,
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
@@ -88,8 +86,6 @@ import {
     GameDeleteRequest,
     GameRenameRequest,
     GameSelectRequest,
-    GameType,
-    GamesCollection,
     IMAGE_LIST_FAILURE,
     IMAGE_LIST_REQUEST,
     IMAGE_LIST_SUCCESS,
@@ -113,6 +109,7 @@ import {
     gameSelectRequest,
     messageDisplay,
 } from './actions';
+import { CardSetType, CardSetsCollection, GameType, GamesCollection } from './types';
 import { State } from './reducers';
 import {
     deleteAccessToken,
@@ -421,8 +418,9 @@ export function* handleGameCreatePngRequest(action: GameCreatePngRequest): SagaI
     try {
         progressId = yield call(putProgress, 'Generating PNG');
 
-        const state = yield select();
-        yield call(generatePngUsingWorker, state.cardsets, action.dpi);
+        const token = yield call(getToken, true, true);
+
+        yield call(generatePngUsingWorker, token, action.collectionType, action.collectionId, action.dpi);
         yield call(hideProgress, progressId);
         yield call(putInfo, 'PNG generated.');
         yield put({

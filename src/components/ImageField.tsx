@@ -3,14 +3,13 @@ import React, { PureComponent } from 'react';
 
 import {
     Dispatch,
-    ImageInfo,
-    ImagePlaceholderType,
     cardSetActiveCardAndPlaceholder,
     cardSetChangeImage,
     cardSetChangePlaceholderAngle,
     cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
 } from '../actions';
+import { ImageInfo, ImagePlaceholderType } from '../types';
 import { State } from '../reducers';
 import FieldController from './FieldController';
 import emptyImageImage from './image.svg';

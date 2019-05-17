@@ -1,6 +1,6 @@
 import axios, { AxiosError, CancelToken } from 'axios';
 
-import { Credentials } from './actions';
+import { Credentials } from './types';
 
 export function handleAxiosError(error: AxiosError) {
     if (error.response) {

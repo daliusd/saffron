@@ -10,6 +10,7 @@ interface StateProps {
     width: number;
     height: number;
     isCreatingPng: boolean;
+    activeCardset: string | null;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
@@ -28,10 +29,12 @@ export class SidebarGeneratePng extends Component<Props, LocalState> {
     };
 
     handleGenerate = () => {
-        const { dispatch } = this.props;
+        const { dispatch, activeCardset } = this.props;
         const { dpi } = this.state;
 
-        dispatch(gameCreatePngRequest(dpi));
+        if (activeCardset !== null) {
+            dispatch(gameCreatePngRequest(dpi, 'cardsets', activeCardset));
+        }
     };
 
     render() {
@@ -72,6 +75,7 @@ const mapStateToProps = (state: State): StateProps => {
         width: state.cardsets.width,
         height: state.cardsets.height,
         isCreatingPng: (state.games.activity & ACTIVITY_CREATING_PNG) === ACTIVITY_CREATING_PNG,
+        activeCardset: state.cardsets.active,
     };
 };
 

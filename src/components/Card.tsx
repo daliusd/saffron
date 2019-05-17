@@ -3,7 +3,8 @@ import Measure from 'react-measure';
 import React, { Component } from 'react';
 
 import { BLEED_WIDTH } from '../constants';
-import { CardType, Dispatch, PlaceholdersCollection, cardSetActiveCardAndPlaceholder, IdsArray } from '../actions';
+import { CardType, IdsArray, PlaceholdersCollection } from '../types';
+import { Dispatch, cardSetActiveCardAndPlaceholder } from '../actions';
 import { State } from '../reducers';
 import ImageField from './ImageField';
 import TextField from './TextField';

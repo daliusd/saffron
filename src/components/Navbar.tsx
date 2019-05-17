@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardSetType, Dispatch, GameType, MessageType, logoutRequest } from '../actions';
+import { CardSetType, GameType, MessageType } from '../types';
+import { Dispatch, logoutRequest } from '../actions';
 import { State } from '../reducers';
 import { getActiveCardSet, getActiveGame } from '../selectors';
 import Loader from './Loader';

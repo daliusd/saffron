@@ -1,7 +1,7 @@
 import WebFont from 'webfontloader';
 
 import { DEFAULT_FONT } from './constants';
-import { PlaceholdersCollection } from './actions';
+import { PlaceholdersCollection } from './types';
 
 const webFontsLoadPromise = (config: WebFont.Config) =>
     new Promise((resolve, reject) => {

@@ -1,9 +1,10 @@
+import { ColorResult } from 'react-color';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DispatchProps, SidebarOwnProps } from '../types';
+import { DispatchProps, PlaceholderType, SidebarOwnProps } from '../types';
+import { State } from '../reducers';
 import {
-    PlaceholderType,
     cardSetAddTextPlaceholder,
     cardSetChangeActivePlaceholderName,
     cardSetChangeActiveTextPlaceholderAlign,
@@ -14,11 +15,9 @@ import {
     cardSetUnlockActivePlaceholder,
     cardSetChangeActiveTextPlaceholderColor,
 } from '../actions';
-import { State } from '../reducers';
 import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
 import style from './SidebarText.module.css';
-import { ColorResult } from 'react-color';
 
 interface StateProps {
     isAuthenticated: boolean;

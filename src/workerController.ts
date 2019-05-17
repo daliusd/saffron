@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { downloadBlob } from './utils';
-import { CardSetState } from './reducers';
 import { delay } from 'redux-saga';
 import { XmlDocument } from 'xmldoc';
 import JSZip from 'jszip';
+import { getRequest } from './requests';
+import { CardSetData } from './types';
 
 const SVG_B64_START = 'data:image/svg+xml;base64,';
 
@@ -112,26 +113,26 @@ function fixWidthAndHeightInSvg(data: string) {
     return btoa(doc.toString({ compressed: true }));
 }
 
-export const generatePngUsingWorker = async (cardSetData: CardSetState, dpi: number) => {
-    // @ts-ignore
-    if (!window.Worker) {
-        throw new Error('We can not generate PNG because of browser you use. Try using different browser');
+class PNGGenerator {
+    tasksQueue: { type: string; subType: string; imageToDraw?: ImageToDraw }[] = [];
+    worker: Worker;
+
+    constructor() {
+        // @ts-ignore
+        if (!window.Worker) {
+            throw new Error('We can not generate PNG because of browser you use. Try using different browser');
+        }
+
+        this.worker = new Worker('/js/worker.js');
+        this.worker.addEventListener('message', event => {
+            if (event.data.type === 'generateCard') {
+                this.tasksQueue.push(event.data);
+            }
+        });
     }
 
-    let tasksQueue: { type: string; subType: string; imageToDraw?: ImageToDraw }[] = [];
-
-    const worker = new Worker('/js/worker.js');
-    worker.addEventListener('message', event => {
-        if (event.data.type === 'generateCard') {
-            tasksQueue.push(event.data);
-        }
-    });
-
-    let zip = new JSZip();
-    let cardsetFolder = zip.folder(cardSetData.active ? cardSetData.byId[cardSetData.active].name : 'cards');
-
-    for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
-        worker.postMessage({
+    async generateCard(cardSetData: CardSetData, cardId: string, cardIdx: number, dpi: number, cardsetFolder: JSZip) {
+        this.worker.postMessage({
             type: 'generateCard',
             cardSetData,
             cardId,
@@ -157,8 +158,8 @@ export const generatePngUsingWorker = async (cardSetData: CardSetState, dpi: num
         const ptpmm = dpi / 25.4;
 
         while (!stopped) {
-            while (tasksQueue.length > 0) {
-                let task = tasksQueue.shift();
+            while (this.tasksQueue.length > 0) {
+                let task = this.tasksQueue.shift();
 
                 if (task && task.imageToDraw) {
                     const imageToDraw = task.imageToDraw;
@@ -220,6 +221,46 @@ export const generatePngUsingWorker = async (cardSetData: CardSetState, dpi: num
         let dataUrl = offscreenCanvas.toDataURL();
         dataUrl = dataUrl.slice('data:image/png;base64,'.length);
         cardsetFolder.file(`${cardIdx.toString().padStart(4, '0')}_${cardId}.png`, dataUrl, { base64: true });
+    }
+
+    async generateGame(accessToken: string, gameId: string, dpi: number, zip: JSZip) {
+        let resp = await getRequest('/api/games/' + gameId, accessToken);
+        if (!resp) return;
+
+        const cardsetsList = resp.data.cardsets;
+        for (const cardsetInfo of cardsetsList) {
+            await this.generateCardset(accessToken, cardsetInfo.id, dpi, zip);
+        }
+    }
+
+    async generateCardset(accessToken: string, cardsetId: string, dpi: number, zip: JSZip) {
+        const resp = await getRequest('/api/cardsets/' + cardsetId, accessToken);
+        if (!resp) return;
+
+        let cardSetData: CardSetData = JSON.parse(resp.data.data);
+
+        let cardsetFolder = zip.folder(resp.data.name);
+
+        for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
+            await this.generateCard(cardSetData, cardId, cardIdx, dpi, cardsetFolder);
+        }
+    }
+}
+
+export const generatePngUsingWorker = async (
+    accessToken: string,
+    collectionType: string,
+    collectionId: string,
+    dpi: number,
+) => {
+    const pngGenerator = new PNGGenerator();
+
+    let zip = new JSZip();
+
+    if (collectionType === 'games') {
+        await pngGenerator.generateGame(accessToken, collectionId, dpi, zip);
+    } else if (collectionType === 'cardsets') {
+        await pngGenerator.generateCardset(accessToken, collectionId, dpi, zip);
     }
 
     let blob = await zip.generateAsync({ type: 'blob' });
