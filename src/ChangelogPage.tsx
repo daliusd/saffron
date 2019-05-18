@@ -18,6 +18,12 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-05-17</h2>
+                <ul>
+                    <li>
+                        PDF and PNG generation improvements.
+                    </li>
+                </ul>
                 <h2>2019-05-16</h2>
                 <ul>
                     <li>
