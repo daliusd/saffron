@@ -18,13 +18,13 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
-                <h2>2019-05-17</h2>
+                <h2>2019-05-18</h2>
                 <ul>
                     <li>
                         PDF and PNG generation improvements.
                     </li>
                 </ul>
-                <h2>2019-05-16</h2>
+                <h2>2019-05-17</h2>
                 <ul>
                     <li>
                         PNG generation for card set or the whole game. This will benefit if you want to publish game via{' '}
