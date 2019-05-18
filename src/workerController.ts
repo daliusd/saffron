@@ -133,12 +133,19 @@ class PNGGenerator {
         });
     }
 
-    async generateCard(cardSetData: CardSetData, cardId: string, cardIdx: number, dpi: number, cardsetFolder: JSZip) {
+    async generateCard(
+        cardSetData: CardSetData,
+        cardId: string,
+        cardIdx: number,
+        dpi: number,
+        isBack: boolean,
+        cardsetFolder: JSZip,
+    ) {
         this.worker.postMessage({
             type: 'generateCard',
             cardSetData,
             cardId,
-            isBack: false,
+            isBack,
         });
 
         let offscreenCanvas = document.createElement('canvas');
@@ -222,7 +229,11 @@ class PNGGenerator {
 
         let dataUrl = offscreenCanvas.toDataURL();
         dataUrl = dataUrl.slice('data:image/png;base64,'.length);
-        cardsetFolder.file(`${cardIdx.toString().padStart(4, '0')}_${cardId}.png`, dataUrl, { base64: true });
+        cardsetFolder.file(
+            `${cardIdx.toString().padStart(4, '0')}_${cardId}_${isBack ? 'back' : 'front'}.png`,
+            dataUrl,
+            { base64: true },
+        );
     }
 
     async generateGame(accessToken: string, gameId: string, dpi: number, zip: JSZip) {
@@ -244,7 +255,10 @@ class PNGGenerator {
         let cardsetFolder = zip.folder(resp.data.name);
 
         for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
-            await this.generateCard(cardSetData, cardId, cardIdx, dpi, cardsetFolder);
+            await this.generateCard(cardSetData, cardId, cardIdx, dpi, false, cardsetFolder);
+            if (cardSetData.isTwoSided) {
+                await this.generateCard(cardSetData, cardId, cardIdx, dpi, true, cardsetFolder);
+            }
         }
     }
 }
