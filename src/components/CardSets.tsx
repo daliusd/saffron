@@ -99,17 +99,18 @@ export class CardSets extends Component<Props, LocalState> {
         const { isAuthenticated, activeGame, allIds, byId, isCreatingPng } = this.props;
         const { dpi } = this.state;
 
-        const cardsetItems = allIds
-            .map(gameId => byId[gameId])
-            .map(cardset => (
-                <li key={cardset.id}>
-                    <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>{' '}
-                    <ConfirmedDelete
-                        question="Do you really want to delete this card set?"
-                        onDelete={() => this.handleCardSetDelete(cardset.id)}
-                    />
-                </li>
-            ));
+        let cardsets = allIds.map(cardsetId => byId[cardsetId]);
+        cardsets.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+        const cardsetItems = cardsets.map(cardset => (
+            <li key={cardset.id}>
+                <Link to={`/cardset/${cardset.id}`}>{cardset.name}</Link>{' '}
+                <ConfirmedDelete
+                    question="Do you really want to delete this card set?"
+                    onDelete={() => this.handleCardSetDelete(cardset.id)}
+                />
+            </li>
+        ));
 
         return (
             isAuthenticated &&

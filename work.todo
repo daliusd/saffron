@@ -236,12 +236,18 @@
     Strange unexplainable case.
 + Images in text have full URL (can we fix that?)
 
-- Sort cardsets
++ Sort cardsets
+
++ Fix text rendering
+    + Empty lines
+    + Problem with cut letters
 
 - Generate list with authors of icons
 - Find more icons or give instructions to users
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
+
+- Sort games
 
 - Create some cards templates.
 

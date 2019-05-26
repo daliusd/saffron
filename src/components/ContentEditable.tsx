@@ -177,7 +177,6 @@ class ContentEditable extends Component<Props> {
     updateContent = (timeoutInMiliseconds: number) => {
         if (!this.editDiv.current) return;
         let value = this.editDiv.current.innerHTML;
-        value = value.replace(/<br>/g, '');
 
         let imgUrlIdx = -1;
         while ((imgUrlIdx = value.indexOf('<img src="http')) !== -1) {

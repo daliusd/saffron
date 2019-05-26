@@ -47,17 +47,18 @@ export class Games extends Component<Props, LocalState> {
     render() {
         const { isAuthenticated, allIds, byId } = this.props;
 
-        const gameItems = allIds
-            .map(gameId => byId[gameId])
-            .map(game => (
-                <li key={game.id}>
-                    <Link to={`/game/${game.id}`}>{game.name}</Link>{' '}
-                    <ConfirmedDelete
-                        question="Do you really want to delete this game?"
-                        onDelete={() => this.handleGameDelete(game.id)}
-                    />
-                </li>
-            ));
+        const games = allIds.map(gameId => byId[gameId]);
+        games.sort((a, b) => (a.name < b.name ? -1 : 1));
+
+        const gameItems = games.map(game => (
+            <li key={game.id}>
+                <Link to={`/game/${game.id}`}>{game.name}</Link>{' '}
+                <ConfirmedDelete
+                    question="Do you really want to delete this game?"
+                    onDelete={() => this.handleGameDelete(game.id)}
+                />
+            </li>
+        ));
 
         return (
             isAuthenticated && (
