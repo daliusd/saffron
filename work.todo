@@ -243,12 +243,14 @@
     + Problem with cut letters
 
 + Sort games
++ Do not generate cut marks in margin area
+
++ Process images on upload
+    + Convert webm to png
+    + Save image dimensions in meta data
+    + Use image meta data for images in text
 
 - Generate list with authors of icons
-- Find more icons or give instructions to users
-    Where to get them. https://thenounproject.com/developers/ looks
-    like an option but it is not free.
-
 - Create some cards templates.
 
 - Open (statistics) page
@@ -259,11 +261,6 @@
 
 - PDF generation log and reporting of failures via e-mail.
     E.g. there are unhandled exceptions
-- Do not generate cut marks in margin area
-- Process images on upload
-    - Convert webm to png
-    - Save image dimensions in meta data
-    - Use image meta data for images in text
 
 - Image clipping, shift and zoom
 
@@ -277,3 +274,5 @@
 
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
+    Where to get them. https://thenounproject.com/developers/ looks
+    like an option but it is not free.

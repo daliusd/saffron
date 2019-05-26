@@ -113,6 +113,8 @@ export interface Credentials {
 export interface Image {
     id: number;
     name: string;
+    width: number;
+    height: number;
 }
 
 export type ImageArray = Image[];
