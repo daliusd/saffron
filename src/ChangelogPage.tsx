@@ -26,6 +26,9 @@ export default class ChangelogPage extends Component {
                     <li>
                         Card Sets and Games list are sorted alphabetically now.
                     </li>
+                    <li>
+                        Image handling improvements.
+                    </li>
                 </ul>
                 <h2>2019-05-18</h2>
                 <ul>
