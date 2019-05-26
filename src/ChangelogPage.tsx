@@ -18,6 +18,15 @@ export default class ChangelogPage extends Component {
                     <li>UI improvements (keyboard support and etc.).</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-05-26</h2>
+                <ul>
+                    <li>
+                        Text rendering fixes.
+                    </li>
+                    <li>
+                        Card Sets and Games list are sorted alphabetically now.
+                    </li>
+                </ul>
                 <h2>2019-05-18</h2>
                 <ul>
                     <li>
