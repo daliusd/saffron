@@ -250,29 +250,34 @@
     + Save image dimensions in meta data
     + Use image meta data for images in text
 
++ Email errors
+- Resize card with content
+- Image clipping, shift and zoom
+- Undo/Redo
+
 - Generate list with authors of icons
+
 - Create some cards templates.
 
-- Open (statistics) page
-
 - Lower / Raise field one step
-- Special visual effects
 - Keyboard manipulation
 
 - PDF generation log and reporting of failures via e-mail.
     E.g. there are unhandled exceptions
 
-- Image clipping, shift and zoom
+- Blog entry about free graphics and etc.
+    https://publicdomainvectors.org/
+    Where to get them. https://thenounproject.com/developers/ looks
+    like an option but it is not free.
 
+
+Future / Commercial ideas
+
+- Open (statistics) page
+
+- Special visual effects
 - Fonts improvements
     - font images
     - custom fonts
     - ttfs
     - replace emojis with images
-
-- Undo/Redo
-
-- Blog entry about free graphics and etc.
-    https://publicdomainvectors.org/
-    Where to get them. https://thenounproject.com/developers/ looks
-    like an option but it is not free.

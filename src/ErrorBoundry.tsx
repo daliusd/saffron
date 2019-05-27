@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
 
@@ -16,10 +17,13 @@ export default class ErrorBoundary extends Component<Props, State> {
         this.state = { hasError: false };
     }
 
-    componentDidCatch() {
+    componentDidCatch(error: Error | null, info: object) {
         this.setState({ hasError: true });
-        // You can also log the error to an error reporting service
-        // logErrorToMyService(error, info);
+        if (error !== null) {
+            axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
+        } else {
+            axios.post('/api/reports', { error: `No error: ${info}` });
+        }
     }
 
     render() {
