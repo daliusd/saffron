@@ -3,6 +3,13 @@ import axios from 'axios';
 
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
 
+window.addEventListener('error', function(evt: ErrorEvent) {
+    if (process.env.NODE_ENV === 'production') {
+        let error = evt.error;
+        axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
+    }
+});
+
 interface Props {
     children: React.ReactNode;
 }
@@ -19,10 +26,12 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     componentDidCatch(error: Error | null, info: object) {
         this.setState({ hasError: true });
-        if (error !== null) {
-            axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
-        } else {
-            axios.post('/api/reports', { error: `No error: ${info}` });
+        if (process.env.NODE_ENV === 'production') {
+            if (error !== null) {
+                axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
+            } else {
+                axios.post('/api/reports', { error: `No error: ${info}` });
+            }
         }
     }
 
