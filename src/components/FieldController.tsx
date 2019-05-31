@@ -280,8 +280,12 @@ class FieldController extends React.Component<Props> {
         const { cx, cy, onPan } = this.props;
         if (this.panDiv.current === null || !onPan || cx === undefined || cy === undefined) return;
 
-        const newCx = cx + co.clientX - this.startX;
-        const newCy = cy + co.clientY - this.startY;
+        let dx = co.clientX - this.startX;
+        let dy = co.clientY - this.startY;
+        const { rx, ry } = this.rotateVec(dx, dy, -this.currentAngle);
+
+        const newCx = cx + rx;
+        const newCy = cy + ry;
 
         this.startX = co.clientX;
         this.startY = co.clientY;
