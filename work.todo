@@ -255,6 +255,7 @@
     + Zoom
     + Shift
     + Clipping
+    - Pan using rotation vector
     - Change how data is stored so we could change one card during action and all after action
         - This will make easier to reset cx, cy
     - Adjust rendering
