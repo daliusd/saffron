@@ -108,6 +108,8 @@ import {
     cardSetChangeImageBase64,
     gameSelectRequest,
     messageDisplay,
+    CARDSET_CHANGE_PLACEHOLDER_PAN,
+    CARDSET_CHANGE_PLACEHOLDER_ZOOM,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection } from './types';
 import { State } from './reducers';
@@ -762,6 +764,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CHANGE_IS_TWO_SIDED, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_SNAPPING_DISTANCE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_POSITION, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_PLACEHOLDER_PAN, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_PLACEHOLDER_ZOOM, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_ANGLE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN, handleCardSetChange),

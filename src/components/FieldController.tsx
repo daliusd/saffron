@@ -3,8 +3,10 @@ import React from 'react';
 
 import { Dispatch } from '../actions';
 import { State } from '../reducers';
-import resize from './resize.svg';
-import rotate from './rotate.svg';
+import panIcon from './pan.svg';
+import zoomIcon from './zoom.svg';
+import resizeIcon from './resize.svg';
+import rotateIcon from './rotate.svg';
 import style from './FieldController.module.css';
 
 interface OwnProps {
@@ -15,10 +17,15 @@ interface OwnProps {
     width: number;
     height: number;
     angle: number;
+    zoom?: number;
+    cx?: number;
+    cy?: number;
     children: React.ReactNode;
     onDrag: (x: number, y: number) => void;
     onResize: (width: number, height: number) => void;
     onRotate: (angle: number) => void;
+    onZoom?: (zoom: number) => void;
+    onPan?: (cx: number, cy: number) => void;
     cardWidth: number;
     cardHeight: number;
     ppmm: number;
@@ -40,6 +47,8 @@ type Props = OwnProps & StateProps & DispatchProps;
 class FieldController extends React.Component<Props> {
     moving: boolean;
     cDiv: React.RefObject<HTMLDivElement>;
+    panDiv: React.RefObject<HTMLImageElement>;
+    zoomDiv: React.RefObject<HTMLImageElement>;
     resizeDiv: React.RefObject<HTMLImageElement>;
     rotateDiv: React.RefObject<HTMLImageElement>;
     relX: number;
@@ -60,6 +69,8 @@ class FieldController extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
         this.cDiv = React.createRef();
+        this.panDiv = React.createRef();
+        this.zoomDiv = React.createRef();
         this.resizeDiv = React.createRef();
         this.rotateDiv = React.createRef();
         this.currentAngle = props.angle;
@@ -81,6 +92,8 @@ class FieldController extends React.Component<Props> {
 
     componentDidMount() {
         if (this.cDiv.current === null) return;
+        if (this.panDiv.current === null) return;
+        if (this.zoomDiv.current === null) return;
         if (this.resizeDiv.current === null) return;
         if (this.rotateDiv.current === null) return;
 
@@ -89,6 +102,10 @@ class FieldController extends React.Component<Props> {
         this.cDiv.current.addEventListener('dragstart', this.handleBrowserDragStart);
         this.cDiv.current.addEventListener('mousedown', this.handleMouseDown);
         this.cDiv.current.addEventListener('touchstart', this.handleTouchStart);
+        this.panDiv.current.addEventListener('mousedown', this.handlePanMouseDown);
+        this.panDiv.current.addEventListener('touchstart', this.handlePanTouchStart);
+        this.zoomDiv.current.addEventListener('mousedown', this.handleZoomMouseDown);
+        this.zoomDiv.current.addEventListener('touchstart', this.handleZoomTouchStart);
         this.resizeDiv.current.addEventListener('mousedown', this.handleResizeMouseDown);
         this.resizeDiv.current.addEventListener('touchstart', this.handleResizeTouchStart);
         this.rotateDiv.current.addEventListener('mousedown', this.handleRotateMouseDown);
@@ -200,6 +217,149 @@ class FieldController extends React.Component<Props> {
         this.cDiv.current.style.top = y + 'px';
     };
 
+    // Pan handling
+
+    handlePanMouseDown = (event: MouseEvent) => {
+        this.handlePanStart(event);
+
+        document.addEventListener('mousemove', this.handlePanMouseMove);
+        document.addEventListener('mouseup', this.handlePanMouseUp);
+        event.stopPropagation();
+        event.preventDefault();
+    };
+
+    handlePanTouchStart = (event: TouchEvent) => {
+        this.handlePanStart(event.changedTouches[0]);
+
+        document.addEventListener('touchmove', this.handlePanTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handlePanTouchEnd, { passive: false });
+        event.stopPropagation();
+    };
+
+    handlePanStart = (co: { clientX: number; clientY: number }) => {
+        if (this.cDiv.current === null) return;
+
+        document.body.style.cursor = `url(${panIcon}), auto`;
+
+        this.startX = co.clientX;
+        this.startY = co.clientY;
+    };
+
+    handlePanMouseUp = (event: MouseEvent) => {
+        this.handlePanComplete(event);
+
+        document.removeEventListener('mousemove', this.handlePanMouseMove);
+        document.removeEventListener('mouseup', this.handlePanMouseUp);
+    };
+
+    handlePanTouchEnd = (event: TouchEvent) => {
+        this.handlePanComplete(event);
+
+        document.removeEventListener('touchmove', this.handlePanTouchMove);
+        document.removeEventListener('touchend', this.handlePanTouchEnd);
+    };
+
+    handlePanComplete = (event: Event) => {
+        if (this.panDiv.current === null) return;
+        document.body.style.cursor = this.originalBodyCursor;
+
+        event.preventDefault();
+    };
+
+    handlePanMouseMove = (event: MouseEvent) => {
+        this.handlePanMove(event);
+        event.preventDefault();
+    };
+
+    handlePanTouchMove = (event: TouchEvent) => {
+        this.handlePanMove(event.changedTouches[0]);
+        event.preventDefault();
+    };
+
+    handlePanMove = (co: { clientX: number; clientY: number }) => {
+        const { cx, cy, onPan } = this.props;
+        if (this.panDiv.current === null || !onPan || cx === undefined || cy === undefined) return;
+
+        const newCx = cx + co.clientX - this.startX;
+        const newCy = cy + co.clientY - this.startY;
+        onPan(newCx, newCy);
+    };
+
+    // Zoom handling
+
+    handleZoomMouseDown = (event: MouseEvent) => {
+        this.handleZoomStart(event);
+
+        document.addEventListener('mousemove', this.handleZoomMouseMove);
+        document.addEventListener('mouseup', this.handleZoomMouseUp);
+        event.stopPropagation();
+        event.preventDefault();
+    };
+
+    handleZoomTouchStart = (event: TouchEvent) => {
+        this.handleZoomStart(event.changedTouches[0]);
+
+        document.addEventListener('touchmove', this.handleZoomTouchMove, { passive: false });
+        document.addEventListener('touchend', this.handleZoomTouchEnd, { passive: false });
+        event.stopPropagation();
+    };
+
+    handleZoomStart = (co: { clientX: number; clientY: number }) => {
+        if (this.cDiv.current === null) return;
+
+        document.body.style.cursor = `url(${zoomIcon}), auto`;
+
+        this.startX = co.clientX;
+        this.startY = co.clientY;
+    };
+
+    handleZoomMouseUp = (event: MouseEvent) => {
+        this.handleZoomComplete(event);
+
+        document.removeEventListener('mousemove', this.handleZoomMouseMove);
+        document.removeEventListener('mouseup', this.handleZoomMouseUp);
+    };
+
+    handleZoomTouchEnd = (event: TouchEvent) => {
+        this.handleZoomComplete(event);
+
+        document.removeEventListener('touchmove', this.handleZoomTouchMove);
+        document.removeEventListener('touchend', this.handleZoomTouchEnd);
+    };
+
+    handleZoomComplete = (event: Event) => {
+        if (this.zoomDiv.current === null) return;
+        document.body.style.cursor = this.originalBodyCursor;
+
+        event.preventDefault();
+    };
+
+    handleZoomMouseMove = (event: MouseEvent) => {
+        this.handleZoomMove(event);
+        event.preventDefault();
+    };
+
+    handleZoomTouchMove = (event: TouchEvent) => {
+        this.handleZoomMove(event.changedTouches[0]);
+        event.preventDefault();
+    };
+
+    handleZoomMove = (co: { clientX: number; clientY: number }) => {
+        const { zoom, onZoom } = this.props;
+        if (this.zoomDiv.current === null || !onZoom || zoom === undefined) return;
+
+        const dx = co.clientX - this.startX;
+        const dy = co.clientY - this.startY;
+
+        this.startX = co.clientX;
+        this.startY = co.clientY;
+
+        let z = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+
+        let newZoom = Math.max(zoom + z / 30, 1);
+        onZoom(newZoom);
+    };
+
     // Resize handling
 
     handleResizeMouseDown = (event: MouseEvent) => {
@@ -224,7 +384,7 @@ class FieldController extends React.Component<Props> {
 
         if (this.cDiv.current === null || isLocked) return;
 
-        document.body.style.cursor = `url(${resize}), auto`;
+        document.body.style.cursor = `url(${resizeIcon}), auto`;
 
         this.originalW = this.cDiv.current.clientWidth;
         this.originalH = this.cDiv.current.clientHeight;
@@ -335,7 +495,7 @@ class FieldController extends React.Component<Props> {
 
         if (this.cDiv.current === null || isLocked) return;
 
-        document.body.style.cursor = `url(${rotate}), auto`;
+        document.body.style.cursor = `url(${rotateIcon}), auto`;
 
         const rect = this.cDiv.current.getBoundingClientRect();
         this.centerX = rect.left + this.cDiv.current.clientWidth / 2;
@@ -402,7 +562,7 @@ class FieldController extends React.Component<Props> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, children, isActive, isActivePlaceholder, isLocked } = this.props;
+        const { x, y, width, height, angle, zoom, cx, children, isActive, isActivePlaceholder, isLocked } = this.props;
 
         return (
             <div
@@ -423,8 +583,38 @@ class FieldController extends React.Component<Props> {
                 }}
             >
                 {children}
+                {cx !== undefined && (
+                    <img
+                        src={panIcon}
+                        alt="pan"
+                        ref={this.panDiv}
+                        className={style.controller}
+                        style={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            cursor: `url(${panIcon}), auto`,
+                        }}
+                    />
+                )}
+
+                {zoom !== undefined && (
+                    <img
+                        src={zoomIcon}
+                        alt="zoom"
+                        ref={this.zoomDiv}
+                        className={style.controller}
+                        style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 0,
+                            cursor: `url(${zoomIcon}), auto`,
+                        }}
+                    />
+                )}
+
                 <img
-                    src={resize}
+                    src={resizeIcon}
                     alt="resize"
                     ref={this.resizeDiv}
                     className={style.controller}
@@ -432,12 +622,12 @@ class FieldController extends React.Component<Props> {
                         position: 'absolute',
                         right: 0,
                         bottom: 0,
-                        cursor: `url(${resize}), auto`,
+                        cursor: `url(${resizeIcon}), auto`,
                         display: isLocked ? 'none' : 'initial',
                     }}
                 />
                 <img
-                    src={rotate}
+                    src={rotateIcon}
                     alt="rotate"
                     ref={this.rotateDiv}
                     className={style.controller}
@@ -445,7 +635,7 @@ class FieldController extends React.Component<Props> {
                         position: 'absolute',
                         left: 0,
                         bottom: 0,
-                        cursor: `url(${rotate}), auto`,
+                        cursor: `url(${rotateIcon}), auto`,
                         display: isLocked ? 'none' : 'initial',
                     }}
                 />

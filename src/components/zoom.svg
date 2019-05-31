@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="5mm" height="5mm" version="1.1" viewBox="0 0 5 5" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <filter id="filter2502" x="-.3888" y="-.3888" width="1.778" height="1.778" color-interpolation-filters="sRGB">
+   <feGaussianBlur stdDeviation="2.6979961"/>
+  </filter>
+ </defs>
+ <g transform="translate(0,-292)" shape-rendering="auto">
+  <path transform="matrix(.2646 0 0 .2646 0 292)" d="m9.449 1.121c-4.592-3.78e-5 -8.328 3.736-8.328 8.328-1.06e-5 4.592 3.736 8.326 8.328 8.326 4.592 3.7e-5 8.326-3.734 8.326-8.326 1e-5 -4.592-3.734-8.328-8.326-8.328zm0 1.24c3.919 0 7.086 3.169 7.086 7.088 9e-6 3.919-3.167 7.086-7.086 7.086-3.919 0-7.088-3.167-7.088-7.086-9e-6 -3.919 3.169-7.088 7.088-7.088zm-0.7246 2.393v0.4941 3.381h-4.133v0.502 1.131h4.133v3.883h1.447v-3.883h4.135v-1.633h-4.135v-3.875h-1.447z" color="#000000" color-rendering="auto" dominant-baseline="auto" fill="#fff" filter="url(#filter2502)" image-rendering="auto" opacity=".98" solid-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;isolation:auto;mix-blend-mode:normal;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+  <path transform="matrix(.2646 0 0 .2646 0 292)" d="m9.449 1.121c-4.592-3.78e-5 -8.328 3.736-8.328 8.328-1.06e-5 4.592 3.736 8.326 8.328 8.326 4.592 3.7e-5 8.326-3.734 8.326-8.326 1e-5 -4.592-3.734-8.328-8.326-8.328zm0 1.24c3.919 0 7.086 3.169 7.086 7.088 9e-6 3.919-3.167 7.086-7.086 7.086-3.919 0-7.088-3.167-7.088-7.086-9e-6 -3.919 3.169-7.088 7.088-7.088zm-0.7246 2.393v0.4941 3.381h-4.133v0.502 1.131h4.133v3.883h1.447v-3.883h4.135v-1.633h-4.135v-3.875h-1.447z" color="#000000" color-rendering="auto" dominant-baseline="auto" image-rendering="auto" opacity=".98" solid-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;isolation:auto;mix-blend-mode:normal;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
+ </g>
+</svg>

@@ -52,6 +52,9 @@ export interface ImagePlaceholderType extends PlaceholderBase {
     id: string;
     type: 'image';
     fit?: string;
+    zoom?: number;
+    cx?: number;
+    cy?: number;
 }
 
 export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;
@@ -77,6 +80,8 @@ export interface ImageInfo {
     global?: boolean;
     base64?: string;
     color?: string;
+    width?: number;
+    height?: number;
 }
 
 export interface PlaceholdersImageInfoCollection {

@@ -79,6 +79,8 @@ export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
 export const CARDSET_CHANGE_SNAPPING_DISTANCE = 'CARDSET_CHANGE_SNAPPING_DISTANCE';
 export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
+export const CARDSET_CHANGE_PLACEHOLDER_PAN = 'CARDSET_CHANGE_PLACEHOLDER_PAN';
+export const CARDSET_CHANGE_PLACEHOLDER_ZOOM = 'CARDSET_CHANGE_PLACEHOLDER_ZOOM';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
@@ -362,6 +364,20 @@ export interface CardSetChangePlaceholderPosition {
     x: number;
     y: number;
 }
+
+export interface CardSetChangePlaceholderPan {
+    type: typeof CARDSET_CHANGE_PLACEHOLDER_PAN;
+    placeholder: PlaceholderType;
+    cx: number;
+    cy: number;
+}
+
+export interface CardSetChangePlaceholderZoom {
+    type: typeof CARDSET_CHANGE_PLACEHOLDER_ZOOM;
+    placeholder: PlaceholderType;
+    zoom: number;
+}
+
 export interface CardSetChangePlaceholderSize {
     type: typeof CARDSET_CHANGE_PLACEHOLDER_SIZE;
     placeholder: PlaceholderType;
@@ -511,6 +527,8 @@ export type CardSetModifyAction =
     | CardSetChangeIsTwoSided
     | CardSetChangeSnappingDistance
     | CardSetChangePlaceholderPosition
+    | CardSetChangePlaceholderPan
+    | CardSetChangePlaceholderZoom
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
@@ -847,6 +865,30 @@ export const cardSetChangePlaceholderPosition = (
         placeholder,
         x,
         y,
+    };
+};
+
+export const cardSetChangePlaceholderPan = (
+    placeholder: PlaceholderType,
+    cx: number,
+    cy: number,
+): CardSetChangePlaceholderPan => {
+    return {
+        type: CARDSET_CHANGE_PLACEHOLDER_PAN,
+        placeholder,
+        cx,
+        cy,
+    };
+};
+
+export const cardSetChangePlaceholderZoom = (
+    placeholder: PlaceholderType,
+    zoom: number,
+): CardSetChangePlaceholderZoom => {
+    return {
+        type: CARDSET_CHANGE_PLACEHOLDER_ZOOM,
+        placeholder,
+        zoom,
     };
 };
 

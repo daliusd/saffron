@@ -251,13 +251,20 @@
     + Use image meta data for images in text
 
 + Email errors
-- Resize card with content
 - Image clipping, shift and zoom
+    + Zoom
+    + Shift
+    - Clipping
+    - Change how data is stored so we could change one card during action and all after action
+        - This will make easier to reset cx, cy
+    - Adjust rendering
+- Resize card with content
 - Undo/Redo
+- Make field non-clickable for convenience
+
+- Fix tests
 
 - Generate list with authors of icons
-
-- Create some cards templates.
 
 - Lower / Raise field one step
 - Keyboard manipulation
@@ -270,12 +277,17 @@
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
 
+- Security
+- Clean-up on text paste
+- Prevent IE from accessing site
 
 Future / Commercial ideas
 
 - Open (statistics) page
 
-- Special visual effects
+- Create some cards templates.
+
+- Special visual effects (react-reveal)
 - Fonts improvements
     - font images
     - custom fonts

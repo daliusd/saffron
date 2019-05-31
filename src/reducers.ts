@@ -86,6 +86,8 @@ import {
     SIGNUP_SUCCESS,
     SidebarState,
     SignUpAction,
+    CARDSET_CHANGE_PLACEHOLDER_ZOOM,
+    CARDSET_CHANGE_PLACEHOLDER_PAN,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -818,6 +820,65 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 ...state.placeholders[action.placeholder.id],
                 x,
                 y,
+            };
+
+            return {
+                ...state,
+                placeholders: {
+                    ...state.placeholders,
+                    [action.placeholder.id]: placeholder,
+                },
+            };
+        }
+        case CARDSET_CHANGE_PLACEHOLDER_PAN: {
+            let { cx, cy } = action;
+
+            let oldPlaceholder = state.placeholders[action.placeholder.id];
+            if (oldPlaceholder.type === 'image') {
+                let { width, height, zoom } = oldPlaceholder;
+                zoom = zoom || 1;
+                cx = Math.min(Math.max(width * (1 - zoom), cx), 0);
+                cy = Math.min(Math.max(height * (1 - zoom), cy), 0);
+            }
+
+            const placeholder = {
+                ...oldPlaceholder,
+                cx,
+                cy,
+            };
+
+            return {
+                ...state,
+                placeholders: {
+                    ...state.placeholders,
+                    [action.placeholder.id]: placeholder,
+                },
+            };
+        }
+        case CARDSET_CHANGE_PLACEHOLDER_ZOOM: {
+            let zoom = action.zoom;
+
+            let oldPlaceholder = state.placeholders[action.placeholder.id];
+
+            let cx = 0,
+                cy = 0;
+            if (oldPlaceholder.type === 'image') {
+                let { width, height } = oldPlaceholder;
+                cx = oldPlaceholder.cx || 0;
+                cy = oldPlaceholder.cy || 0;
+                let oldZoom = oldPlaceholder.zoom || 1;
+                cx = cx + ((oldZoom - zoom) * width) / 2;
+                cy = cy + ((oldZoom - zoom) * height) / 2;
+
+                cx = Math.min(Math.max(width * (1 - zoom), cx), width * (zoom - 1));
+                cy = Math.min(Math.max(height * (1 - zoom), cy), height * (zoom - 1));
+            }
+
+            const placeholder = {
+                ...state.placeholders[action.placeholder.id],
+                zoom,
+                cx,
+                cy,
             };
 
             return {
