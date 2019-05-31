@@ -17,6 +17,7 @@ import {
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
     TextInfo,
+    FieldInfoByCardCollection,
 } from './types';
 
 export const INIT_REQUEST = 'INIT_REQUEST';
@@ -33,7 +34,6 @@ export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS';
 export const SIGNUP_FAILURE = 'SIGNUP_FAILURE';
 export const GAME_CREATE_REQUEST = 'GAME_CREATE_REQUEST';
 export const GAME_CREATE_SUCCESS = 'GAME_CREATE_SUCCESS';
-export const GAME_CREATE_FAILURE = 'GAME_CREATE_FAILURE';
 export const GAME_DELETE_REQUEST = 'GAME_DELETE_REQUEST';
 export const GAME_RENAME_REQUEST = 'GAME_RENAME_REQUEST';
 export const GAME_LIST_SUCCESS = 'GAME_LIST_SUCCESS';
@@ -49,6 +49,7 @@ export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
 export const GAME_CREATE_PNG_REQUEST = 'GAME_CREATE_PNG_REQUEST';
 export const GAME_CREATE_PNG_SUCCESS = 'GAME_CREATE_PNG_SUCCESS';
 export const GAME_CREATE_PNG_FAILURE = 'GAME_CREATE_PNG_FAILURE';
+export const CARDSETS_SELECT_SUCCESS = 'CARDSETS_SELECT_SUCCESS';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
 export const CARDSET_CREATE_FAILURE = 'CARDSET_CREATE_FAILURE';
@@ -97,9 +98,6 @@ export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
 export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER = 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
-export const CARDSET_UPDATE_DATA_REQUEST = 'CARDSET_UPDATE_DATA_REQUEST';
-export const CARDSET_UPDATE_DATA_SUCCESS = 'CARDSET_UPDATE_DATA_SUCCESS';
-export const CARDSET_UPDATE_DATA_FAILURE = 'CARDSET_UPDATE_DATA_FAILURE';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
 export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
 export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
@@ -145,10 +143,7 @@ export interface GameCreateRequest {
     type: typeof GAME_CREATE_REQUEST;
     gamename: string;
 }
-export type GameCreateAction =
-    | GameCreateRequest
-    | { type: typeof GAME_CREATE_SUCCESS }
-    | { type: typeof GAME_CREATE_FAILURE };
+export type GameCreateAction = GameCreateRequest | { type: typeof GAME_CREATE_SUCCESS };
 
 export interface GameDeleteRequest {
     type: typeof GAME_DELETE_REQUEST;
@@ -252,6 +247,19 @@ export interface CardSetRenameRequest {
     newName: string;
 }
 
+export interface CardSetsSelectSuccess {
+    type: typeof CARDSETS_SELECT_SUCCESS;
+    id: string;
+    name: string;
+}
+
+export type CardSetsAction =
+    | CardSetsSelectSuccess
+    | CardSetCreateAction
+    | CardSetDeleteRequest
+    | CardSetRenameRequest
+    | CardSetListAction;
+
 export interface CardSetImportData {
     type: typeof CARDSET_IMPORT_DATA;
     data: object;
@@ -272,24 +280,46 @@ export interface CardSetSelectRequest {
     type: typeof CARDSET_SELECT_REQUEST;
     id: string;
 }
+
+export interface CardSetSelectSuccessDataBase {
+    version: string;
+}
+
+export interface CardSetSelectSuccessDataV2 {
+    version: 2;
+    width: number;
+    height: number;
+    isTwoSided: boolean;
+    snappingDistance: number;
+    cardsAllIds: IdsArray;
+    cardsById: CardsCollection;
+    placeholders: PlaceholdersCollection;
+    placeholdersAllIds: IdsArray;
+    texts: PlaceholdersTextInfoByCardCollection;
+    images: PlaceholdersImageInfoByCardCollection;
+    zoom: number;
+}
+
+export interface CardSetSelectSuccessDataV3 {
+    version: 3;
+    width: number;
+    height: number;
+    isTwoSided: boolean;
+    snappingDistance: number;
+    cardsAllIds: IdsArray;
+    cardsById: CardsCollection;
+    fields: FieldInfoByCardCollection;
+    fieldsAllIds: IdsArray;
+    zoom: number;
+}
+
+export type CardSetSelectSuccessData = CardSetSelectSuccessDataV2 | CardSetSelectSuccessDataV3;
+
 export interface CardSetSelectSuccess {
     type: typeof CARDSET_SELECT_SUCCESS;
     id: string;
     name: string;
-    data: {
-        version: number;
-        width: number;
-        height: number;
-        isTwoSided: boolean;
-        snappingDistance: number;
-        cardsAllIds: IdsArray;
-        cardsById: CardsCollection;
-        placeholders: PlaceholdersCollection;
-        placeholdersAllIds: IdsArray;
-        texts: PlaceholdersTextInfoByCardCollection;
-        images: PlaceholdersImageInfoByCardCollection;
-        zoom: number;
-    };
+    data: CardSetSelectSuccessData;
     gameId: string;
 }
 export interface CardSetCreateCard {
@@ -443,9 +473,9 @@ export interface CardSetChangeImageBase64 {
 }
 export interface CardSetSetActiveCardAndPlaceholder {
     type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER;
-    cardId: string | null;
+    cardId?: string;
     isBackActive: boolean;
-    placeholderId: string | null;
+    fieldId?: string;
 }
 
 export enum SidebarState {
@@ -502,17 +532,6 @@ export interface CardSetUploadImageFailure {
 
 export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | { type: typeof CARDSET_SELECT_FAILURE };
 
-export interface CardSetUpdateDataRequest {
-    type: typeof CARDSET_UPDATE_DATA_REQUEST;
-}
-export interface CardSetUpdateDataSuccess {
-    type: typeof CARDSET_UPDATE_DATA_SUCCESS;
-}
-export interface CardSetUpdateDataFailure {
-    type: typeof CARDSET_UPDATE_DATA_FAILURE;
-}
-export type CardSetUpdateDataAction = CardSetUpdateDataRequest | CardSetUpdateDataSuccess | CardSetUpdateDataFailure;
-
 export type CardSetModifyAction =
     | CardSetCreateCard
     | CardSetCloneCard
@@ -555,15 +574,7 @@ export type CardSetModifyAction =
     | CardSetUploadImageSuccess
     | CardSetUploadImageFailure;
 
-export type CardSetAction =
-    | CardSetCreateAction
-    | CardSetDeleteRequest
-    | CardSetRenameRequest
-    | CardSetImportData
-    | CardSetListAction
-    | CardSetSelectAction
-    | CardSetUpdateDataAction
-    | CardSetModifyAction;
+export type CardSetAction = CardSetImportData | CardSetSelectAction | CardSetModifyAction;
 
 export interface ImageListRequest {
     type: typeof IMAGE_LIST_REQUEST;
@@ -581,6 +592,7 @@ export type Action =
     | LoginAction
     | SignUpAction
     | GameAction
+    | CardSetsAction
     | CardSetAction
     | ImageListAction
     | MessageAction;
@@ -709,7 +721,7 @@ export const cardSetCreateRequest = (
     width: number,
     height: number,
     gameId: string,
-): CardSetAction => {
+): CardSetsAction => {
     return {
         type: CARDSET_CREATE_REQUEST,
         cardsetname: cardsetname,
@@ -719,14 +731,14 @@ export const cardSetCreateRequest = (
     };
 };
 
-export const cardSetDeleteRequest = (cardSetId: string): CardSetAction => {
+export const cardSetDeleteRequest = (cardSetId: string): CardSetsAction => {
     return {
         type: CARDSET_DELETE_REQUEST,
         cardSetId,
     };
 };
 
-export const cardSetRenameRequest = (cardSetId: string, newName: string): CardSetAction => {
+export const cardSetRenameRequest = (cardSetId: string, newName: string): CardSetsAction => {
     return {
         type: CARDSET_RENAME_REQUEST,
         cardSetId,
@@ -1022,15 +1034,15 @@ export const cardSetChangeImageBase64 = (
 };
 
 export const cardSetActiveCardAndPlaceholder = (
-    cardId: string | null,
+    cardId: string | undefined,
     isBackActive: boolean,
-    placeholderId: string | null,
+    fieldId: string | undefined,
 ): CardSetSetActiveCardAndPlaceholder => {
     return {
         type: CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
         cardId,
         isBackActive,
-        placeholderId,
+        fieldId,
     };
 };
 

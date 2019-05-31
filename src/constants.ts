@@ -1,4 +1,4 @@
-export const CURRENT_CARDSET_VERSION = 2;
+export const CURRENT_CARDSET_VERSION = 3;
 export const DEFAULT_FONT = 'Roboto';
 export const DEFAULT_FONT_VARIANT = 'regular';
 export const DEFAULT_FONT_SIZE = 8;

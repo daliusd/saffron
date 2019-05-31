@@ -49,9 +49,6 @@ import {
     CARDSET_SET_ZOOM,
     CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
     CARDSET_UPDATE_CARD_COUNT,
-    CARDSET_UPDATE_DATA_FAILURE,
-    CARDSET_UPDATE_DATA_REQUEST,
-    CARDSET_UPDATE_DATA_SUCCESS,
     CARDSET_UPLOAD_IMAGE,
     CARDSET_UPLOAD_IMAGE_FAILURE,
     CARDSET_UPLOAD_IMAGE_SUCCESS,
@@ -63,7 +60,6 @@ import {
     CardSetRenameRequest,
     CardSetSelectRequest,
     CardSetUploadImage,
-    GAME_CREATE_FAILURE,
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
     GAME_CREATE_PDF_SUCCESS,
@@ -111,6 +107,7 @@ import {
     messageDisplay,
     CARDSET_CHANGE_PLACEHOLDER_PAN,
     CARDSET_CHANGE_PLACEHOLDER_ZOOM,
+    CARDSETS_SELECT_SUCCESS,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection } from './types';
 import { State } from './reducers';
@@ -313,7 +310,6 @@ export function* handleGameCreateRequest(action: GameCreateRequest): SagaIterato
         });
         yield put({ type: GAME_LIST_REQUEST });
     } catch (e) {
-        yield put({ type: GAME_CREATE_FAILURE });
         yield call(putError, e.message);
     }
 }
@@ -496,9 +492,12 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
 
         yield call(loadFontsUsedInPlaceholders, parsedData);
         yield put({
-            type: CARDSET_SELECT_SUCCESS,
+            type: CARDSETS_SELECT_SUCCESS,
             id: resp.data.id,
             name: resp.data.name,
+        });
+        yield put({
+            type: CARDSET_SELECT_SUCCESS,
             data: parsedData,
         });
         yield put(gameSelectRequest(resp.data.gameId, false));
@@ -580,23 +579,23 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActivePlaceho
         yield call(delay, 100);
         const state: State = yield select();
 
-        if (state.cardsets.activePlaceholder === null) {
+        if (state.cardset.activeFieldId === undefined) {
             return;
         }
 
-        for (const cardId in state.cardsets.cardsById) {
-            const image = state.cardsets.images[cardId][state.cardsets.activePlaceholder];
-            if (image.url) {
-                const imageResp = yield call(authorizedGetRequest, image.url);
+        for (const cardId in state.cardset.cardsById) {
+            const fieldInfo = state.cardset.fields[cardId][state.cardset.activeFieldId];
+            if (fieldInfo.type === 'image' && fieldInfo.url) {
+                const imageResp = yield call(authorizedGetRequest, fieldInfo.url);
                 if (imageResp.headers['content-type'] === 'image/svg+xml') {
                     if (action.fit === 'stretch') {
-                        const svg = adjustSvg(imageResp.data, false, image.color);
-                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
-                    } else if (image.color) {
-                        const svg = adjustSvg(imageResp.data, true, image.color);
-                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, svg));
+                        const svg = adjustSvg(imageResp.data, false, fieldInfo.color);
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, svg));
+                    } else if (fieldInfo.color) {
+                        const svg = adjustSvg(imageResp.data, true, fieldInfo.color);
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, svg));
                     } else {
-                        yield put(cardSetChangeImageBase64(cardId, state.cardsets.activePlaceholder, undefined));
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, undefined));
                     }
                 }
             }
@@ -611,26 +610,26 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
         yield call(delay, 100);
         const state: State = yield select();
 
-        const placeholder = state.cardsets.placeholders[action.placeholderId];
-        const imageInfo = state.cardsets.images[action.cardId][action.placeholderId];
-        if (placeholder.type === 'image' && imageInfo.url) {
+        const cardFields = state.cardset.fields[action.cardId];
+        const imageInfo = cardFields[action.placeholderId];
+        if (imageInfo.type === 'image' && imageInfo.url) {
             const imageResp = yield call(authorizedGetRequest, imageInfo.url);
 
             if (imageResp.headers['content-type'] === 'image/svg+xml') {
-                const name = placeholder.name || placeholder.id;
+                const name = imageInfo.name || imageInfo.id;
 
-                for (const plId in state.cardsets.placeholders) {
-                    const pl = state.cardsets.placeholders[plId];
+                for (const fieldId in cardFields) {
+                    const fieldInfo = cardFields[fieldId];
 
-                    if ((pl.name === name || pl.id === name) && pl.type === 'image') {
-                        if (pl.fit === 'stretch') {
+                    if ((fieldInfo.name === name || fieldInfo.id === name) && fieldInfo.type === 'image') {
+                        if (fieldInfo.fit === 'stretch') {
                             const svg = adjustSvg(imageResp.data, false, imageInfo.color);
-                            yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
+                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, svg));
                         } else if (imageInfo.color) {
                             const svg = adjustSvg(imageResp.data, true, imageInfo.color);
-                            yield put(cardSetChangeImageBase64(action.cardId, plId, svg));
+                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, svg));
                         } else {
-                            yield put(cardSetChangeImageBase64(action.cardId, plId, undefined));
+                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, undefined));
                         }
                     }
                 }
@@ -662,26 +661,21 @@ export function* handleCardSetChange(): SagaIterator {
         progressId = yield call(putProgress, 'Saving Card Set');
 
         yield call(delay, 1000);
-        const state = yield select();
-
-        yield put({
-            type: CARDSET_UPDATE_DATA_REQUEST,
-        });
+        const state: State = yield select();
 
         const cardsetId = state.cardsets.active;
+        if (cardsetId === null) throw Error('Save failed.');
         const data = {
-            width: state.cardsets.width,
-            height: state.cardsets.height,
-            isTwoSided: state.cardsets.isTwoSided,
-            snappingDistance: state.cardsets.snappingDistance,
-            version: state.cardsets.version,
-            cardsAllIds: state.cardsets.cardsAllIds,
-            cardsById: state.cardsets.cardsById,
-            placeholdersAllIds: state.cardsets.placeholdersAllIds,
-            placeholders: state.cardsets.placeholders,
-            texts: state.cardsets.texts,
-            images: state.cardsets.images,
-            zoom: state.cardsets.zoom,
+            width: state.cardset.width,
+            height: state.cardset.height,
+            isTwoSided: state.cardset.isTwoSided,
+            snappingDistance: state.cardset.snappingDistance,
+            version: state.cardset.version,
+            cardsAllIds: state.cardset.cardsAllIds,
+            cardsById: state.cardset.cardsById,
+            fieldsAllIds: state.cardset.fieldsAllIds,
+            fields: state.cardset.fields,
+            zoom: state.cardset.zoom,
         };
 
         yield call(authorizedPutRequest, '/api/cardsets/' + cardsetId, {
@@ -690,12 +684,8 @@ export function* handleCardSetChange(): SagaIterator {
         });
         yield call(hideProgress, progressId);
         yield call(putInfo, 'Card Set saved');
-        yield put({
-            type: CARDSET_UPDATE_DATA_SUCCESS,
-        });
         allowWindowClose();
     } catch (e) {
-        yield put({ type: CARDSET_UPDATE_DATA_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e.message);
         allowWindowClose();

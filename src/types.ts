@@ -93,6 +93,55 @@ export interface PlaceholdersImageInfoByCardCollection {
     [propName: string]: PlaceholdersImageInfoCollection;
 }
 
+export interface FieldBaseInfo {
+    id: string;
+    type: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    angle: number;
+    locked?: boolean;
+    name?: string;
+    isOnBack?: boolean;
+}
+
+export interface TextFieldInfo extends FieldBaseInfo {
+    type: 'text';
+    value: string;
+    align: string;
+    color: string;
+    fontFamily: string;
+    fontVariant: string;
+    fontSize: number;
+    lineHeight?: number;
+}
+
+export interface ImageFieldInfo extends FieldBaseInfo {
+    type: 'image';
+    url?: string;
+    global?: boolean;
+    base64?: string;
+    color?: string;
+    imageWidth?: number;
+    imageHeight?: number;
+    fit?: string;
+    zoom?: number;
+    cx?: number;
+    cy?: number;
+    crop?: boolean;
+}
+
+export type FieldInfo = TextFieldInfo | ImageFieldInfo;
+
+export interface FieldInfoCollection {
+    [propName: string]: FieldInfo;
+}
+
+export interface FieldInfoByCardCollection {
+    [propName: string]: FieldInfoCollection;
+}
+
 export interface CardType {
     id: string;
     count: number;

@@ -26,12 +26,7 @@ import {
     CARDSET_CHANGE_WIDTH,
     CARDSET_CLONE_CARD,
     CARDSET_CREATE_CARD,
-    CARDSET_CREATE_FAILURE,
-    CARDSET_CREATE_REQUEST,
-    CARDSET_CREATE_SUCCESS,
     CARDSET_IMPORT_DATA,
-    CARDSET_LIST_FAILURE,
-    CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
     CARDSET_LOCK_ACTIVE_PLACEHOLDER,
@@ -48,21 +43,13 @@ import {
     CARDSET_SET_ZOOM,
     CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
     CARDSET_UPDATE_CARD_COUNT,
-    CARDSET_UPDATE_DATA_FAILURE,
-    CARDSET_UPDATE_DATA_REQUEST,
-    CARDSET_UPDATE_DATA_SUCCESS,
     CardSetAction,
-    GAME_CREATE_FAILURE,
     GAME_CREATE_PDF_FAILURE,
     GAME_CREATE_PDF_REQUEST,
     GAME_CREATE_PDF_SUCCESS,
     GAME_CREATE_PNG_FAILURE,
     GAME_CREATE_PNG_REQUEST,
     GAME_CREATE_PNG_SUCCESS,
-    GAME_CREATE_REQUEST,
-    GAME_CREATE_SUCCESS,
-    GAME_LIST_FAILURE,
-    GAME_LIST_REQUEST,
     GAME_LIST_RESET,
     GAME_LIST_SUCCESS,
     GAME_RENAME_REQUEST,
@@ -70,7 +57,6 @@ import {
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
     GameAction,
-    IMAGE_LIST_FAILURE,
     IMAGE_LIST_REQUEST,
     IMAGE_LIST_SUCCESS,
     ImageListAction,
@@ -89,6 +75,8 @@ import {
     SignUpAction,
     CARDSET_CHANGE_PLACEHOLDER_ZOOM,
     CARDSET_CHANGE_PLACEHOLDER_PAN,
+    CardSetsAction,
+    CARDSETS_SELECT_SUCCESS,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -103,22 +91,13 @@ import {
     GamesCollection,
     IdsArray,
     ImageArray,
-    ImagePlaceholderType,
     MessageType,
-    PlaceholdersCollection,
-    PlaceholdersImageInfoByCardCollection,
-    PlaceholdersImageInfoCollection,
-    PlaceholdersTextInfoByCardCollection,
-    PlaceholdersTextInfoCollection,
-    TextPlaceholderType,
+    FieldInfoByCardCollection,
 } from './types';
 
-export const ACTIVITY_CREATING = 0x1;
-export const ACTIVITY_LISTING = 0x2;
-export const ACTIVITY_SELECTING = 0x4;
-export const ACTIVITY_CREATING_PDF = 0x8;
-export const ACTIVITY_UPDATING = 0x10;
-export const ACTIVITY_CREATING_PNG = 0x20;
+export const ACTIVITY_SELECTING = 0x1;
+export const ACTIVITY_CREATING_PDF = 0x2;
+export const ACTIVITY_CREATING_PNG = 0x4;
 
 export interface MessageState {
     messages: MessageType[];
@@ -169,25 +148,32 @@ export interface TextSettings {
     lineHeight?: number;
 }
 
+export interface CardSetsState {
+    byId: CardSetsCollection;
+    allIds: IdsArray;
+    active: string | null;
+}
+
+export const DefaultCardSetsState: CardSetsState = {
+    byId: {},
+    allIds: [],
+    active: null,
+};
+
 export interface CardSetState {
     width: number;
     height: number;
     isTwoSided: boolean;
     snappingDistance: number;
     version: number;
-    byId: CardSetsCollection;
-    allIds: IdsArray;
     activity: number;
-    active: string | null;
     cardsAllIds: IdsArray;
     cardsById: CardsCollection;
-    activeCard: string | null;
+    activeCardId?: string;
     isBackActive: boolean;
-    activePlaceholder: string | null;
-    placeholders: PlaceholdersCollection;
-    placeholdersAllIds: IdsArray;
-    texts: PlaceholdersTextInfoByCardCollection;
-    images: PlaceholdersImageInfoByCardCollection;
+    activeFieldId?: string;
+    fieldsAllIds: IdsArray;
+    fields: FieldInfoByCardCollection;
     textSettings: TextSettings;
     activeSidebar: SidebarState | null;
     zoom: number;
@@ -199,19 +185,14 @@ export const DefaultCardSetState: CardSetState = {
     isTwoSided: false,
     snappingDistance: 1,
     version: CURRENT_CARDSET_VERSION,
-    byId: {},
-    allIds: [],
     activity: 0,
-    active: null,
-    placeholders: {},
-    placeholdersAllIds: [],
     cardsById: {},
     cardsAllIds: [],
-    activeCard: null,
+    activeCardId: undefined,
     isBackActive: false,
-    activePlaceholder: null,
-    texts: {},
-    images: {},
+    activeFieldId: undefined,
+    fieldsAllIds: [],
+    fields: {},
     textSettings: {
         align: 'left',
         color: '#000000',
@@ -241,7 +222,8 @@ export interface State {
     auth: AuthState;
     signup: SignUpState;
     games: GameState;
-    cardsets: CardSetState;
+    cardsets: CardSetsState;
+    cardset: CardSetState;
     images: ImageState;
 }
 
@@ -250,7 +232,8 @@ export const DefaultState: State = {
     auth: DefaultAuthState,
     signup: DefaultSignUpState,
     games: DefaultGameState,
-    cardsets: DefaultCardSetState,
+    cardsets: DefaultCardSetsState,
+    cardset: DefaultCardSetState,
     images: DefaultImageState,
 };
 
@@ -318,18 +301,6 @@ export function signup(state: SignUpState = DefaultSignUpState, action: SignUpAc
 
 export function games(state: GameState = DefaultGameState, action: GameAction): GameState {
     switch (action.type) {
-        case GAME_CREATE_REQUEST:
-            return Object.assign({}, state, {
-                activity: state.activity | ACTIVITY_CREATING,
-            });
-        case GAME_CREATE_SUCCESS:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_CREATING,
-            });
-        case GAME_CREATE_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_CREATING,
-            });
         case GAME_RENAME_REQUEST:
             const game = state.byId[action.gameId];
 
@@ -343,19 +314,10 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
                     },
                 },
             };
-        case GAME_LIST_REQUEST:
-            return Object.assign({}, state, {
-                activity: state.activity | ACTIVITY_LISTING,
-            });
         case GAME_LIST_SUCCESS:
             return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
                 byId: action.byId,
                 allIds: action.allIds,
-            });
-        case GAME_LIST_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
             });
         case GAME_LIST_RESET:
             return Object.assign({}, state, {
@@ -405,20 +367,19 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
     }
 }
 
-export function cardsets(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
+export function cardsets(state: CardSetsState = DefaultCardSetsState, action: CardSetsAction): CardSetsState {
     switch (action.type) {
-        case CARDSET_CREATE_REQUEST:
-            return Object.assign({}, state, {
-                activity: state.activity | ACTIVITY_CREATING,
-            });
-        case CARDSET_CREATE_SUCCESS:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_CREATING,
-            });
-        case CARDSET_CREATE_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_CREATING,
-            });
+        case CARDSETS_SELECT_SUCCESS:
+            return {
+                ...state,
+                active: action.id,
+                byId: Object.assign({}, state.byId, {
+                    [action.id]: {
+                        id: action.id,
+                        name: action.name,
+                    },
+                }),
+            };
         case CARDSET_RENAME_REQUEST:
             const cardset = state.byId[action.cardSetId];
 
@@ -432,25 +393,8 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     },
                 },
             };
-        case CARDSET_UPDATE_DATA_REQUEST:
-            return Object.assign({}, state, {
-                activity: state.activity | ACTIVITY_UPDATING,
-            });
-        case CARDSET_UPDATE_DATA_SUCCESS:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_UPDATING,
-            });
-        case CARDSET_UPDATE_DATA_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_UPDATING,
-            });
-        case CARDSET_LIST_REQUEST:
-            return Object.assign({}, state, {
-                activity: state.activity | ACTIVITY_LISTING,
-            });
         case CARDSET_LIST_SUCCESS:
             return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
                 byId: action.byId,
                 allIds: action.allIds,
             });
@@ -460,40 +404,76 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 byId: {},
                 allIds: [],
             });
-        case CARDSET_LIST_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
-            });
+        default:
+            return state;
+    }
+}
+
+export function cardset(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
+    switch (action.type) {
         case CARDSET_SELECT_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_SELECTING,
             });
-        case CARDSET_SELECT_SUCCESS:
-            return Object.assign({}, state, {
+        case CARDSET_SELECT_SUCCESS: {
+            let fields: FieldInfoByCardCollection = {};
+            let fieldsAllIds: IdsArray = [];
+            let version = action.data.version;
+
+            if (action.data.version === 2) {
+                fieldsAllIds = action.data.placeholdersAllIds;
+                for (const cardId of action.data.cardsAllIds) {
+                    fields[cardId] = {};
+
+                    for (const fieldId of fieldsAllIds) {
+                        let placeholder = action.data.placeholders[fieldId];
+                        if (placeholder.type === 'image') {
+                            let imageInfo = action.data.images[cardId][fieldId];
+                            fields[cardId][fieldId] = {
+                                type: 'image',
+                                ...placeholder,
+                                url: imageInfo && imageInfo.url,
+                                global: imageInfo && imageInfo.global,
+                                base64: imageInfo && imageInfo.base64,
+                                color: imageInfo && imageInfo.color,
+                                imageWidth: imageInfo && imageInfo.width,
+                                imageHeight: imageInfo && imageInfo.height,
+                            };
+                        } else if (placeholder.type === 'text') {
+                            fields[cardId][fieldId] = {
+                                type: 'text',
+                                ...placeholder,
+                                ...action.data.texts[cardId][fieldId],
+                            };
+                        }
+                    }
+                }
+                version = 3;
+            } else if (action.data.version === 3) {
+                fields = action.data.fields || {};
+                fieldsAllIds = action.data.fieldsAllIds || {};
+            } else {
+                throw new Error('Unknown data version');
+            }
+
+            return {
+                ...state,
                 activity: state.activity & ~ACTIVITY_SELECTING,
-                active: action.id,
-                byId: Object.assign({}, state.byId, {
-                    [action.id]: {
-                        id: action.id,
-                        name: action.name,
-                    },
-                }),
                 width: action.data.width || 63.5,
                 height: action.data.height || 88.9,
                 isTwoSided: action.data.isTwoSided || false,
                 snappingDistance: action.data.snappingDistance || 1,
-                version: action.data.version,
+                version,
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
-                placeholders: action.data.placeholders || {},
-                placeholdersAllIds: action.data.placeholdersAllIds || [],
-                texts: action.data.texts || {},
-                images: action.data.images || {},
-                activeCard: null,
-                activePlaceholder: null,
+                fields,
+                fieldsAllIds,
+                activeCardId: undefined,
+                activeFieldId: undefined,
                 isBackActive: false,
                 zoom: action.data.zoom || 1,
-            });
+            };
+        }
         case CARDSET_SELECT_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
@@ -520,16 +500,10 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                     [newCard.id]: newCard,
                 },
                 cardsAllIds,
-                texts: {
-                    ...state.texts,
+                fields: {
+                    ...state.fields,
                     [newCard.id]: {
-                        ...state.texts[action.card.id],
-                    },
-                },
-                images: {
-                    ...state.images,
-                    [newCard.id]: {
-                        ...state.images[action.card.id],
+                        ...state.fields[action.card.id],
                     },
                 },
             };
@@ -539,36 +513,27 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             let cardsById = { ...state.cardsById };
             delete cardsById[cardId];
 
-            let texts = { ...state.texts };
-            if (cardId in texts) {
-                delete texts[cardId];
+            let fields = { ...state.fields };
+            if (cardId in fields) {
+                delete fields[cardId];
             }
 
-            let images = { ...state.images };
-            if (cardId in images) {
-                delete images[cardId];
-            }
-
-            let activeCard = state.activeCard === cardId ? null : state.activeCard;
+            let activeCardId = state.activeCardId === cardId ? undefined : state.activeCardId;
 
             const cardsAllIds = state.cardsAllIds.filter(id => id !== cardId);
 
-            let placeholders = state.placeholders;
-            let placeholdersAllIds = state.placeholdersAllIds;
+            let fieldsAllIds = state.fieldsAllIds;
             if (cardsAllIds.length === 0) {
-                placeholders = {};
-                placeholdersAllIds = [];
+                fieldsAllIds = [];
             }
 
             return {
                 ...state,
                 cardsById,
                 cardsAllIds,
-                placeholders,
-                placeholdersAllIds,
-                texts,
-                images,
-                activeCard,
+                fieldsAllIds,
+                fields,
+                activeCardId,
             };
         }
         case CARDSET_UPDATE_CARD_COUNT: {
@@ -587,66 +552,80 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         case CARDSET_ADD_TEXT_PLACEHOLDER: {
             let textSettings = { ...state.textSettings };
             const id = shortid.generate();
-            const textPlaceholder: TextPlaceholderType = {
-                id,
-                type: 'text',
-                x: 5,
-                y: 5,
-                width: 20,
-                height: 10,
-                angle: 0,
-                align: textSettings.align,
-                color: textSettings.color,
-                fontFamily: textSettings.fontFamily,
-                fontVariant: textSettings.fontVariant,
-                fontSize: textSettings.fontSize,
-                lineHeight: textSettings.lineHeight || DEFAULT_LINE_HEIGHT,
-                isOnBack: state.isBackActive,
-            };
+            let fields: FieldInfoByCardCollection = {};
+            for (const cardId of state.cardsAllIds) {
+                fields[cardId] = {
+                    ...state.fields[cardId],
+                    [id]: {
+                        type: 'text',
+                        id,
+                        x: 5,
+                        y: 5,
+                        width: 20,
+                        height: 10,
+                        angle: 0,
+                        isOnBack: state.isBackActive,
+                        value: '',
+                        align: textSettings.align,
+                        color: textSettings.color,
+                        fontFamily: textSettings.fontFamily,
+                        fontVariant: textSettings.fontVariant,
+                        fontSize: textSettings.fontSize,
+                        lineHeight: textSettings.lineHeight || DEFAULT_LINE_HEIGHT,
+                    },
+                };
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [id]: textPlaceholder,
-                },
-                placeholdersAllIds: [...state.placeholdersAllIds, id],
+                fieldsAllIds: [...state.fieldsAllIds, id],
+                fields,
             };
         }
         case CARDSET_ADD_IMAGE_PLACEHOLDER: {
             const id = shortid.generate();
-            const imagePlaceholder: ImagePlaceholderType = {
-                id,
-                type: 'image',
-                x: 5,
-                y: 5,
-                width: 20,
-                height: 20,
-                angle: 0,
-                crop: true,
-                isOnBack: state.isBackActive,
-            };
+            let fields: FieldInfoByCardCollection = {};
+            for (const cardId of state.cardsAllIds) {
+                fields[cardId] = {
+                    ...state.fields[cardId],
+                    [id]: {
+                        type: 'image',
+                        id,
+                        x: 5,
+                        y: 5,
+                        width: 20,
+                        height: 20,
+                        angle: 0,
+                        isOnBack: state.isBackActive,
+                        crop: true,
+                    },
+                };
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [id]: imagePlaceholder,
-                },
-                placeholdersAllIds: [...state.placeholdersAllIds, id],
+                fieldsAllIds: [...state.fieldsAllIds, id],
+                fields,
             };
         }
         case CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME: {
-            if (state.activePlaceholder !== null) {
-                let placeholders = { ...state.placeholders };
-                placeholders[state.activePlaceholder] = {
-                    ...placeholders[state.activePlaceholder],
-                    name: action.name,
-                };
+            if (state.activeFieldId !== undefined) {
+                let fields: FieldInfoByCardCollection = {};
+                let id = state.activeFieldId;
+
+                for (const cardId of state.cardsAllIds) {
+                    fields[cardId] = {
+                        ...state.fields[cardId],
+                        [id]: {
+                            ...state.fields[cardId][id],
+                            name: action.name,
+                        },
+                    };
+                }
 
                 return {
                     ...state,
-                    placeholders,
+                    fields,
                 };
             }
 
@@ -654,149 +633,151 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
         }
 
         case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
-            const placeholderId = state.activePlaceholder;
-            if (placeholderId !== undefined && placeholderId !== null) {
-                const activePlaceholder = state.placeholders[placeholderId];
-                if (activePlaceholder.locked) {
-                    return state;
+            const fieldId = state.activeFieldId;
+            if (fieldId !== undefined) {
+                let fieldsAllIds = [...state.fieldsAllIds];
+                let fieldIndex = fieldsAllIds.indexOf(fieldId);
+                if (fieldIndex !== -1) {
+                    fieldsAllIds.splice(fieldIndex, 1);
                 }
 
-                let placeholders = { ...state.placeholders };
-                let placeholdersAllIds = [...state.placeholdersAllIds];
-                if (placeholderId in placeholders) {
-                    delete placeholders[placeholderId];
-                }
-                let placeholderIndex = placeholdersAllIds.indexOf(placeholderId);
-                if (placeholderIndex !== -1) {
-                    placeholdersAllIds.splice(placeholderIndex, 1);
-                }
-
-                let texts = { ...state.texts };
-                for (const cardId in texts) {
-                    if (placeholderId in texts[cardId]) {
-                        let placeholderTexts = { ...texts[cardId] };
-                        delete placeholderTexts[placeholderId];
-                        texts[cardId] = placeholderTexts;
-                    }
-                }
-
-                let images = { ...state.images };
-                for (const cardId in images) {
-                    if (placeholderId in images[cardId]) {
-                        let placeholderImages = { ...images[cardId] };
-                        delete placeholderImages[placeholderId];
-                        images[cardId] = placeholderImages;
+                let fields = { ...state.fields };
+                for (const cardId in fields) {
+                    if (fieldId in fields[cardId] && !fields[cardId][fieldId].locked) {
+                        let cardFields = { ...fields[cardId] };
+                        delete cardFields[fieldId];
+                        fields[cardId] = cardFields;
                     }
                 }
 
                 return {
                     ...state,
-                    placeholders,
-                    placeholdersAllIds,
-                    texts,
-                    images,
-                    activePlaceholder: null,
+                    fieldsAllIds,
+                    fields,
+                    activeFieldId: undefined,
                 };
             }
             return state;
         }
         case CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP: {
-            let placeholdersAllIds = [...state.placeholdersAllIds];
+            let fieldsAllIds = [...state.fieldsAllIds];
 
-            if (state.activePlaceholder !== null) {
-                let index = placeholdersAllIds.indexOf(state.activePlaceholder);
+            if (state.activeFieldId !== undefined) {
+                let index = fieldsAllIds.indexOf(state.activeFieldId);
                 if (index !== -1) {
-                    placeholdersAllIds.push(placeholdersAllIds.splice(index, 1)[0]);
+                    fieldsAllIds.push(fieldsAllIds.splice(index, 1)[0]);
                 }
             }
 
             return {
                 ...state,
-                placeholdersAllIds,
+                fieldsAllIds,
             };
         }
         case CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM: {
-            let placeholdersAllIds = [...state.placeholdersAllIds];
+            let fieldsAllIds = [...state.fieldsAllIds];
 
-            if (state.activePlaceholder !== null) {
-                let index = placeholdersAllIds.indexOf(state.activePlaceholder);
+            if (state.activeFieldId !== undefined) {
+                let index = fieldsAllIds.indexOf(state.activeFieldId);
                 if (index !== -1) {
-                    placeholdersAllIds.unshift(placeholdersAllIds.splice(index, 1)[0]);
+                    fieldsAllIds.unshift(fieldsAllIds.splice(index, 1)[0]);
                 }
             }
 
             return {
                 ...state,
-                placeholdersAllIds,
+                fieldsAllIds,
             };
         }
         case CARDSET_LOCK_ACTIVE_PLACEHOLDER: {
-            if (state.activePlaceholder) {
-                const placeholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    locked: true,
-                };
+            if (state.activeFieldId) {
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        cardFields[fieldId] = {
+                            ...cardFields[fieldId],
+                            locked: true,
+                        };
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: placeholder,
-                    },
+                    fields,
                 };
             }
 
             return state;
         }
         case CARDSET_UNLOCK_ACTIVE_PLACEHOLDER: {
-            if (state.activePlaceholder) {
-                const placeholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    locked: false,
-                };
+            if (state.activeFieldId) {
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        cardFields[fieldId] = {
+                            ...cardFields[fieldId],
+                            locked: false,
+                        };
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: placeholder,
-                    },
+                    fields,
                 };
             }
 
             return state;
         }
         case CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER: {
-            if (state.activePlaceholder) {
-                const placeholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    fit: action.fit,
-                };
+            if (state.activeFieldId) {
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = { ...cardFields[fieldId] };
+                        if (fieldInfo.type === 'image') {
+                            fieldInfo.fit = action.fit;
+                        }
+                        cardFields[fieldId] = fieldInfo;
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: placeholder,
-                    },
+                    fields,
                 };
             }
 
             return state;
         }
         case CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER: {
-            if (state.activePlaceholder) {
-                const placeholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    crop: action.crop,
-                };
+            if (state.activeFieldId) {
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = { ...cardFields[fieldId] };
+                        if (fieldInfo.type === 'image') {
+                            fieldInfo.crop = action.crop;
+                        }
+                        cardFields[fieldId] = fieldInfo;
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: placeholder,
-                    },
+                    fields,
                 };
             }
 
@@ -836,77 +817,90 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 y = Math.round(y / snappingDistance) * snappingDistance;
             }
 
-            const placeholder = {
-                ...state.placeholders[action.placeholder.id],
-                x,
-                y,
-            };
+            let fields = { ...state.fields };
+            let fieldId = action.placeholder.id;
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                if (fieldId in cardFields) {
+                    cardFields[fieldId] = {
+                        ...cardFields[fieldId],
+                        x,
+                        y,
+                    };
+                }
+                fields[cardId] = cardFields;
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [action.placeholder.id]: placeholder,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_PAN: {
             let { cx, cy } = action;
 
-            let oldPlaceholder = state.placeholders[action.placeholder.id];
-            if (oldPlaceholder.type === 'image') {
-                let { width, height, zoom } = oldPlaceholder;
-                zoom = zoom || 1;
-                cx = Math.min(Math.max(width * (1 - zoom), cx), 0);
-                cy = Math.min(Math.max(height * (1 - zoom), cy), 0);
-            }
+            let fields = { ...state.fields };
+            let fieldId = action.placeholder.id;
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                if (fieldId in cardFields) {
+                    let fieldInfo = cardFields[fieldId];
+                    if (fieldInfo.type === 'image') {
+                        let { width, height, zoom } = fieldInfo;
+                        zoom = zoom || 1;
+                        cx = Math.min(Math.max(width * (1 - zoom), cx), 0);
+                        cy = Math.min(Math.max(height * (1 - zoom), cy), 0);
 
-            const placeholder = {
-                ...oldPlaceholder,
-                cx,
-                cy,
-            };
+                        cardFields[fieldId] = {
+                            ...fieldInfo,
+                            cx,
+                            cy,
+                        };
+                    }
+                }
+                fields[cardId] = cardFields;
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [action.placeholder.id]: placeholder,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_ZOOM: {
             let zoom = action.zoom;
 
-            let oldPlaceholder = state.placeholders[action.placeholder.id];
+            let fields = { ...state.fields };
+            let fieldId = action.placeholder.id;
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                if (fieldId in cardFields) {
+                    let fieldInfo = cardFields[fieldId];
+                    if (fieldInfo.type === 'image') {
+                        let { width, height } = fieldInfo;
 
-            let cx = 0,
-                cy = 0;
-            if (oldPlaceholder.type === 'image') {
-                let { width, height } = oldPlaceholder;
-                cx = oldPlaceholder.cx || 0;
-                cy = oldPlaceholder.cy || 0;
-                let oldZoom = oldPlaceholder.zoom || 1;
-                cx = cx + ((oldZoom - zoom) * width) / 2;
-                cy = cy + ((oldZoom - zoom) * height) / 2;
+                        let cx = fieldInfo.cx || 0;
+                        let cy = fieldInfo.cy || 0;
+                        let oldZoom = fieldInfo.zoom || 1;
+                        cx = cx + ((oldZoom - zoom) * width) / 2;
+                        cy = cy + ((oldZoom - zoom) * height) / 2;
 
-                cx = Math.min(Math.max(width * (1 - zoom), cx), width * (zoom - 1));
-                cy = Math.min(Math.max(height * (1 - zoom), cy), height * (zoom - 1));
+                        cx = Math.min(Math.max(width * (1 - zoom), cx), width * (zoom - 1));
+                        cy = Math.min(Math.max(height * (1 - zoom), cy), height * (zoom - 1));
+
+                        cardFields[fieldId] = {
+                            ...fieldInfo,
+                            zoom,
+                            cx,
+                            cy,
+                        };
+                    }
+                }
+                fields[cardId] = cardFields;
             }
-
-            const placeholder = {
-                ...state.placeholders[action.placeholder.id],
-                zoom,
-                cx,
-                cy,
-            };
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [action.placeholder.id]: placeholder,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_SIZE: {
@@ -919,32 +913,44 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 height = Math.round(height / snappingDistance) * snappingDistance;
             }
 
-            const placeholder = {
-                ...state.placeholders[action.placeholder.id],
-                width,
-                height,
-            };
+            let fields = { ...state.fields };
+            let fieldId = action.placeholder.id;
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                if (fieldId in cardFields) {
+                    cardFields[fieldId] = {
+                        ...cardFields[fieldId],
+                        width,
+                        height,
+                    };
+                }
+                fields[cardId] = cardFields;
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [action.placeholder.id]: placeholder,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_PLACEHOLDER_ANGLE: {
-            const placeholder = {
-                ...state.placeholders[action.placeholder.id],
-                angle: action.angle,
-            };
+            let angle = action.angle;
+
+            let fields = { ...state.fields };
+            let fieldId = action.placeholder.id;
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                if (fieldId in cardFields) {
+                    cardFields[fieldId] = {
+                        ...cardFields[fieldId],
+                        angle,
+                    };
+                }
+                fields[cardId] = cardFields;
+            }
 
             return {
                 ...state,
-                placeholders: {
-                    ...state.placeholders,
-                    [action.placeholder.id]: placeholder,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: {
@@ -953,18 +959,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 align: action.align,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    align: action.align,
-                };
+            if (state.activeFieldId) {
+                let align = action.align;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                align,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -980,18 +996,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 color: action.color,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    color: action.color,
-                };
+            if (state.activeFieldId) {
+                let color = action.color;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                color,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1007,18 +1033,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 color: action.fontFamily,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    fontFamily: action.fontFamily,
-                };
+            if (state.activeFieldId) {
+                let fontFamily = action.fontFamily;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                fontFamily,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1034,18 +1070,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 color: action.fontVariant,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    fontVariant: action.fontVariant,
-                };
+            if (state.activeFieldId) {
+                let fontVariant = action.fontVariant;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                fontVariant,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1062,19 +1108,30 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 fontVariant: action.fontVariant,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    fontFamily: action.fontFamily,
-                    fontVariant: action.fontVariant,
-                };
+            if (state.activeFieldId) {
+                let fontFamily = action.fontFamily;
+                let fontVariant = action.fontVariant;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                fontFamily,
+                                fontVariant,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1090,18 +1147,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 fontSize: action.fontSize,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    fontSize: action.fontSize,
-                };
+            if (state.activeFieldId) {
+                let fontSize = action.fontSize;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                fontSize,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1117,18 +1184,28 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 lineHeight: action.lineHeight,
             };
 
-            if (state.activePlaceholder) {
-                const textPlaceholder = {
-                    ...state.placeholders[state.activePlaceholder],
-                    lineHeight: action.lineHeight,
-                };
+            if (state.activeFieldId) {
+                let lineHeight = action.lineHeight;
+
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'text') {
+                            cardFields[fieldId] = {
+                                ...fieldInfo,
+                                lineHeight,
+                            };
+                        }
+                    }
+                    fields[cardId] = cardFields;
+                }
 
                 return {
                     ...state,
-                    placeholders: {
-                        ...state.placeholders,
-                        [state.activePlaceholder]: textPlaceholder,
-                    },
+                    fields,
                     textSettings,
                 };
             } else {
@@ -1139,75 +1216,81 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             }
         }
         case CARDSET_CHANGE_TEXT: {
-            let placeholdersByCard: PlaceholdersTextInfoCollection = {};
-            if (state.texts && action.cardId in state.texts) {
-                placeholdersByCard = { ...state.texts[action.cardId] };
-            }
+            let cardFields = { ...state.fields[action.cardId] };
 
-            const placeholder = state.placeholders[action.placeholderId];
-            const name = placeholder.name || placeholder.id;
+            const fieldInfo = cardFields[action.placeholderId];
+            const name = fieldInfo.name || fieldInfo.id;
 
-            for (const plId in state.placeholders) {
-                const pl = state.placeholders[plId];
+            for (const fieldId in cardFields) {
+                const testFieldInfo = cardFields[fieldId];
 
-                if ((pl.name === name || pl.id === name) && pl.type === 'text') {
-                    placeholdersByCard[plId] = action.textInfo;
-                }
-            }
-
-            return {
-                ...state,
-                texts: {
-                    ...state.texts,
-                    [action.cardId]: placeholdersByCard,
-                },
-            };
-        }
-        case CARDSET_CHANGE_IMAGE: {
-            let placeholdersByCard: PlaceholdersImageInfoCollection = {};
-            if (state.images && action.cardId in state.images) {
-                placeholdersByCard = { ...state.images[action.cardId] };
-            }
-
-            const placeholder = state.placeholders[action.placeholderId];
-            const name = placeholder.name || placeholder.id;
-
-            for (const plId in state.placeholders) {
-                const pl = state.placeholders[plId];
-
-                if ((pl.name === name || pl.id === name) && pl.type === 'image') {
-                    placeholdersByCard[plId] = {
-                        ...placeholdersByCard[plId],
-                        ...action.imageInfo,
+                if ((testFieldInfo.name === name || testFieldInfo.id === name) && testFieldInfo.type === 'text') {
+                    cardFields[fieldId] = {
+                        ...testFieldInfo,
+                        value: action.textInfo.value,
                     };
                 }
             }
 
             return {
                 ...state,
-                images: {
-                    ...state.images,
-                    [action.cardId]: placeholdersByCard,
+                fields: {
+                    ...state.fields,
+                    [action.cardId]: cardFields,
                 },
             };
         }
+        case CARDSET_CHANGE_IMAGE: {
+            let cardFields = { ...state.fields[action.cardId] };
 
-        case CARDSET_CHANGE_IMAGE_BASE64: {
-            let placeholdersByCard: PlaceholdersImageInfoCollection = {};
-            if (state.images && action.cardId in state.images) {
-                placeholdersByCard = { ...state.images[action.cardId] };
+            const fieldInfo = cardFields[action.placeholderId];
+            const name = fieldInfo.name || fieldInfo.id;
+
+            for (const fieldId in cardFields) {
+                const testFieldInfo = cardFields[fieldId];
+
+                if ((testFieldInfo.name === name || testFieldInfo.id === name) && testFieldInfo.type === 'image') {
+                    cardFields[fieldId] = {
+                        ...testFieldInfo,
+                        url: 'url' in action.imageInfo ? action.imageInfo.url : testFieldInfo.url,
+                        base64: 'base64' in action.imageInfo ? action.imageInfo.base64 : testFieldInfo.base64,
+                        color: 'color' in action.imageInfo ? action.imageInfo.color : testFieldInfo.color,
+                        imageWidth: 'width' in action.imageInfo ? action.imageInfo.width : testFieldInfo.imageWidth,
+                        imageHeight: 'height' in action.imageInfo ? action.imageInfo.height : testFieldInfo.imageHeight,
+                    };
+                }
             }
-
-            placeholdersByCard[action.placeholderId] = {
-                ...placeholdersByCard[action.placeholderId],
-                base64: action.base64,
-            };
 
             return {
                 ...state,
-                images: {
-                    ...state.images,
-                    [action.cardId]: placeholdersByCard,
+                fields: {
+                    ...state.fields,
+                    [action.cardId]: cardFields,
+                },
+            };
+        }
+        case CARDSET_CHANGE_IMAGE_BASE64: {
+            let cardFields = { ...state.fields[action.cardId] };
+
+            const fieldInfo = cardFields[action.placeholderId];
+            const name = fieldInfo.name || fieldInfo.id;
+
+            for (const fieldId in cardFields) {
+                const testFieldInfo = cardFields[fieldId];
+
+                if ((testFieldInfo.name === name || testFieldInfo.id === name) && testFieldInfo.type === 'image') {
+                    cardFields[fieldId] = {
+                        ...testFieldInfo,
+                        base64: action.base64,
+                    };
+                }
+            }
+
+            return {
+                ...state,
+                fields: {
+                    ...state.fields,
+                    [action.cardId]: cardFields,
                 },
             };
         }
@@ -1215,19 +1298,20 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
             let textSettings = { ...state.textSettings };
             let activeSidebar = state.activeSidebar;
 
-            if (activeSidebar !== SidebarState.Measurements && action.cardId !== null) {
+            if (activeSidebar !== SidebarState.Measurements && action.cardId !== undefined) {
                 activeSidebar = SidebarState.Details;
             }
 
-            if (action.placeholderId !== null) {
-                const placeholder = state.placeholders[action.placeholderId];
-                if (placeholder.type === 'text') {
-                    textSettings.align = placeholder.align;
-                    textSettings.color = placeholder.color;
-                    textSettings.fontFamily = placeholder.fontFamily;
-                    textSettings.fontVariant = placeholder.fontVariant;
-                    textSettings.fontSize = placeholder.fontSize;
-                    textSettings.lineHeight = placeholder.lineHeight;
+            if (action.cardId !== undefined && action.fieldId !== undefined) {
+                const fieldInfo = state.fields[action.cardId][action.fieldId];
+
+                if (fieldInfo.type === 'text') {
+                    textSettings.align = fieldInfo.align;
+                    textSettings.color = fieldInfo.color;
+                    textSettings.fontFamily = fieldInfo.fontFamily;
+                    textSettings.fontVariant = fieldInfo.fontVariant;
+                    textSettings.fontSize = fieldInfo.fontSize;
+                    textSettings.lineHeight = fieldInfo.lineHeight;
 
                     if (activeSidebar !== SidebarState.Measurements) {
                         activeSidebar = SidebarState.Text;
@@ -1241,9 +1325,9 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
 
             return {
                 ...state,
-                activeCard: action.cardId,
+                activeCardId: action.cardId,
                 isBackActive: action.isBackActive,
-                activePlaceholder: action.placeholderId,
+                activeFieldId: action.fieldId,
                 textSettings,
                 activeSidebar,
             };
@@ -1277,16 +1361,10 @@ export function images(state: ImageState = DefaultImageState, action: ImageListA
         case IMAGE_LIST_REQUEST:
             return Object.assign({}, state, {
                 filter: action.filter,
-                activity: state.activity | ACTIVITY_LISTING,
             });
         case IMAGE_LIST_SUCCESS:
             return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
                 images: action.images,
-            });
-        case IMAGE_LIST_FAILURE:
-            return Object.assign({}, state, {
-                activity: state.activity & ~ACTIVITY_LISTING,
             });
         default:
             return state;
@@ -1299,6 +1377,7 @@ const reducers = combineReducers({
     signup,
     games,
     cardsets,
+    cardset,
     images,
 });
 

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DispatchProps, IdsArray, PlaceholderType, PlaceholdersCollection, SidebarOwnProps } from '../types';
+import { DispatchProps, IdsArray, SidebarOwnProps, FieldInfo, FieldInfoByCardCollection } from '../types';
 import { State } from '../reducers';
 import {
     cardSetActiveCardAndPlaceholder,
@@ -17,135 +17,127 @@ import {
 import style from './SidebarMeasurements.module.css';
 
 interface StateProps {
-    activePlaceholder: PlaceholderType | null;
-    activeCard: string | null;
-    placeholders: PlaceholdersCollection;
-    placeholdersAllIds: IdsArray;
+    activeField?: FieldInfo;
+    activeCardId?: string;
+    fields: FieldInfoByCardCollection;
+    fieldsAllIds: IdsArray;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarMeasurements extends Component<Props> {
     handlePrevPlaceholder = () => {
-        const { activeCard, activePlaceholder, placeholders, placeholdersAllIds, dispatch } = this.props;
-        if (placeholdersAllIds.length === 0 || activeCard === null) return;
+        const { activeCardId, activeField, fieldsAllIds, dispatch } = this.props;
+        if (fieldsAllIds.length === 0 || activeCardId === null) return;
 
-        let prevPlaceholder = placeholdersAllIds[placeholdersAllIds.length - 1];
-        if (activePlaceholder !== null) {
-            let idx = placeholdersAllIds.indexOf(activePlaceholder.id);
-            if (idx > 0) prevPlaceholder = placeholdersAllIds[idx - 1];
+        let prevField = fieldsAllIds[fieldsAllIds.length - 1];
+        if (activeField !== undefined) {
+            let idx = fieldsAllIds.indexOf(activeField.id);
+            if (idx > 0) prevField = fieldsAllIds[idx - 1];
         }
 
         dispatch(
-            cardSetActiveCardAndPlaceholder(
-                activeCard,
-                placeholders[prevPlaceholder].isOnBack || false,
-                prevPlaceholder,
-            ),
+            cardSetActiveCardAndPlaceholder(activeCardId, (activeField && activeField.isOnBack) || false, prevField),
         );
     };
 
     handleNextPlaceholder = () => {
-        const { activeCard, activePlaceholder, placeholders, placeholdersAllIds, dispatch } = this.props;
-        if (placeholdersAllIds.length === 0 || activeCard === null) return;
+        const { activeCardId, activeField, fieldsAllIds, dispatch } = this.props;
+        if (fieldsAllIds.length === 0 || activeCardId === null) return;
 
-        let nextPlaceholder = placeholdersAllIds[0];
-        if (activePlaceholder !== null) {
-            let idx = placeholdersAllIds.indexOf(activePlaceholder.id);
-            if (idx !== -1 && idx !== placeholdersAllIds.length - 1) nextPlaceholder = placeholdersAllIds[idx + 1];
+        let nextField = fieldsAllIds[0];
+        if (activeField !== undefined) {
+            let idx = fieldsAllIds.indexOf(activeField.id);
+            if (idx !== -1 && idx !== fieldsAllIds.length - 1) nextField = fieldsAllIds[idx + 1];
         }
 
         dispatch(
-            cardSetActiveCardAndPlaceholder(
-                activeCard,
-                placeholders[nextPlaceholder].isOnBack || false,
-                nextPlaceholder,
-            ),
+            cardSetActiveCardAndPlaceholder(activeCardId, (activeField && activeField.isOnBack) || false, nextField),
         );
     };
 
     handleRaiseToTop = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetRaiseActivePlaceholderToTop());
         }
     };
 
     handleLowerToBottom = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetLowerActivePlaceholderToBottom());
         }
     };
 
     handleLockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetLockActivePlaceholder());
         }
     };
 
     handleUnlockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetUnlockActivePlaceholder());
         }
     };
 
     handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const name = event.target.value.trim();
-        if (activePlaceholder !== null) {
+        if (activeField !== undefined) {
             dispatch(cardSetChangeActivePlaceholderName(name));
         }
     };
 
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const width = parseFloat(event.target.value);
-        if (activePlaceholder !== null) {
-            dispatch(cardSetChangePlaceholderSize(activePlaceholder, width, activePlaceholder.height));
+        if (activeField !== undefined) {
+            dispatch(cardSetChangePlaceholderSize(activeField, width, activeField.height));
         }
     };
 
     handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const height = parseFloat(event.target.value);
-        if (activePlaceholder !== null) {
-            dispatch(cardSetChangePlaceholderSize(activePlaceholder, activePlaceholder.width, height));
+        if (activeField !== undefined) {
+            dispatch(cardSetChangePlaceholderSize(activeField, activeField.width, height));
         }
     };
 
     handleXChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const x = parseFloat(event.target.value);
-        if (activePlaceholder !== null) {
-            dispatch(cardSetChangePlaceholderPosition(activePlaceholder, x, activePlaceholder.y));
+        if (activeField !== undefined) {
+            dispatch(cardSetChangePlaceholderPosition(activeField, x, activeField.y));
         }
     };
 
     handleYChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const y = parseFloat(event.target.value);
-        if (activePlaceholder !== null) {
-            dispatch(cardSetChangePlaceholderPosition(activePlaceholder, activePlaceholder.x, y));
+        if (activeField !== undefined) {
+            dispatch(cardSetChangePlaceholderPosition(activeField, activeField.x, y));
         }
     };
 
     handleAngleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const angle = (parseFloat(event.target.value) * Math.PI) / 180;
-        if (activePlaceholder !== null) {
-            dispatch(cardSetChangePlaceholderAngle(activePlaceholder, angle));
+        if (activeField !== undefined) {
+            dispatch(cardSetChangePlaceholderAngle(activeField, angle));
         }
     };
 
     render() {
-        const { activeCard, activePlaceholder, visible } = this.props;
+        const { activeCardId, activeField, visible } = this.props;
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
-                {activeCard !== null && (
+                {activeCardId !== undefined && (
                     <>
                         <button onClick={this.handlePrevPlaceholder} title="Previous placeholder">
                             <i className="material-icons">arrow_back</i>
@@ -156,7 +148,7 @@ export class SidebarMeasurements extends Component<Props> {
                     </>
                 )}
 
-                {activePlaceholder !== null && (
+                {activeField !== undefined && (
                     <>
                         <button onClick={this.handleRaiseToTop} title="Raise to top">
                             <i className="material-icons">arrow_upward</i>
@@ -167,7 +159,7 @@ export class SidebarMeasurements extends Component<Props> {
                     </>
                 )}
 
-                {activePlaceholder !== null && !activePlaceholder.locked && (
+                {activeField !== undefined && !activeField.locked && (
                     <button
                         onClick={this.handleLockField}
                         title="Lock field. Locked field can't be dragged, rotated, resized and removed."
@@ -176,7 +168,7 @@ export class SidebarMeasurements extends Component<Props> {
                     </button>
                 )}
 
-                {activePlaceholder !== null && activePlaceholder.locked && (
+                {activeField !== undefined && activeField.locked && (
                     <button
                         onClick={this.handleUnlockField}
                         title="Unlock field. Unlocked field can be dragged, rotated, resized and removed."
@@ -185,14 +177,14 @@ export class SidebarMeasurements extends Component<Props> {
                     </button>
                 )}
 
-                {activePlaceholder !== null && (
+                {activeField !== undefined && (
                     <div>
                         <label>
                             Field name:
                             <input
                                 type="text"
-                                value={activePlaceholder.name || ''}
-                                placeholder={activePlaceholder.id}
+                                value={activeField.name || ''}
+                                placeholder={activeField.id}
                                 onChange={this.handleNameChange}
                                 title="Change name of field."
                             />
@@ -203,7 +195,7 @@ export class SidebarMeasurements extends Component<Props> {
                             <input
                                 type="number"
                                 step="any"
-                                value={activePlaceholder.width}
+                                value={activeField.width}
                                 placeholder="Width"
                                 onChange={this.handleWidthChange}
                                 title="Change width of field."
@@ -215,7 +207,7 @@ export class SidebarMeasurements extends Component<Props> {
                             <input
                                 type="number"
                                 step="any"
-                                value={activePlaceholder.height}
+                                value={activeField.height}
                                 placeholder="Height"
                                 onChange={this.handleHeightChange}
                                 title="Change width of field."
@@ -227,7 +219,7 @@ export class SidebarMeasurements extends Component<Props> {
                             <input
                                 type="number"
                                 step="any"
-                                value={activePlaceholder.x}
+                                value={activeField.x}
                                 placeholder="Width"
                                 onChange={this.handleXChange}
                                 title="Change x coordinate of field."
@@ -239,7 +231,7 @@ export class SidebarMeasurements extends Component<Props> {
                             <input
                                 type="number"
                                 step="any"
-                                value={activePlaceholder.y}
+                                value={activeField.y}
                                 placeholder="Height"
                                 onChange={this.handleYChange}
                                 title="Change y coordinate of field."
@@ -251,7 +243,7 @@ export class SidebarMeasurements extends Component<Props> {
                             <input
                                 type="number"
                                 step="any"
-                                value={(activePlaceholder.angle * 180) / Math.PI}
+                                value={(activeField.angle * 180) / Math.PI}
                                 placeholder="Angle"
                                 onChange={this.handleAngleChange}
                                 title="Change rotation angle of field."
@@ -265,16 +257,16 @@ export class SidebarMeasurements extends Component<Props> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-    const activePlaceholder =
-        state.cardsets.activePlaceholder !== null
-            ? state.cardsets.placeholders[state.cardsets.activePlaceholder]
-            : null;
+    const activeField =
+        state.cardset.activeCardId !== undefined && state.cardset.activeFieldId !== undefined
+            ? state.cardset.fields[state.cardset.activeCardId][state.cardset.activeFieldId]
+            : undefined;
 
     return {
-        activePlaceholder,
-        activeCard: state.cardsets.activeCard,
-        placeholders: state.cardsets.placeholders,
-        placeholdersAllIds: state.cardsets.placeholdersAllIds,
+        activeField,
+        activeCardId: state.cardset.activeCardId,
+        fields: state.cardset.fields,
+        fieldsAllIds: state.cardset.fieldsAllIds,
     };
 };
 

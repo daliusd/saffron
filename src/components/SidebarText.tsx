@@ -2,7 +2,7 @@ import { ColorResult } from 'react-color';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { DispatchProps, PlaceholderType, SidebarOwnProps } from '../types';
+import { DispatchProps, SidebarOwnProps, FieldInfo } from '../types';
 import { State } from '../reducers';
 import {
     cardSetAddTextPlaceholder,
@@ -21,7 +21,7 @@ import style from './SidebarText.module.css';
 
 interface StateProps {
     isAuthenticated: boolean;
-    activePlaceholder: PlaceholderType | null;
+    activeField?: FieldInfo;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
@@ -74,44 +74,44 @@ export class SidebarText extends Component<Props> {
     };
 
     handleRemoveClick = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetRemoveActivePlaceholder());
         }
     };
 
     handleRaiseToTop = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetRaiseActivePlaceholderToTop());
         }
     };
 
     handleLowerToBottom = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetLowerActivePlaceholderToBottom());
         }
     };
 
     handleLockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetLockActivePlaceholder());
         }
     };
 
     handleUnlockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
             dispatch(cardSetUnlockActivePlaceholder());
         }
     };
 
     handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeField, dispatch } = this.props;
         const name = event.target.value.trim();
-        if (activePlaceholder !== null) {
+        if (activeField !== undefined) {
             dispatch(cardSetChangeActivePlaceholderName(name));
         }
     };
@@ -128,11 +128,11 @@ export class SidebarText extends Component<Props> {
     };
 
     render() {
-        const { activePlaceholder, visible } = this.props;
+        const { activeField, visible } = this.props;
 
         let color = '#000000';
-        if (activePlaceholder && activePlaceholder.type === 'text' && activePlaceholder.color) {
-            color = activePlaceholder.color;
+        if (activeField && activeField.type === 'text' && activeField.color) {
+            color = activeField.color;
         }
 
         return (
@@ -140,7 +140,7 @@ export class SidebarText extends Component<Props> {
                 <button onClick={this.handleAddTextClick} title="Add text field">
                     <i className="material-icons">text_fields</i>
                 </button>
-                {activePlaceholder !== null && (
+                {activeField !== undefined && (
                     <>
                         <button onClick={this.handleRaiseToTop} title="Raise text to top">
                             <i className="material-icons">arrow_upward</i>
@@ -151,7 +151,7 @@ export class SidebarText extends Component<Props> {
                     </>
                 )}
 
-                {activePlaceholder !== null && !activePlaceholder.locked && (
+                {activeField !== undefined && !activeField.locked && (
                     <button
                         onClick={this.handleLockField}
                         title="Lock text field. Locked field can't be dragged, rotated, resized and removed."
@@ -160,7 +160,7 @@ export class SidebarText extends Component<Props> {
                     </button>
                 )}
 
-                {activePlaceholder !== null && activePlaceholder.locked && (
+                {activeField !== undefined && activeField.locked && (
                     <button
                         onClick={this.handleUnlockField}
                         title="Unlock text field. Unlocked text field can be dragged, rotated, resized and removed."
@@ -170,18 +170,18 @@ export class SidebarText extends Component<Props> {
                 )}
 
                 <button
-                    className={activePlaceholder === null || activePlaceholder.locked ? style.disabled : ''}
+                    className={activeField === undefined || activeField.locked ? style.disabled : ''}
                     onClick={this.handleRemoveClick}
                     title="Remove field"
                 >
                     <i className="material-icons">remove</i>
                 </button>
 
-                {activePlaceholder !== null && (
+                {activeField !== undefined && (
                     <input
                         type="text"
-                        value={activePlaceholder.name || ''}
-                        placeholder={activePlaceholder.id}
+                        value={activeField.name || ''}
+                        placeholder={activeField.id}
                         onChange={this.handleNameChange}
                         title="Change name of text field."
                     />
@@ -212,14 +212,14 @@ export class SidebarText extends Component<Props> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-    const activePlaceholder =
-        state.cardsets.activePlaceholder !== null
-            ? state.cardsets.placeholders[state.cardsets.activePlaceholder]
-            : null;
+    const activeField =
+        state.cardset.activeCardId !== undefined && state.cardset.activeFieldId !== undefined
+            ? state.cardset.fields[state.cardset.activeCardId][state.cardset.activeFieldId]
+            : undefined;
 
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activePlaceholder,
+        activeField,
     };
 };
 

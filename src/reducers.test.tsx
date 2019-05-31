@@ -1,6 +1,4 @@
 import {
-    ACTIVITY_CREATING,
-    ACTIVITY_LISTING,
     ACTIVITY_SELECTING,
     AuthState,
     DefaultCardSetState,
@@ -11,6 +9,8 @@ import {
     games,
     message,
     signup,
+    DefaultCardSetsState,
+    cardset,
 } from './reducers';
 import {
     CARDSET_CREATE_FAILURE,
@@ -20,11 +20,7 @@ import {
     CARDSET_LIST_REQUEST,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
-    CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
-    CARDSET_SELECT_SUCCESS,
-    CardSetsCollection,
-    GAME_CREATE_FAILURE,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
     GAME_LIST_FAILURE,
@@ -34,19 +30,18 @@ import {
     GAME_SELECT_FAILURE,
     GAME_SELECT_REQUEST,
     GAME_SELECT_SUCCESS,
-    GamesCollection,
-    IdsArray,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGOUT_SUCCESS,
     MESSAGE_DISPLAY,
     MESSAGE_HIDE,
-    MessageType,
     SIGNUP_FAILURE,
     SIGNUP_REQUEST,
     SIGNUP_SUCCESS,
+    CARDSETS_SELECT_SUCCESS,
 } from './actions';
+import { MessageType, GamesCollection, IdsArray, CardSetsCollection } from './types';
 
 test('message', () => {
     const testMessage1: MessageType = { id: 'test2', type: 'error', text: 'text' };
@@ -113,14 +108,14 @@ test('GAME_CREATE', () => {
     ).toEqual({
         byId: {},
         allIds: [],
-        activity: ACTIVITY_CREATING,
+        activity: 0,
         active: null,
     });
 
     expect(
         games(
             {
-                activity: ACTIVITY_CREATING,
+                activity: 0,
                 byId: {},
                 allIds: [],
                 active: null,
@@ -128,23 +123,6 @@ test('GAME_CREATE', () => {
             { type: GAME_CREATE_SUCCESS },
         ),
     ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
-
-    expect(
-        games(
-            {
-                activity: ACTIVITY_CREATING,
-                byId: {},
-                allIds: [],
-                active: null,
-            },
-            { type: GAME_CREATE_FAILURE },
-        ),
-    ).toEqual({
-        activity: 0,
-        byId: {},
-        allIds: [],
-        active: null,
-    });
 });
 
 test('GAME_LIST', () => {
@@ -158,14 +136,14 @@ test('GAME_LIST', () => {
             },
             { type: GAME_LIST_REQUEST },
         ),
-    ).toEqual({ activity: ACTIVITY_LISTING, byId: {}, allIds: [], active: null });
+    ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
 
     let byId: GamesCollection = { '1': { id: '1', name: 'test' } };
     let allIds: IdsArray = ['1'];
     expect(
         games(
             {
-                activity: ACTIVITY_LISTING,
+                activity: 0,
                 byId: {},
                 allIds: [],
                 active: null,
@@ -182,7 +160,7 @@ test('GAME_LIST', () => {
     expect(
         games(
             {
-                activity: ACTIVITY_LISTING,
+                activity: 0,
                 byId: {},
                 allIds: [],
                 active: null,
@@ -199,7 +177,7 @@ test('GAME_LIST', () => {
     expect(
         games(
             {
-                activity: ACTIVITY_LISTING,
+                activity: 0,
                 byId,
                 allIds,
                 active: null,
@@ -263,33 +241,38 @@ test('GAME_SELECT', () => {
 });
 
 test('CARDSET_CREATE', () => {
-    expect(cardsets(DefaultCardSetState, { type: CARDSET_CREATE_REQUEST, cardsetname: 'test', gameId: '1' })).toEqual({
-        ...DefaultCardSetState,
-        activity: ACTIVITY_CREATING,
+    expect(
+        cardsets(DefaultCardSetsState, {
+            type: CARDSET_CREATE_REQUEST,
+            cardsetname: 'test',
+            gameId: '1',
+            width: 10,
+            height: 10,
+        }),
+    ).toEqual({
+        ...DefaultCardSetsState,
     });
 
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_CREATING,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_CREATE_SUCCESS },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
     });
 
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_CREATING,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_CREATE_FAILURE },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
     });
 });
 
@@ -297,13 +280,12 @@ test('CARDSET_LIST', () => {
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_LIST_REQUEST },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
-        activity: ACTIVITY_LISTING,
+        ...DefaultCardSetsState,
     });
 
     let byId: CardSetsCollection = { '1': { id: '1', name: 'test' } };
@@ -312,13 +294,12 @@ test('CARDSET_LIST', () => {
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_LISTING,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_LIST_SUCCESS, byId, allIds },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
         byId,
         allIds,
     });
@@ -326,31 +307,29 @@ test('CARDSET_LIST', () => {
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_LISTING,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_LIST_FAILURE },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
     });
 
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_LISTING,
+                ...DefaultCardSetsState,
             },
             { type: CARDSET_LIST_RESET },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
     });
 });
 
 test('CARDSET_SELECT', () => {
     expect(
-        cardsets(
+        cardset(
             {
                 ...DefaultCardSetState,
             },
@@ -364,30 +343,14 @@ test('CARDSET_SELECT', () => {
     expect(
         cardsets(
             {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_SELECTING,
+                ...DefaultCardSetsState,
                 byId: { '1': { id: '1', name: 'test' } },
                 allIds: ['1'],
             },
             {
-                type: CARDSET_SELECT_SUCCESS,
+                type: CARDSETS_SELECT_SUCCESS,
                 id: '1',
                 name: 'test2',
-                data: {
-                    cardsAllIds: ['1'],
-                    cardsById: { '1': { id: '1', count: 1 } },
-                    placeholders: {},
-                    texts: {},
-                    images: {},
-                    version: 2,
-                    width: 63.5,
-                    height: 88.9,
-                    placeholdersAllIds: [],
-                    zoom: 1,
-                    isTwoSided: false,
-                    snappingDistance: 1,
-                },
-                gameId: '2',
             },
         ),
     ).toEqual({
@@ -402,17 +365,5 @@ test('CARDSET_SELECT', () => {
                 id: '1',
             },
         },
-    });
-
-    expect(
-        cardsets(
-            {
-                ...DefaultCardSetState,
-                activity: ACTIVITY_SELECTING,
-            },
-            { type: CARDSET_SELECT_FAILURE },
-        ),
-    ).toEqual({
-        ...DefaultCardSetState,
     });
 });

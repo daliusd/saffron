@@ -257,10 +257,22 @@
     + Clipping
     + Pan using rotation vector
     - Change how data is stored so we could change one card during action and all after action
+        + Load version 2 data properly
+        - Limit to one card CARDSET_CHANGE_PLACEHOLDER_ZOOM
+        - Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
+        - Fix import / export
+        - ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
         - This will make easier to reset cx, cy
+    - Think what to do with old data where width and height not available on ImageData
+        /home/dalius/projects/saffron/src/components/ImageField.tsx
     - Adjust rendering
-- Resize card with content
+    - Fix tests
+
+- PDF generation log and reporting of failures via e-mail.
+    E.g. there are unhandled exceptions
+
 - Undo/Redo
+- Resize card with content
 - Make field non-clickable for convenience
 
 - Fix tests
@@ -270,8 +282,6 @@
 - Lower / Raise field one step
 - Keyboard manipulation
 
-- PDF generation log and reporting of failures via e-mail.
-    E.g. there are unhandled exceptions
 
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/

@@ -125,7 +125,7 @@ export class Sidebar extends Component<Props> {
 const mapStateToProps = (state: State): StateProps => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activeSidebar: state.cardsets.activeSidebar,
+        activeSidebar: state.cardset.activeSidebar,
     };
 };
 

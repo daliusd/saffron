@@ -246,16 +246,11 @@ class ContentEditable extends Component<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const textInfo =
-        state.cardsets.texts &&
-        state.cardsets.texts[props.cardId] &&
-        state.cardsets.texts[props.cardId][props.placeholderId]
-            ? state.cardsets.texts[props.cardId][props.placeholderId]
-            : { value: '' };
+    let fieldInfo = state.cardset.fields[props.cardId][props.placeholderId];
+    const textValue = fieldInfo.type === 'text' ? fieldInfo.value : '';
     return {
-        textValue: textInfo.value,
-        isActive:
-            props.cardId === state.cardsets.activeCard && props.placeholderId === state.cardsets.activePlaceholder,
+        textValue,
+        isActive: props.cardId === state.cardset.activeCardId && props.placeholderId === state.cardset.activeFieldId,
     };
 };
 

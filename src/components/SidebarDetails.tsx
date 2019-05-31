@@ -70,7 +70,8 @@ export class SidebarDetails extends Component<Props> {
 const mapStateToProps = (state: State): StateProps => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activeCard: state.cardsets.activeCard !== null ? state.cardsets.cardsById[state.cardsets.activeCard] : null,
+        activeCard:
+            state.cardset.activeCardId !== undefined ? state.cardset.cardsById[state.cardset.activeCardId] : null,
     };
 };
 

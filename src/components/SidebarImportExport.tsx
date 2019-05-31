@@ -13,10 +13,8 @@ import {
     CardsCollection,
     DispatchProps,
     IdsArray,
-    PlaceholdersCollection,
-    PlaceholdersImageInfoByCardCollection,
-    PlaceholdersTextInfoByCardCollection,
     SidebarOwnProps,
+    FieldInfoByCardCollection,
 } from '../types';
 import { FPLoadCallback, FPRevertLoadCallback, cardSetImportData, messageDisplay } from '../actions';
 import { State } from '../reducers';
@@ -32,58 +30,48 @@ interface StateProps {
     isTwoSided: boolean;
     cardsAllIds: IdsArray;
     cardsById: CardsCollection;
-    placeholders: PlaceholdersCollection;
-    placeholdersAllIds: IdsArray;
-    texts: PlaceholdersTextInfoByCardCollection;
-    images: PlaceholdersImageInfoByCardCollection;
+    fieldsAllIds: IdsArray;
+    fields: FieldInfoByCardCollection;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarImportExport extends Component<Props> {
-    prepareImagePaths = (images: PlaceholdersImageInfoByCardCollection) => {
+    prepareImagePaths = (fields: FieldInfoByCardCollection) => {
         const { activeGame } = this.props;
-        if (activeGame === null) return images;
+        if (activeGame === null) return fields;
 
         const ending = '_' + md5(activeGame);
 
-        let preparedImages: PlaceholdersImageInfoByCardCollection = {};
+        let preparedImages: FieldInfoByCardCollection = {};
 
-        for (const cardId in images) {
-            let imagesByCard = { ...images[cardId] };
-            for (const placeholderId in imagesByCard) {
-                let imageInfo = { ...imagesByCard[placeholderId] };
-                let url = imageInfo.url || '';
-                if (url.endsWith(ending)) {
-                    url = url.replace(ending, '');
-                } else {
-                    imageInfo.global = true;
+        for (const cardId in fields) {
+            let fieldsByCard = { ...fields[cardId] };
+            for (const fieldId in fieldsByCard) {
+                let imageInfo = { ...fieldsByCard[fieldId] };
+                if (imageInfo.type === 'image') {
+                    let url = imageInfo.url || '';
+                    if (url.endsWith(ending)) {
+                        url = url.replace(ending, '');
+                    } else {
+                        imageInfo.global = true;
+                    }
+
+                    imageInfo.url = url.replace('/api/imagefiles/', '');
+
+                    fieldsByCard[fieldId] = imageInfo;
                 }
-
-                imageInfo.url = url.replace('/api/imagefiles/', '');
-
-                imagesByCard[placeholderId] = imageInfo;
             }
-            preparedImages[cardId] = imagesByCard;
+            preparedImages[cardId] = fieldsByCard;
         }
 
         return preparedImages;
     };
 
     handleExportJson = () => {
-        const {
-            width,
-            height,
-            isTwoSided,
-            cardsAllIds,
-            cardsById,
-            placeholders,
-            placeholdersAllIds,
-            texts,
-            images,
-        } = this.props;
+        const { width, height, isTwoSided, cardsAllIds, cardsById, fields, fieldsAllIds } = this.props;
 
-        const preparedImages = this.prepareImagePaths(images);
+        const preparedImages = this.prepareImagePaths(fields);
 
         const data = {
             width,
@@ -91,9 +79,8 @@ export class SidebarImportExport extends Component<Props> {
             isTwoSided,
             cardsAllIds,
             cardsById,
-            placeholders,
-            placeholdersAllIds,
-            texts,
+            fields,
+            fieldsAllIds,
             images: preparedImages,
         };
 
@@ -104,19 +91,19 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleExportCsv = () => {
-        const { cardsAllIds, cardsById, placeholders, placeholdersAllIds, texts, images } = this.props;
+        const { cardsAllIds, cardsById, fields, fieldsAllIds } = this.props;
 
-        const preparedImages = this.prepareImagePaths(images);
+        const preparedFields = this.prepareImagePaths(fields);
 
         let csvData: (string | number)[][] = [];
         let header = ['card_id', 'card_count'];
         let usedNames: { [key: string]: boolean } = {};
-        for (const plId of placeholdersAllIds) {
-            const placeholder = placeholders[plId];
-            const name = placeholder.name || placeholder.id;
+        for (const plId of fieldsAllIds) {
+            const fieldInfo = fields[cardsAllIds[0]][plId];
+            const name = fieldInfo.name || fieldInfo.id;
             if (!(name in usedNames)) {
                 header.push(name);
-                if (placeholder.type === 'image') {
+                if (fieldInfo.type === 'image') {
                     header.push(`${name}_global`);
                 }
                 usedNames[name] = false;
@@ -130,17 +117,17 @@ export class SidebarImportExport extends Component<Props> {
             let dataRow: (string | number)[] = [cardId, card.count];
 
             let written = { ...usedNames };
-            for (const plId of placeholdersAllIds) {
-                const placeholder = placeholders[plId];
+            for (const fieldId of fieldsAllIds) {
+                const placeholder = fields[cardId][fieldId];
                 const name = placeholder.name || placeholder.id;
 
                 if (!written[name]) {
-                    if (placeholder.type === 'text') {
-                        dataRow.push(texts[cardId][plId].value);
-                    } else if (placeholder.type === 'image') {
-                        const image = preparedImages[cardId][plId];
-                        dataRow.push(image.url || '');
-                        dataRow.push(image.global ? 'y' : 'n');
+                    let fieldInfo = preparedFields[cardId][fieldId];
+                    if (fieldInfo.type === 'text') {
+                        dataRow.push(fieldInfo.value);
+                    } else if (fieldInfo.type === 'image') {
+                        dataRow.push(fieldInfo.url || '');
+                        dataRow.push(fieldInfo.global ? 'y' : 'n');
                     }
                     written[name] = true;
                 }
@@ -155,7 +142,7 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleProcess = (fieldName: string, file: File, metadata: { [propName: string]: string }, load: FPLoadCallback) => {
-        const { dispatch, activeGame, placeholders } = this.props;
+        const { dispatch, activeGame, fields } = this.props;
         if (activeGame === null) return;
 
         var reader = new FileReader();
@@ -186,8 +173,7 @@ export class SidebarImportExport extends Component<Props> {
 
                 let cardsAllIds: IdsArray = [];
                 let cardsById: CardsCollection = {};
-                let texts: PlaceholdersTextInfoByCardCollection = {};
-                let images: PlaceholdersImageInfoByCardCollection = {};
+                let newFields: FieldInfoByCardCollection = { ...fields };
 
                 for (const row of csvData.data) {
                     const card: CardType = {
@@ -198,27 +184,28 @@ export class SidebarImportExport extends Component<Props> {
                     cardsAllIds.push(card.id);
                     cardsById[card.id] = card;
 
-                    for (const plId in placeholders) {
-                        const pl = placeholders[plId];
-                        const name = pl.name || pl.id;
+                    newFields[card.id] = {
+                        ...fields[card.id],
+                    };
+
+                    for (const fieldId in fields) {
+                        const fieldInfo = fields[card.id][fieldId];
+                        const name = fieldInfo.name || fieldInfo.id;
 
                         if (row[name]) {
-                            if (pl.type === 'image') {
+                            if (fieldInfo.type === 'image') {
                                 const isGlobal = row[`${name}_global`] === 'y';
                                 const url = row[name];
 
-                                if (!(card.id in images)) {
-                                    images[card.id] = {};
-                                }
-
-                                images[card.id][plId] = {
+                                newFields[card.id][fieldId] = {
+                                    ...fieldInfo,
                                     url: `/api/imagefiles/${url}${isGlobal ? '' : ending}`,
                                 };
-                            } else if (pl.type === 'text') {
-                                if (!(card.id in texts)) {
-                                    texts[card.id] = {};
-                                }
-                                texts[card.id][plId] = { value: row[name] };
+                            } else if (fieldInfo.type === 'text') {
+                                newFields[card.id][fieldId] = {
+                                    ...fieldInfo,
+                                    value: row[name],
+                                };
                             }
                         }
                     }
@@ -227,8 +214,7 @@ export class SidebarImportExport extends Component<Props> {
                 data = {
                     cardsAllIds,
                     cardsById,
-                    texts,
-                    images,
+                    fields: newFields,
                 };
             }
 
@@ -280,15 +266,13 @@ export class SidebarImportExport extends Component<Props> {
 const mapStateToProps = (state: State): StateProps => {
     return {
         activeGame: state.games.active,
-        width: state.cardsets.width,
-        height: state.cardsets.height,
-        isTwoSided: state.cardsets.isTwoSided,
-        cardsAllIds: state.cardsets.cardsAllIds,
-        cardsById: state.cardsets.cardsById,
-        placeholders: state.cardsets.placeholders,
-        placeholdersAllIds: state.cardsets.placeholdersAllIds,
-        texts: state.cardsets.texts,
-        images: state.cardsets.images,
+        width: state.cardset.width,
+        height: state.cardset.height,
+        isTwoSided: state.cardset.isTwoSided,
+        cardsAllIds: state.cardset.cardsAllIds,
+        cardsById: state.cardset.cardsById,
+        fieldsAllIds: state.cardset.fieldsAllIds,
+        fields: state.cardset.fields,
     };
 };
 

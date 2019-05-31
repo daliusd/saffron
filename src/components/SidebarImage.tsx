@@ -2,7 +2,7 @@ import { ColorResult } from 'react-color';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
-import { CardType, DispatchProps, IdsArray, ImageArray, ImageInfo, PlaceholderType, SidebarOwnProps } from '../types';
+import { DispatchProps, IdsArray, ImageArray, SidebarOwnProps, FieldInfo, ImageInfo } from '../types';
 import { State } from '../reducers';
 import {
     cardSetAddImagePlaceholder,
@@ -22,9 +22,8 @@ import style from './SidebarImage.module.css';
 
 interface StateProps {
     isAuthenticated: boolean;
-    activePlaceholder: PlaceholderType | null;
-    imageInfo?: ImageInfo;
-    activeCard: CardType | null;
+    activeFieldInfo?: FieldInfo;
+    activeCardId?: string;
     filter: string;
     images: ImageArray;
     cardsAllIds: IdsArray;
@@ -49,16 +48,16 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     changeImage = (ii: ImageInfo) => {
-        const { cardsAllIds, activeCard, activePlaceholder, dispatch } = this.props;
+        const { cardsAllIds, activeCardId, activeFieldInfo, dispatch } = this.props;
         const { applyToAllCards } = this.state;
 
-        if (activePlaceholder) {
+        if (activeFieldInfo) {
             if (applyToAllCards) {
                 for (const cardId of cardsAllIds) {
-                    dispatch(cardSetChangeImage(cardId, activePlaceholder.id, ii));
+                    dispatch(cardSetChangeImage(cardId, activeFieldInfo.id, ii));
                 }
-            } else if (activeCard) {
-                dispatch(cardSetChangeImage(activeCard.id, activePlaceholder.id, ii));
+            } else if (activeCardId) {
+                dispatch(cardSetChangeImage(activeCardId, activeFieldInfo.id, ii));
             }
         }
     };
@@ -69,16 +68,16 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleRemoveClick = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetRemoveActivePlaceholder());
         }
     };
 
     handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
+        const { activeFieldInfo, dispatch } = this.props;
         const name = event.target.value.trim();
-        if (activePlaceholder !== null) {
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetChangeActivePlaceholderName(name));
         }
     };
@@ -91,10 +90,10 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleImageSelect = (imageName: string) => {
-        const { imageInfo, activePlaceholder } = this.props;
+        const { activeFieldInfo } = this.props;
 
-        if (activePlaceholder !== null) {
-            const color = imageInfo && imageInfo.color;
+        if (activeFieldInfo !== undefined) {
+            const color = activeFieldInfo && activeFieldInfo.color;
 
             const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, base64: undefined };
             this.changeImage(ii);
@@ -102,29 +101,29 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleRaiseToTop = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetRaiseActivePlaceholderToTop());
         }
     };
 
     handleLowerToBottom = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetLowerActivePlaceholderToBottom());
         }
     };
 
     handleLockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetLockActivePlaceholder());
         }
     };
 
     handleUnlockField = () => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetUnlockActivePlaceholder());
         }
     };
@@ -159,14 +158,14 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleChangeCrop = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const { activePlaceholder, dispatch } = this.props;
-        if (activePlaceholder !== null) {
+        const { activeFieldInfo, dispatch } = this.props;
+        if (activeFieldInfo !== undefined) {
             dispatch(cardSetChangeCropForActivePlaceholder(event.target.checked));
         }
     };
 
     render() {
-        const { activePlaceholder, imageInfo, filter, visible } = this.props;
+        const { activeFieldInfo, filter, visible } = this.props;
         const { location, applyToAllCards } = this.state;
 
         return (
@@ -176,7 +175,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                         <i className="material-icons">add_photo_alternate</i>
                     </button>
 
-                    {activePlaceholder !== null && (
+                    {activeFieldInfo !== undefined && (
                         <>
                             <button onClick={this.handleRaiseToTop} title="Raise image to top">
                                 <i className="material-icons">arrow_upward</i>
@@ -187,13 +186,15 @@ export class SidebarImage extends Component<Props, LocalState> {
                         </>
                     )}
 
-                    {imageInfo && (
-                        <button onClick={this.handleRemoveImageFromFieldClick} title="Remove image from field">
-                            <i className="material-icons">remove_circle_outline</i>
-                        </button>
-                    )}
+                    {activeFieldInfo &&
+                        activeFieldInfo.type === 'image' &&
+                        (activeFieldInfo.url || activeFieldInfo.base64) && (
+                            <button onClick={this.handleRemoveImageFromFieldClick} title="Remove image from field">
+                                <i className="material-icons">remove_circle_outline</i>
+                            </button>
+                        )}
 
-                    {activePlaceholder !== null && !activePlaceholder.locked && (
+                    {activeFieldInfo !== undefined && !activeFieldInfo.locked && (
                         <button
                             onClick={this.handleLockField}
                             title="Lock image field. Locked field can't be dragged, rotated, resized and removed."
@@ -202,7 +203,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                         </button>
                     )}
 
-                    {activePlaceholder !== null && activePlaceholder.locked && (
+                    {activeFieldInfo !== undefined && activeFieldInfo.locked && (
                         <button
                             onClick={this.handleUnlockField}
                             title="Unlock image field. Unlocked text field can be dragged, rotated, resized and removed."
@@ -212,24 +213,24 @@ export class SidebarImage extends Component<Props, LocalState> {
                     )}
 
                     <button
-                        className={activePlaceholder === null || activePlaceholder.locked ? style.disabled : ''}
+                        className={activeFieldInfo === undefined || activeFieldInfo.locked ? style.disabled : ''}
                         onClick={this.handleRemoveClick}
                         title="Remove field"
                     >
                         <i className="material-icons">remove</i>
                     </button>
 
-                    {activePlaceholder !== null && (
+                    {activeFieldInfo !== undefined && (
                         <input
                             type="text"
-                            value={activePlaceholder.name || ''}
-                            placeholder={activePlaceholder.id}
+                            value={activeFieldInfo.name || ''}
+                            placeholder={activeFieldInfo.id}
                             onChange={this.handleNameChange}
                             title="Change name of image field."
                         />
                     )}
 
-                    {activePlaceholder && activePlaceholder.type === 'image' && (
+                    {activeFieldInfo && activeFieldInfo.type === 'image' && (
                         <form>
                             <div>
                                 Fit:
@@ -237,7 +238,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                                     <input
                                         type="radio"
                                         value="width"
-                                        checked={!activePlaceholder.fit || activePlaceholder.fit === 'width'}
+                                        checked={!activeFieldInfo.fit || activeFieldInfo.fit === 'width'}
                                         onChange={this.handleFitOptionChange}
                                     />
                                     width
@@ -246,7 +247,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                                     <input
                                         type="radio"
                                         value="height"
-                                        checked={activePlaceholder.fit === 'height'}
+                                        checked={activeFieldInfo.fit === 'height'}
                                         onChange={this.handleFitOptionChange}
                                     />
                                     height
@@ -255,7 +256,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                                     <input
                                         type="radio"
                                         value="stretch"
-                                        checked={activePlaceholder.fit === 'stretch'}
+                                        checked={activeFieldInfo.fit === 'stretch'}
                                         onChange={this.handleFitOptionChange}
                                     />
                                     stretch
@@ -265,22 +266,22 @@ export class SidebarImage extends Component<Props, LocalState> {
                     )}
                 </div>
 
-                {activePlaceholder && activePlaceholder.type === 'image' && (
+                {activeFieldInfo && activeFieldInfo.type === 'image' && (
                     <>
                         <div>
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={activePlaceholder.crop}
+                                    checked={activeFieldInfo.crop}
                                     onChange={this.handleChangeCrop}
                                 />
                                 Crop
                             </label>
                             <ColorButton
-                                color={(imageInfo && imageInfo.color) || '#FFFFFF'}
+                                color={(activeFieldInfo && activeFieldInfo.color) || '#FFFFFF'}
                                 onChange={this.handleColorChange}
                             />
-                            {imageInfo && imageInfo.color && (
+                            {activeFieldInfo && activeFieldInfo.color && (
                                 <button onClick={this.handleRemoveColorClick} title="Remove color">
                                     <i className="material-icons">remove_circle</i>
                                 </button>
@@ -352,34 +353,20 @@ export class SidebarImage extends Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-    const activePlaceholder =
-        state.cardsets.activePlaceholder !== null
-            ? state.cardsets.placeholders[state.cardsets.activePlaceholder]
-            : null;
+    const activeFieldInfo =
+        state.cardset.activeCardId !== undefined && state.cardset.activeFieldId !== undefined
+            ? state.cardset.fields[state.cardset.activeCardId][state.cardset.activeFieldId]
+            : undefined;
 
-    const activeCard = state.cardsets.activeCard !== null ? state.cardsets.cardsById[state.cardsets.activeCard] : null;
-
-    let imageInfo = undefined;
-
-    if (
-        state.cardsets.images &&
-        activeCard &&
-        state.cardsets.images[activeCard.id] &&
-        activePlaceholder !== null &&
-        activePlaceholder.type === 'image' &&
-        state.cardsets.images[activeCard.id][activePlaceholder.id]
-    ) {
-        imageInfo = state.cardsets.images[activeCard.id][activePlaceholder.id];
-    }
+    const activeCardId = state.cardset.activeCardId;
 
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        activePlaceholder,
-        imageInfo,
-        activeCard,
+        activeFieldInfo,
+        activeCardId,
         images: state.images.images,
         filter: state.images.filter,
-        cardsAllIds: state.cardsets.cardsAllIds,
+        cardsAllIds: state.cardset.cardsAllIds,
     };
 };
 

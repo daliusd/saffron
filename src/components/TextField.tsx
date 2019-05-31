@@ -9,7 +9,7 @@ import {
     cardSetChangePlaceholderSize,
 } from '../actions';
 import { State } from '../reducers';
-import { TextPlaceholderType } from '../types';
+import { TextFieldInfo } from '../types';
 import ContentEditable from './ContentEditable';
 import FieldController from './FieldController';
 import emptyTextImage from './text.svg';
@@ -18,7 +18,7 @@ interface OwnProps {
     cardId: string;
     isOnBack: boolean;
     ppmm: number;
-    textPlaceholder: TextPlaceholderType;
+    textFieldInfo: TextFieldInfo;
     cardWidth: number;
     cardHeight: number;
 }
@@ -35,32 +35,32 @@ type Props = OwnProps & StateProps & DispatchProps;
 
 class TextField extends PureComponent<Props> {
     handleDrag = (x: number, y: number) => {
-        const { dispatch, textPlaceholder, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderPosition(textPlaceholder, x / ppmm, y / ppmm));
+        const { dispatch, textFieldInfo, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderPosition(textFieldInfo, x / ppmm, y / ppmm));
     };
 
     handleResize = (width: number, height: number) => {
-        const { dispatch, textPlaceholder, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderSize(textPlaceholder, width / ppmm, height / ppmm));
+        const { dispatch, textFieldInfo, ppmm } = this.props;
+        dispatch(cardSetChangePlaceholderSize(textFieldInfo, width / ppmm, height / ppmm));
     };
 
     handleRotate = (angle: number) => {
-        const { dispatch, textPlaceholder } = this.props;
-        dispatch(cardSetChangePlaceholderAngle(textPlaceholder, angle));
+        const { dispatch, textFieldInfo } = this.props;
+        dispatch(cardSetChangePlaceholderAngle(textFieldInfo, angle));
     };
 
     render() {
-        const { textPlaceholder, text, ppmm, cardWidth, cardHeight } = this.props;
+        const { textFieldInfo, text, ppmm, cardWidth, cardHeight } = this.props;
 
         return (
             <FieldController
                 cardId={this.props.cardId}
-                placeholderId={textPlaceholder.id}
-                x={textPlaceholder.x * ppmm}
-                y={textPlaceholder.y * ppmm}
-                width={textPlaceholder.width * ppmm}
-                height={textPlaceholder.height * ppmm}
-                angle={textPlaceholder.angle}
+                placeholderId={textFieldInfo.id}
+                x={textFieldInfo.x * ppmm}
+                y={textFieldInfo.y * ppmm}
+                width={textFieldInfo.width * ppmm}
+                height={textFieldInfo.height * ppmm}
+                angle={textFieldInfo.angle}
                 onDrag={this.handleDrag}
                 onResize={this.handleResize}
                 onRotate={this.handleRotate}
@@ -78,9 +78,9 @@ class TextField extends PureComponent<Props> {
                             top: 0,
                             zIndex: -1,
                             textAlign:
-                                textPlaceholder.align === 'left'
+                                textFieldInfo.align === 'left'
                                     ? 'left'
-                                    : textPlaceholder.align === 'right'
+                                    : textFieldInfo.align === 'right'
                                     ? 'right'
                                     : 'center',
                         }}
@@ -92,13 +92,13 @@ class TextField extends PureComponent<Props> {
                 <ContentEditable
                     cardId={this.props.cardId}
                     isOnBack={this.props.isOnBack}
-                    placeholderId={textPlaceholder.id}
-                    align={textPlaceholder.align}
-                    color={textPlaceholder.color}
-                    fontFamily={textPlaceholder.fontFamily}
-                    fontVariant={textPlaceholder.fontVariant}
-                    fontSize={textPlaceholder.fontSize * ppmm}
-                    lineHeight={textPlaceholder.lineHeight || DEFAULT_LINE_HEIGHT}
+                    placeholderId={textFieldInfo.id}
+                    align={textFieldInfo.align}
+                    color={textFieldInfo.color}
+                    fontFamily={textFieldInfo.fontFamily}
+                    fontVariant={textFieldInfo.fontVariant}
+                    fontSize={textFieldInfo.fontSize * ppmm}
+                    lineHeight={textFieldInfo.lineHeight || DEFAULT_LINE_HEIGHT}
                 />
             </FieldController>
         );
@@ -106,12 +106,8 @@ class TextField extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let text =
-        state.cardsets.texts &&
-        state.cardsets.texts[props.cardId] &&
-        state.cardsets.texts[props.cardId][props.textPlaceholder.id]
-            ? state.cardsets.texts[props.cardId][props.textPlaceholder.id].value
-            : '';
+    let fieldInfo = state.cardset.fields[props.cardId][props.textFieldInfo.id];
+    let text = fieldInfo.type === 'text' ? fieldInfo.value : '';
     return {
         text,
     };

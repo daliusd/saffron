@@ -72,8 +72,8 @@ export class SidebarGeneratePng extends Component<Props, LocalState> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
-        width: state.cardsets.width,
-        height: state.cardsets.height,
+        width: state.cardset.width,
+        height: state.cardset.height,
         isCreatingPng: (state.games.activity & ACTIVITY_CREATING_PNG) === ACTIVITY_CREATING_PNG,
         activeCardset: state.cardsets.active,
     };

@@ -56,7 +56,7 @@ export class CardSet extends Component<Props, LocalState> {
 
     handleClickOutsideOfCard = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetActiveCardAndPlaceholder(null, false, null));
+        dispatch(cardSetActiveCardAndPlaceholder(undefined, false, undefined));
     };
 
     handleCardSetNameChange = (newName: string) => {
@@ -147,14 +147,14 @@ export class CardSet extends Component<Props, LocalState> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
-        activity: state.cardsets.activity,
-        width: state.cardsets.width,
-        height: state.cardsets.height,
-        isTwoSided: state.cardsets.isTwoSided,
-        zoom: state.cardsets.zoom,
+        activity: state.cardset.activity,
+        width: state.cardset.width,
+        height: state.cardset.height,
+        isTwoSided: state.cardset.isTwoSided,
+        zoom: state.cardset.zoom,
         isAuthenticated: state.auth.isAuthenticated,
-        cardsAllIds: state.cardsets.cardsAllIds,
-        cardsById: state.cardsets.cardsById,
+        cardsAllIds: state.cardset.cardsAllIds,
+        cardsById: state.cardset.cardsById,
         activeCardSet:
             state.cardsets.active && state.cardsets.byId[state.cardsets.active]
                 ? state.cardsets.byId[state.cardsets.active]

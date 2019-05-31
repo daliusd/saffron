@@ -3,7 +3,7 @@ import Measure from 'react-measure';
 import React, { Component } from 'react';
 
 import { BLEED_WIDTH } from '../constants';
-import { CardType, IdsArray, PlaceholdersCollection } from '../types';
+import { CardType, IdsArray, FieldInfoCollection } from '../types';
 import { Dispatch, cardSetActiveCardAndPlaceholder } from '../actions';
 import { State } from '../reducers';
 import ImageField from './ImageField';
@@ -16,8 +16,8 @@ interface OwnProps {
 }
 
 interface StateProps {
-    placeholders: PlaceholdersCollection;
-    placeholdersIds: IdsArray;
+    cardFields: FieldInfoCollection;
+    fieldsIds: IdsArray;
     width: number;
     height: number;
     isTwoSided: boolean;
@@ -50,23 +50,13 @@ class Card extends Component<Props, LocalState> {
         const { dispatch, card, isBack } = this.props;
         const el = event.target as HTMLElement;
         if (el.getAttribute('id') === `card_${card.id}`) {
-            dispatch(cardSetActiveCardAndPlaceholder(card.id, isBack, null));
+            dispatch(cardSetActiveCardAndPlaceholder(card.id, isBack, undefined));
             event.stopPropagation();
         }
     };
 
     render() {
-        const {
-            placeholders,
-            placeholdersIds,
-            card,
-            isBack,
-            width,
-            height,
-            isActiveCard,
-            zoom,
-            isTwoSided,
-        } = this.props;
+        const { cardFields, fieldsIds, card, isBack, width, height, isActiveCard, zoom, isTwoSided } = this.props;
         const widthWithBleeds = width + BLEED_WIDTH * 2;
         const heightWithBleeds = height + BLEED_WIDTH * 2;
 
@@ -97,15 +87,15 @@ class Card extends Component<Props, LocalState> {
                             onMouseDown={this.handleFieldDeselect}
                             onTouchStart={this.handleFieldDeselect}
                         >
-                            {placeholdersIds.map(id => {
-                                const p = placeholders[id];
+                            {fieldsIds.map(id => {
+                                const p = cardFields[id];
                                 if (p.type === 'image') {
                                     return (
                                         <ImageField
                                             key={p.id}
                                             cardId={card.id}
                                             isOnBack={isBack}
-                                            imagePlaceholder={p}
+                                            imageFieldInfo={p}
                                             ppmm={ppmm}
                                             cardWidth={this.state.dimensions.width}
                                             cardHeight={this.state.dimensions.height}
@@ -117,7 +107,7 @@ class Card extends Component<Props, LocalState> {
                                             key={p.id}
                                             cardId={card.id}
                                             isOnBack={isBack}
-                                            textPlaceholder={p}
+                                            textFieldInfo={p}
                                             ppmm={ppmm}
                                             cardWidth={this.state.dimensions.width}
                                             cardHeight={this.state.dimensions.height}
@@ -172,16 +162,16 @@ class Card extends Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
+    let cardFields = state.cardset.fields[props.card.id];
+
     return {
-        placeholders: state.cardsets.placeholders,
-        placeholdersIds: state.cardsets.placeholdersAllIds.filter(
-            id => (state.cardsets.placeholders[id].isOnBack || false) === props.isBack,
-        ),
-        width: state.cardsets.width,
-        height: state.cardsets.height,
-        isTwoSided: state.cardsets.isTwoSided,
-        isActiveCard: state.cardsets.activeCard === props.card.id && state.cardsets.isBackActive === props.isBack,
-        zoom: state.cardsets.zoom,
+        cardFields,
+        fieldsIds: state.cardset.fieldsAllIds.filter(id => (cardFields[id].isOnBack || false) === props.isBack),
+        width: state.cardset.width,
+        height: state.cardset.height,
+        isTwoSided: state.cardset.isTwoSided,
+        isActiveCard: state.cardset.activeCardId === props.card.id && state.cardset.isBackActive === props.isBack,
+        zoom: state.cardset.zoom,
     };
 };
 
