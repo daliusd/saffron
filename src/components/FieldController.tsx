@@ -282,6 +282,10 @@ class FieldController extends React.Component<Props> {
 
         const newCx = cx + co.clientX - this.startX;
         const newCy = cy + co.clientY - this.startY;
+
+        this.startX = co.clientX;
+        this.startY = co.clientY;
+
         onPan(newCx, newCy);
     };
 
@@ -583,20 +587,19 @@ class FieldController extends React.Component<Props> {
                 }}
             >
                 {children}
-                {cx !== undefined && (
-                    <img
-                        src={panIcon}
-                        alt="pan"
-                        ref={this.panDiv}
-                        className={style.controller}
-                        style={{
-                            position: 'absolute',
-                            left: 0,
-                            top: 0,
-                            cursor: `url(${panIcon}), auto`,
-                        }}
-                    />
-                )}
+                <img
+                    src={panIcon}
+                    alt="pan"
+                    ref={this.panDiv}
+                    className={style.controller}
+                    style={{
+                        position: 'absolute',
+                        left: 0,
+                        top: 0,
+                        cursor: `url(${panIcon}), auto`,
+                        visibility: cx !== undefined && zoom !== undefined && zoom > 1 ? 'visible' : 'hidden',
+                    }}
+                />
 
                 {zoom !== undefined && (
                     <img
