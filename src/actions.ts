@@ -74,6 +74,7 @@ export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_
 export const CARDSET_LOCK_ACTIVE_PLACEHOLDER = 'CARDSET_LOCK_ACTIVE_PLACEHOLDER';
 export const CARDSET_UNLOCK_ACTIVE_PLACEHOLDER = 'CARDSET_UNLOCK_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER';
+export const CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
@@ -337,6 +338,10 @@ export interface CardSetChangeFitForActivePlaceholder {
     type: typeof CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER;
     fit: string;
 }
+export interface CardSetChangeCropForActivePlaceholder {
+    type: typeof CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER;
+    crop: boolean;
+}
 
 export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
@@ -522,6 +527,7 @@ export type CardSetModifyAction =
     | CardSetLockActivePlaceholder
     | CardSetUnlockActivePlaceholder
     | CardSetChangeFitForActivePlaceholder
+    | CardSetChangeCropForActivePlaceholder
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangeIsTwoSided
@@ -824,6 +830,13 @@ export const cardSetChangeFitForActivePlaceholder = (fit: string): CardSetChange
     return {
         type: CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
         fit,
+    };
+};
+
+export const cardSetChangeCropForActivePlaceholder = (crop: boolean): CardSetChangeCropForActivePlaceholder => {
+    return {
+        type: CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER,
+        crop,
     };
 };
 

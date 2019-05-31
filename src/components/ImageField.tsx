@@ -207,7 +207,7 @@ class ImageField extends PureComponent<Props> {
                         width: '100%',
                         height: '100%',
                         position: 'relative',
-                        overflow: 'hidden',
+                        overflow: imagePlaceholder.crop ? 'hidden' : 'visible',
                     }}
                     onDragOver={this.handleDragOver}
                     onDragLeave={this.handleDragLeave}

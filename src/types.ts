@@ -55,6 +55,7 @@ export interface ImagePlaceholderType extends PlaceholderBase {
     zoom?: number;
     cx?: number;
     cy?: number;
+    crop?: boolean;
 }
 
 export type PlaceholderType = TextPlaceholderType | ImagePlaceholderType;

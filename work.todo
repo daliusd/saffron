@@ -254,7 +254,7 @@
 - Image clipping, shift and zoom
     + Zoom
     + Shift
-    - Clipping
+    + Clipping
     - Change how data is stored so we could change one card during action and all after action
         - This will make easier to reset cx, cy
     - Adjust rendering

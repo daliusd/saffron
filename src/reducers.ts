@@ -13,6 +13,7 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
     CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
+    CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER,
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_IMAGE_BASE64,
@@ -622,6 +623,7 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 width: 20,
                 height: 20,
                 angle: 0,
+                crop: true,
                 isOnBack: state.isBackActive,
             };
 
@@ -769,6 +771,24 @@ export function cardsets(state: CardSetState = DefaultCardSetState, action: Card
                 const placeholder = {
                     ...state.placeholders[state.activePlaceholder],
                     fit: action.fit,
+                };
+
+                return {
+                    ...state,
+                    placeholders: {
+                        ...state.placeholders,
+                        [state.activePlaceholder]: placeholder,
+                    },
+                };
+            }
+
+            return state;
+        }
+        case CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER: {
+            if (state.activePlaceholder) {
+                const placeholder = {
+                    ...state.placeholders[state.activePlaceholder],
+                    crop: action.crop,
                 };
 
                 return {

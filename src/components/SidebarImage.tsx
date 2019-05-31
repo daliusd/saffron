@@ -8,6 +8,7 @@ import {
     cardSetAddImagePlaceholder,
     cardSetChangeActivePlaceholderName,
     cardSetChangeFitForActivePlaceholder,
+    cardSetChangeCropForActivePlaceholder,
     cardSetChangeImage,
     cardSetLockActivePlaceholder,
     cardSetLowerActivePlaceholderToBottom,
@@ -157,6 +158,13 @@ export class SidebarImage extends Component<Props, LocalState> {
         this.setState({ applyToAllCards: event.target.checked });
     };
 
+    handleChangeCrop = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { activePlaceholder, dispatch } = this.props;
+        if (activePlaceholder !== null) {
+            dispatch(cardSetChangeCropForActivePlaceholder(event.target.checked));
+        }
+    };
+
     render() {
         const { activePlaceholder, imageInfo, filter, visible } = this.props;
         const { location, applyToAllCards } = this.state;
@@ -260,6 +268,14 @@ export class SidebarImage extends Component<Props, LocalState> {
                 {activePlaceholder && activePlaceholder.type === 'image' && (
                     <>
                         <div>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={activePlaceholder.crop}
+                                    onChange={this.handleChangeCrop}
+                                />
+                                Crop
+                            </label>
                             <ColorButton
                                 color={(imageInfo && imageInfo.color) || '#FFFFFF'}
                                 onChange={this.handleColorChange}
