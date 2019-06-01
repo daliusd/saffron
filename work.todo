@@ -268,15 +268,13 @@
     - Think what to do with old data where width and height not available on ImageData
         /home/dalius/projects/saffron/src/components/ImageField.tsx
     - Think what to do if image is replaced in server side
+    - PDF generation log and reporting of failures via e-mail.
+        E.g. there are unhandled exceptions
     - Adjust rendering
     - Fix tests
-
-- PDF generation log and reporting of failures via e-mail.
-    E.g. there are unhandled exceptions
+    - Rebuild frame control icons. They look bad on Chrome
 
 - Undo/Redo
-
-- Rebuild frame control icons. They look bad on Chrome
 
 - Resize card with content
 - Make field non-clickable for convenience

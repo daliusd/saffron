@@ -48,6 +48,7 @@ type Props = OwnProps & StateProps & DispatchProps;
 export interface LocalState {
     startX: number;
     startY: number;
+    originalAngle: number;
     activatedUsingTouch: boolean;
 }
 
@@ -71,6 +72,7 @@ class FieldController extends React.Component<Props, LocalState> {
             activatedUsingTouch: false,
             startX: 0,
             startY: 0,
+            originalAngle: 0,
         };
     }
 
@@ -379,7 +381,6 @@ class FieldController extends React.Component<Props, LocalState> {
         }
 
         this.setState({ startX: co.clientX, startY: co.clientY });
-        console.log(newWidth, newHeight);
 
         onResize(newWidth, newHeight, true);
     };
@@ -430,13 +431,19 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleRotateStart = (co: { clientX: number; clientY: number }) => {
-        const { isLocked } = this.props;
+        const { isLocked, angle } = this.props;
 
-        if (isLocked) return;
+        if (isLocked || this.cDiv.current === null) return;
 
         document.body.style.cursor = `url(${rotateIcon}), auto`;
 
-        this.setState({ startX: co.clientX, startY: co.clientY });
+        const rect = this.cDiv.current.getBoundingClientRect();
+        let startX = rect.left + this.cDiv.current.clientWidth / 2;
+        let startY = rect.top + this.cDiv.current.clientHeight / 2;
+
+        let originalAngle = angle + Math.atan2(startX - co.clientX, startY - co.clientY);
+
+        this.setState({ startX, startY, originalAngle });
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {
@@ -449,23 +456,19 @@ class FieldController extends React.Component<Props, LocalState> {
         event.preventDefault();
     };
 
-    handleRotateMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
-        const { isLocked, onRotate, x, y, width, height, angle } = this.props;
+    handleRotateMove = (co: MouseEvent | Touch, disableSnapping: boolean) => {
+        const { isLocked, onRotate } = this.props;
 
         if (isLocked) return;
 
-        let centerX = x + width / 2;
-        let centerY = y + height / 2;
-        let originalAngle = Math.atan2(centerX - this.state.startX, centerY - this.state.startY) + angle;
+        const { originalAngle, startX, startY } = this.state;
 
-        let curAngle = Math.atan2(centerX - co.clientX, centerY - co.clientY);
+        let curAngle = Math.atan2(startX - co.clientX, startY - co.clientY);
         let newAngle = originalAngle - curAngle;
 
         if (!disableSnapping) {
             newAngle = ((Math.round(((newAngle / Math.PI) * 180) / 5) * 5) / 180) * Math.PI;
         }
-
-        this.setState({ startX: co.clientX, startY: co.clientY });
 
         onRotate(newAngle, true);
     };

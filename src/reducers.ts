@@ -94,6 +94,7 @@ import {
     MessageType,
     FieldInfoByCardCollection,
 } from './types';
+import { rotateVec } from './utils';
 
 export const ACTIVITY_SELECTING = 0x1;
 export const ACTIVITY_CREATING_PDF = 0x2;
@@ -928,6 +929,20 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     let fieldInfo = { ...cardFields[fieldId] };
+
+                    let cx = fieldInfo.x + fieldInfo.width / 2;
+                    let cy = fieldInfo.y + fieldInfo.height / 2;
+                    let { rx, ry } = rotateVec(
+                        (width - fieldInfo.width) / 2,
+                        (height - fieldInfo.height) / 2,
+                        fieldInfo.angle,
+                    );
+
+                    cx = cx + rx - width / 2;
+                    cy = cy + ry - height / 2;
+
+                    fieldInfo.x = cx;
+                    fieldInfo.y = cy;
                     fieldInfo.width = width;
                     fieldInfo.height = height;
                     cardFields[fieldId] = fieldInfo;
@@ -948,7 +963,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
             let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
 
-            for (const cardId in cardsToFix) {
+            for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     cardFields[fieldId] = {
