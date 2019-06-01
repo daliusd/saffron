@@ -142,7 +142,7 @@ export class SidebarImportExport extends Component<Props> {
     };
 
     handleProcess = (fieldName: string, file: File, metadata: { [propName: string]: string }, load: FPLoadCallback) => {
-        const { dispatch, activeGame, fields } = this.props;
+        const { dispatch, activeGame, fields, fieldsAllIds, cardsById, cardsAllIds } = this.props;
         if (activeGame === null) return;
 
         var reader = new FileReader();
@@ -171,9 +171,9 @@ export class SidebarImportExport extends Component<Props> {
                 // eslint-disable-next-line
                 const csvData = Papa.parse((e.target as any).result, { header: true });
 
-                let cardsAllIds: IdsArray = [];
-                let cardsById: CardsCollection = {};
-                let newFields: FieldInfoByCardCollection = { ...fields };
+                let newCardsAllIds: IdsArray = [];
+                let newCardsById: CardsCollection = {};
+                let newFields: FieldInfoByCardCollection = {};
 
                 for (const row of csvData.data) {
                     const card: CardType = {
@@ -181,15 +181,15 @@ export class SidebarImportExport extends Component<Props> {
                         count: row['card_count'] || 1,
                     };
 
-                    cardsAllIds.push(card.id);
-                    cardsById[card.id] = card;
-
                     newFields[card.id] = {
-                        ...fields[card.id],
+                        ...fields[card.id in cardsById ? card.id : cardsAllIds[0]],
                     };
 
-                    for (const fieldId in fields) {
-                        const fieldInfo = fields[card.id][fieldId];
+                    newCardsAllIds.push(card.id);
+                    newCardsById[card.id] = card;
+
+                    for (const fieldId of fieldsAllIds) {
+                        const fieldInfo = newFields[card.id][fieldId];
                         const name = fieldInfo.name || fieldInfo.id;
 
                         if (row[name]) {
@@ -212,8 +212,8 @@ export class SidebarImportExport extends Component<Props> {
                 }
 
                 data = {
-                    cardsAllIds,
-                    cardsById,
+                    cardsAllIds: newCardsAllIds,
+                    cardsById: newCardsById,
                     fields: newFields,
                 };
             }
