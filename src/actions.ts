@@ -12,7 +12,6 @@ import {
     ImageArray,
     ImageInfo,
     MessageType,
-    PlaceholderType,
     PlaceholdersCollection,
     PlaceholdersImageInfoByCardCollection,
     PlaceholdersTextInfoByCardCollection,
@@ -84,7 +83,7 @@ export const CARDSET_CHANGE_FIELD_POSITION = 'CARDSET_CHANGE_FIELD_POSITION';
 export const CARDSET_CHANGE_FIELD_PAN = 'CARDSET_CHANGE_FIELD_PAN';
 export const CARDSET_CHANGE_FIELD_ZOOM = 'CARDSET_CHANGE_FIELD_ZOOM';
 export const CARDSET_CHANGE_FIELD_SIZE = 'CARDSET_CHANGE_FIELD_SIZE';
-export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
+export const CARDSET_CHANGE_FIELD_ANGLE = 'CARDSET_CHANGE_FIELD_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY';
@@ -423,9 +422,10 @@ export interface CardSetChangeFieldSize {
     width: number;
     height: number;
 }
-export interface CardSetChangePlaceholderAngle {
-    type: typeof CARDSET_CHANGE_PLACEHOLDER_ANGLE;
-    placeholder: PlaceholderType;
+export interface CardSetChangeFieldAngle {
+    type: typeof CARDSET_CHANGE_FIELD_ANGLE;
+    cardId?: string;
+    fieldId: string;
     angle: number;
 }
 export interface CardSetChangeActiveTextPlaceholderAlign {
@@ -559,7 +559,7 @@ export type CardSetModifyAction =
     | CardSetChangeFieldPan
     | CardSetChangeFieldZoom
     | CardSetChangeFieldSize
-    | CardSetChangePlaceholderAngle
+    | CardSetChangeFieldAngle
     | CardSetChangeActiveTextPlaceholderAlign
     | CardSetChangeActiveTextPlaceholderColor
     | CardSetChangeActiveTextPlaceholderFontFamily
@@ -942,13 +942,15 @@ export const cardSetChangeFieldSize = (
     };
 };
 
-export const cardSetChangePlaceholderAngle = (
-    placeholder: PlaceholderType,
+export const cardSetChangeFieldAngle = (
+    cardId: string | undefined,
+    fieldId: string,
     angle: number,
-): CardSetChangePlaceholderAngle => {
+): CardSetChangeFieldAngle => {
     return {
-        type: CARDSET_CHANGE_PLACEHOLDER_ANGLE,
-        placeholder,
+        type: CARDSET_CHANGE_FIELD_ANGLE,
+        cardId,
+        fieldId,
         angle,
     };
 };

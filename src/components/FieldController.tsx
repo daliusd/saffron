@@ -24,7 +24,7 @@ interface OwnProps {
     children: React.ReactNode;
     onDrag: (x: number, y: number, cardOnly: boolean) => void;
     onResize: (width: number, height: number, cardOnly: boolean) => void;
-    onRotate: (angle: number) => void;
+    onRotate: (angle: number, cardOnly: boolean) => void;
     onZoom?: (zoom: number, cardOnly: boolean) => void;
     onPan?: (cx: number, cy: number, cardOnly: boolean) => void;
     cardWidth: number;
@@ -46,26 +46,17 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps;
 
 export interface LocalState {
-    dragStarted: boolean;
-    panStarted: boolean;
-    zoomStarted: boolean;
-    resizeStarted: boolean;
     startX: number;
     startY: number;
     activatedUsingTouch: boolean;
 }
 
 class FieldController extends React.Component<Props, LocalState> {
-    moving: boolean;
     cDiv: React.RefObject<HTMLDivElement>;
     panDiv: React.RefObject<HTMLImageElement>;
     zoomDiv: React.RefObject<HTMLImageElement>;
     resizeDiv: React.RefObject<HTMLImageElement>;
     rotateDiv: React.RefObject<HTMLImageElement>;
-    centerX: number;
-    centerY: number;
-    originalAngle: number;
-    currentAngle: number;
     originalBodyCursor: string | null;
 
     constructor(props: Props) {
@@ -75,18 +66,9 @@ class FieldController extends React.Component<Props, LocalState> {
         this.zoomDiv = React.createRef();
         this.resizeDiv = React.createRef();
         this.rotateDiv = React.createRef();
-        this.currentAngle = props.angle;
-        this.moving = false;
-        this.centerX = 0;
-        this.centerY = 0;
-        this.originalAngle = 0;
         this.originalBodyCursor = null;
         this.state = {
             activatedUsingTouch: false,
-            dragStarted: false,
-            panStarted: false,
-            zoomStarted: false,
-            resizeStarted: false,
             startX: 0,
             startY: 0,
         };
@@ -111,12 +93,6 @@ class FieldController extends React.Component<Props, LocalState> {
         this.resizeDiv.current.addEventListener('touchstart', this.handleResizeTouchStart);
         this.rotateDiv.current.addEventListener('mousedown', this.handleRotateMouseDown);
         this.rotateDiv.current.addEventListener('touchstart', this.handleRotateTouchStart);
-    }
-
-    componentDidUpdate() {
-        if (this.cDiv.current === null) return;
-
-        this.currentAngle = this.props.angle;
     }
 
     handleBrowserDragStart = (event: React.DragEvent) => {
@@ -145,9 +121,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         this.cDiv.current.style.cursor = 'grabbing';
 
-        let startX = co.clientX;
-        let startY = co.clientY;
-        this.setState({ dragStarted: true, startX, startY });
+        this.setState({ startX: co.clientX, startY: co.clientY });
     };
 
     handleMouseMove = (event: MouseEvent) => {
@@ -161,7 +135,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handleDragMove = (co: MouseEvent | Touch, disableSnapping: boolean) => {
         const { isLocked, x, y } = this.props;
 
-        if (this.cDiv.current === null || isLocked || !this.state.dragStarted) return;
+        if (isLocked) return;
 
         const { ppmm, snappingDistance } = this.props;
 
@@ -196,9 +170,8 @@ class FieldController extends React.Component<Props, LocalState> {
 
         if (this.cDiv.current === null) return;
 
-        if (this.state.dragStarted && !isLocked) {
+        if (!isLocked) {
             this.props.onDrag(x, y, false);
-            this.setState({ dragStarted: false });
         }
         this.setState({ activatedUsingTouch: isTouchEvent });
 
@@ -228,9 +201,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handlePanStart = (co: MouseEvent | Touch) => {
         document.body.style.cursor = `url(${panIcon}), auto`;
 
-        let startX = co.clientX;
-        let startY = co.clientY;
-        this.setState({ panStarted: true, startX, startY });
+        this.setState({ startX: co.clientX, startY: co.clientY });
     };
 
     handlePanMouseMove = (event: MouseEvent) => {
@@ -244,12 +215,12 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handlePanMove = (co: MouseEvent | Touch) => {
-        const { cx, cy, onPan } = this.props;
-        if (!this.state.panStarted || !onPan || cx === undefined || cy === undefined) return;
+        const { cx, cy, angle, onPan } = this.props;
+        if (!onPan || cx === undefined || cy === undefined) return;
 
         let dx = co.clientX - this.state.startX;
         let dy = co.clientY - this.state.startY;
-        const { rx, ry } = rotateVec(dx, dy, -this.currentAngle);
+        const { rx, ry } = rotateVec(dx, dy, -angle);
 
         const newCx = cx + rx;
         const newCy = cy + ry;
@@ -275,9 +246,8 @@ class FieldController extends React.Component<Props, LocalState> {
 
     handlePanComplete = (event: MouseEvent | TouchEvent) => {
         const { cx, cy, onPan } = this.props;
-        if (this.state.panStarted && onPan && cx !== undefined && cy !== undefined) {
+        if (onPan && cx !== undefined && cy !== undefined) {
             onPan(cx, cy, true);
-            this.setState({ panStarted: false });
         }
 
         document.body.style.cursor = this.originalBodyCursor;
@@ -305,9 +275,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handleZoomStart = (co: { clientX: number; clientY: number }) => {
         document.body.style.cursor = `url(${zoomIcon}), auto`;
 
-        let startX = co.clientX;
-        let startY = co.clientY;
-        this.setState({ zoomStarted: true, startX, startY });
+        this.setState({ startX: co.clientX, startY: co.clientY });
     };
 
     handleZoomMouseMove = (event: MouseEvent) => {
@@ -379,7 +347,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         document.body.style.cursor = `url(${resizeIcon}), auto`;
 
-        this.setState({ resizeStarted: true, startX: co.clientX, startY: co.clientY });
+        this.setState({ startX: co.clientX, startY: co.clientY });
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
@@ -393,14 +361,14 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleResizeMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
-        const { isLocked, ppmm, width, height, snappingDistance, onResize } = this.props;
+        const { isLocked, ppmm, width, height, angle, snappingDistance, onResize } = this.props;
 
         if (isLocked) return;
 
         const dx = co.clientX - this.state.startX;
         const dy = co.clientY - this.state.startY;
 
-        const { rx, ry } = rotateVec(dx, dy, -this.currentAngle);
+        const { rx, ry } = rotateVec(dx, dy, -angle);
 
         let newWidth = width + rx;
         let newHeight = height + ry;
@@ -433,10 +401,9 @@ class FieldController extends React.Component<Props, LocalState> {
     handleResizeComplete = (event: Event) => {
         const { isLocked } = this.props;
 
-        if (this.state.resizeStarted && !isLocked) {
+        if (!isLocked) {
             const { width, height, onResize } = this.props;
             onResize(width, height, false);
-            this.setState({ resizeStarted: false });
         }
 
         document.body.style.cursor = this.originalBodyCursor;
@@ -465,15 +432,42 @@ class FieldController extends React.Component<Props, LocalState> {
     handleRotateStart = (co: { clientX: number; clientY: number }) => {
         const { isLocked } = this.props;
 
-        if (this.cDiv.current === null || isLocked) return;
+        if (isLocked) return;
 
         document.body.style.cursor = `url(${rotateIcon}), auto`;
 
-        const rect = this.cDiv.current.getBoundingClientRect();
-        this.centerX = rect.left + this.cDiv.current.clientWidth / 2;
-        this.centerY = rect.top + this.cDiv.current.clientHeight / 2;
+        this.setState({ startX: co.clientX, startY: co.clientY });
+    };
 
-        this.originalAngle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY) + this.currentAngle;
+    handleRotateMouseMove = (event: MouseEvent) => {
+        this.handleRotateMove(event, event.ctrlKey);
+        event.preventDefault();
+    };
+
+    handleRotateTouchMove = (event: TouchEvent) => {
+        this.handleRotateMove(event.changedTouches[0], event.ctrlKey);
+        event.preventDefault();
+    };
+
+    handleRotateMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
+        const { isLocked, onRotate, x, y, width, height, angle } = this.props;
+
+        if (isLocked) return;
+
+        let centerX = x + width / 2;
+        let centerY = y + height / 2;
+        let originalAngle = Math.atan2(centerX - this.state.startX, centerY - this.state.startY) + angle;
+
+        let curAngle = Math.atan2(centerX - co.clientX, centerY - co.clientY);
+        let newAngle = originalAngle - curAngle;
+
+        if (!disableSnapping) {
+            newAngle = ((Math.round(((newAngle / Math.PI) * 180) / 5) * 5) / 180) * Math.PI;
+        }
+
+        this.setState({ startX: co.clientX, startY: co.clientY });
+
+        onRotate(newAngle, true);
     };
 
     handleRotateMouseUp = (event: MouseEvent) => {
@@ -493,42 +487,14 @@ class FieldController extends React.Component<Props, LocalState> {
     handleRotateComplete = (event: Event) => {
         const { isLocked } = this.props;
 
-        if (this.moving && !isLocked) {
-            this.props.onRotate(this.currentAngle);
-            this.moving = false;
+        if (!isLocked) {
+            const { angle } = this.props;
+            this.props.onRotate(angle, false);
         }
 
         document.body.style.cursor = this.originalBodyCursor;
 
         event.preventDefault();
-    };
-
-    handleRotateMouseMove = (event: MouseEvent) => {
-        this.handleRotateMove(event, event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleRotateTouchMove = (event: TouchEvent) => {
-        this.handleRotateMove(event.changedTouches[0], event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleRotateMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
-        const { isLocked } = this.props;
-
-        if (this.cDiv.current === null || isLocked) return;
-        this.moving = true;
-
-        let angle = Math.atan2(this.centerX - co.clientX, this.centerY - co.clientY);
-
-        angle = this.originalAngle - angle;
-        if (!disableSnapping) {
-            angle = ((Math.round(((angle / Math.PI) * 180) / 5) * 5) / 180) * Math.PI;
-        }
-
-        this.currentAngle = angle;
-
-        this.cDiv.current.style.transform = `rotate(${this.currentAngle}rad)`;
     };
 
     // Rendering

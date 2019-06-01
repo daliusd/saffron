@@ -18,7 +18,7 @@ import {
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_IMAGE_BASE64,
     CARDSET_CHANGE_IS_TWO_SIDED,
-    CARDSET_CHANGE_PLACEHOLDER_ANGLE,
+    CARDSET_CHANGE_FIELD_ANGLE,
     CARDSET_CHANGE_FIELD_SIZE,
     CARDSET_CHANGE_SNAPPING_DISTANCE,
     CARDSET_CHANGE_TEXT,
@@ -940,12 +940,15 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_CHANGE_PLACEHOLDER_ANGLE: {
+        case CARDSET_CHANGE_FIELD_ANGLE: {
             let angle = action.angle;
 
             let fields = { ...state.fields };
-            let fieldId = action.placeholder.id;
-            for (const cardId in fields) {
+            let fieldId = action.fieldId;
+
+            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+
+            for (const cardId in cardsToFix) {
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     cardFields[fieldId] = {

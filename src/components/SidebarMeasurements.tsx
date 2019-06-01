@@ -6,7 +6,7 @@ import { State } from '../reducers';
 import {
     cardSetActiveCardAndPlaceholder,
     cardSetChangeActivePlaceholderName,
-    cardSetChangePlaceholderAngle,
+    cardSetChangeFieldAngle,
     cardSetChangeFieldSize,
     cardSetLockActivePlaceholder,
     cardSetChangeFieldPosition,
@@ -128,7 +128,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const angle = (parseFloat(event.target.value) * Math.PI) / 180;
         if (activeField !== undefined) {
-            dispatch(cardSetChangePlaceholderAngle(activeField, angle));
+            dispatch(cardSetChangeFieldAngle(undefined, activeField.id, angle));
         }
     };
 

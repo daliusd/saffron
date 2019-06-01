@@ -6,7 +6,7 @@ import {
     cardSetActiveCardAndPlaceholder,
     cardSetChangeImage,
     cardSetChangeFieldPosition,
-    cardSetChangePlaceholderAngle,
+    cardSetChangeFieldAngle,
     cardSetChangeFieldPan,
     cardSetChangeFieldZoom,
     cardSetChangeFieldSize,
@@ -72,9 +72,9 @@ class ImageField extends PureComponent<Props, LocalState> {
         dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, imageFieldInfo.id, width / ppmm, height / ppmm));
     };
 
-    handleRotate = (angle: number) => {
-        const { dispatch, imageFieldInfo } = this.props;
-        dispatch(cardSetChangePlaceholderAngle(imageFieldInfo, angle));
+    handleRotate = (angle: number, cardOnly: boolean) => {
+        const { dispatch, cardId, imageFieldInfo } = this.props;
+        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, imageFieldInfo.id, angle));
     };
 
     handleMouseDown = (event: React.MouseEvent) => {

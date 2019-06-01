@@ -2,12 +2,7 @@ import { connect } from 'react-redux';
 import React, { PureComponent } from 'react';
 
 import { DEFAULT_LINE_HEIGHT } from '../constants';
-import {
-    Dispatch,
-    cardSetChangePlaceholderAngle,
-    cardSetChangeFieldPosition,
-    cardSetChangeFieldSize,
-} from '../actions';
+import { Dispatch, cardSetChangeFieldAngle, cardSetChangeFieldPosition, cardSetChangeFieldSize } from '../actions';
 import { State } from '../reducers';
 import { TextFieldInfo } from '../types';
 import ContentEditable from './ContentEditable';
@@ -44,9 +39,9 @@ class TextField extends PureComponent<Props> {
         dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, textFieldInfo.id, width / ppmm, height / ppmm));
     };
 
-    handleRotate = (angle: number) => {
-        const { dispatch, textFieldInfo } = this.props;
-        dispatch(cardSetChangePlaceholderAngle(textFieldInfo, angle));
+    handleRotate = (angle: number, cardOnly: boolean) => {
+        const { dispatch, textFieldInfo, cardId } = this.props;
+        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, textFieldInfo.id, angle));
     };
 
     render() {
