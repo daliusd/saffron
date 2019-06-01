@@ -851,10 +851,20 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 if (fieldId in cardFields) {
                     let fieldInfo = cardFields[fieldId];
                     if (fieldInfo.type === 'image') {
-                        let { width, height, zoom } = fieldInfo;
+                        let { width, height, zoom, fit, imageWidth, imageHeight } = fieldInfo;
                         zoom = zoom || 1;
-                        cx = Math.min(Math.max(width * (1 - zoom), cx), 0);
-                        cy = Math.min(Math.max(height * (1 - zoom), cy), 0);
+                        imageHeight = imageHeight || 1;
+                        imageWidth = imageWidth || 1;
+
+                        let fitImageWidth = width;
+                        let fitImageHeight = height;
+                        if (fit === 'width') {
+                            fitImageHeight = width * (imageHeight / imageWidth);
+                        } else if (fit === 'height') {
+                            fitImageWidth = height * (imageWidth / imageHeight);
+                        }
+                        cx = Math.min(Math.max(width - zoom * fitImageWidth, cx), 0);
+                        cy = Math.min(Math.max(height - zoom * fitImageHeight, cy), 0);
 
                         cardFields[fieldId] = {
                             ...fieldInfo,
@@ -930,19 +940,34 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 if (fieldId in cardFields) {
                     let fieldInfo = { ...cardFields[fieldId] };
 
-                    let cx = fieldInfo.x + fieldInfo.width / 2;
-                    let cy = fieldInfo.y + fieldInfo.height / 2;
+                    let nx = fieldInfo.x + fieldInfo.width / 2;
+                    let ny = fieldInfo.y + fieldInfo.height / 2;
                     let { rx, ry } = rotateVec(
                         (width - fieldInfo.width) / 2,
                         (height - fieldInfo.height) / 2,
                         fieldInfo.angle,
                     );
 
-                    cx = cx + rx - width / 2;
-                    cy = cy + ry - height / 2;
+                    nx = nx + rx - width / 2;
+                    ny = ny + ry - height / 2;
 
-                    fieldInfo.x = cx;
-                    fieldInfo.y = cy;
+                    if (fieldInfo.type === 'image' && fieldInfo.cx && fieldInfo.cy) {
+                        if (fieldInfo.fit === 'width') {
+                            let ratio = width / fieldInfo.width;
+                            fieldInfo.cx *= ratio;
+                            fieldInfo.cy *= ratio;
+                        } else if (fieldInfo.fit === 'height') {
+                            let ratio = height / fieldInfo.height;
+                            fieldInfo.cx *= ratio;
+                            fieldInfo.cy *= ratio;
+                        } else {
+                            fieldInfo.cx *= width / fieldInfo.width;
+                            fieldInfo.cy *= height / fieldInfo.height;
+                        }
+                    }
+
+                    fieldInfo.x = nx;
+                    fieldInfo.y = ny;
                     fieldInfo.width = width;
                     fieldInfo.height = height;
                     cardFields[fieldId] = fieldInfo;

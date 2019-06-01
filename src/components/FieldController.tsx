@@ -535,7 +535,7 @@ class FieldController extends React.Component<Props, LocalState> {
                         left: 0,
                         top: 0,
                         cursor: `url(${panIcon}), auto`,
-                        display: cx !== undefined && zoom !== undefined && zoom > 1 ? 'initial' : 'none',
+                        display: cx !== undefined && zoom !== undefined ? 'initial' : 'none',
                     }}
                 />
 
