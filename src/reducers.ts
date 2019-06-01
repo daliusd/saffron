@@ -1283,6 +1283,9 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                         color: 'color' in action.imageInfo ? action.imageInfo.color : testFieldInfo.color,
                         imageWidth: 'width' in action.imageInfo ? action.imageInfo.width : testFieldInfo.imageWidth,
                         imageHeight: 'height' in action.imageInfo ? action.imageInfo.height : testFieldInfo.imageHeight,
+                        cx: 0,
+                        cy: 0,
+                        zoom: 0,
                     };
                 }
             }
@@ -1308,6 +1311,9 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                     cardFields[fieldId] = {
                         ...testFieldInfo,
                         base64: action.base64,
+                        cx: 0,
+                        cy: 0,
+                        zoom: 0,
                     };
                 }
             }

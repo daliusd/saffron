@@ -262,9 +262,9 @@
         + Change how card is selected now image is selected after each drag (that's wrong)
         + Limit to one card CARDSET_CHANGE_PLACEHOLDER_ZOOM
         + Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
-        - Fix import / export
+        + Fix import / export
+        + This will make easier to reset cx, cy
         - ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
-        - This will make easier to reset cx, cy
     - Think what to do with old data where width and height not available on ImageData
         /home/dalius/projects/saffron/src/components/ImageField.tsx
     - Think what to do if image is replaced in server side
