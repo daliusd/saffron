@@ -5,10 +5,10 @@ import {
     Dispatch,
     cardSetActiveCardAndPlaceholder,
     cardSetChangeImage,
+    cardSetChangeFieldPosition,
     cardSetChangePlaceholderAngle,
-    cardSetChangePlaceholderPan,
-    cardSetChangePlaceholderPosition,
-    cardSetChangePlaceholderZoom,
+    cardSetChangeFieldPan,
+    cardSetChangeFieldZoom,
     cardSetChangePlaceholderSize,
 } from '../actions';
 import { ImageInfo, ImageFieldInfo } from '../types';
@@ -38,39 +38,33 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class ImageField extends PureComponent<Props> {
-    imageDiv: React.RefObject<HTMLDivElement>;
+interface LocalState {
+    dragIsOver: boolean;
     wasMoved: boolean;
+}
 
+class ImageField extends PureComponent<Props, LocalState> {
     constructor(props: Props) {
         super(props);
-        this.imageDiv = React.createRef();
-        this.wasMoved = false;
+        this.state = {
+            dragIsOver: false,
+            wasMoved: false,
+        };
     }
 
-    componentDidMount() {
-        if (!this.imageDiv.current) return;
-        this.imageDiv.current.addEventListener('mousedown', this.handleMouseDown);
-        this.imageDiv.current.addEventListener('touchstart', this.handleTouchStart);
-        this.imageDiv.current.addEventListener('mousemove', this.handleMouseMove);
-        this.imageDiv.current.addEventListener('touchmove', this.handleTouchMove, { passive: false });
-        this.imageDiv.current.addEventListener('mouseup', this.handleMouseUp);
-        this.imageDiv.current.addEventListener('touchend', this.handleTouchEnd, { passive: false });
-    }
-
-    handleDrag = (x: number, y: number) => {
-        const { dispatch, imageFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderPosition(imageFieldInfo, x / ppmm, y / ppmm));
+    handleDrag = (x: number, y: number, cardOnly: boolean) => {
+        const { dispatch, cardId, imageFieldInfo, ppmm } = this.props;
+        dispatch(cardSetChangeFieldPosition(cardOnly ? cardId : undefined, imageFieldInfo.id, x / ppmm, y / ppmm));
     };
 
-    handlePan = (cx: number, cy: number) => {
-        const { dispatch, imageFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderPan(imageFieldInfo, cx / ppmm, cy / ppmm));
+    handlePan = (cx: number, cy: number, cardOnly: boolean) => {
+        const { dispatch, cardId, imageFieldInfo, ppmm } = this.props;
+        dispatch(cardSetChangeFieldPan(cardOnly ? cardId : undefined, imageFieldInfo.id, cx / ppmm, cy / ppmm));
     };
 
-    handleZoom = (zoom: number) => {
-        const { dispatch, imageFieldInfo } = this.props;
-        dispatch(cardSetChangePlaceholderZoom(imageFieldInfo, zoom));
+    handleZoom = (zoom: number, cardOnly: boolean) => {
+        const { dispatch, cardId, imageFieldInfo } = this.props;
+        dispatch(cardSetChangeFieldZoom(cardOnly ? cardId : undefined, imageFieldInfo.id, zoom));
     };
 
     handleResize = (width: number, height: number) => {
@@ -83,62 +77,56 @@ class ImageField extends PureComponent<Props> {
         dispatch(cardSetChangePlaceholderAngle(imageFieldInfo, angle));
     };
 
-    handleMouseDown = (event: MouseEvent) => {
-        this.wasMoved = false;
+    handleMouseDown = (event: React.MouseEvent) => {
+        this.setState({ wasMoved: false });
         event.preventDefault();
     };
 
-    handleTouchStart = (event: TouchEvent) => {
-        this.wasMoved = false;
+    handleTouchStart = (event: React.TouchEvent) => {
+        this.setState({ wasMoved: false });
         event.preventDefault();
     };
 
-    handleMouseMove = (event: MouseEvent) => {
-        this.wasMoved = true;
+    handleMouseMove = (event: React.MouseEvent) => {
+        this.setState({ wasMoved: true });
         event.preventDefault();
     };
 
-    handleTouchMove = (event: TouchEvent) => {
-        this.wasMoved = true;
+    handleTouchMove = (event: React.TouchEvent) => {
+        this.setState({ wasMoved: true });
         event.preventDefault();
     };
 
-    handleMouseUp = (event: MouseEvent) => {
+    handleMouseUp = (event: React.MouseEvent) => {
         this.handleComplete(event);
     };
 
-    handleTouchEnd = (event: TouchEvent) => {
+    handleTouchEnd = (event: React.TouchEvent) => {
         this.handleComplete(event);
     };
 
-    handleComplete = (event: Event) => {
+    handleComplete = (event: React.MouseEvent | React.TouchEvent) => {
         const { dispatch, cardId, isOnBack, imageFieldInfo } = this.props;
-        if (!this.wasMoved) {
+        if (!this.state.wasMoved) {
             event.preventDefault();
             dispatch(cardSetActiveCardAndPlaceholder(cardId, isOnBack, imageFieldInfo.id));
         }
     };
 
     handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
-        if (this.imageDiv.current !== null) {
-            this.imageDiv.current.classList.add(style.over);
-        }
+        this.setState({ dragIsOver: true });
         event.preventDefault();
         event.stopPropagation();
     };
 
     handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
-        if (this.imageDiv.current !== null) {
-            this.imageDiv.current.classList.remove(style.over);
-        }
+        this.setState({ dragIsOver: false });
         event.preventDefault();
         event.stopPropagation();
     };
 
     handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-        if (this.imageDiv.current !== null) {
-            this.imageDiv.current.classList.remove(style.over);
-        }
+        this.setState({ dragIsOver: false });
         event.preventDefault();
         event.stopPropagation();
 
@@ -202,13 +190,19 @@ class ImageField extends PureComponent<Props> {
                 ppmm={ppmm}
             >
                 <div
-                    ref={this.imageDiv}
                     style={{
                         width: '100%',
                         height: '100%',
                         position: 'relative',
                         overflow: imageFieldInfo.crop ? 'hidden' : 'visible',
                     }}
+                    className={this.state.dragIsOver ? style.over : ''}
+                    onMouseDown={this.handleMouseDown}
+                    onTouchStart={this.handleTouchStart}
+                    onMouseMove={this.handleMouseMove}
+                    onTouchMove={this.handleTouchMove}
+                    onMouseUp={this.handleMouseUp}
+                    onTouchEnd={this.handleTouchEnd}
                     onDragOver={this.handleDragOver}
                     onDragLeave={this.handleDragLeave}
                     onDrop={this.handleDrop}
@@ -241,8 +235,8 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
         } else {
             imageUrl = props.imageFieldInfo && props.imageFieldInfo.url;
         }
-        imageWidth = props.imageFieldInfo.width || 1;
-        imageHeight = props.imageFieldInfo.height || 1;
+        imageWidth = props.imageFieldInfo.imageWidth || 1;
+        imageHeight = props.imageFieldInfo.imageHeight || 1;
     }
 
     return {

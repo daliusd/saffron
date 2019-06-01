@@ -19,7 +19,6 @@ import {
     CARDSET_CHANGE_IMAGE_BASE64,
     CARDSET_CHANGE_IS_TWO_SIDED,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
-    CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
     CARDSET_CHANGE_SNAPPING_DISTANCE,
     CARDSET_CHANGE_TEXT,
@@ -73,10 +72,11 @@ import {
     SIGNUP_SUCCESS,
     SidebarState,
     SignUpAction,
-    CARDSET_CHANGE_PLACEHOLDER_ZOOM,
-    CARDSET_CHANGE_PLACEHOLDER_PAN,
+    CARDSET_CHANGE_FIELD_ZOOM,
+    CARDSET_CHANGE_FIELD_PAN,
     CardSetsAction,
     CARDSETS_SELECT_SUCCESS,
+    CARDSET_CHANGE_FIELD_POSITION,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -807,7 +807,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 snappingDistance: action.snappingDistance,
             };
         }
-        case CARDSET_CHANGE_PLACEHOLDER_POSITION: {
+        case CARDSET_CHANGE_FIELD_POSITION: {
             let x = action.x;
             let y = action.y;
             let snappingDistance = state.snappingDistance;
@@ -818,8 +818,10 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             }
 
             let fields = { ...state.fields };
-            let fieldId = action.placeholder.id;
-            for (const cardId in fields) {
+            let fieldId = action.fieldId;
+            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+
+            for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     cardFields[fieldId] = {
@@ -836,12 +838,14 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_CHANGE_PLACEHOLDER_PAN: {
+        case CARDSET_CHANGE_FIELD_PAN: {
             let { cx, cy } = action;
 
             let fields = { ...state.fields };
-            let fieldId = action.placeholder.id;
-            for (const cardId in fields) {
+            let fieldId = action.fieldId;
+            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+
+            for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     let fieldInfo = cardFields[fieldId];
@@ -866,12 +870,15 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_CHANGE_PLACEHOLDER_ZOOM: {
+        case CARDSET_CHANGE_FIELD_ZOOM: {
             let zoom = action.zoom;
 
             let fields = { ...state.fields };
-            let fieldId = action.placeholder.id;
-            for (const cardId in fields) {
+            let fieldId = action.fieldId;
+
+            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+
+            for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
                 if (fieldId in cardFields) {
                     let fieldInfo = cardFields[fieldId];

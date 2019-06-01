@@ -7,9 +7,9 @@ import {
     cardSetActiveCardAndPlaceholder,
     cardSetChangeActivePlaceholderName,
     cardSetChangePlaceholderAngle,
-    cardSetChangePlaceholderPosition,
     cardSetChangePlaceholderSize,
     cardSetLockActivePlaceholder,
+    cardSetChangeFieldPosition,
     cardSetLowerActivePlaceholderToBottom,
     cardSetRaiseActivePlaceholderToTop,
     cardSetUnlockActivePlaceholder,
@@ -112,7 +112,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const x = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangePlaceholderPosition(activeField, x, activeField.y));
+            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, x, activeField.y));
         }
     };
 
@@ -120,7 +120,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const y = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangePlaceholderPosition(activeField, activeField.x, y));
+            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, activeField.x, y));
         }
     };
 

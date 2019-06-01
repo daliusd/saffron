@@ -5,7 +5,7 @@ import { DEFAULT_LINE_HEIGHT } from '../constants';
 import {
     Dispatch,
     cardSetChangePlaceholderAngle,
-    cardSetChangePlaceholderPosition,
+    cardSetChangeFieldPosition,
     cardSetChangePlaceholderSize,
 } from '../actions';
 import { State } from '../reducers';
@@ -34,9 +34,9 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps;
 
 class TextField extends PureComponent<Props> {
-    handleDrag = (x: number, y: number) => {
-        const { dispatch, textFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderPosition(textFieldInfo, x / ppmm, y / ppmm));
+    handleDrag = (x: number, y: number, cardOnly: boolean) => {
+        const { dispatch, cardId, textFieldInfo, ppmm } = this.props;
+        dispatch(cardSetChangeFieldPosition(cardOnly ? cardId : undefined, textFieldInfo.id, x / ppmm, y / ppmm));
     };
 
     handleResize = (width: number, height: number) => {

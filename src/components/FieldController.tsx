@@ -21,11 +21,11 @@ interface OwnProps {
     cx?: number;
     cy?: number;
     children: React.ReactNode;
-    onDrag: (x: number, y: number) => void;
+    onDrag: (x: number, y: number, cardOnly: boolean) => void;
     onResize: (width: number, height: number) => void;
     onRotate: (angle: number) => void;
-    onZoom?: (zoom: number) => void;
-    onPan?: (cx: number, cy: number) => void;
+    onZoom?: (zoom: number, cardOnly: boolean) => void;
+    onPan?: (cx: number, cy: number, cardOnly: boolean) => void;
     cardWidth: number;
     cardHeight: number;
     ppmm: number;
@@ -44,15 +44,22 @@ interface DispatchProps {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class FieldController extends React.Component<Props> {
+export interface LocalState {
+    dragStarted: boolean;
+    panStarted: boolean;
+    zoomStarted: boolean;
+    startX: number;
+    startY: number;
+    activatedUsingTouch: boolean;
+}
+
+class FieldController extends React.Component<Props, LocalState> {
     moving: boolean;
     cDiv: React.RefObject<HTMLDivElement>;
     panDiv: React.RefObject<HTMLImageElement>;
     zoomDiv: React.RefObject<HTMLImageElement>;
     resizeDiv: React.RefObject<HTMLImageElement>;
     rotateDiv: React.RefObject<HTMLImageElement>;
-    relX: number;
-    relY: number;
     startX: number;
     startY: number;
     originalW: number;
@@ -63,7 +70,6 @@ class FieldController extends React.Component<Props> {
     centerY: number;
     originalAngle: number;
     currentAngle: number;
-    activatedUsingTouch: boolean;
     originalBodyCursor: string | null;
 
     constructor(props: Props) {
@@ -75,8 +81,6 @@ class FieldController extends React.Component<Props> {
         this.rotateDiv = React.createRef();
         this.currentAngle = props.angle;
         this.moving = false;
-        this.relX = 0;
-        this.relY = 0;
         this.startX = 0;
         this.startY = 0;
         this.originalW = 0;
@@ -86,8 +90,15 @@ class FieldController extends React.Component<Props> {
         this.centerX = 0;
         this.centerY = 0;
         this.originalAngle = 0;
-        this.activatedUsingTouch = false;
         this.originalBodyCursor = null;
+        this.state = {
+            activatedUsingTouch: false,
+            dragStarted: false,
+            panStarted: false,
+            zoomStarted: false,
+            startX: 0,
+            startY: 0,
+        };
     }
 
     componentDidMount() {
@@ -99,7 +110,6 @@ class FieldController extends React.Component<Props> {
 
         this.originalBodyCursor = document.body.style.cursor;
 
-        this.cDiv.current.addEventListener('dragstart', this.handleBrowserDragStart);
         this.cDiv.current.addEventListener('mousedown', this.handleMouseDown);
         this.cDiv.current.addEventListener('touchstart', this.handleTouchStart);
         this.panDiv.current.addEventListener('mousedown', this.handlePanMouseDown);
@@ -127,7 +137,7 @@ class FieldController extends React.Component<Props> {
         return { rx, ry };
     };
 
-    handleBrowserDragStart = (event: DragEvent) => {
+    handleBrowserDragStart = (event: React.DragEvent) => {
         event.stopPropagation();
         event.preventDefault();
     };
@@ -139,7 +149,6 @@ class FieldController extends React.Component<Props> {
 
         document.addEventListener('mousemove', this.handleMouseMove);
         document.addEventListener('mouseup', this.handleMouseUp);
-        event.stopPropagation();
     };
 
     handleTouchStart = (event: TouchEvent) => {
@@ -147,16 +156,43 @@ class FieldController extends React.Component<Props> {
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
-        event.stopPropagation();
     };
 
-    handleDragStart = (co: { clientX: number; clientY: number }) => {
+    handleDragStart = (co: MouseEvent | Touch) => {
         if (this.cDiv.current === null) return;
 
         this.cDiv.current.style.cursor = 'grabbing';
 
-        this.relX = co.clientX - this.cDiv.current.offsetLeft;
-        this.relY = co.clientY - this.cDiv.current.offsetTop;
+        let startX = co.clientX;
+        let startY = co.clientY;
+        this.setState({ dragStarted: true, startX, startY });
+    };
+
+    handleMouseMove = (event: MouseEvent) => {
+        this.handleDragMove(event, event.ctrlKey);
+    };
+
+    handleTouchMove = (event: TouchEvent) => {
+        this.handleDragMove(event.changedTouches[0], event.ctrlKey);
+    };
+
+    handleDragMove = (co: MouseEvent | Touch, disableSnapping: boolean) => {
+        const { isLocked, x, y } = this.props;
+
+        if (this.cDiv.current === null || isLocked || !this.state.dragStarted) return;
+
+        const { ppmm, snappingDistance } = this.props;
+
+        let nx = x + co.clientX - this.state.startX;
+        let ny = y + co.clientY - this.state.startY;
+
+        if (!disableSnapping && snappingDistance !== 0) {
+            nx = Math.round(nx / ppmm / snappingDistance) * snappingDistance * ppmm;
+            ny = Math.round(ny / ppmm / snappingDistance) * snappingDistance * ppmm;
+        }
+
+        this.setState({ startX: co.clientX, startY: co.clientY });
+        this.props.onDrag(nx, ny, true);
     };
 
     handleMouseUp = (event: MouseEvent) => {
@@ -173,48 +209,20 @@ class FieldController extends React.Component<Props> {
         document.removeEventListener('touchend', this.handleTouchEnd);
     };
 
-    handleComplete = (event: Event, isTouchEvent: boolean) => {
-        const { isLocked } = this.props;
+    handleComplete = (event: MouseEvent | TouchEvent, isTouchEvent: boolean) => {
+        const { isLocked, x, y } = this.props;
 
         if (this.cDiv.current === null) return;
-        if (this.moving && !isLocked) {
-            this.props.onDrag(this.cDiv.current.offsetLeft, this.cDiv.current.offsetTop);
-            this.moving = false;
+
+        if (this.state.dragStarted && !isLocked) {
+            this.props.onDrag(x, y, false);
+            this.setState({ dragStarted: false });
         }
-        this.activatedUsingTouch = isTouchEvent;
+        this.setState({ activatedUsingTouch: isTouchEvent });
 
         this.cDiv.current.style.cursor = 'grab';
 
         event.preventDefault();
-    };
-
-    handleMouseMove = (event: MouseEvent) => {
-        this.handleDragMove(event, event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleTouchMove = (event: TouchEvent) => {
-        this.handleDragMove(event.changedTouches[0], event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleDragMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
-        const { isLocked } = this.props;
-
-        if (this.cDiv.current === null || isLocked) return;
-        const { ppmm, snappingDistance } = this.props;
-        this.moving = true;
-
-        let x = co.clientX - this.relX;
-        let y = co.clientY - this.relY;
-
-        if (!disableSnapping && snappingDistance !== 0) {
-            x = Math.round(x / ppmm / snappingDistance) * snappingDistance * ppmm;
-            y = Math.round(y / ppmm / snappingDistance) * snappingDistance * ppmm;
-        }
-
-        this.cDiv.current.style.left = x + 'px';
-        this.cDiv.current.style.top = y + 'px';
     };
 
     // Pan handling
@@ -225,7 +233,6 @@ class FieldController extends React.Component<Props> {
         document.addEventListener('mousemove', this.handlePanMouseMove);
         document.addEventListener('mouseup', this.handlePanMouseUp);
         event.stopPropagation();
-        event.preventDefault();
     };
 
     handlePanTouchStart = (event: TouchEvent) => {
@@ -236,13 +243,38 @@ class FieldController extends React.Component<Props> {
         event.stopPropagation();
     };
 
-    handlePanStart = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
-
+    handlePanStart = (co: MouseEvent | Touch) => {
         document.body.style.cursor = `url(${panIcon}), auto`;
 
-        this.startX = co.clientX;
-        this.startY = co.clientY;
+        let startX = co.clientX;
+        let startY = co.clientY;
+        this.setState({ panStarted: true, startX, startY });
+    };
+
+    handlePanMouseMove = (event: MouseEvent) => {
+        this.handlePanMove(event);
+        event.preventDefault();
+    };
+
+    handlePanTouchMove = (event: TouchEvent) => {
+        this.handlePanMove(event.changedTouches[0]);
+        event.preventDefault();
+    };
+
+    handlePanMove = (co: MouseEvent | Touch) => {
+        const { cx, cy, onPan } = this.props;
+        if (!this.state.panStarted || !onPan || cx === undefined || cy === undefined) return;
+
+        let dx = co.clientX - this.state.startX;
+        let dy = co.clientY - this.state.startY;
+        const { rx, ry } = this.rotateVec(dx, dy, -this.currentAngle);
+
+        const newCx = cx + rx;
+        const newCy = cy + ry;
+
+        this.setState({ startX: co.clientX, startY: co.clientY });
+
+        onPan(newCx, newCy, true);
     };
 
     handlePanMouseUp = (event: MouseEvent) => {
@@ -259,38 +291,15 @@ class FieldController extends React.Component<Props> {
         document.removeEventListener('touchend', this.handlePanTouchEnd);
     };
 
-    handlePanComplete = (event: Event) => {
-        if (this.panDiv.current === null) return;
-        document.body.style.cursor = this.originalBodyCursor;
-
-        event.preventDefault();
-    };
-
-    handlePanMouseMove = (event: MouseEvent) => {
-        this.handlePanMove(event);
-        event.preventDefault();
-    };
-
-    handlePanTouchMove = (event: TouchEvent) => {
-        this.handlePanMove(event.changedTouches[0]);
-        event.preventDefault();
-    };
-
-    handlePanMove = (co: { clientX: number; clientY: number }) => {
+    handlePanComplete = (event: MouseEvent | TouchEvent) => {
         const { cx, cy, onPan } = this.props;
-        if (this.panDiv.current === null || !onPan || cx === undefined || cy === undefined) return;
+        if (this.state.panStarted && onPan && cx !== undefined && cy !== undefined) {
+            onPan(cx, cy, true);
+            this.setState({ panStarted: false });
+        }
 
-        let dx = co.clientX - this.startX;
-        let dy = co.clientY - this.startY;
-        const { rx, ry } = this.rotateVec(dx, dy, -this.currentAngle);
-
-        const newCx = cx + rx;
-        const newCy = cy + ry;
-
-        this.startX = co.clientX;
-        this.startY = co.clientY;
-
-        onPan(newCx, newCy);
+        document.body.style.cursor = this.originalBodyCursor;
+        event.preventDefault();
     };
 
     // Zoom handling
@@ -301,7 +310,6 @@ class FieldController extends React.Component<Props> {
         document.addEventListener('mousemove', this.handleZoomMouseMove);
         document.addEventListener('mouseup', this.handleZoomMouseUp);
         event.stopPropagation();
-        event.preventDefault();
     };
 
     handleZoomTouchStart = (event: TouchEvent) => {
@@ -313,12 +321,36 @@ class FieldController extends React.Component<Props> {
     };
 
     handleZoomStart = (co: { clientX: number; clientY: number }) => {
-        if (this.cDiv.current === null) return;
-
         document.body.style.cursor = `url(${zoomIcon}), auto`;
 
-        this.startX = co.clientX;
-        this.startY = co.clientY;
+        let startX = co.clientX;
+        let startY = co.clientY;
+        this.setState({ zoomStarted: true, startX, startY });
+    };
+
+    handleZoomMouseMove = (event: MouseEvent) => {
+        this.handleZoomMove(event);
+        event.preventDefault();
+    };
+
+    handleZoomTouchMove = (event: TouchEvent) => {
+        this.handleZoomMove(event.changedTouches[0]);
+        event.preventDefault();
+    };
+
+    handleZoomMove = (co: MouseEvent | Touch) => {
+        const { zoom, onZoom } = this.props;
+        if (this.zoomDiv.current === null || !onZoom || zoom === undefined) return;
+
+        const dx = co.clientX - this.state.startX;
+        const dy = co.clientY - this.state.startY;
+
+        let z = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+
+        let newZoom = Math.max(zoom + z / 30, 1);
+        this.setState({ startX: co.clientX, startY: co.clientY });
+
+        onZoom(newZoom, true);
     };
 
     handleZoomMouseUp = (event: MouseEvent) => {
@@ -336,36 +368,8 @@ class FieldController extends React.Component<Props> {
     };
 
     handleZoomComplete = (event: Event) => {
-        if (this.zoomDiv.current === null) return;
         document.body.style.cursor = this.originalBodyCursor;
-
         event.preventDefault();
-    };
-
-    handleZoomMouseMove = (event: MouseEvent) => {
-        this.handleZoomMove(event);
-        event.preventDefault();
-    };
-
-    handleZoomTouchMove = (event: TouchEvent) => {
-        this.handleZoomMove(event.changedTouches[0]);
-        event.preventDefault();
-    };
-
-    handleZoomMove = (co: { clientX: number; clientY: number }) => {
-        const { zoom, onZoom } = this.props;
-        if (this.zoomDiv.current === null || !onZoom || zoom === undefined) return;
-
-        const dx = co.clientX - this.startX;
-        const dy = co.clientY - this.startY;
-
-        this.startX = co.clientX;
-        this.startY = co.clientY;
-
-        let z = Math.abs(dx) > Math.abs(dy) ? dx : dy;
-
-        let newZoom = Math.max(zoom + z / 30, 1);
-        onZoom(newZoom);
     };
 
     // Resize handling
@@ -376,7 +380,6 @@ class FieldController extends React.Component<Props> {
         document.addEventListener('mousemove', this.handleResizeMouseMove);
         document.addEventListener('mouseup', this.handleResizeMouseUp);
         event.stopPropagation();
-        event.preventDefault();
     };
 
     handleResizeTouchStart = (event: TouchEvent) => {
@@ -429,7 +432,7 @@ class FieldController extends React.Component<Props> {
 
         if (this.moving && !isLocked) {
             const { offsetLeft, offsetTop, clientWidth, clientHeight } = this.cDiv.current;
-            this.props.onDrag(offsetLeft, offsetTop);
+            this.props.onDrag(offsetLeft, offsetTop, false);
             this.props.onResize(clientWidth, clientHeight);
             this.moving = false;
         }
@@ -487,7 +490,6 @@ class FieldController extends React.Component<Props> {
         document.addEventListener('mousemove', this.handleRotateMouseMove);
         document.addEventListener('mouseup', this.handleRotateMouseUp);
         event.stopPropagation();
-        event.preventDefault();
     };
 
     handleRotateTouchStart = (event: TouchEvent) => {
@@ -575,10 +577,11 @@ class FieldController extends React.Component<Props> {
         return (
             <div
                 ref={this.cDiv}
+                onDragStart={this.handleBrowserDragStart}
                 className={`${style.fieldcontroller} ${
                     isActivePlaceholder ? style.fieldcontrolleractiveplaceholder : ''
                 } ${isActive ? style.fieldcontrolleractive : ''} ${
-                    isActive && this.activatedUsingTouch ? style.touchactivated : ''
+                    isActive && this.state.activatedUsingTouch ? style.touchactivated : ''
                 } `}
                 style={{
                     position: 'absolute',
@@ -605,20 +608,19 @@ class FieldController extends React.Component<Props> {
                     }}
                 />
 
-                {zoom !== undefined && (
-                    <img
-                        src={zoomIcon}
-                        alt="zoom"
-                        ref={this.zoomDiv}
-                        className={style.controller}
-                        style={{
-                            position: 'absolute',
-                            right: 0,
-                            top: 0,
-                            cursor: `url(${zoomIcon}), auto`,
-                        }}
-                    />
-                )}
+                <img
+                    src={zoomIcon}
+                    alt="zoom"
+                    ref={this.zoomDiv}
+                    className={style.controller}
+                    style={{
+                        position: 'absolute',
+                        right: 0,
+                        top: 0,
+                        cursor: `url(${zoomIcon}), auto`,
+                        display: zoom !== undefined ? 'initial' : 'none',
+                    }}
+                />
 
                 <img
                     src={resizeIcon}

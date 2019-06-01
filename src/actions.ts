@@ -80,9 +80,9 @@ export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
 export const CARDSET_CHANGE_SNAPPING_DISTANCE = 'CARDSET_CHANGE_SNAPPING_DISTANCE';
-export const CARDSET_CHANGE_PLACEHOLDER_POSITION = 'CARDSET_CHANGE_PLACEHOLDER_POSITION';
-export const CARDSET_CHANGE_PLACEHOLDER_PAN = 'CARDSET_CHANGE_PLACEHOLDER_PAN';
-export const CARDSET_CHANGE_PLACEHOLDER_ZOOM = 'CARDSET_CHANGE_PLACEHOLDER_ZOOM';
+export const CARDSET_CHANGE_FIELD_POSITION = 'CARDSET_CHANGE_FIELD_POSITION';
+export const CARDSET_CHANGE_FIELD_PAN = 'CARDSET_CHANGE_FIELD_PAN';
+export const CARDSET_CHANGE_FIELD_ZOOM = 'CARDSET_CHANGE_FIELD_ZOOM';
 export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
@@ -393,23 +393,26 @@ export interface CardSetChangeSnappingDistance {
     snappingDistance: number;
 }
 
-export interface CardSetChangePlaceholderPosition {
-    type: typeof CARDSET_CHANGE_PLACEHOLDER_POSITION;
-    placeholder: PlaceholderType;
+export interface CardSetChangeFieldPosition {
+    type: typeof CARDSET_CHANGE_FIELD_POSITION;
+    cardId?: string;
+    fieldId: string;
     x: number;
     y: number;
 }
 
-export interface CardSetChangePlaceholderPan {
-    type: typeof CARDSET_CHANGE_PLACEHOLDER_PAN;
-    placeholder: PlaceholderType;
+export interface CardSetChangeFieldPan {
+    type: typeof CARDSET_CHANGE_FIELD_PAN;
+    cardId?: string;
+    fieldId: string;
     cx: number;
     cy: number;
 }
 
-export interface CardSetChangePlaceholderZoom {
-    type: typeof CARDSET_CHANGE_PLACEHOLDER_ZOOM;
-    placeholder: PlaceholderType;
+export interface CardSetChangeFieldZoom {
+    type: typeof CARDSET_CHANGE_FIELD_ZOOM;
+    cardId?: string;
+    fieldId: string;
     zoom: number;
 }
 
@@ -551,9 +554,9 @@ export type CardSetModifyAction =
     | CardSetChangeHeight
     | CardSetChangeIsTwoSided
     | CardSetChangeSnappingDistance
-    | CardSetChangePlaceholderPosition
-    | CardSetChangePlaceholderPan
-    | CardSetChangePlaceholderZoom
+    | CardSetChangeFieldPosition
+    | CardSetChangeFieldPan
+    | CardSetChangeFieldZoom
     | CardSetChangePlaceholderSize
     | CardSetChangePlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
@@ -880,39 +883,45 @@ export const cardSetChangeSnappingDistance = (snappingDistance: number): CardSet
     };
 };
 
-export const cardSetChangePlaceholderPosition = (
-    placeholder: PlaceholderType,
+export const cardSetChangeFieldPosition = (
+    cardId: string | undefined,
+    fieldId: string,
     x: number,
     y: number,
-): CardSetChangePlaceholderPosition => {
+): CardSetChangeFieldPosition => {
     return {
-        type: CARDSET_CHANGE_PLACEHOLDER_POSITION,
-        placeholder,
+        type: CARDSET_CHANGE_FIELD_POSITION,
+        cardId,
+        fieldId,
         x,
         y,
     };
 };
 
-export const cardSetChangePlaceholderPan = (
-    placeholder: PlaceholderType,
+export const cardSetChangeFieldPan = (
+    cardId: string | undefined,
+    fieldId: string,
     cx: number,
     cy: number,
-): CardSetChangePlaceholderPan => {
+): CardSetChangeFieldPan => {
     return {
-        type: CARDSET_CHANGE_PLACEHOLDER_PAN,
-        placeholder,
+        type: CARDSET_CHANGE_FIELD_PAN,
+        cardId,
+        fieldId,
         cx,
         cy,
     };
 };
 
-export const cardSetChangePlaceholderZoom = (
-    placeholder: PlaceholderType,
+export const cardSetChangeFieldZoom = (
+    cardId: string | undefined,
+    fieldId: string,
     zoom: number,
-): CardSetChangePlaceholderZoom => {
+): CardSetChangeFieldZoom => {
     return {
-        type: CARDSET_CHANGE_PLACEHOLDER_ZOOM,
-        placeholder,
+        type: CARDSET_CHANGE_FIELD_ZOOM,
+        cardId,
+        fieldId,
         zoom,
     };
 };

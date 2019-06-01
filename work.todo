@@ -258,6 +258,8 @@
     + Pan using rotation vector
     - Change how data is stored so we could change one card during action and all after action
         + Load version 2 data properly
+        + Text field resize bug
+        + Change how card is selected now image is selected after each drag (that's wrong)
         - Limit to one card CARDSET_CHANGE_PLACEHOLDER_ZOOM
         - Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
         - Fix import / export
@@ -265,6 +267,7 @@
         - This will make easier to reset cx, cy
     - Think what to do with old data where width and height not available on ImageData
         /home/dalius/projects/saffron/src/components/ImageField.tsx
+    - Think what to do if image is replaced in server side
     - Adjust rendering
     - Fix tests
 
@@ -272,6 +275,9 @@
     E.g. there are unhandled exceptions
 
 - Undo/Redo
+
+- Rebuild frame control icons. They look bad on Chrome
+
 - Resize card with content
 - Make field non-clickable for convenience
 

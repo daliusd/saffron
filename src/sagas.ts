@@ -22,7 +22,6 @@ import {
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_IS_TWO_SIDED,
     CARDSET_CHANGE_PLACEHOLDER_ANGLE,
-    CARDSET_CHANGE_PLACEHOLDER_POSITION,
     CARDSET_CHANGE_PLACEHOLDER_SIZE,
     CARDSET_CHANGE_SNAPPING_DISTANCE,
     CARDSET_CHANGE_TEXT,
@@ -105,9 +104,10 @@ import {
     cardSetChangeImageBase64,
     gameSelectRequest,
     messageDisplay,
-    CARDSET_CHANGE_PLACEHOLDER_PAN,
-    CARDSET_CHANGE_PLACEHOLDER_ZOOM,
+    CARDSET_CHANGE_FIELD_PAN,
+    CARDSET_CHANGE_FIELD_ZOOM,
     CARDSETS_SELECT_SUCCESS,
+    CARDSET_CHANGE_FIELD_POSITION,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection } from './types';
 import { State } from './reducers';
@@ -755,9 +755,9 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CHANGE_HEIGHT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_IS_TWO_SIDED, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_SNAPPING_DISTANCE, handleCardSetChange),
-        takeLatest(CARDSET_CHANGE_PLACEHOLDER_POSITION, handleCardSetChange),
-        takeLatest(CARDSET_CHANGE_PLACEHOLDER_PAN, handleCardSetChange),
-        takeLatest(CARDSET_CHANGE_PLACEHOLDER_ZOOM, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_FIELD_POSITION, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_FIELD_PAN, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_FIELD_ZOOM, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_SIZE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_PLACEHOLDER_ANGLE, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN, handleCardSetChange),
