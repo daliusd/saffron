@@ -260,8 +260,8 @@
         + Load version 2 data properly
         + Text field resize bug
         + Change how card is selected now image is selected after each drag (that's wrong)
-        - Limit to one card CARDSET_CHANGE_PLACEHOLDER_ZOOM
-        - Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
+        + Limit to one card CARDSET_CHANGE_PLACEHOLDER_ZOOM
+        + Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
         - Fix import / export
         - ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
         - This will make easier to reset cx, cy

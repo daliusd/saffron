@@ -83,7 +83,7 @@ export const CARDSET_CHANGE_SNAPPING_DISTANCE = 'CARDSET_CHANGE_SNAPPING_DISTANC
 export const CARDSET_CHANGE_FIELD_POSITION = 'CARDSET_CHANGE_FIELD_POSITION';
 export const CARDSET_CHANGE_FIELD_PAN = 'CARDSET_CHANGE_FIELD_PAN';
 export const CARDSET_CHANGE_FIELD_ZOOM = 'CARDSET_CHANGE_FIELD_ZOOM';
-export const CARDSET_CHANGE_PLACEHOLDER_SIZE = 'CARDSET_CHANGE_PLACEHOLDER_SIZE';
+export const CARDSET_CHANGE_FIELD_SIZE = 'CARDSET_CHANGE_FIELD_SIZE';
 export const CARDSET_CHANGE_PLACEHOLDER_ANGLE = 'CARDSET_CHANGE_PLACEHOLDER_ANGLE';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
 export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR';
@@ -416,9 +416,10 @@ export interface CardSetChangeFieldZoom {
     zoom: number;
 }
 
-export interface CardSetChangePlaceholderSize {
-    type: typeof CARDSET_CHANGE_PLACEHOLDER_SIZE;
-    placeholder: PlaceholderType;
+export interface CardSetChangeFieldSize {
+    type: typeof CARDSET_CHANGE_FIELD_SIZE;
+    cardId?: string;
+    fieldId: string;
     width: number;
     height: number;
 }
@@ -557,7 +558,7 @@ export type CardSetModifyAction =
     | CardSetChangeFieldPosition
     | CardSetChangeFieldPan
     | CardSetChangeFieldZoom
-    | CardSetChangePlaceholderSize
+    | CardSetChangeFieldSize
     | CardSetChangePlaceholderAngle
     | CardSetChangeActiveTextPlaceholderAlign
     | CardSetChangeActiveTextPlaceholderColor
@@ -926,14 +927,16 @@ export const cardSetChangeFieldZoom = (
     };
 };
 
-export const cardSetChangePlaceholderSize = (
-    placeholder: PlaceholderType,
+export const cardSetChangeFieldSize = (
+    cardId: string | undefined,
+    fieldId: string,
     width: number,
     height: number,
-): CardSetChangePlaceholderSize => {
+): CardSetChangeFieldSize => {
     return {
-        type: CARDSET_CHANGE_PLACEHOLDER_SIZE,
-        placeholder,
+        type: CARDSET_CHANGE_FIELD_SIZE,
+        cardId,
+        fieldId,
         width,
         height,
     };

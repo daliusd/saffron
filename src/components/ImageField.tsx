@@ -9,7 +9,7 @@ import {
     cardSetChangePlaceholderAngle,
     cardSetChangeFieldPan,
     cardSetChangeFieldZoom,
-    cardSetChangePlaceholderSize,
+    cardSetChangeFieldSize,
 } from '../actions';
 import { ImageInfo, ImageFieldInfo } from '../types';
 import { State } from '../reducers';
@@ -67,9 +67,9 @@ class ImageField extends PureComponent<Props, LocalState> {
         dispatch(cardSetChangeFieldZoom(cardOnly ? cardId : undefined, imageFieldInfo.id, zoom));
     };
 
-    handleResize = (width: number, height: number) => {
-        const { dispatch, imageFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderSize(imageFieldInfo, width / ppmm, height / ppmm));
+    handleResize = (width: number, height: number, cardOnly: boolean) => {
+        const { dispatch, imageFieldInfo, cardId, ppmm } = this.props;
+        dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, imageFieldInfo.id, width / ppmm, height / ppmm));
     };
 
     handleRotate = (angle: number) => {

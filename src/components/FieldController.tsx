@@ -8,6 +8,7 @@ import zoomIcon from './zoom.svg';
 import resizeIcon from './resize.svg';
 import rotateIcon from './rotate.svg';
 import style from './FieldController.module.css';
+import { rotateVec } from '../utils';
 
 interface OwnProps {
     cardId: string;
@@ -22,7 +23,7 @@ interface OwnProps {
     cy?: number;
     children: React.ReactNode;
     onDrag: (x: number, y: number, cardOnly: boolean) => void;
-    onResize: (width: number, height: number) => void;
+    onResize: (width: number, height: number, cardOnly: boolean) => void;
     onRotate: (angle: number) => void;
     onZoom?: (zoom: number, cardOnly: boolean) => void;
     onPan?: (cx: number, cy: number, cardOnly: boolean) => void;
@@ -48,6 +49,7 @@ export interface LocalState {
     dragStarted: boolean;
     panStarted: boolean;
     zoomStarted: boolean;
+    resizeStarted: boolean;
     startX: number;
     startY: number;
     activatedUsingTouch: boolean;
@@ -60,12 +62,6 @@ class FieldController extends React.Component<Props, LocalState> {
     zoomDiv: React.RefObject<HTMLImageElement>;
     resizeDiv: React.RefObject<HTMLImageElement>;
     rotateDiv: React.RefObject<HTMLImageElement>;
-    startX: number;
-    startY: number;
-    originalW: number;
-    originalH: number;
-    rotatedPointX: number;
-    rotatedPointY: number;
     centerX: number;
     centerY: number;
     originalAngle: number;
@@ -81,12 +77,6 @@ class FieldController extends React.Component<Props, LocalState> {
         this.rotateDiv = React.createRef();
         this.currentAngle = props.angle;
         this.moving = false;
-        this.startX = 0;
-        this.startY = 0;
-        this.originalW = 0;
-        this.originalH = 0;
-        this.rotatedPointX = 0;
-        this.rotatedPointY = 0;
         this.centerX = 0;
         this.centerY = 0;
         this.originalAngle = 0;
@@ -96,6 +86,7 @@ class FieldController extends React.Component<Props, LocalState> {
             dragStarted: false,
             panStarted: false,
             zoomStarted: false,
+            resizeStarted: false,
             startX: 0,
             startY: 0,
         };
@@ -127,15 +118,6 @@ class FieldController extends React.Component<Props, LocalState> {
 
         this.currentAngle = this.props.angle;
     }
-
-    rotateVec = (x: number, y: number, a: number) => {
-        const sinA = Math.sin(a);
-        const cosA = Math.cos(a);
-        const rx = cosA * x - sinA * y;
-        const ry = sinA * x + cosA * y;
-
-        return { rx, ry };
-    };
 
     handleBrowserDragStart = (event: React.DragEvent) => {
         event.stopPropagation();
@@ -267,7 +249,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         let dx = co.clientX - this.state.startX;
         let dy = co.clientY - this.state.startY;
-        const { rx, ry } = this.rotateVec(dx, dy, -this.currentAngle);
+        const { rx, ry } = rotateVec(dx, dy, -this.currentAngle);
 
         const newCx = cx + rx;
         const newCy = cy + ry;
@@ -340,7 +322,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
     handleZoomMove = (co: MouseEvent | Touch) => {
         const { zoom, onZoom } = this.props;
-        if (this.zoomDiv.current === null || !onZoom || zoom === undefined) return;
+        if (!onZoom || zoom === undefined) return;
 
         const dx = co.clientX - this.state.startX;
         const dy = co.clientY - this.state.startY;
@@ -390,25 +372,48 @@ class FieldController extends React.Component<Props, LocalState> {
         event.stopPropagation();
     };
 
-    handleResizeStart = (co: { clientX: number; clientY: number }) => {
+    handleResizeStart = (co: MouseEvent | Touch) => {
         const { isLocked } = this.props;
 
-        if (this.cDiv.current === null || isLocked) return;
+        if (isLocked) return;
 
         document.body.style.cursor = `url(${resizeIcon}), auto`;
 
-        this.originalW = this.cDiv.current.clientWidth;
-        this.originalH = this.cDiv.current.clientHeight;
+        this.setState({ resizeStarted: true, startX: co.clientX, startY: co.clientY });
+    };
 
-        const dx = this.cDiv.current.clientWidth / 2;
-        const dy = this.cDiv.current.clientHeight / 2;
-        const { rx, ry } = this.rotateVec(-dx, -dy, this.currentAngle);
+    handleResizeMouseMove = (event: MouseEvent) => {
+        this.handleResizeMove(event, event.ctrlKey);
+        event.preventDefault();
+    };
 
-        this.rotatedPointX = this.cDiv.current.offsetLeft + dx + rx;
-        this.rotatedPointY = this.cDiv.current.offsetTop + dy + ry;
+    handleResizeTouchMove = (event: TouchEvent) => {
+        this.handleResizeMove(event.changedTouches[0], event.ctrlKey);
+        event.preventDefault();
+    };
 
-        this.startX = co.clientX;
-        this.startY = co.clientY;
+    handleResizeMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
+        const { isLocked, ppmm, width, height, snappingDistance, onResize } = this.props;
+
+        if (isLocked) return;
+
+        const dx = co.clientX - this.state.startX;
+        const dy = co.clientY - this.state.startY;
+
+        const { rx, ry } = rotateVec(dx, dy, -this.currentAngle);
+
+        let newWidth = width + rx;
+        let newHeight = height + ry;
+
+        if (!disableSnapping && snappingDistance !== 0) {
+            newWidth = Math.round(newWidth / ppmm / snappingDistance) * snappingDistance * ppmm;
+            newHeight = Math.round(newHeight / ppmm / snappingDistance) * snappingDistance * ppmm;
+        }
+
+        this.setState({ startX: co.clientX, startY: co.clientY });
+        console.log(newWidth, newHeight);
+
+        onResize(newWidth, newHeight, true);
     };
 
     handleResizeMouseUp = (event: MouseEvent) => {
@@ -428,58 +433,15 @@ class FieldController extends React.Component<Props, LocalState> {
     handleResizeComplete = (event: Event) => {
         const { isLocked } = this.props;
 
-        if (this.cDiv.current === null) return;
-
-        if (this.moving && !isLocked) {
-            const { offsetLeft, offsetTop, clientWidth, clientHeight } = this.cDiv.current;
-            this.props.onDrag(offsetLeft, offsetTop, false);
-            this.props.onResize(clientWidth, clientHeight);
-            this.moving = false;
+        if (this.state.resizeStarted && !isLocked) {
+            const { width, height, onResize } = this.props;
+            onResize(width, height, false);
+            this.setState({ resizeStarted: false });
         }
 
         document.body.style.cursor = this.originalBodyCursor;
 
         event.preventDefault();
-    };
-
-    handleResizeMouseMove = (event: MouseEvent) => {
-        this.handleResizeMove(event, event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleResizeTouchMove = (event: TouchEvent) => {
-        this.handleResizeMove(event.changedTouches[0], event.ctrlKey);
-        event.preventDefault();
-    };
-
-    handleResizeMove = (co: { clientX: number; clientY: number }, disableSnapping: boolean) => {
-        const { isLocked, ppmm, snappingDistance } = this.props;
-
-        if (this.cDiv.current === null || isLocked) return;
-        this.moving = true;
-
-        const vx = co.clientX - this.startX;
-        const vy = co.clientY - this.startY;
-
-        const { rx, ry } = this.rotateVec(vx, vy, -this.currentAngle);
-
-        let w = this.originalW + rx;
-        let h = this.originalH + ry;
-
-        if (!disableSnapping && snappingDistance !== 0) {
-            w = Math.round(w / ppmm / snappingDistance) * snappingDistance * ppmm;
-            h = Math.round(h / ppmm / snappingDistance) * snappingDistance * ppmm;
-        }
-
-        this.cDiv.current.style.width = w + 'px';
-        this.cDiv.current.style.height = h + 'px';
-
-        const rotatedV = this.rotateVec(w / 2, h / 2, this.currentAngle);
-        const nx = this.rotatedPointX + rotatedV.rx;
-        const ny = this.rotatedPointY + rotatedV.ry;
-
-        this.cDiv.current.style.left = nx - w / 2 + 'px';
-        this.cDiv.current.style.top = ny - h / 2 + 'px';
     };
 
     // Rotation handling

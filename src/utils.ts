@@ -14,3 +14,12 @@ export function downloadBlob(blobURL: string, filename: string, resolve?: () => 
         if (resolve) resolve();
     }, 100);
 }
+
+export function rotateVec(x: number, y: number, a: number) {
+    const sinA = Math.sin(a);
+    const cosA = Math.cos(a);
+    const rx = cosA * x - sinA * y;
+    const ry = sinA * x + cosA * y;
+
+    return { rx, ry };
+}

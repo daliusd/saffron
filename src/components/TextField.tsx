@@ -6,7 +6,7 @@ import {
     Dispatch,
     cardSetChangePlaceholderAngle,
     cardSetChangeFieldPosition,
-    cardSetChangePlaceholderSize,
+    cardSetChangeFieldSize,
 } from '../actions';
 import { State } from '../reducers';
 import { TextFieldInfo } from '../types';
@@ -39,9 +39,9 @@ class TextField extends PureComponent<Props> {
         dispatch(cardSetChangeFieldPosition(cardOnly ? cardId : undefined, textFieldInfo.id, x / ppmm, y / ppmm));
     };
 
-    handleResize = (width: number, height: number) => {
-        const { dispatch, textFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangePlaceholderSize(textFieldInfo, width / ppmm, height / ppmm));
+    handleResize = (width: number, height: number, cardOnly: boolean) => {
+        const { dispatch, textFieldInfo, cardId, ppmm } = this.props;
+        dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, textFieldInfo.id, width / ppmm, height / ppmm));
     };
 
     handleRotate = (angle: number) => {
