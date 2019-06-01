@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 
 import {
     Dispatch,
-    cardSetActiveCardAndPlaceholder,
+    cardSetActiveCardAndField,
     cardSetChangeImage,
     cardSetChangeFieldPosition,
     cardSetChangeFieldAngle,
@@ -109,7 +109,7 @@ class ImageField extends PureComponent<Props, LocalState> {
         const { dispatch, cardId, isOnBack, imageFieldInfo } = this.props;
         if (!this.state.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndPlaceholder(cardId, isOnBack, imageFieldInfo.id));
+            dispatch(cardSetActiveCardAndField(cardId, isOnBack, imageFieldInfo.id));
         }
     };
 

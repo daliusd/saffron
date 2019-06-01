@@ -5,7 +5,7 @@ import shortid from 'shortid';
 import { ACTIVITY_SELECTING, State } from '../reducers';
 import { BLEED_WIDTH } from '../constants';
 import { CardSetType, CardType, CardsCollection } from '../types';
-import { Dispatch, cardSetActiveCardAndPlaceholder, cardSetCreateCard, cardSetRenameRequest } from '../actions';
+import { Dispatch, cardSetActiveCardAndField, cardSetCreateCard, cardSetRenameRequest } from '../actions';
 import Card from './Card';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
@@ -56,7 +56,7 @@ export class CardSet extends Component<Props, LocalState> {
 
     handleClickOutsideOfCard = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetActiveCardAndPlaceholder(undefined, false, undefined));
+        dispatch(cardSetActiveCardAndField(undefined, false, undefined));
     };
 
     handleCardSetNameChange = (newName: string) => {

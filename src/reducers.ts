@@ -2,8 +2,8 @@ import { combineReducers } from 'redux';
 import shortid from 'shortid';
 
 import {
-    CARDSET_ADD_IMAGE_PLACEHOLDER,
-    CARDSET_ADD_TEXT_PLACEHOLDER,
+    CARDSET_ADD_IMAGE_FIELD,
+    CARDSET_ADD_TEXT_FIELD,
     CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
@@ -37,7 +37,7 @@ import {
     CARDSET_SELECT_FAILURE,
     CARDSET_SELECT_REQUEST,
     CARDSET_SELECT_SUCCESS,
-    CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
+    CARDSET_SET_ACTIVE_CARD_AND_FIELD,
     CARDSET_SET_SIDEBAR_STATE,
     CARDSET_SET_ZOOM,
     CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
@@ -550,7 +550,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 },
             };
         }
-        case CARDSET_ADD_TEXT_PLACEHOLDER: {
+        case CARDSET_ADD_TEXT_FIELD: {
             let textSettings = { ...state.textSettings };
             const id = shortid.generate();
             let fields: FieldInfoByCardCollection = {};
@@ -583,7 +583,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_ADD_IMAGE_PLACEHOLDER: {
+        case CARDSET_ADD_IMAGE_FIELD: {
             const id = shortid.generate();
             let fields: FieldInfoByCardCollection = {};
             for (const cardId of state.cardsAllIds) {
@@ -1351,7 +1351,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 },
             };
         }
-        case CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER: {
+        case CARDSET_SET_ACTIVE_CARD_AND_FIELD: {
             let textSettings = { ...state.textSettings };
             let activeSidebar = state.activeSidebar;
 

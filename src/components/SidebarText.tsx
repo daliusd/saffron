@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { DispatchProps, SidebarOwnProps, FieldInfo } from '../types';
 import { State } from '../reducers';
 import {
-    cardSetAddTextPlaceholder,
+    cardSetAddTextField,
     cardSetChangeActivePlaceholderName,
     cardSetChangeActiveTextPlaceholderAlign,
     cardSetLockActivePlaceholder,
@@ -29,7 +29,7 @@ type Props = StateProps & DispatchProps & SidebarOwnProps;
 export class SidebarText extends Component<Props> {
     handleAddTextClick = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetAddTextPlaceholder());
+        dispatch(cardSetAddTextField());
     };
 
     handleSetTextAlignLeft = () => {

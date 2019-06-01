@@ -6,8 +6,8 @@ import jwtDecode from 'jwt-decode';
 
 import { BLEED_WIDTH } from './constants';
 import {
-    CARDSET_ADD_IMAGE_PLACEHOLDER,
-    CARDSET_ADD_TEXT_PLACEHOLDER,
+    CARDSET_ADD_IMAGE_FIELD,
+    CARDSET_ADD_TEXT_FIELD,
     CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
@@ -741,8 +741,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),
         takeLatest(CARDSET_REMOVE_CARD, handleCardSetChange),
         takeLatest(CARDSET_UPDATE_CARD_COUNT, handleCardSetChange),
-        takeLatest(CARDSET_ADD_TEXT_PLACEHOLDER, handleCardSetChange),
-        takeLatest(CARDSET_ADD_IMAGE_PLACEHOLDER, handleCardSetChange),
+        takeLatest(CARDSET_ADD_TEXT_FIELD, handleCardSetChange),
+        takeLatest(CARDSET_ADD_IMAGE_FIELD, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME, handleCardSetChange),
         takeLatest(CARDSET_REMOVE_ACTIVE_PLACEHOLDER, handleCardSetChange),
         takeLatest(CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP, handleCardSetChange),

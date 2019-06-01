@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 
 import { BLEED_WIDTH } from '../constants';
 import { CardType, IdsArray, FieldInfoCollection } from '../types';
-import { Dispatch, cardSetActiveCardAndPlaceholder } from '../actions';
+import { Dispatch, cardSetActiveCardAndField } from '../actions';
 import { State } from '../reducers';
 import ImageField from './ImageField';
 import TextField from './TextField';
@@ -50,7 +50,7 @@ class Card extends Component<Props, LocalState> {
         const { dispatch, card, isBack } = this.props;
         const el = event.target as HTMLElement;
         if (el.getAttribute('id') === `card_${card.id}`) {
-            dispatch(cardSetActiveCardAndPlaceholder(card.id, isBack, undefined));
+            dispatch(cardSetActiveCardAndField(card.id, isBack, undefined));
             event.stopPropagation();
         }
     };

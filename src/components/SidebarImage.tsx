@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 import { DispatchProps, IdsArray, ImageArray, SidebarOwnProps, FieldInfo, ImageInfo } from '../types';
 import { State } from '../reducers';
 import {
-    cardSetAddImagePlaceholder,
+    cardSetAddImageField,
     cardSetChangeActivePlaceholderName,
     cardSetChangeFitForActivePlaceholder,
     cardSetChangeCropForActivePlaceholder,
@@ -44,7 +44,7 @@ export class SidebarImage extends Component<Props, LocalState> {
 
     handleAddImageClick = () => {
         const { dispatch } = this.props;
-        dispatch(cardSetAddImagePlaceholder());
+        dispatch(cardSetAddImageField());
     };
 
     changeImage = (ii: ImageInfo) => {

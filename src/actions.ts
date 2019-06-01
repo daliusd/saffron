@@ -65,8 +65,8 @@ export const CARDSET_CREATE_CARD = 'CARDSET_CREATE_CARD';
 export const CARDSET_CLONE_CARD = 'CARDSET_CLONE_CARD';
 export const CARDSET_REMOVE_CARD = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
-export const CARDSET_ADD_TEXT_PLACEHOLDER = 'CARDSET_ADD_TEXT_PLACEHOLDER';
-export const CARDSET_ADD_IMAGE_PLACEHOLDER = 'CARDSET_ADD_IMAGE_PLACEHOLDER';
+export const CARDSET_ADD_TEXT_FIELD = 'CARDSET_ADD_TEXT_FIELD';
+export const CARDSET_ADD_IMAGE_FIELD = 'CARDSET_ADD_IMAGE_FIELD';
 export const CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME = 'CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME';
 export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
 export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP';
@@ -96,7 +96,7 @@ export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT = 'CARDSET_CHANG
 export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
-export const CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER = 'CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER';
+export const CARDSET_SET_ACTIVE_CARD_AND_FIELD = 'CARDSET_SET_ACTIVE_CARD_AND_FIELD';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
 export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
 export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
@@ -338,11 +338,11 @@ export interface CardSetUpdateCardCount {
     card: CardType;
     count: number;
 }
-export interface CardSetAddTextPlaceholder {
-    type: typeof CARDSET_ADD_TEXT_PLACEHOLDER;
+export interface CardSetAddTextField {
+    type: typeof CARDSET_ADD_TEXT_FIELD;
 }
-export interface CardSetAddImagePlaceholder {
-    type: typeof CARDSET_ADD_IMAGE_PLACEHOLDER;
+export interface CardSetAddImageField {
+    type: typeof CARDSET_ADD_IMAGE_FIELD;
 }
 export interface CardSetChangeActivePlaceholderName {
     type: typeof CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME;
@@ -475,8 +475,8 @@ export interface CardSetChangeImageBase64 {
     placeholderId: string;
     base64?: string;
 }
-export interface CardSetSetActiveCardAndPlaceholder {
-    type: typeof CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER;
+export interface CardSetSetActiveCardAndField {
+    type: typeof CARDSET_SET_ACTIVE_CARD_AND_FIELD;
     cardId?: string;
     isBackActive: boolean;
     fieldId?: string;
@@ -541,8 +541,8 @@ export type CardSetModifyAction =
     | CardSetCloneCard
     | CardSetRemoveCard
     | CardSetUpdateCardCount
-    | CardSetAddTextPlaceholder
-    | CardSetAddImagePlaceholder
+    | CardSetAddTextField
+    | CardSetAddImageField
     | CardSetChangeActivePlaceholderName
     | CardSetRemoveActivePlaceholder
     | CardSetRaiseActivePlaceholderToTop
@@ -570,7 +570,7 @@ export type CardSetModifyAction =
     | CardSetChangeText
     | CardSetChangeImage
     | CardSetChangeImageBase64
-    | CardSetSetActiveCardAndPlaceholder
+    | CardSetSetActiveCardAndField
     | CardSetSetSidebarState
     | CardSetSetZoom
     | CardSetUploadImage
@@ -793,15 +793,15 @@ export const cardSetUpdateCardCount = (card: CardType, count: number): CardSetUp
     };
 };
 
-export const cardSetAddTextPlaceholder = (): CardSetAddTextPlaceholder => {
+export const cardSetAddTextField = (): CardSetAddTextField => {
     return {
-        type: CARDSET_ADD_TEXT_PLACEHOLDER,
+        type: CARDSET_ADD_TEXT_FIELD,
     };
 };
 
-export const cardSetAddImagePlaceholder = (): CardSetAddImagePlaceholder => {
+export const cardSetAddImageField = (): CardSetAddImageField => {
     return {
-        type: CARDSET_ADD_IMAGE_PLACEHOLDER,
+        type: CARDSET_ADD_IMAGE_FIELD,
     };
 };
 
@@ -1047,13 +1047,13 @@ export const cardSetChangeImageBase64 = (
     };
 };
 
-export const cardSetActiveCardAndPlaceholder = (
+export const cardSetActiveCardAndField = (
     cardId: string | undefined,
     isBackActive: boolean,
     fieldId: string | undefined,
-): CardSetSetActiveCardAndPlaceholder => {
+): CardSetSetActiveCardAndField => {
     return {
-        type: CARDSET_SET_ACTIVE_CARD_AND_PLACEHOLDER,
+        type: CARDSET_SET_ACTIVE_CARD_AND_FIELD,
         cardId,
         isBackActive,
         fieldId,

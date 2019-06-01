@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { DispatchProps, IdsArray, SidebarOwnProps, FieldInfo, FieldInfoByCardCollection } from '../types';
 import { State } from '../reducers';
 import {
-    cardSetActiveCardAndPlaceholder,
+    cardSetActiveCardAndField,
     cardSetChangeActivePlaceholderName,
     cardSetChangeFieldAngle,
     cardSetChangeFieldSize,
@@ -36,9 +36,7 @@ export class SidebarMeasurements extends Component<Props> {
             if (idx > 0) prevField = fieldsAllIds[idx - 1];
         }
 
-        dispatch(
-            cardSetActiveCardAndPlaceholder(activeCardId, (activeField && activeField.isOnBack) || false, prevField),
-        );
+        dispatch(cardSetActiveCardAndField(activeCardId, (activeField && activeField.isOnBack) || false, prevField));
     };
 
     handleNextPlaceholder = () => {
@@ -51,9 +49,7 @@ export class SidebarMeasurements extends Component<Props> {
             if (idx !== -1 && idx !== fieldsAllIds.length - 1) nextField = fieldsAllIds[idx + 1];
         }
 
-        dispatch(
-            cardSetActiveCardAndPlaceholder(activeCardId, (activeField && activeField.isOnBack) || false, nextField),
-        );
+        dispatch(cardSetActiveCardAndField(activeCardId, (activeField && activeField.isOnBack) || false, nextField));
     };
 
     handleRaiseToTop = () => {

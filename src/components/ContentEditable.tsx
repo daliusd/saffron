@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component } from 'react';
 
 import { DEFAULT_FONT, DEFAULT_FONT_SIZE, DEFAULT_LINE_HEIGHT } from '../constants';
-import { Dispatch, cardSetActiveCardAndPlaceholder, cardSetChangeText } from '../actions';
+import { Dispatch, cardSetActiveCardAndField, cardSetChangeText } from '../actions';
 import { State } from '../reducers';
 import { TextInfo } from '../types';
 import style from './ContentEditable.module.css';
@@ -148,7 +148,7 @@ class ContentEditable extends Component<Props> {
             event.stopPropagation();
         } else if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndPlaceholder(cardId, isOnBack, placeholderId));
+            dispatch(cardSetActiveCardAndField(cardId, isOnBack, placeholderId));
 
             if (!this.editDiv.current) return;
             this.editDiv.current.focus();

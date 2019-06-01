@@ -256,7 +256,7 @@
     + Shift
     + Clipping
     + Pan using rotation vector
-    - Change how data is stored so we could change one card during action and all after action
+    + Change how data is stored so we could change one card during action and all after action
         + Load version 2 data properly
         + Text field resize bug
         + Change how card is selected now image is selected after each drag (that's wrong)
@@ -264,10 +264,12 @@
         + Limit to one card CARDSET_CHANGE_PLACEHOLDER_PAN
         + Fix import / export
         + This will make easier to reset cx, cy
-        - ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
+        + ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
     - Think what to do with old data where width and height not available on ImageData
         /home/dalius/projects/saffron/src/components/ImageField.tsx
+        Load image data on load
     - Think what to do if image is replaced in server side
+        Maybe we should always check images on load
     - PDF generation log and reporting of failures via e-mail.
         E.g. there are unhandled exceptions
     - Adjust rendering
