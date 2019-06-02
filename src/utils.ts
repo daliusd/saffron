@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export function downloadBlob(blobURL: string, filename: string, resolve?: () => void) {
     const tempLink = document.createElement('a');
     tempLink.style.display = 'none';
@@ -22,4 +24,8 @@ export function rotateVec(x: number, y: number, a: number) {
     const ry = sinA * x + cosA * y;
 
     return { rx, ry };
+}
+
+export function reportError(error: string) {
+    return axios.post('/api/reports', { error });
 }

@@ -271,9 +271,9 @@
     + Think what to do if image is replaced in server side
         Maybe we should always check images on load
     + crop checkbox not controlled ?
-    - PDF and PNG generation log and reporting of failures via e-mail.
+    + sagas putError should log stack as well
+    + PDF and PNG generation log and reporting of failures via e-mail.
         E.g. there are unhandled exceptions
-    - sagas putError should log stack as well
     - Adjust rendering
     - Fix tests
     - Rebuild frame control icons. They look bad on Chrome

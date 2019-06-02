@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
+import { reportError } from './utils';
 
 window.addEventListener('error', function(evt: ErrorEvent) {
     if (process.env.NODE_ENV === 'production') {
         let error = evt.error;
-        axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
+        reportError(`${error.message} ${error.stack}`);
     }
 });
 
@@ -28,9 +28,9 @@ export default class ErrorBoundary extends Component<Props, State> {
         this.setState({ hasError: true });
         if (process.env.NODE_ENV === 'production') {
             if (error !== null) {
-                axios.post('/api/reports', { error: `${error.message} ${error.stack}` });
+                reportError(`${error.message} ${error.stack}`);
             } else {
-                axios.post('/api/reports', { error: `No error: ${info}` });
+                reportError(`No error: ${info}`);
             }
         }
     }

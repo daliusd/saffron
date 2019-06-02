@@ -129,10 +129,16 @@ import {
 import { generatePdfUsingWorker, generatePngUsingWorker } from './workerController';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
+import { reportError } from './utils';
 
 // Messages
-export function* putError(message: string): SagaIterator {
-    yield put(messageDisplay('error', message));
+export function* putError(e: Error): SagaIterator {
+    yield put(messageDisplay('error', e.message));
+    if (process.env.NODE_ENV === 'development') {
+        yield call(console.log, e.stack);
+    } else {
+        yield call(reportError, e.stack || e.message);
+    }
 }
 
 export function* putInfo(message: string): SagaIterator {
@@ -203,7 +209,7 @@ export function* handleLoginRequest(action: LoginRequest): SagaIterator {
         yield put({ type: LOGIN_SUCCESS });
     } catch (e) {
         yield put({ type: LOGIN_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -244,7 +250,7 @@ export function* handleLogoutRequest(): SagaIterator {
         yield put({ type: LOGOUT_SUCCESS });
     } catch (e) {
         yield put({ type: LOGOUT_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -258,7 +264,7 @@ export function* handleSignupRequest(action: SignUpRequest): SagaIterator {
         yield put({ type: LOGIN_SUCCESS });
     } catch (e) {
         yield put({ type: SIGNUP_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -313,7 +319,7 @@ export function* handleGameCreateRequest(action: GameCreateRequest): SagaIterato
         });
         yield put({ type: GAME_LIST_REQUEST });
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -322,7 +328,7 @@ export function* handleGameDeleteRequest(action: GameDeleteRequest): SagaIterato
         yield call(authorizedDeleteRequest, '/api/games/' + action.gameId);
         yield put({ type: GAME_LIST_REQUEST });
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -331,7 +337,7 @@ export function* handleGameRenameRequest(action: GameRenameRequest): SagaIterato
         yield call(delay, 500);
         yield call(authorizedPutRequest, '/api/games/' + action.gameId, { name: action.newName });
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -350,7 +356,7 @@ export function* handleGameListRequest(): SagaIterator {
         });
     } catch (e) {
         yield put({ type: GAME_LIST_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -376,7 +382,7 @@ export function* handleGameSelectRequest(action: GameSelectRequest): SagaIterato
         }
     } catch (e) {
         yield put({ type: GAME_SELECT_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -412,7 +418,7 @@ export function* handleGameCreatePdfRequest(action: GameCreatePdfRequest): SagaI
     } catch (e) {
         yield put({ type: GAME_CREATE_PDF_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -432,7 +438,7 @@ export function* handleGameCreatePngRequest(action: GameCreatePngRequest): SagaI
     } catch (e) {
         yield put({ type: GAME_CREATE_PNG_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -451,7 +457,7 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): SagaI
         yield put(gameSelectRequest(action.gameId, true));
     } catch (e) {
         yield put({ type: CARDSET_CREATE_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -463,7 +469,7 @@ export function* handleCardSetDeleteRequest(action: CardSetDeleteRequest): SagaI
         const state = yield select();
         yield put(gameSelectRequest(state.games.active, true));
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -472,7 +478,7 @@ export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaI
         yield call(delay, 500);
         yield call(authorizedPutRequest, '/api/cardsets/' + action.cardSetId, { name: action.newName });
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -612,7 +618,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
         yield put(gameSelectRequest(resp.data.gameId, false));
     } catch (e) {
         yield put({ type: CARDSET_SELECT_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -644,7 +650,7 @@ export function* handleCardSetUploadImage(action: CardSetUploadImage): SagaItera
     } catch (e) {
         yield put({ type: CARDSET_UPLOAD_IMAGE_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
-        yield call(putError, e.message);
+        yield call(putError, e);
         action.error(e.message);
     }
 }
@@ -710,7 +716,7 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActivePlaceho
             }
         }
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -745,7 +751,7 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
             }
         }
     } catch (e) {
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
@@ -796,7 +802,7 @@ export function* handleCardSetChange(): SagaIterator {
         allowWindowClose();
     } catch (e) {
         if (progressId !== null) yield call(hideProgress, progressId);
-        yield call(putError, e.message);
+        yield call(putError, e);
         allowWindowClose();
     }
 }
@@ -818,7 +824,7 @@ export function* handleImageListRequest(action: ImageListRequest): SagaIterator 
         });
     } catch (e) {
         yield put({ type: IMAGE_LIST_FAILURE });
-        yield call(putError, e.message);
+        yield call(putError, e);
     }
 }
 
