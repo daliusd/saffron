@@ -16,6 +16,7 @@ import { State } from '../reducers';
 import FieldController from './FieldController';
 import emptyImageImage from './image.svg';
 import style from './ImageField.module.css';
+import { calculateImageDimensions } from '../utils';
 
 interface OwnProps {
     cardId: string;
@@ -28,8 +29,6 @@ interface OwnProps {
 
 interface StateProps {
     imageUrl?: string;
-    imageWidth: number;
-    imageHeight: number;
 }
 
 interface DispatchProps {
@@ -150,23 +149,11 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     render() {
-        const { imageFieldInfo, imageUrl, ppmm, cardWidth, cardHeight, imageWidth, imageHeight } = this.props;
+        const { imageFieldInfo, imageUrl, ppmm, cardWidth, cardHeight } = this.props;
 
-        let calculatedImageWidth, calculatedImageHeight;
-        if (!imageFieldInfo.fit || imageFieldInfo.fit === 'width') {
-            calculatedImageWidth = imageFieldInfo.width * ppmm;
-            calculatedImageHeight = ((imageFieldInfo.width * imageHeight) / imageWidth) * ppmm;
-        } else if (imageFieldInfo.fit === 'height') {
-            calculatedImageWidth = ((imageFieldInfo.height * imageWidth) / imageHeight) * ppmm;
-            calculatedImageHeight = imageFieldInfo.height * ppmm;
-        } else {
-            // strech
-            calculatedImageWidth = imageFieldInfo.width * ppmm;
-            calculatedImageHeight = imageFieldInfo.height * ppmm;
-        }
-
-        calculatedImageWidth *= imageFieldInfo.zoom || 1;
-        calculatedImageHeight *= imageFieldInfo.zoom || 1;
+        let dim = calculateImageDimensions(imageFieldInfo);
+        let calculatedImageWidth = dim.width * ppmm;
+        let calculatedImageHeight = dim.height * ppmm;
 
         return (
             <FieldController
@@ -227,22 +214,16 @@ class ImageField extends PureComponent<Props, LocalState> {
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     let imageUrl: string | undefined = '';
-    let imageWidth = 1;
-    let imageHeight = 1;
     if (props.imageFieldInfo && props.imageFieldInfo.type === 'image') {
         if (props.imageFieldInfo.base64) {
             imageUrl = 'data:image/svg+xml;base64,' + props.imageFieldInfo.base64;
         } else {
             imageUrl = props.imageFieldInfo && props.imageFieldInfo.url;
         }
-        imageWidth = props.imageFieldInfo.imageWidth || 1;
-        imageHeight = props.imageFieldInfo.imageHeight || 1;
     }
 
     return {
         imageUrl,
-        imageWidth,
-        imageHeight,
     };
 };
 

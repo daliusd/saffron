@@ -1,33 +1,12 @@
 import axios from 'axios';
-import { downloadBlob } from './utils';
+import { downloadBlob, calculateImageDimensions } from './utils';
 import { delay } from 'redux-saga';
 import { XmlDocument } from 'xmldoc';
 import JSZip from 'jszip';
 import { getRequest } from './requests';
-import { CardSetData } from './types';
+import { CardSetData, ImageToDraw, ImageType } from './types';
 
 const SVG_B64_START = 'data:image/svg+xml;base64,';
-
-enum ImageType {
-    SVG,
-    SVG_PATH,
-    IMAGE,
-    BLOCK_START,
-    BLOCK_END,
-}
-
-interface ImageToDraw {
-    type: ImageType;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-    angle: number;
-    fit?: string;
-    data: string;
-    color?: string;
-    scale?: number;
-}
 
 export const generatePdfUsingWorker = (
     accessToken: string,
@@ -105,6 +84,10 @@ function prepareImageToDrawSpace(context: CanvasRenderingContext2D, imageToDraw:
     let ax = (-imageToDraw.width / 2) * ptpmm;
     let ay = (-imageToDraw.height / 2) * ptpmm;
     context.translate(ax, ay);
+    if (imageToDraw.crop) {
+        context.rect(0, 0, imageToDraw.width * ptpmm, imageToDraw.height * ptpmm);
+        context.clip();
+    }
 }
 
 function fixWidthAndHeightInSvg(data: string) {
@@ -193,6 +176,11 @@ class PNGGenerator {
                     } else if (imageToDraw.type === ImageType.IMAGE || imageToDraw.type === ImageType.SVG) {
                         prepareImageToDrawSpace(context, imageToDraw, ptpmm);
 
+                        if (imageToDraw.cx && imageToDraw.cy) {
+                            context.translate(imageToDraw.cx * ptpmm, imageToDraw.cy * ptpmm);
+                        }
+                        let dim = calculateImageDimensions(imageToDraw);
+
                         let image;
                         if (imageToDraw.type === ImageType.SVG) {
                             let svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
@@ -207,16 +195,7 @@ class PNGGenerator {
                             }
                         }
 
-                        let scaledWidth = imageToDraw.width * ptpmm;
-                        let scaledHeight = imageToDraw.height * ptpmm;
-
-                        if (!imageToDraw.fit || imageToDraw.fit === 'width') {
-                            scaledHeight = image.height * (scaledWidth / image.width);
-                        } else if (imageToDraw.fit === 'height') {
-                            scaledWidth = image.width * (scaledHeight / image.height);
-                        }
-
-                        context.drawImage(image, 0, 0, scaledWidth, scaledHeight);
+                        context.drawImage(image, 0, 0, dim.width * ptpmm, dim.height * ptpmm);
 
                         context.restore();
                     } else if (imageToDraw.type === ImageType.BLOCK_START) {

@@ -180,8 +180,33 @@ export interface CardSetData {
     isTwoSided: boolean;
     cardsAllIds: string[];
     cardsById: CardsCollection;
-    placeholders: PlaceholdersCollection;
-    placeholdersAllIds: string[];
-    texts: PlaceholdersTextInfoByCardCollection;
-    images: PlaceholdersImageInfoByCardCollection;
+    fieldsAllIds: string[];
+    fields: FieldInfoByCardCollection;
+}
+
+export enum ImageType {
+    SVG,
+    SVG_PATH,
+    IMAGE,
+    BLOCK_START,
+    BLOCK_END,
+}
+
+export interface ImageToDraw {
+    type: ImageType;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    angle: number;
+    fit?: string;
+    data: string;
+    color?: string;
+    scale?: number;
+    imageWidth?: number;
+    imageHeight?: number;
+    zoom?: number;
+    cx?: number;
+    cy?: number;
+    crop?: boolean;
 }
