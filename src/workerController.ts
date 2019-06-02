@@ -119,7 +119,12 @@ function fixWidthAndHeightInSvg(data: string) {
 }
 
 class PNGGenerator {
-    tasksQueue: { type: string; subType: string; imageToDraw?: ImageToDraw }[] = [];
+    tasksQueue: {
+        type: string;
+        subType: string;
+        imageToDraw?: ImageToDraw;
+        error?: { message: string; stack: string };
+    }[] = [];
     worker: Worker;
 
     constructor() {
@@ -130,7 +135,7 @@ class PNGGenerator {
 
         this.worker = new Worker('/js/worker.js');
         this.worker.addEventListener('message', event => {
-            if (event.data.type === 'generateCard') {
+            if (event.data.type === 'generateCard' || event.data.type === 'generateError') {
                 this.tasksQueue.push(event.data);
             }
         });
@@ -223,6 +228,12 @@ class PNGGenerator {
 
                 if (task && task.subType === 'stop') {
                     stopped = true;
+                }
+
+                if (task && task.type === 'generateError' && task.error) {
+                    let error = Error('Failed to generate PNG');
+                    error.stack = task.error.stack;
+                    throw error;
                 }
             }
             if (!stopped) {
