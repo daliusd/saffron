@@ -818,7 +818,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
                         let fitImageWidth = width;
                         let fitImageHeight = height;
-                        if (fit === 'width') {
+                        if (fit === 'width' || fit === undefined) {
                             fitImageHeight = width * (imageHeight / imageWidth);
                         } else if (fit === 'height') {
                             fitImageWidth = height * (imageWidth / imageHeight);
@@ -912,7 +912,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                     ny = ny + ry - height / 2;
 
                     if (fieldInfo.type === 'image' && fieldInfo.cx && fieldInfo.cy) {
-                        if (fieldInfo.fit === 'width') {
+                        if (fieldInfo.fit === 'width' || fieldInfo.fit === undefined) {
                             let ratio = width / fieldInfo.width;
                             fieldInfo.cx *= ratio;
                             fieldInfo.cy *= ratio;
