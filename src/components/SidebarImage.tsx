@@ -23,6 +23,7 @@ import style from './SidebarImage.module.css';
 interface StateProps {
     isAuthenticated: boolean;
     activeFieldInfo?: FieldInfo;
+    crop: boolean;
     activeCardId?: string;
     filter: string;
     images: ImageArray;
@@ -165,7 +166,7 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     render() {
-        const { activeFieldInfo, filter, visible } = this.props;
+        const { activeFieldInfo, crop, filter, visible } = this.props;
         const { location, applyToAllCards } = this.state;
 
         return (
@@ -270,11 +271,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                     <>
                         <div>
                             <label>
-                                <input
-                                    type="checkbox"
-                                    checked={activeFieldInfo.crop}
-                                    onChange={this.handleChangeCrop}
-                                />
+                                <input type="checkbox" checked={crop} onChange={this.handleChangeCrop} />
                                 Crop
                             </label>
                             <ColorButton
@@ -363,6 +360,7 @@ const mapStateToProps = (state: State): StateProps => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
         activeFieldInfo,
+        crop: activeFieldInfo && activeFieldInfo.type === 'image' ? activeFieldInfo.crop || false : false,
         activeCardId,
         images: state.images.images,
         filter: state.images.filter,
