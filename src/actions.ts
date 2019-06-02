@@ -318,7 +318,7 @@ export interface CardSetSelectSuccess {
     type: typeof CARDSET_SELECT_SUCCESS;
     id: string;
     name: string;
-    data: CardSetSelectSuccessData;
+    data: CardSetSelectSuccessDataV3;
     gameId: string;
 }
 export interface CardSetCreateCard {

@@ -417,46 +417,6 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 activity: state.activity | ACTIVITY_SELECTING,
             });
         case CARDSET_SELECT_SUCCESS: {
-            let fields: FieldInfoByCardCollection = {};
-            let fieldsAllIds: IdsArray = [];
-            let version = action.data.version;
-
-            if (action.data.version === 2) {
-                fieldsAllIds = action.data.placeholdersAllIds;
-                for (const cardId of action.data.cardsAllIds) {
-                    fields[cardId] = {};
-
-                    for (const fieldId of fieldsAllIds) {
-                        let placeholder = action.data.placeholders[fieldId];
-                        if (placeholder.type === 'image') {
-                            let imageInfo = action.data.images[cardId][fieldId];
-                            fields[cardId][fieldId] = {
-                                type: 'image',
-                                ...placeholder,
-                                url: imageInfo && imageInfo.url,
-                                global: imageInfo && imageInfo.global,
-                                base64: imageInfo && imageInfo.base64,
-                                color: imageInfo && imageInfo.color,
-                                imageWidth: imageInfo && imageInfo.width,
-                                imageHeight: imageInfo && imageInfo.height,
-                            };
-                        } else if (placeholder.type === 'text') {
-                            fields[cardId][fieldId] = {
-                                type: 'text',
-                                ...placeholder,
-                                ...action.data.texts[cardId][fieldId],
-                            };
-                        }
-                    }
-                }
-                version = 3;
-            } else if (action.data.version === 3) {
-                fields = action.data.fields || {};
-                fieldsAllIds = action.data.fieldsAllIds || {};
-            } else {
-                throw new Error('Unknown data version');
-            }
-
             return {
                 ...state,
                 activity: state.activity & ~ACTIVITY_SELECTING,
@@ -464,11 +424,11 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 height: action.data.height || 88.9,
                 isTwoSided: action.data.isTwoSided || false,
                 snappingDistance: action.data.snappingDistance || 1,
-                version,
+                version: action.data.version,
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
-                fields,
-                fieldsAllIds,
+                fields: action.data.fields || {},
+                fieldsAllIds: action.data.fieldsAllIds || {},
                 activeCardId: undefined,
                 activeFieldId: undefined,
                 isBackActive: false,

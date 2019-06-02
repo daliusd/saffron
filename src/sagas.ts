@@ -108,8 +108,11 @@ import {
     CARDSET_CHANGE_FIELD_ZOOM,
     CARDSETS_SELECT_SUCCESS,
     CARDSET_CHANGE_FIELD_POSITION,
+    CardSetSelectSuccessData,
+    CardSetSelectSuccessDataV2,
+    CardSetSelectSuccessDataV3,
 } from './actions';
-import { CardSetType, CardSetsCollection, GameType, GamesCollection } from './types';
+import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
 import {
     deleteAccessToken,
@@ -473,24 +476,130 @@ export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaI
     }
 }
 
-export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaIterator {
-    try {
-        const resp = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
-        const parsedData = JSON.parse(resp.data.data);
-        if (!('placeholdersAllIds' in parsedData) && 'placeholders' in parsedData) {
-            parsedData.placeholdersAllIds = Object.keys(parsedData.placeholders);
+function loadImageInfo(url: string): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+        try {
+            let img = new Image();
+
+            img.addEventListener('load', function() {
+                resolve({
+                    width: this.naturalWidth,
+                    height: this.naturalHeight,
+                });
+            });
+            img.src = url;
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
+async function processData(data: CardSetSelectSuccessData): Promise<CardSetSelectSuccessDataV3> {
+    let processedData = data;
+
+    if (!('version' in processedData)) {
+        if (!('placeholdersAllIds' in processedData) && 'placeholders' in processedData) {
+            (processedData as CardSetSelectSuccessDataV2).placeholdersAllIds = Object.keys(
+                (processedData as CardSetSelectSuccessDataV2).placeholders,
+            );
         }
 
-        if (!('version' in parsedData)) {
-            parsedData.version = 2;
-            for (const plId in parsedData.placeholders) {
-                const placeholder = parsedData.placeholders[plId];
-                placeholder.x += BLEED_WIDTH;
-                placeholder.y += BLEED_WIDTH;
+        (processedData as CardSetSelectSuccessDataV2).version = 2;
+        for (const plId in (processedData as CardSetSelectSuccessDataV2).placeholders) {
+            const placeholder = (processedData as CardSetSelectSuccessDataV2).placeholders[plId];
+            placeholder.x += BLEED_WIDTH;
+            placeholder.y += BLEED_WIDTH;
+        }
+    }
+
+    if (processedData.version === 2) {
+        let fieldsAllIds = processedData.placeholdersAllIds;
+        let fields: FieldInfoByCardCollection = {};
+
+        for (const cardId of processedData.cardsAllIds) {
+            fields[cardId] = {};
+
+            for (const fieldId of fieldsAllIds) {
+                let placeholder = processedData.placeholders[fieldId];
+                if (placeholder.type === 'image') {
+                    if (cardId in processedData.images && fieldId in processedData.images[cardId]) {
+                        let imageInfo = processedData.images[cardId][fieldId];
+                        fields[cardId][fieldId] = {
+                            type: 'image',
+                            ...placeholder,
+                            url: imageInfo && imageInfo.url,
+                            global: imageInfo && imageInfo.global,
+                            base64: imageInfo && imageInfo.base64,
+                            color: imageInfo && imageInfo.color,
+                            imageWidth: imageInfo && imageInfo.width,
+                            imageHeight: imageInfo && imageInfo.height,
+                        };
+                    } else {
+                        fields[cardId][fieldId] = {
+                            type: 'image',
+                            ...placeholder,
+                        };
+                    }
+                } else if (placeholder.type === 'text') {
+                    if (cardId in processedData.texts && fieldId in processedData.texts[cardId]) {
+                        fields[cardId][fieldId] = {
+                            type: 'text',
+                            ...placeholder,
+                            ...processedData.texts[cardId][fieldId],
+                        };
+                    } else {
+                        fields[cardId][fieldId] = {
+                            type: 'text',
+                            ...placeholder,
+                            value: '',
+                        };
+                    }
+                }
             }
         }
 
-        yield call(loadFontsUsedInPlaceholders, parsedData);
+        processedData = {
+            version: 3,
+            width: processedData.width,
+            height: processedData.height,
+            isTwoSided: processedData.isTwoSided,
+            snappingDistance: processedData.snappingDistance,
+            cardsAllIds: processedData.cardsAllIds,
+            cardsById: processedData.cardsById,
+            fields,
+            fieldsAllIds,
+            zoom: processedData.zoom,
+        };
+    }
+
+    // We must load image data on each new load because user can upload new images
+    // that have different dimensions.
+    for (const cardId in processedData.fields) {
+        for (const fieldId in processedData.fields[cardId]) {
+            const fieldInfo = processedData.fields[cardId][fieldId];
+            if (fieldInfo.type === 'image' && fieldInfo.url) {
+                let info = await loadImageInfo(fieldInfo.url);
+                if (info.width !== fieldInfo.imageWidth || info.height !== fieldInfo.imageHeight) {
+                    fieldInfo.imageWidth = info.width;
+                    fieldInfo.imageHeight = info.height;
+                    fieldInfo.cx = 0;
+                    fieldInfo.cy = 0;
+                    fieldInfo.zoom = 1;
+                }
+            }
+        }
+    }
+
+    return processedData;
+}
+
+export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaIterator {
+    try {
+        const resp = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
+        let parsedData = JSON.parse(resp.data.data);
+        let processedData: CardSetSelectSuccessDataV3 = yield call(processData, parsedData);
+
+        yield call(loadFontsUsedInPlaceholders, processedData);
         yield put({
             type: CARDSETS_SELECT_SUCCESS,
             id: resp.data.id,
@@ -498,7 +607,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
         });
         yield put({
             type: CARDSET_SELECT_SUCCESS,
-            data: parsedData,
+            data: processedData,
         });
         yield put(gameSelectRequest(resp.data.gameId, false));
     } catch (e) {

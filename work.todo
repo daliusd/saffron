@@ -265,14 +265,16 @@
         + Fix import / export
         + This will make easier to reset cx, cy
         + ACTIVE_PLACEHOLDER -> ACTIVE_FIELD
-    - Think what to do with old data where width and height not available on ImageData
+    + Think what to do with old data where width and height not available on ImageData
         /home/dalius/projects/saffron/src/components/ImageField.tsx
         Load image data on load
-    - Think what to do if image is replaced in server side
+    + Think what to do if image is replaced in server side
         Maybe we should always check images on load
+    - crop checkbox not controlled ?
     - PDF generation log and reporting of failures via e-mail.
         E.g. there are unhandled exceptions
     - Adjust rendering
+    - sagas putError should log stack as well
     - Fix tests
     - Rebuild frame control icons. They look bad on Chrome
 
