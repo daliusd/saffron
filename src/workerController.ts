@@ -57,6 +57,9 @@ export const generatePdfUsingWorker = (
                 if (event.data.type === 'generatePdf') {
                     const blobURL = event.data.url;
                     downloadBlob(blobURL, 'card.pdf', resolve);
+                } else if (event.data.type === 'generateError') {
+                    const error = event.data.error;
+                    reject({ message: 'PDF generation failed', stack: error.stack });
                 }
             });
 
