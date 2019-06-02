@@ -854,16 +854,27 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 if (fieldId in cardFields) {
                     let fieldInfo = cardFields[fieldId];
                     if (fieldInfo.type === 'image') {
-                        let { width, height } = fieldInfo;
+                        let { fit, width, height, imageWidth, imageHeight } = fieldInfo;
+
+                        imageHeight = imageHeight || 1;
+                        imageWidth = imageWidth || 1;
+
+                        let fitImageWidth = width;
+                        let fitImageHeight = height;
+                        if (fit === 'width' || fit === undefined) {
+                            fitImageHeight = width * (imageHeight / imageWidth);
+                        } else if (fit === 'height') {
+                            fitImageWidth = height * (imageWidth / imageHeight);
+                        }
 
                         let cx = fieldInfo.cx || 0;
                         let cy = fieldInfo.cy || 0;
                         let oldZoom = fieldInfo.zoom || 1;
-                        cx = cx + ((oldZoom - zoom) * width) / 2;
-                        cy = cy + ((oldZoom - zoom) * height) / 2;
+                        cx = cx + ((oldZoom - zoom) * fitImageWidth) / 2;
+                        cy = cy + ((oldZoom - zoom) * fitImageHeight) / 2;
 
-                        cx = Math.min(Math.max(width * (1 - zoom), cx), width * (zoom - 1));
-                        cy = Math.min(Math.max(height * (1 - zoom), cy), height * (zoom - 1));
+                        cx = Math.min(Math.max(width - zoom * fitImageWidth, cx), 0);
+                        cy = Math.min(Math.max(height - zoom * fitImageHeight, cy), 0);
 
                         cardFields[fieldId] = {
                             ...fieldInfo,
