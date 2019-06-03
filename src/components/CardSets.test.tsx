@@ -32,9 +32,16 @@ describe('<CardSets />', () => {
 
     it('Generates CardSets', () => {
         const wrapper = shallow(
-            <CardSets dispatch={jest.fn()} isAuthenticated={true} allIds={[]} byId={{}} activeGame={'1'} />,
+            <CardSets
+                dispatch={jest.fn()}
+                isAuthenticated={true}
+                allIds={[]}
+                byId={{}}
+                activeGame={null}
+                isCreatingPng={false}
+            />,
         );
-        expect(wrapper.find('button')).toHaveLength(1);
+        expect(wrapper.find('button')).toHaveLength(0);
     });
 
     it('Generates CardSets with some info', () => {
@@ -44,10 +51,11 @@ describe('<CardSets />', () => {
                 isAuthenticated={true}
                 allIds={['1']}
                 byId={{ '1': { id: '1', name: 'test' } }}
-                activeGame={'1'}
+                activeGame={{ id: '1', name: 'test' }}
+                isCreatingPng={false}
             />,
         );
-        expect(wrapper.find('button')).toHaveLength(1);
+        expect(wrapper.find('button')).toHaveLength(2);
     });
 
     it('simulates create click event', () => {
@@ -55,7 +63,10 @@ describe('<CardSets />', () => {
         const wrapper = shallow(
             <CardSets dispatch={cardsetCreate} isAuthenticated={true} allIds={[]} byId={{}} activeGame={'1'} />,
         );
-        wrapper.find('button').simulate('click');
+        wrapper
+            .find('button')
+            .first()
+            .simulate('click');
         expect(cardsetCreate.mock.calls.length).toBe(1);
     });
 });

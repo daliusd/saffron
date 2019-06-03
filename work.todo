@@ -274,8 +274,8 @@
     + sagas putError should log stack as well
     + PDF and PNG generation log and reporting of failures via e-mail.
         E.g. there are unhandled exceptions
-    - Adjust rendering
-    - Fix tests
+    + Adjust rendering
+    + Fix tests
     - Rebuild frame control icons. They look bad on Chrome
 
 - Undo/Redo

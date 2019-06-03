@@ -44,7 +44,7 @@ import {
 import { MessageType, GamesCollection, IdsArray, CardSetsCollection } from './types';
 
 test('message', () => {
-    const testMessage1: MessageType = { id: 'test2', type: 'error', text: 'text' };
+    const testMessage1: MessageType = { id: 'test1', type: 'error', text: 'text' };
     const testMessage2: MessageType = { id: 'test2', type: 'error', text: 'text' };
 
     const state: MessageState = {
@@ -354,16 +354,9 @@ test('CARDSET_SELECT', () => {
             },
         ),
     ).toEqual({
-        ...DefaultCardSetState,
+        ...DefaultCardSetsState,
         byId: { '1': { id: '1', name: 'test2' } },
         allIds: ['1'],
         active: '1',
-        cardsAllIds: ['1'],
-        cardsById: {
-            '1': {
-                count: 1,
-                id: '1',
-            },
-        },
     });
 });

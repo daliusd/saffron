@@ -401,7 +401,6 @@ export function cardsets(state: CardSetsState = DefaultCardSetsState, action: Ca
             });
         case CARDSET_LIST_RESET:
             return Object.assign({}, state, {
-                activity: 0,
                 byId: {},
                 allIds: [],
             });

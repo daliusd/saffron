@@ -500,7 +500,7 @@ function loadImageInfo(url: string): Promise<{ width: number; height: number }> 
     });
 }
 
-async function processData(data: CardSetSelectSuccessData): Promise<CardSetSelectSuccessDataV3> {
+export async function processData(data: CardSetSelectSuccessData): Promise<CardSetSelectSuccessDataV3> {
     let processedData = data;
 
     if (!('version' in processedData)) {
