@@ -12,7 +12,7 @@ import {
     cardSetLowerActiveFieldToBottom,
     cardSetRaiseActiveFieldToTop,
     cardSetRemoveActiveField,
-    cardSetUnlockActivePlaceholder,
+    cardSetUnlockActiveField,
     cardSetChangeActiveTextPlaceholderColor,
 } from '../actions';
 import ColorButton from './ColorButton';
@@ -104,7 +104,7 @@ export class SidebarText extends Component<Props> {
     handleUnlockField = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetUnlockActivePlaceholder());
+            dispatch(cardSetUnlockActiveField());
         }
     };
 

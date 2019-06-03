@@ -251,7 +251,7 @@
     + Use image meta data for images in text
 
 + Email errors
-- Image clipping, shift and zoom
++ Image clipping, shift and zoom
     + Zoom
     + Shift
     + Clipping
@@ -276,7 +276,7 @@
         E.g. there are unhandled exceptions
     + Adjust rendering
     + Fix tests
-    - Rebuild frame control icons. They look bad on Chrome
+    + Rebuild frame control icons. They look bad on Chrome
 
 - Undo/Redo
 
