@@ -5,14 +5,14 @@ import { DispatchProps, IdsArray, SidebarOwnProps, FieldInfo, FieldInfoByCardCol
 import { State } from '../reducers';
 import {
     cardSetActiveCardAndField,
-    cardSetChangeActivePlaceholderName,
+    cardSetChangeActiveFieldName,
     cardSetChangeFieldAngle,
     cardSetChangeFieldSize,
-    cardSetLockActivePlaceholder,
+    cardSetLockActiveField,
     cardSetChangeFieldPosition,
-    cardSetLowerActivePlaceholderToBottom,
-    cardSetRaiseActivePlaceholderToTop,
-    cardSetUnlockActivePlaceholder,
+    cardSetLowerActiveFieldToBottom,
+    cardSetRaiseActiveFieldToTop,
+    cardSetUnlockActiveField,
 } from '../actions';
 import style from './SidebarMeasurements.module.css';
 
@@ -55,28 +55,28 @@ export class SidebarMeasurements extends Component<Props> {
     handleRaiseToTop = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetRaiseActivePlaceholderToTop());
+            dispatch(cardSetRaiseActiveFieldToTop());
         }
     };
 
     handleLowerToBottom = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLowerActivePlaceholderToBottom());
+            dispatch(cardSetLowerActiveFieldToBottom());
         }
     };
 
     handleLockField = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLockActivePlaceholder());
+            dispatch(cardSetLockActiveField());
         }
     };
 
     handleUnlockField = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetUnlockActivePlaceholder());
+            dispatch(cardSetUnlockActiveField());
         }
     };
 
@@ -84,7 +84,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const name = event.target.value.trim();
         if (activeField !== undefined) {
-            dispatch(cardSetChangeActivePlaceholderName(name));
+            dispatch(cardSetChangeActiveFieldName(name));
         }
     };
 

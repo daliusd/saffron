@@ -6,12 +6,12 @@ import { DispatchProps, SidebarOwnProps, FieldInfo } from '../types';
 import { State } from '../reducers';
 import {
     cardSetAddTextField,
-    cardSetChangeActivePlaceholderName,
+    cardSetChangeActiveFieldName,
     cardSetChangeActiveTextPlaceholderAlign,
-    cardSetLockActivePlaceholder,
-    cardSetLowerActivePlaceholderToBottom,
-    cardSetRaiseActivePlaceholderToTop,
-    cardSetRemoveActivePlaceholder,
+    cardSetLockActiveField,
+    cardSetLowerActiveFieldToBottom,
+    cardSetRaiseActiveFieldToTop,
+    cardSetRemoveActiveField,
     cardSetUnlockActivePlaceholder,
     cardSetChangeActiveTextPlaceholderColor,
 } from '../actions';
@@ -76,28 +76,28 @@ export class SidebarText extends Component<Props> {
     handleRemoveClick = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetRemoveActivePlaceholder());
+            dispatch(cardSetRemoveActiveField());
         }
     };
 
     handleRaiseToTop = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetRaiseActivePlaceholderToTop());
+            dispatch(cardSetRaiseActiveFieldToTop());
         }
     };
 
     handleLowerToBottom = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLowerActivePlaceholderToBottom());
+            dispatch(cardSetLowerActiveFieldToBottom());
         }
     };
 
     handleLockField = () => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLockActivePlaceholder());
+            dispatch(cardSetLockActiveField());
         }
     };
 
@@ -112,7 +112,7 @@ export class SidebarText extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const name = event.target.value.trim();
         if (activeField !== undefined) {
-            dispatch(cardSetChangeActivePlaceholderName(name));
+            dispatch(cardSetChangeActiveFieldName(name));
         }
     };
 

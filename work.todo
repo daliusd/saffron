@@ -280,6 +280,8 @@
 
 - Undo/Redo
 
+- Remove "placeholder" from the code
+
 - Resize card with content
 - Make field non-clickable for convenience
 

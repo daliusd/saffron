@@ -4,7 +4,7 @@ import shortid from 'shortid';
 import {
     CARDSET_ADD_IMAGE_FIELD,
     CARDSET_ADD_TEXT_FIELD,
-    CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
+    CARDSET_CHANGE_ACTIVE_FIELD_NAME,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
@@ -12,8 +12,8 @@ import {
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
     CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
-    CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
-    CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER,
+    CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD,
+    CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD,
     CARDSET_CHANGE_HEIGHT,
     CARDSET_CHANGE_IMAGE,
     CARDSET_CHANGE_IMAGE_BASE64,
@@ -28,10 +28,10 @@ import {
     CARDSET_IMPORT_DATA,
     CARDSET_LIST_RESET,
     CARDSET_LIST_SUCCESS,
-    CARDSET_LOCK_ACTIVE_PLACEHOLDER,
-    CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
-    CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
-    CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
+    CARDSET_LOCK_ACTIVE_FIELD,
+    CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM,
+    CARDSET_RAISE_ACTIVE_FIELD_TO_TOP,
+    CARDSET_REMOVE_ACTIVE_FIELD,
     CARDSET_REMOVE_CARD,
     CARDSET_RENAME_REQUEST,
     CARDSET_SELECT_FAILURE,
@@ -40,7 +40,7 @@ import {
     CARDSET_SET_ACTIVE_CARD_AND_FIELD,
     CARDSET_SET_SIDEBAR_STATE,
     CARDSET_SET_ZOOM,
-    CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
+    CARDSET_UNLOCK_ACTIVE_FIELD,
     CARDSET_UPDATE_CARD_COUNT,
     CardSetAction,
     GAME_CREATE_PDF_FAILURE,
@@ -568,7 +568,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME: {
+        case CARDSET_CHANGE_ACTIVE_FIELD_NAME: {
             if (state.activeFieldId !== undefined) {
                 let fields: FieldInfoByCardCollection = {};
                 let id = state.activeFieldId;
@@ -592,7 +592,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             return state;
         }
 
-        case CARDSET_REMOVE_ACTIVE_PLACEHOLDER: {
+        case CARDSET_REMOVE_ACTIVE_FIELD: {
             const fieldId = state.activeFieldId;
             if (fieldId !== undefined) {
                 let fieldsAllIds = [...state.fieldsAllIds];
@@ -619,7 +619,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             }
             return state;
         }
-        case CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP: {
+        case CARDSET_RAISE_ACTIVE_FIELD_TO_TOP: {
             let fieldsAllIds = [...state.fieldsAllIds];
 
             if (state.activeFieldId !== undefined) {
@@ -634,7 +634,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fieldsAllIds,
             };
         }
-        case CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM: {
+        case CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM: {
             let fieldsAllIds = [...state.fieldsAllIds];
 
             if (state.activeFieldId !== undefined) {
@@ -649,7 +649,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fieldsAllIds,
             };
         }
-        case CARDSET_LOCK_ACTIVE_PLACEHOLDER: {
+        case CARDSET_LOCK_ACTIVE_FIELD: {
             if (state.activeFieldId) {
                 let fields = { ...state.fields };
                 let fieldId = state.activeFieldId;
@@ -672,7 +672,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
             return state;
         }
-        case CARDSET_UNLOCK_ACTIVE_PLACEHOLDER: {
+        case CARDSET_UNLOCK_ACTIVE_FIELD: {
             if (state.activeFieldId) {
                 let fields = { ...state.fields };
                 let fieldId = state.activeFieldId;
@@ -695,7 +695,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
             return state;
         }
-        case CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER: {
+        case CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD: {
             if (state.activeFieldId) {
                 let fields = { ...state.fields };
                 let fieldId = state.activeFieldId;
@@ -719,7 +719,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
             return state;
         }
-        case CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER: {
+        case CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD: {
             if (state.activeFieldId) {
                 let fields = { ...state.fields };
                 let fieldId = state.activeFieldId;

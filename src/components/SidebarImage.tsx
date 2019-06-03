@@ -6,15 +6,15 @@ import { DispatchProps, IdsArray, ImageArray, SidebarOwnProps, FieldInfo, ImageI
 import { State } from '../reducers';
 import {
     cardSetAddImageField,
-    cardSetChangeActivePlaceholderName,
-    cardSetChangeFitForActivePlaceholder,
-    cardSetChangeCropForActivePlaceholder,
+    cardSetChangeActiveFieldName,
+    cardSetChangeFitForActiveField,
+    cardSetChangeCropForActiveField,
     cardSetChangeImage,
-    cardSetLockActivePlaceholder,
-    cardSetLowerActivePlaceholderToBottom,
-    cardSetRaiseActivePlaceholderToTop,
-    cardSetRemoveActivePlaceholder,
-    cardSetUnlockActivePlaceholder,
+    cardSetLockActiveField,
+    cardSetLowerActiveFieldToBottom,
+    cardSetRaiseActiveFieldToTop,
+    cardSetRemoveActiveField,
+    cardSetUnlockActiveField,
     imageListRequest,
 } from '../actions';
 import ColorButton from './ColorButton';
@@ -71,7 +71,7 @@ export class SidebarImage extends Component<Props, LocalState> {
     handleRemoveClick = () => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetRemoveActivePlaceholder());
+            dispatch(cardSetRemoveActiveField());
         }
     };
 
@@ -79,7 +79,7 @@ export class SidebarImage extends Component<Props, LocalState> {
         const { activeFieldInfo, dispatch } = this.props;
         const name = event.target.value.trim();
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetChangeActivePlaceholderName(name));
+            dispatch(cardSetChangeActiveFieldName(name));
         }
     };
 
@@ -104,28 +104,28 @@ export class SidebarImage extends Component<Props, LocalState> {
     handleRaiseToTop = () => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetRaiseActivePlaceholderToTop());
+            dispatch(cardSetRaiseActiveFieldToTop());
         }
     };
 
     handleLowerToBottom = () => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetLowerActivePlaceholderToBottom());
+            dispatch(cardSetLowerActiveFieldToBottom());
         }
     };
 
     handleLockField = () => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetLockActivePlaceholder());
+            dispatch(cardSetLockActiveField());
         }
     };
 
     handleUnlockField = () => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetUnlockActivePlaceholder());
+            dispatch(cardSetUnlockActiveField());
         }
     };
 
@@ -133,7 +133,7 @@ export class SidebarImage extends Component<Props, LocalState> {
         const { dispatch } = this.props;
         const fit = event.target.value;
 
-        dispatch(cardSetChangeFitForActivePlaceholder(fit));
+        dispatch(cardSetChangeFitForActiveField(fit));
     };
 
     handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,7 +161,7 @@ export class SidebarImage extends Component<Props, LocalState> {
     handleChangeCrop = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetChangeCropForActivePlaceholder(event.target.checked));
+            dispatch(cardSetChangeCropForActiveField(event.target.checked));
         }
     };
 

@@ -67,14 +67,14 @@ export const CARDSET_REMOVE_CARD = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
 export const CARDSET_ADD_TEXT_FIELD = 'CARDSET_ADD_TEXT_FIELD';
 export const CARDSET_ADD_IMAGE_FIELD = 'CARDSET_ADD_IMAGE_FIELD';
-export const CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME = 'CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME';
-export const CARDSET_REMOVE_ACTIVE_PLACEHOLDER = 'CARDSET_REMOVE_ACTIVE_PLACEHOLDER';
-export const CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP = 'CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP';
-export const CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM';
-export const CARDSET_LOCK_ACTIVE_PLACEHOLDER = 'CARDSET_LOCK_ACTIVE_PLACEHOLDER';
-export const CARDSET_UNLOCK_ACTIVE_PLACEHOLDER = 'CARDSET_UNLOCK_ACTIVE_PLACEHOLDER';
-export const CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER';
-export const CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER = 'CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER';
+export const CARDSET_CHANGE_ACTIVE_FIELD_NAME = 'CARDSET_CHANGE_ACTIVE_FIELD_NAME';
+export const CARDSET_REMOVE_ACTIVE_FIELD = 'CARDSET_REMOVE_ACTIVE_FIELD';
+export const CARDSET_RAISE_ACTIVE_FIELD_TO_TOP = 'CARDSET_RAISE_ACTIVE_FIELD_TO_TOP';
+export const CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM';
+export const CARDSET_LOCK_ACTIVE_FIELD = 'CARDSET_LOCK_ACTIVE_FIELD';
+export const CARDSET_UNLOCK_ACTIVE_FIELD = 'CARDSET_UNLOCK_ACTIVE_FIELD';
+export const CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD';
+export const CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD = 'CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
@@ -344,31 +344,31 @@ export interface CardSetAddTextField {
 export interface CardSetAddImageField {
     type: typeof CARDSET_ADD_IMAGE_FIELD;
 }
-export interface CardSetChangeActivePlaceholderName {
-    type: typeof CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME;
+export interface CardSetChangeActiveFieldName {
+    type: typeof CARDSET_CHANGE_ACTIVE_FIELD_NAME;
     name: string;
 }
-export interface CardSetRemoveActivePlaceholder {
-    type: typeof CARDSET_REMOVE_ACTIVE_PLACEHOLDER;
+export interface CardSetRemoveActiveField {
+    type: typeof CARDSET_REMOVE_ACTIVE_FIELD;
 }
-export interface CardSetRaiseActivePlaceholderToTop {
-    type: typeof CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP;
+export interface CardSetRaiseActiveFieldToTop {
+    type: typeof CARDSET_RAISE_ACTIVE_FIELD_TO_TOP;
 }
-export interface CardSetLowerActivePlaceholderToBottom {
-    type: typeof CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM;
+export interface CardSetLowerActiveFieldToBottom {
+    type: typeof CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM;
 }
-export interface CardSetLockActivePlaceholder {
-    type: typeof CARDSET_LOCK_ACTIVE_PLACEHOLDER;
+export interface CardSetLockActiveField {
+    type: typeof CARDSET_LOCK_ACTIVE_FIELD;
 }
-export interface CardSetUnlockActivePlaceholder {
-    type: typeof CARDSET_UNLOCK_ACTIVE_PLACEHOLDER;
+export interface CardSetUnlockActiveField {
+    type: typeof CARDSET_UNLOCK_ACTIVE_FIELD;
 }
-export interface CardSetChangeFitForActivePlaceholder {
-    type: typeof CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER;
+export interface CardSetChangeFitForActiveField {
+    type: typeof CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD;
     fit: string;
 }
-export interface CardSetChangeCropForActivePlaceholder {
-    type: typeof CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER;
+export interface CardSetChangeCropForActiveField {
+    type: typeof CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD;
     crop: boolean;
 }
 
@@ -543,14 +543,14 @@ export type CardSetModifyAction =
     | CardSetUpdateCardCount
     | CardSetAddTextField
     | CardSetAddImageField
-    | CardSetChangeActivePlaceholderName
-    | CardSetRemoveActivePlaceholder
-    | CardSetRaiseActivePlaceholderToTop
-    | CardSetLowerActivePlaceholderToBottom
-    | CardSetLockActivePlaceholder
-    | CardSetUnlockActivePlaceholder
-    | CardSetChangeFitForActivePlaceholder
-    | CardSetChangeCropForActivePlaceholder
+    | CardSetChangeActiveFieldName
+    | CardSetRemoveActiveField
+    | CardSetRaiseActiveFieldToTop
+    | CardSetLowerActiveFieldToBottom
+    | CardSetLockActiveField
+    | CardSetUnlockActiveField
+    | CardSetChangeFitForActiveField
+    | CardSetChangeCropForActiveField
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangeIsTwoSided
@@ -805,53 +805,53 @@ export const cardSetAddImageField = (): CardSetAddImageField => {
     };
 };
 
-export const cardSetChangeActivePlaceholderName = (name: string): CardSetChangeActivePlaceholderName => {
+export const cardSetChangeActiveFieldName = (name: string): CardSetChangeActiveFieldName => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_PLACEHOLDER_NAME,
+        type: CARDSET_CHANGE_ACTIVE_FIELD_NAME,
         name,
     };
 };
 
-export const cardSetRemoveActivePlaceholder = (): CardSetRemoveActivePlaceholder => {
+export const cardSetRemoveActiveField = (): CardSetRemoveActiveField => {
     return {
-        type: CARDSET_REMOVE_ACTIVE_PLACEHOLDER,
+        type: CARDSET_REMOVE_ACTIVE_FIELD,
     };
 };
 
-export const cardSetRaiseActivePlaceholderToTop = (): CardSetRaiseActivePlaceholderToTop => {
+export const cardSetRaiseActiveFieldToTop = (): CardSetRaiseActiveFieldToTop => {
     return {
-        type: CARDSET_RAISE_ACTIVE_PLACEHOLDER_TO_TOP,
+        type: CARDSET_RAISE_ACTIVE_FIELD_TO_TOP,
     };
 };
 
-export const cardSetLowerActivePlaceholderToBottom = (): CardSetLowerActivePlaceholderToBottom => {
+export const cardSetLowerActiveFieldToBottom = (): CardSetLowerActiveFieldToBottom => {
     return {
-        type: CARDSET_LOWER_ACTIVE_PLACEHOLDER_TO_BOTTOM,
+        type: CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM,
     };
 };
 
-export const cardSetLockActivePlaceholder = (): CardSetLockActivePlaceholder => {
+export const cardSetLockActiveField = (): CardSetLockActiveField => {
     return {
-        type: CARDSET_LOCK_ACTIVE_PLACEHOLDER,
+        type: CARDSET_LOCK_ACTIVE_FIELD,
     };
 };
 
-export const cardSetUnlockActivePlaceholder = (): CardSetUnlockActivePlaceholder => {
+export const cardSetUnlockActiveField = (): CardSetUnlockActiveField => {
     return {
-        type: CARDSET_UNLOCK_ACTIVE_PLACEHOLDER,
+        type: CARDSET_UNLOCK_ACTIVE_FIELD,
     };
 };
 
-export const cardSetChangeFitForActivePlaceholder = (fit: string): CardSetChangeFitForActivePlaceholder => {
+export const cardSetChangeFitForActiveField = (fit: string): CardSetChangeFitForActiveField => {
     return {
-        type: CARDSET_CHANGE_FIT_FOR_ACTIVE_PLACEHOLDER,
+        type: CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD,
         fit,
     };
 };
 
-export const cardSetChangeCropForActivePlaceholder = (crop: boolean): CardSetChangeCropForActivePlaceholder => {
+export const cardSetChangeCropForActiveField = (crop: boolean): CardSetChangeCropForActiveField => {
     return {
-        type: CARDSET_CHANGE_CROP_FOR_ACTIVE_PLACEHOLDER,
+        type: CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD,
         crop,
     };
 };
