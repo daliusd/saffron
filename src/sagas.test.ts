@@ -543,9 +543,11 @@ test('handleCardSetChange', () => {
     expect(gen.next().value).toEqual(call(putProgress, 'Saving Card Set'));
     expect(gen.next(progressId).value).toEqual(call(delay, 1000));
 
-    const state: { cardset: CardSetState; cardsets: CardSetsState } = {
+    const state: { cardset: { present: CardSetState }; cardsets: CardSetsState } = {
         cardset: {
-            ...DefaultCardSetState,
+            present: {
+                ...DefaultCardSetState,
+            },
         },
         cardsets: {
             ...DefaultCardSetsState,
