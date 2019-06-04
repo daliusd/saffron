@@ -120,6 +120,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
+        event.preventDefault();
     };
 
     handleDragStart = (co: MouseEvent | Touch) => {
