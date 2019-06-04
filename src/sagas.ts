@@ -3,6 +3,7 @@ import { XmlDocument, XmlNode } from 'xmldoc';
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
 import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
+import { ActionCreators } from 'redux-undo';
 
 import { BLEED_WIDTH } from './constants';
 import {
@@ -618,6 +619,7 @@ export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaI
             data: processedData,
         });
         yield put(gameSelectRequest(resp.data.gameId, false));
+        yield put(ActionCreators.clearHistory());
     } catch (e) {
         yield put({ type: CARDSET_SELECT_FAILURE });
         yield call(putError, e);

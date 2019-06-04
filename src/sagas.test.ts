@@ -1,6 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { cloneableGenerator } from 'redux-saga/utils';
 import { delay } from 'redux-saga';
+import { ActionCreators } from 'redux-undo';
 
 import jwt from 'jwt-simple';
 
@@ -526,6 +527,7 @@ test('handleCardSetSelectRequest', () => {
         }),
     );
     expect(gen.next().value).toEqual(put(gameSelectRequest('666', false)));
+    expect(gen.next().value).toEqual(put(ActionCreators.clearHistory()));
     expect(gen.next().done).toBeTruthy();
 
     // Failed request
