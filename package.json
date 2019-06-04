@@ -50,6 +50,7 @@
     "react-test-renderer": "^16.6.0",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
+    "redux-undo": "^1.0.0-beta9-9-7",
     "shortid": "^2.2.14",
     "typescript": "^3.2.4",
     "webfontloader": "^1.6.28",

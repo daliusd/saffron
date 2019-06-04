@@ -213,8 +213,8 @@ export class SidebarText extends Component<Props> {
 
 const mapStateToProps = (state: State): StateProps => {
     const activeField =
-        state.cardset.activeCardId !== undefined && state.cardset.activeFieldId !== undefined
-            ? state.cardset.fields[state.cardset.activeCardId][state.cardset.activeFieldId]
+        state.cardset.present.activeCardId !== undefined && state.cardset.present.activeFieldId !== undefined
+            ? state.cardset.present.fields[state.cardset.present.activeCardId][state.cardset.present.activeFieldId]
             : undefined;
 
     return {

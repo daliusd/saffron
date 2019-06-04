@@ -266,13 +266,13 @@ export class SidebarImportExport extends Component<Props> {
 const mapStateToProps = (state: State): StateProps => {
     return {
         activeGame: state.games.active,
-        width: state.cardset.width,
-        height: state.cardset.height,
-        isTwoSided: state.cardset.isTwoSided,
-        cardsAllIds: state.cardset.cardsAllIds,
-        cardsById: state.cardset.cardsById,
-        fieldsAllIds: state.cardset.fieldsAllIds,
-        fields: state.cardset.fields,
+        width: state.cardset.present.width,
+        height: state.cardset.present.height,
+        isTwoSided: state.cardset.present.isTwoSided,
+        cardsAllIds: state.cardset.present.cardsAllIds,
+        cardsById: state.cardset.present.cardsById,
+        fieldsAllIds: state.cardset.present.fieldsAllIds,
+        fields: state.cardset.present.fields,
     };
 };
 

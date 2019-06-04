@@ -101,7 +101,7 @@ class TextField extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let fieldInfo = state.cardset.fields[props.cardId][props.textFieldInfo.id];
+    let fieldInfo = state.cardset.present.fields[props.cardId][props.textFieldInfo.id];
     let text = fieldInfo.type === 'text' ? fieldInfo.value : '';
     return {
         text,

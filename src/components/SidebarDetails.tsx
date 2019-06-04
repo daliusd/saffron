@@ -71,7 +71,9 @@ const mapStateToProps = (state: State): StateProps => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
         activeCard:
-            state.cardset.activeCardId !== undefined ? state.cardset.cardsById[state.cardset.activeCardId] : null,
+            state.cardset.present.activeCardId !== undefined
+                ? state.cardset.present.cardsById[state.cardset.present.activeCardId]
+                : null,
     };
 };
 

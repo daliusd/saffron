@@ -162,16 +162,17 @@ class Card extends Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let cardFields = state.cardset.fields[props.card.id];
+    let cardFields = state.cardset.present.fields[props.card.id];
 
     return {
         cardFields,
-        fieldsIds: state.cardset.fieldsAllIds.filter(id => (cardFields[id].isOnBack || false) === props.isBack),
-        width: state.cardset.width,
-        height: state.cardset.height,
-        isTwoSided: state.cardset.isTwoSided,
-        isActiveCard: state.cardset.activeCardId === props.card.id && state.cardset.isBackActive === props.isBack,
-        zoom: state.cardset.zoom,
+        fieldsIds: state.cardset.present.fieldsAllIds.filter(id => (cardFields[id].isOnBack || false) === props.isBack),
+        width: state.cardset.present.width,
+        height: state.cardset.present.height,
+        isTwoSided: state.cardset.present.isTwoSided,
+        isActiveCard:
+            state.cardset.present.activeCardId === props.card.id && state.cardset.present.isBackActive === props.isBack,
+        zoom: state.cardset.present.zoom,
     };
 };
 

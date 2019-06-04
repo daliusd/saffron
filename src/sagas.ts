@@ -111,6 +111,8 @@ import {
     CardSetSelectSuccessData,
     CardSetSelectSuccessDataV2,
     CardSetSelectSuccessDataV3,
+    CARDSET_UNDO,
+    CARDSET_REDO,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
@@ -694,23 +696,23 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActiveField):
         yield call(delay, 100);
         const state: State = yield select();
 
-        if (state.cardset.activeFieldId === undefined) {
+        if (state.cardset.present.activeFieldId === undefined) {
             return;
         }
 
-        for (const cardId in state.cardset.cardsById) {
-            const fieldInfo = state.cardset.fields[cardId][state.cardset.activeFieldId];
+        for (const cardId in state.cardset.present.cardsById) {
+            const fieldInfo = state.cardset.present.fields[cardId][state.cardset.present.activeFieldId];
             if (fieldInfo.type === 'image' && fieldInfo.url) {
                 const imageResp = yield call(authorizedGetRequest, fieldInfo.url);
                 if (imageResp.headers['content-type'] === 'image/svg+xml') {
                     if (action.fit === 'stretch') {
                         const svg = adjustSvg(imageResp.data, false, fieldInfo.color);
-                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, svg));
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.present.activeFieldId, svg));
                     } else if (fieldInfo.color) {
                         const svg = adjustSvg(imageResp.data, true, fieldInfo.color);
-                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, svg));
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.present.activeFieldId, svg));
                     } else {
-                        yield put(cardSetChangeImageBase64(cardId, state.cardset.activeFieldId, undefined));
+                        yield put(cardSetChangeImageBase64(cardId, state.cardset.present.activeFieldId, undefined));
                     }
                 }
             }
@@ -725,7 +727,7 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
         yield call(delay, 100);
         const state: State = yield select();
 
-        const cardFields = state.cardset.fields[action.cardId];
+        const cardFields = state.cardset.present.fields[action.cardId];
         const imageInfo = cardFields[action.placeholderId];
         if (imageInfo.type === 'image' && imageInfo.url) {
             const imageResp = yield call(authorizedGetRequest, imageInfo.url);
@@ -781,16 +783,16 @@ export function* handleCardSetChange(): SagaIterator {
         const cardsetId = state.cardsets.active;
         if (cardsetId === null) throw Error('Save failed.');
         const data = {
-            width: state.cardset.width,
-            height: state.cardset.height,
-            isTwoSided: state.cardset.isTwoSided,
-            snappingDistance: state.cardset.snappingDistance,
-            version: state.cardset.version,
-            cardsAllIds: state.cardset.cardsAllIds,
-            cardsById: state.cardset.cardsById,
-            fieldsAllIds: state.cardset.fieldsAllIds,
-            fields: state.cardset.fields,
-            zoom: state.cardset.zoom,
+            width: state.cardset.present.width,
+            height: state.cardset.present.height,
+            isTwoSided: state.cardset.present.isTwoSided,
+            snappingDistance: state.cardset.present.snappingDistance,
+            version: state.cardset.present.version,
+            cardsAllIds: state.cardset.present.cardsAllIds,
+            cardsById: state.cardset.present.cardsById,
+            fieldsAllIds: state.cardset.present.fieldsAllIds,
+            fields: state.cardset.present.fields,
+            zoom: state.cardset.present.zoom,
         };
 
         yield call(authorizedPutRequest, '/api/cardsets/' + cardsetId, {
@@ -886,6 +888,8 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_CHANGE_IMAGE, handleCardSetChange),
         takeLatest(CARDSET_SET_ZOOM, handleCardSetChange),
         takeLatest(CARDSET_IMPORT_DATA, handleCardSetChange),
+        takeLatest(CARDSET_UNDO, handleCardSetChange),
+        takeLatest(CARDSET_REDO, handleCardSetChange),
 
         takeLatest(IMAGE_LIST_REQUEST, handleImageListRequest),
 

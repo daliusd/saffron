@@ -117,11 +117,11 @@ export class SidebarDetails extends Component<Props> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
-        width: state.cardset.width,
-        height: state.cardset.height,
-        isTwoSided: state.cardset.isTwoSided,
-        snappingDistance: state.cardset.snappingDistance,
-        zoom: state.cardset.zoom,
+        width: state.cardset.present.width,
+        height: state.cardset.present.height,
+        isTwoSided: state.cardset.present.isTwoSided,
+        snappingDistance: state.cardset.present.snappingDistance,
+        zoom: state.cardset.present.zoom,
     };
 };
 

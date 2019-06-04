@@ -104,6 +104,8 @@ export const CARDSET_UPLOAD_IMAGE = 'CARDSET_UPLOAD_IMAGE';
 export const CARDSET_UPLOAD_IMAGE_SUCCESS = 'CARDSET_UPLOAD_IMAGE_SUCCESS';
 export const CARDSET_UPLOAD_IMAGE_FAILURE = 'CARDSET_UPLOAD_IMAGE_FAILURE';
 export const CARDSET_DELETE_IMAGE = 'CARDSET_DELETE_IMAGE';
+export const CARDSET_UNDO = 'CARDSET_UNDO';
+export const CARDSET_REDO = 'CARDSET_REDO';
 export const IMAGE_LIST_REQUEST = 'IMAGE_LIST_REQUEST';
 export const IMAGE_LIST_SUCCESS = 'IMAGE_LIST_SUCCESS';
 export const IMAGE_LIST_FAILURE = 'IMAGE_LIST_FAILURE';
@@ -526,6 +528,14 @@ export interface CardSetDeleteImage {
     error: FPErrorCallback;
 }
 
+export interface CardSetUndo {
+    type: typeof CARDSET_UNDO;
+}
+
+export interface CardSetRedo {
+    type: typeof CARDSET_REDO;
+}
+
 export interface CardSetUploadImageSuccess {
     type: typeof CARDSET_UPLOAD_IMAGE_SUCCESS;
 }
@@ -575,6 +585,8 @@ export type CardSetModifyAction =
     | CardSetSetZoom
     | CardSetUploadImage
     | CardSetDeleteImage
+    | CardSetUndo
+    | CardSetRedo
     | CardSetUploadImageSuccess
     | CardSetUploadImageFailure;
 
@@ -1105,6 +1117,18 @@ export const cardSetDeleteImage = (
         imageId,
         load,
         error,
+    };
+};
+
+export const cardSetUndo = (): CardSetUndo => {
+    return {
+        type: CARDSET_UNDO,
+    };
+};
+
+export const cardSetRedo = (): CardSetRedo => {
+    return {
+        type: CARDSET_REDO,
     };
 };
 

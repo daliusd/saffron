@@ -585,15 +585,17 @@ class FieldController extends React.Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const isActivePlaceholder = props.placeholderId === state.cardset.activeFieldId;
-    const isActive = props.cardId === state.cardset.activeCardId && props.placeholderId === state.cardset.activeFieldId;
-    const isLocked = state.cardset.fields[props.cardId][props.placeholderId].locked === true;
+    const isActivePlaceholder = props.placeholderId === state.cardset.present.activeFieldId;
+    const isActive =
+        props.cardId === state.cardset.present.activeCardId &&
+        props.placeholderId === state.cardset.present.activeFieldId;
+    const isLocked = state.cardset.present.fields[props.cardId][props.placeholderId].locked === true;
 
     return {
         isActive,
         isActivePlaceholder,
         isLocked,
-        snappingDistance: state.cardset.snappingDistance,
+        snappingDistance: state.cardset.present.snappingDistance,
     };
 };
 

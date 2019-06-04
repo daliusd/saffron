@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux';
 import shortid from 'shortid';
+import undoable from 'redux-undo';
 
 import {
     CARDSET_ADD_IMAGE_FIELD,
@@ -77,6 +78,11 @@ import {
     CardSetsAction,
     CARDSETS_SELECT_SUCCESS,
     CARDSET_CHANGE_FIELD_POSITION,
+    CARDSET_UNDO,
+    CARDSET_REDO,
+    Action,
+    INIT_REQUEST,
+    GAME_LIST_REQUEST,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -224,7 +230,9 @@ export interface State {
     signup: SignUpState;
     games: GameState;
     cardsets: CardSetsState;
-    cardset: CardSetState;
+    cardset: {
+        present: CardSetState;
+    };
     images: ImageState;
 }
 
@@ -234,7 +242,9 @@ export const DefaultState: State = {
     signup: DefaultSignUpState,
     games: DefaultGameState,
     cardsets: DefaultCardSetsState,
-    cardset: DefaultCardSetState,
+    cardset: {
+        present: DefaultCardSetState,
+    },
     images: DefaultImageState,
 };
 
@@ -1398,13 +1408,40 @@ export function images(state: ImageState = DefaultImageState, action: ImageListA
     }
 }
 
+const undoableCardset = undoable(cardset, {
+    ignoreInitialState: true,
+    undoType: CARDSET_UNDO,
+    redoType: CARDSET_REDO,
+    filter: function filterActions(action: Action) {
+        if (
+            action.type === INIT_REQUEST ||
+            action.type === MESSAGE_DISPLAY ||
+            action.type === MESSAGE_HIDE ||
+            action.type === LOGIN_SUCCESS ||
+            action.type === GAME_LIST_REQUEST ||
+            action.type === GAME_LIST_SUCCESS ||
+            action.type === GAME_SELECT_REQUEST ||
+            action.type === GAME_SELECT_SUCCESS ||
+            action.type === CARDSETS_SELECT_SUCCESS ||
+            action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD ||
+            action.type === CARDSET_SELECT_REQUEST ||
+            action.type === CARDSET_SELECT_SUCCESS
+        ) {
+            console.log('no', action.type);
+            return false;
+        }
+        console.log('yes', action.type);
+        return true;
+    },
+});
+
 const reducers = combineReducers({
     message,
     auth,
     signup,
     games,
     cardsets,
-    cardset,
+    cardset: undoableCardset,
     images,
 });
 

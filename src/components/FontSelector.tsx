@@ -141,10 +141,10 @@ class FontSelector extends Component<Props> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-    let activeFont = state.cardset.textSettings.fontFamily;
-    let activeFontVariant = state.cardset.textSettings.fontVariant;
-    let activeFontSize = state.cardset.textSettings.fontSize;
-    let activeLineHeight = state.cardset.textSettings.lineHeight || DEFAULT_LINE_HEIGHT;
+    let activeFont = state.cardset.present.textSettings.fontFamily;
+    let activeFontVariant = state.cardset.present.textSettings.fontVariant;
+    let activeFontSize = state.cardset.present.textSettings.fontSize;
+    let activeLineHeight = state.cardset.present.textSettings.lineHeight || DEFAULT_LINE_HEIGHT;
 
     return {
         activeFont,

@@ -5,7 +5,14 @@ import shortid from 'shortid';
 import { ACTIVITY_SELECTING, State } from '../reducers';
 import { BLEED_WIDTH } from '../constants';
 import { CardSetType, CardType, CardsCollection } from '../types';
-import { Dispatch, cardSetActiveCardAndField, cardSetCreateCard, cardSetRenameRequest } from '../actions';
+import {
+    Dispatch,
+    cardSetActiveCardAndField,
+    cardSetCreateCard,
+    cardSetRenameRequest,
+    cardSetUndo,
+    cardSetRedo,
+} from '../actions';
 import Card from './Card';
 import EditableTitle from './EditableTitle';
 import KawaiiMessage, { Character } from './KawaiiMessage';
@@ -44,6 +51,38 @@ export class CardSet extends Component<Props, LocalState> {
         pageHeight: 297,
         topBottomMargin: 15,
         leftRightMargin: 9,
+    };
+
+    componentDidMount() {
+        window.addEventListener('keydown', this.keyDown);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.keyDown);
+    }
+
+    keyDown = (event: KeyboardEvent) => {
+        const { dispatch } = this.props;
+
+        switch (event.key) {
+            case 'z':
+            case 'Z': {
+                if (event.ctrlKey && event.shiftKey) {
+                    dispatch(cardSetRedo());
+                } else if (event.ctrlKey) {
+                    dispatch(cardSetUndo());
+                }
+                break;
+            }
+            case 'y':
+            case 'Y': {
+                if (event.ctrlKey) {
+                    dispatch(cardSetRedo());
+                }
+                break;
+            }
+            // no default
+        }
     };
 
     handleCreateCardClick = () => {
@@ -147,14 +186,14 @@ export class CardSet extends Component<Props, LocalState> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
-        activity: state.cardset.activity,
-        width: state.cardset.width,
-        height: state.cardset.height,
-        isTwoSided: state.cardset.isTwoSided,
-        zoom: state.cardset.zoom,
+        activity: state.cardset.present.activity,
+        width: state.cardset.present.width,
+        height: state.cardset.present.height,
+        isTwoSided: state.cardset.present.isTwoSided,
+        zoom: state.cardset.present.zoom,
         isAuthenticated: state.auth.isAuthenticated,
-        cardsAllIds: state.cardset.cardsAllIds,
-        cardsById: state.cardset.cardsById,
+        cardsAllIds: state.cardset.present.cardsAllIds,
+        cardsById: state.cardset.present.cardsById,
         activeCardSet:
             state.cardsets.active && state.cardsets.byId[state.cardsets.active]
                 ? state.cardsets.byId[state.cardsets.active]

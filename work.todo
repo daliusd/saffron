@@ -285,8 +285,6 @@
 - Resize card with content
 - Make field non-clickable for convenience
 
-- Fix tests
-
 - Generate list with authors of icons
 
 - Lower / Raise field one step

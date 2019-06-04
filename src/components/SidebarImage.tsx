@@ -351,11 +351,11 @@ export class SidebarImage extends Component<Props, LocalState> {
 
 const mapStateToProps = (state: State): StateProps => {
     const activeFieldInfo =
-        state.cardset.activeCardId !== undefined && state.cardset.activeFieldId !== undefined
-            ? state.cardset.fields[state.cardset.activeCardId][state.cardset.activeFieldId]
+        state.cardset.present.activeCardId !== undefined && state.cardset.present.activeFieldId !== undefined
+            ? state.cardset.present.fields[state.cardset.present.activeCardId][state.cardset.present.activeFieldId]
             : undefined;
 
-    const activeCardId = state.cardset.activeCardId;
+    const activeCardId = state.cardset.present.activeCardId;
 
     return {
         isAuthenticated: state.auth.isAuthenticated,
@@ -364,7 +364,7 @@ const mapStateToProps = (state: State): StateProps => {
         activeCardId,
         images: state.images.images,
         filter: state.images.filter,
-        cardsAllIds: state.cardset.cardsAllIds,
+        cardsAllIds: state.cardset.present.cardsAllIds,
     };
 };
 
