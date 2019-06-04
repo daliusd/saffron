@@ -22,15 +22,23 @@ interface StateProps {
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
-export class SidebarDetails extends Component<Props> {
+interface LocalState {
+    maintainAspectRatio: boolean;
+}
+
+export class SidebarSettings extends Component<Props, LocalState> {
+    state: LocalState = {
+        maintainAspectRatio: true,
+    };
+
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeWidth(parseFloat(event.target.value)));
+        dispatch(cardSetChangeWidth(parseFloat(event.target.value), this.state.maintainAspectRatio));
     };
 
     handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeHeight(parseFloat(event.target.value)));
+        dispatch(cardSetChangeHeight(parseFloat(event.target.value), this.state.maintainAspectRatio));
     };
 
     handleIsTwoSidedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,6 +58,7 @@ export class SidebarDetails extends Component<Props> {
 
     render() {
         const { width, height, isTwoSided, snappingDistance, visible, zoom } = this.props;
+        const { maintainAspectRatio } = this.state;
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
@@ -75,6 +84,20 @@ export class SidebarDetails extends Component<Props> {
                     placeholder="height"
                     value={height}
                 />
+                <div>
+                    <label>
+                        Maintain aspect ration:{' '}
+                        <input
+                            type="checkbox"
+                            onChange={() => {
+                                this.setState({ maintainAspectRatio: !maintainAspectRatio });
+                            }}
+                            className="form-control"
+                            checked={maintainAspectRatio}
+                        />
+                    </label>
+                </div>
+
                 <label>
                     Cards have two sides:{' '}
                     <input
@@ -125,4 +148,4 @@ const mapStateToProps = (state: State): StateProps => {
     };
 };
 
-export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarDetails);
+export default connect<StateProps, DispatchProps, SidebarOwnProps, State>(mapStateToProps)(SidebarSettings);

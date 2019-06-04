@@ -775,15 +775,35 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             return state;
         }
         case CARDSET_CHANGE_WIDTH: {
+            if (!action.width || action.width <= 0) {
+                return state;
+            }
+
+            let height = state.height;
+            if (action.maintainAspectRatio) {
+                height = action.width * (state.height / state.width);
+            }
+
             return {
                 ...state,
                 width: action.width,
+                height,
             };
         }
         case CARDSET_CHANGE_HEIGHT: {
+            if (!action.height || action.height <= 0) {
+                return state;
+            }
+
+            let width = state.width;
+            if (action.maintainAspectRatio) {
+                width = action.height * (state.width / state.height);
+            }
+
             return {
                 ...state,
                 height: action.height,
+                width,
             };
         }
         case CARDSET_CHANGE_IS_TWO_SIDED: {
