@@ -6,13 +6,13 @@ import {
     CARDSET_ADD_IMAGE_FIELD,
     CARDSET_ADD_TEXT_FIELD,
     CARDSET_CHANGE_ACTIVE_FIELD_NAME,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
-    CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT,
+    CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT,
     CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD,
     CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD,
     CARDSET_CHANGE_HEIGHT,
@@ -1005,7 +1005,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 fields,
             };
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN: {
             let textSettings = {
                 ...state.textSettings,
                 align: action.align,
@@ -1042,7 +1042,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR: {
             let textSettings = {
                 ...state.textSettings,
                 color: action.color,
@@ -1079,7 +1079,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY: {
             let textSettings = {
                 ...state.textSettings,
                 color: action.fontFamily,
@@ -1116,7 +1116,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT: {
             let textSettings = {
                 ...state.textSettings,
                 color: action.fontVariant,
@@ -1153,7 +1153,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT: {
             let textSettings = {
                 ...state.textSettings,
                 fontFamily: action.fontFamily,
@@ -1193,7 +1193,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE: {
             let textSettings = {
                 ...state.textSettings,
                 fontSize: action.fontSize,
@@ -1230,7 +1230,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 };
             }
         }
-        case CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT: {
+        case CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT: {
             let textSettings = {
                 ...state.textSettings,
                 lineHeight: action.lineHeight,

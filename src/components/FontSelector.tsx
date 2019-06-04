@@ -6,10 +6,10 @@ import WebFont from 'webfontloader';
 import { DEFAULT_LINE_HEIGHT } from '../constants';
 import {
     Dispatch,
-    cardSetChangeActiveTextPlaceholderFontFamilyAndVariant,
-    cardSetChangeActiveTextPlaceholderFontSize,
-    cardSetChangeActiveTextPlaceholderFontVariant,
-    cardSetChangeActiveTextPlaceholderLineHeight,
+    cardSetChangeActiveTextFieldFontFamilyAndVariant,
+    cardSetChangeActiveTextFieldFontSize,
+    cardSetChangeActiveTextFieldFontVariant,
+    cardSetChangeActiveTextFieldLineHeight,
 } from '../actions';
 import { State } from '../reducers';
 import style from './FontSelector.module.css';
@@ -69,7 +69,7 @@ class FontSelector extends Component<Props> {
             },
             active: () => {
                 const { dispatch } = this.props;
-                dispatch(cardSetChangeActiveTextPlaceholderFontFamilyAndVariant(fontFamily, fontVariant));
+                dispatch(cardSetChangeActiveTextFieldFontFamilyAndVariant(fontFamily, fontVariant));
             },
         });
     };
@@ -84,19 +84,19 @@ class FontSelector extends Component<Props> {
             },
             active: () => {
                 const { dispatch } = this.props;
-                dispatch(cardSetChangeActiveTextPlaceholderFontVariant(value));
+                dispatch(cardSetChangeActiveTextFieldFontVariant(value));
             },
         });
     };
 
     handleFontSizeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderFontSize(parseFloat(event.target.value)));
+        dispatch(cardSetChangeActiveTextFieldFontSize(parseFloat(event.target.value)));
     };
 
     handleLineHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeActiveTextPlaceholderLineHeight(parseFloat(event.target.value)));
+        dispatch(cardSetChangeActiveTextFieldLineHeight(parseFloat(event.target.value)));
     };
 
     render() {

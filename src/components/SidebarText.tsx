@@ -7,13 +7,13 @@ import { State } from '../reducers';
 import {
     cardSetAddTextField,
     cardSetChangeActiveFieldName,
-    cardSetChangeActiveTextPlaceholderAlign,
+    cardSetChangeActiveTextFieldAlign,
     cardSetLockActiveField,
     cardSetLowerActiveFieldToBottom,
     cardSetRaiseActiveFieldToTop,
     cardSetRemoveActiveField,
     cardSetUnlockActiveField,
-    cardSetChangeActiveTextPlaceholderColor,
+    cardSetChangeActiveTextFieldColor,
 } from '../actions';
 import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
@@ -37,7 +37,7 @@ export class SidebarText extends Component<Props> {
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
-            dispatch(cardSetChangeActiveTextPlaceholderAlign('left'));
+            dispatch(cardSetChangeActiveTextFieldAlign('left'));
         } else {
             document.execCommand('justifyleft');
         }
@@ -48,7 +48,7 @@ export class SidebarText extends Component<Props> {
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
-            dispatch(cardSetChangeActiveTextPlaceholderAlign('center'));
+            dispatch(cardSetChangeActiveTextFieldAlign('center'));
         } else {
             document.execCommand('justifycenter');
         }
@@ -59,7 +59,7 @@ export class SidebarText extends Component<Props> {
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
-            dispatch(cardSetChangeActiveTextPlaceholderAlign('right'));
+            dispatch(cardSetChangeActiveTextFieldAlign('right'));
         } else {
             document.execCommand('justifyright');
         }
@@ -121,7 +121,7 @@ export class SidebarText extends Component<Props> {
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
-            dispatch(cardSetChangeActiveTextPlaceholderColor(color.hex));
+            dispatch(cardSetChangeActiveTextFieldColor(color.hex));
         } else {
             document.execCommand('forecolor', false, color.hex);
         }

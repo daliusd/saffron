@@ -84,15 +84,14 @@ export const CARDSET_CHANGE_FIELD_PAN = 'CARDSET_CHANGE_FIELD_PAN';
 export const CARDSET_CHANGE_FIELD_ZOOM = 'CARDSET_CHANGE_FIELD_ZOOM';
 export const CARDSET_CHANGE_FIELD_SIZE = 'CARDSET_CHANGE_FIELD_SIZE';
 export const CARDSET_CHANGE_FIELD_ANGLE = 'CARDSET_CHANGE_FIELD_ANGLE';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT =
-    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT =
-    'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE';
-export const CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT = 'CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT =
+    'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE';
+export const CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT = 'CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT';
 export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
@@ -435,33 +434,33 @@ export interface CardSetChangeFieldAngle {
     angle: number;
     group: string;
 }
-export interface CardSetChangeActiveTextPlaceholderAlign {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN;
+export interface CardSetChangeActiveTextFieldAlign {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN;
     align: string;
 }
-export interface CardSetChangeActiveTextPlaceholderColor {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR;
+export interface CardSetChangeActiveTextFieldColor {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR;
     color: string;
 }
-export interface CardSetChangeActiveTextPlaceholderFontFamily {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY;
+export interface CardSetChangeActiveTextFieldFontFamily {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY;
     fontFamily: string;
 }
-export interface CardSetChangeActiveTextPlaceholderFontVariant {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT;
+export interface CardSetChangeActiveTextFieldFontVariant {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT;
     fontVariant: string;
 }
-export interface CardSetChangeActiveTextPlaceholderFontFamilyAndVariant {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT;
+export interface CardSetChangeActiveTextFieldFontFamilyAndVariant {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT;
     fontFamily: string;
     fontVariant: string;
 }
-export interface CardSetChangeActiveTextPlaceholderFontSize {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE;
+export interface CardSetChangeActiveTextFieldFontSize {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE;
     fontSize: number;
 }
-export interface CardSetChangeActiveTextPlaceholderLineHeight {
-    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT;
+export interface CardSetChangeActiveTextFieldLineHeight {
+    type: typeof CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT;
     lineHeight: number;
 }
 export interface CardSetChangeText {
@@ -575,13 +574,13 @@ export type CardSetModifyAction =
     | CardSetChangeFieldZoom
     | CardSetChangeFieldSize
     | CardSetChangeFieldAngle
-    | CardSetChangeActiveTextPlaceholderAlign
-    | CardSetChangeActiveTextPlaceholderColor
-    | CardSetChangeActiveTextPlaceholderFontFamily
-    | CardSetChangeActiveTextPlaceholderFontVariant
-    | CardSetChangeActiveTextPlaceholderFontFamilyAndVariant
-    | CardSetChangeActiveTextPlaceholderFontSize
-    | CardSetChangeActiveTextPlaceholderLineHeight
+    | CardSetChangeActiveTextFieldAlign
+    | CardSetChangeActiveTextFieldColor
+    | CardSetChangeActiveTextFieldFontFamily
+    | CardSetChangeActiveTextFieldFontVariant
+    | CardSetChangeActiveTextFieldFontFamilyAndVariant
+    | CardSetChangeActiveTextFieldFontSize
+    | CardSetChangeActiveTextFieldLineHeight
     | CardSetChangeText
     | CardSetChangeImage
     | CardSetChangeImageBase64
@@ -982,63 +981,57 @@ export const cardSetChangeFieldAngle = (
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderAlign = (align: string): CardSetChangeActiveTextPlaceholderAlign => {
+export const cardSetChangeActiveTextFieldAlign = (align: string): CardSetChangeActiveTextFieldAlign => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_ALIGN,
         align,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderColor = (color: string): CardSetChangeActiveTextPlaceholderColor => {
+export const cardSetChangeActiveTextFieldColor = (color: string): CardSetChangeActiveTextFieldColor => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_COLOR,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_COLOR,
         color,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderFontFamily = (
-    fontFamily: string,
-): CardSetChangeActiveTextPlaceholderFontFamily => {
+export const cardSetChangeActiveTextFieldFontFamily = (fontFamily: string): CardSetChangeActiveTextFieldFontFamily => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY,
         fontFamily,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderFontVariant = (
+export const cardSetChangeActiveTextFieldFontVariant = (
     fontVariant: string,
-): CardSetChangeActiveTextPlaceholderFontVariant => {
+): CardSetChangeActiveTextFieldFontVariant => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_VARIANT,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_VARIANT,
         fontVariant,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderFontFamilyAndVariant = (
+export const cardSetChangeActiveTextFieldFontFamilyAndVariant = (
     fontFamily: string,
     fontVariant: string,
-): CardSetChangeActiveTextPlaceholderFontFamilyAndVariant => {
+): CardSetChangeActiveTextFieldFontFamilyAndVariant => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_FAMILY_AND_VARIANT,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_FAMILY_AND_VARIANT,
         fontFamily,
         fontVariant,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderFontSize = (
-    fontSize: number,
-): CardSetChangeActiveTextPlaceholderFontSize => {
+export const cardSetChangeActiveTextFieldFontSize = (fontSize: number): CardSetChangeActiveTextFieldFontSize => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_FONT_SIZE,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_FONT_SIZE,
         fontSize,
     };
 };
 
-export const cardSetChangeActiveTextPlaceholderLineHeight = (
-    lineHeight: number,
-): CardSetChangeActiveTextPlaceholderLineHeight => {
+export const cardSetChangeActiveTextFieldLineHeight = (lineHeight: number): CardSetChangeActiveTextFieldLineHeight => {
     return {
-        type: CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_LINE_HEIGHT,
+        type: CARDSET_CHANGE_ACTIVE_TEXT_FIELD_LINE_HEIGHT,
         lineHeight,
     };
 };
