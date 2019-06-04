@@ -176,7 +176,7 @@ class PNGGenerator {
                     } else if (imageToDraw.type === ImageType.IMAGE || imageToDraw.type === ImageType.SVG) {
                         prepareImageToDrawSpace(context, imageToDraw, ptpmm);
 
-                        if (imageToDraw.cx && imageToDraw.cy) {
+                        if (imageToDraw.cx !== undefined && imageToDraw.cy !== undefined) {
                             context.translate(imageToDraw.cx * ptpmm, imageToDraw.cy * ptpmm);
                         }
                         let dim = calculateImageDimensions(imageToDraw);
