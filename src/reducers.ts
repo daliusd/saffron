@@ -465,7 +465,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 cardsAllIds: action.data.cardsAllIds || [],
                 cardsById: action.data.cardsById || {},
                 fields: action.data.fields || {},
-                fieldsAllIds: action.data.fieldsAllIds || {},
+                fieldsAllIds: action.data.fieldsAllIds || [],
                 activeCardId: undefined,
                 activeFieldId: undefined,
                 isBackActive: false,

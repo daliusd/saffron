@@ -59,9 +59,8 @@ export class SidebarImportExport extends Component<Props> {
                     }
 
                     imageInfo.url = url.replace('/api/imagefiles/', '');
-
-                    fieldsByCard[fieldId] = imageInfo;
                 }
+                fieldsByCard[fieldId] = imageInfo;
             }
             preparedImages[cardId] = fieldsByCard;
         }
@@ -72,7 +71,7 @@ export class SidebarImportExport extends Component<Props> {
     handleExportJson = () => {
         const { width, height, isTwoSided, cardsAllIds, cardsById, fields, fieldsAllIds } = this.props;
 
-        const preparedImages = this.prepareImagePaths(fields);
+        const preparedFields = this.prepareImagePaths(fields);
 
         const data = {
             width,
@@ -80,9 +79,8 @@ export class SidebarImportExport extends Component<Props> {
             isTwoSided,
             cardsAllIds,
             cardsById,
-            fields,
+            fields: preparedFields,
             fieldsAllIds,
-            images: preparedImages,
         };
 
         let json = JSON.stringify(data, null, 4);

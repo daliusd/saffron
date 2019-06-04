@@ -9,6 +9,10 @@ const webFontsLoadPromise = (config: WebFont.Config) =>
     });
 
 export const loadFontsUsedInPlaceholders = (data: CardSetSelectSuccessDataV3) => {
+    if (!('fieldsAllIds' in data)) {
+        return;
+    }
+
     let fontsToLoad: Set<string> = new Set();
     fontsToLoad.add(DEFAULT_FONT);
     for (const fieldId of data.fieldsAllIds) {

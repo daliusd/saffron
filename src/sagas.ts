@@ -5,7 +5,7 @@ import { delay, SagaIterator } from 'redux-saga';
 import jwtDecode from 'jwt-decode';
 import { ActionCreators } from 'redux-undo';
 
-import { BLEED_WIDTH } from './constants';
+import { BLEED_WIDTH, CURRENT_CARDSET_VERSION } from './constants';
 import {
     CARDSET_ADD_IMAGE_FIELD,
     CARDSET_ADD_TEXT_FIELD,
@@ -114,7 +114,7 @@ import {
     CardSetSelectSuccessDataV3,
     CARDSET_UNDO,
     CARDSET_REDO,
-    CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD
+    CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
@@ -453,7 +453,7 @@ export function* handleCardSetCreateRequest(action: CardSetCreateRequest): SagaI
         yield call(authorizedPostRequest, '/api/cardsets', {
             name: action.cardsetname,
             gameId: action.gameId,
-            data: JSON.stringify({ width: action.width, height: action.height }),
+            data: JSON.stringify({ width: action.width, height: action.height, version: CURRENT_CARDSET_VERSION }),
         });
         yield put({
             type: CARDSET_CREATE_SUCCESS,

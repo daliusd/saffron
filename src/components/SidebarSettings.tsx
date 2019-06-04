@@ -90,7 +90,7 @@ export class SidebarSettings extends Component<Props, LocalState> {
                 />
                 <div>
                     <label>
-                        Maintain aspect ration:{' '}
+                        Maintain aspect ratio:{' '}
                         <input
                             type="checkbox"
                             onChange={() => {
