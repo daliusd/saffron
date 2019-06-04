@@ -7,16 +7,16 @@ export default class ChangelogPage extends Component {
                 <p>Here you can find list of future plans and what was implemented recently.</p>
                 <h2>Future plans</h2>
                 <ul>
-                    <li>
-                        Image improvements:
-                        <ul>
-                            <li>Generating list of author's of icons if attribution is required.</li>
-                            <li>Various ideas for advanced images controls.</li>
-                        </ul>
-                    </li>
+                    <li>Generating list of author's of icons if attribution is required.</li>
                     <li>Card templates.</li>
-                    <li>UI improvements (keyboard support and etc.).</li>
+                    <li>Keyboard shortcuts.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
+                </ul>
+                <h2>2019-06-04</h2>
+                <ul>
+                    <li>Possibility to zoom in and pan imaged added.</li>
+                    <li>Undo/Redo using Ctrl+Z and Ctrl+Y (or Ctrl+Shift+Z).</li>
+                    <li>More small improvements and bug fixes.</li>
                 </ul>
                 <h2>2019-05-26</h2>
                 <ul>
