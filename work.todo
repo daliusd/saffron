@@ -278,10 +278,10 @@
     + Fix tests
     + Rebuild frame control icons. They look bad on Chrome
 
-- Undo/Redo
++ Undo/Redo
 
+- Active field must be on top for convenience
 - Remove "placeholder" from the code
-
 - Resize card with content
 - Make field non-clickable for convenience
 
