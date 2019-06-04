@@ -400,6 +400,7 @@ export interface CardSetChangeFieldPosition {
     fieldId: string;
     x: number;
     y: number;
+    group: string;
 }
 
 export interface CardSetChangeFieldPan {
@@ -408,6 +409,7 @@ export interface CardSetChangeFieldPan {
     fieldId: string;
     cx: number;
     cy: number;
+    group: string;
 }
 
 export interface CardSetChangeFieldZoom {
@@ -415,6 +417,7 @@ export interface CardSetChangeFieldZoom {
     cardId?: string;
     fieldId: string;
     zoom: number;
+    group: string;
 }
 
 export interface CardSetChangeFieldSize {
@@ -423,12 +426,14 @@ export interface CardSetChangeFieldSize {
     fieldId: string;
     width: number;
     height: number;
+    group: string;
 }
 export interface CardSetChangeFieldAngle {
     type: typeof CARDSET_CHANGE_FIELD_ANGLE;
     cardId?: string;
     fieldId: string;
     angle: number;
+    group: string;
 }
 export interface CardSetChangeActiveTextPlaceholderAlign {
     type: typeof CARDSET_CHANGE_ACTIVE_TEXT_PLACEHOLDER_ALIGN;
@@ -901,6 +906,7 @@ export const cardSetChangeFieldPosition = (
     fieldId: string,
     x: number,
     y: number,
+    group: string,
 ): CardSetChangeFieldPosition => {
     return {
         type: CARDSET_CHANGE_FIELD_POSITION,
@@ -908,6 +914,7 @@ export const cardSetChangeFieldPosition = (
         fieldId,
         x,
         y,
+        group,
     };
 };
 
@@ -916,6 +923,7 @@ export const cardSetChangeFieldPan = (
     fieldId: string,
     cx: number,
     cy: number,
+    group: string,
 ): CardSetChangeFieldPan => {
     return {
         type: CARDSET_CHANGE_FIELD_PAN,
@@ -923,6 +931,7 @@ export const cardSetChangeFieldPan = (
         fieldId,
         cx,
         cy,
+        group,
     };
 };
 
@@ -930,12 +939,14 @@ export const cardSetChangeFieldZoom = (
     cardId: string | undefined,
     fieldId: string,
     zoom: number,
+    group: string,
 ): CardSetChangeFieldZoom => {
     return {
         type: CARDSET_CHANGE_FIELD_ZOOM,
         cardId,
         fieldId,
         zoom,
+        group,
     };
 };
 
@@ -944,6 +955,7 @@ export const cardSetChangeFieldSize = (
     fieldId: string,
     width: number,
     height: number,
+    group: string,
 ): CardSetChangeFieldSize => {
     return {
         type: CARDSET_CHANGE_FIELD_SIZE,
@@ -951,6 +963,7 @@ export const cardSetChangeFieldSize = (
         fieldId,
         width,
         height,
+        group,
     };
 };
 
@@ -958,12 +971,14 @@ export const cardSetChangeFieldAngle = (
     cardId: string | undefined,
     fieldId: string,
     angle: number,
+    group: string,
 ): CardSetChangeFieldAngle => {
     return {
         type: CARDSET_CHANGE_FIELD_ANGLE,
         cardId,
         fieldId,
         angle,
+        group,
     };
 };
 

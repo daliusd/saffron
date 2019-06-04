@@ -29,19 +29,23 @@ interface DispatchProps {
 type Props = OwnProps & StateProps & DispatchProps;
 
 class TextField extends PureComponent<Props> {
-    handleDrag = (x: number, y: number, cardOnly: boolean) => {
+    handleDrag = (x: number, y: number, cardOnly: boolean, group: string) => {
         const { dispatch, cardId, textFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangeFieldPosition(cardOnly ? cardId : undefined, textFieldInfo.id, x / ppmm, y / ppmm));
+        dispatch(
+            cardSetChangeFieldPosition(cardOnly ? cardId : undefined, textFieldInfo.id, x / ppmm, y / ppmm, group),
+        );
     };
 
-    handleResize = (width: number, height: number, cardOnly: boolean) => {
+    handleResize = (width: number, height: number, cardOnly: boolean, group: string) => {
         const { dispatch, textFieldInfo, cardId, ppmm } = this.props;
-        dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, textFieldInfo.id, width / ppmm, height / ppmm));
+        dispatch(
+            cardSetChangeFieldSize(cardOnly ? cardId : undefined, textFieldInfo.id, width / ppmm, height / ppmm, group),
+        );
     };
 
-    handleRotate = (angle: number, cardOnly: boolean) => {
+    handleRotate = (angle: number, cardOnly: boolean, group: string) => {
         const { dispatch, textFieldInfo, cardId } = this.props;
-        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, textFieldInfo.id, angle));
+        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, textFieldInfo.id, angle, group));
     };
 
     render() {

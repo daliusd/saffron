@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import shortid from 'shortid';
-import undoable, { groupByActionTypes } from 'redux-undo';
+import undoable from 'redux-undo';
 
 import {
     CARDSET_ADD_IMAGE_FIELD,
@@ -1433,19 +1433,24 @@ const undoableCardset = undoable(cardset, {
     ignoreInitialState: true,
     undoType: CARDSET_UNDO,
     redoType: CARDSET_REDO,
-    groupBy: groupByActionTypes([
-        CARDSET_CHANGE_FIELD_SIZE,
-        CARDSET_CHANGE_FIELD_POSITION,
-        CARDSET_CHANGE_FIELD_ANGLE,
-        CARDSET_CHANGE_FIELD_ZOOM,
-        CARDSET_CHANGE_FIELD_PAN,
-    ]),
+    groupBy: (action: Action) => {
+        if (
+            action.type === 'CARDSET_CHANGE_FIELD_SIZE' ||
+            action.type === 'CARDSET_CHANGE_FIELD_POSITION' ||
+            action.type === 'CARDSET_CHANGE_FIELD_ANGLE' ||
+            action.type === 'CARDSET_CHANGE_FIELD_ZOOM' ||
+            action.type === 'CARDSET_CHANGE_FIELD_PAN'
+        ) {
+            return action.group;
+        }
+        return null;
+    },
     filter: (action: Action) => {
         if (!action.type.startsWith('CARDSET_')) {
             return false;
         }
 
-        if (action.type === CARDSET_SELECT_REQUEST) {
+        if (action.type === CARDSET_SELECT_REQUEST || action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD) {
             return false;
         }
         return true;

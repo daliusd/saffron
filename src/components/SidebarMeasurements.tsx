@@ -15,6 +15,7 @@ import {
     cardSetUnlockActiveField,
 } from '../actions';
 import style from './SidebarMeasurements.module.css';
+import shortid from 'shortid';
 
 interface StateProps {
     activeField?: FieldInfo;
@@ -92,7 +93,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const width = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangeFieldSize(undefined, activeField.id, width, activeField.height));
+            dispatch(cardSetChangeFieldSize(undefined, activeField.id, width, activeField.height, shortid.generate()));
         }
     };
 
@@ -100,7 +101,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const height = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangeFieldSize(undefined, activeField.id, activeField.width, height));
+            dispatch(cardSetChangeFieldSize(undefined, activeField.id, activeField.width, height, shortid.generate()));
         }
     };
 
@@ -108,7 +109,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const x = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, x, activeField.y));
+            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, x, activeField.y, shortid.generate()));
         }
     };
 
@@ -116,7 +117,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const y = parseFloat(event.target.value);
         if (activeField !== undefined) {
-            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, activeField.x, y));
+            dispatch(cardSetChangeFieldPosition(undefined, activeField.id, activeField.x, y, shortid.generate()));
         }
     };
 
@@ -124,7 +125,7 @@ export class SidebarMeasurements extends Component<Props> {
         const { activeField, dispatch } = this.props;
         const angle = (parseFloat(event.target.value) * Math.PI) / 180;
         if (activeField !== undefined) {
-            dispatch(cardSetChangeFieldAngle(undefined, activeField.id, angle));
+            dispatch(cardSetChangeFieldAngle(undefined, activeField.id, angle, shortid.generate()));
         }
     };
 

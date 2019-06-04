@@ -51,29 +51,39 @@ class ImageField extends PureComponent<Props, LocalState> {
         };
     }
 
-    handleDrag = (x: number, y: number, cardOnly: boolean) => {
+    handleDrag = (x: number, y: number, cardOnly: boolean, group: string) => {
         const { dispatch, cardId, imageFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangeFieldPosition(cardOnly ? cardId : undefined, imageFieldInfo.id, x / ppmm, y / ppmm));
+        dispatch(
+            cardSetChangeFieldPosition(cardOnly ? cardId : undefined, imageFieldInfo.id, x / ppmm, y / ppmm, group),
+        );
     };
 
-    handlePan = (cx: number, cy: number, cardOnly: boolean) => {
+    handlePan = (cx: number, cy: number, cardOnly: boolean, group: string) => {
         const { dispatch, cardId, imageFieldInfo, ppmm } = this.props;
-        dispatch(cardSetChangeFieldPan(cardOnly ? cardId : undefined, imageFieldInfo.id, cx / ppmm, cy / ppmm));
+        dispatch(cardSetChangeFieldPan(cardOnly ? cardId : undefined, imageFieldInfo.id, cx / ppmm, cy / ppmm, group));
     };
 
-    handleZoom = (zoom: number, cardOnly: boolean) => {
+    handleZoom = (zoom: number, cardOnly: boolean, group: string) => {
         const { dispatch, cardId, imageFieldInfo } = this.props;
-        dispatch(cardSetChangeFieldZoom(cardOnly ? cardId : undefined, imageFieldInfo.id, zoom));
+        dispatch(cardSetChangeFieldZoom(cardOnly ? cardId : undefined, imageFieldInfo.id, zoom, group));
     };
 
-    handleResize = (width: number, height: number, cardOnly: boolean) => {
+    handleResize = (width: number, height: number, cardOnly: boolean, group: string) => {
         const { dispatch, imageFieldInfo, cardId, ppmm } = this.props;
-        dispatch(cardSetChangeFieldSize(cardOnly ? cardId : undefined, imageFieldInfo.id, width / ppmm, height / ppmm));
+        dispatch(
+            cardSetChangeFieldSize(
+                cardOnly ? cardId : undefined,
+                imageFieldInfo.id,
+                width / ppmm,
+                height / ppmm,
+                group,
+            ),
+        );
     };
 
-    handleRotate = (angle: number, cardOnly: boolean) => {
+    handleRotate = (angle: number, cardOnly: boolean, group: string) => {
         const { dispatch, cardId, imageFieldInfo } = this.props;
-        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, imageFieldInfo.id, angle));
+        dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, imageFieldInfo.id, angle, group));
     };
 
     handleMouseDown = (event: React.MouseEvent) => {

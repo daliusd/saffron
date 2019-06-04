@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React from 'react';
+import shortid from 'shortid';
 
 import { Dispatch } from '../actions';
 import { State } from '../reducers';
@@ -22,11 +23,11 @@ interface OwnProps {
     cx?: number;
     cy?: number;
     children: React.ReactNode;
-    onDrag: (x: number, y: number, cardOnly: boolean) => void;
-    onResize: (width: number, height: number, cardOnly: boolean) => void;
-    onRotate: (angle: number, cardOnly: boolean) => void;
-    onZoom?: (zoom: number, cardOnly: boolean) => void;
-    onPan?: (cx: number, cy: number, cardOnly: boolean) => void;
+    onDrag: (x: number, y: number, cardOnly: boolean, group: string) => void;
+    onResize: (width: number, height: number, cardOnly: boolean, group: string) => void;
+    onRotate: (angle: number, cardOnly: boolean, group: string) => void;
+    onZoom?: (zoom: number, cardOnly: boolean, group: string) => void;
+    onPan?: (cx: number, cy: number, cardOnly: boolean, group: string) => void;
     cardWidth: number;
     cardHeight: number;
     ppmm: number;
@@ -50,6 +51,7 @@ export interface LocalState {
     startY: number;
     originalAngle: number;
     activatedUsingTouch: boolean;
+    group: string;
 }
 
 class FieldController extends React.Component<Props, LocalState> {
@@ -73,6 +75,7 @@ class FieldController extends React.Component<Props, LocalState> {
             startX: 0,
             startY: 0,
             originalAngle: 0,
+            group: '',
         };
     }
 
@@ -123,7 +126,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         this.cDiv.current.style.cursor = 'grabbing';
 
-        this.setState({ startX: co.clientX, startY: co.clientY });
+        this.setState({ startX: co.clientX, startY: co.clientY, group: shortid.generate() });
     };
 
     handleMouseMove = (event: MouseEvent) => {
@@ -150,7 +153,7 @@ class FieldController extends React.Component<Props, LocalState> {
         }
 
         this.setState({ startX: co.clientX, startY: co.clientY });
-        this.props.onDrag(nx, ny, true);
+        this.props.onDrag(nx, ny, true, this.state.group);
     };
 
     handleMouseUp = (event: MouseEvent) => {
@@ -173,7 +176,7 @@ class FieldController extends React.Component<Props, LocalState> {
         if (this.cDiv.current === null) return;
 
         if (!isLocked) {
-            this.props.onDrag(x, y, false);
+            this.props.onDrag(x, y, false, this.state.group);
         }
         this.setState({ activatedUsingTouch: isTouchEvent });
 
@@ -203,7 +206,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handlePanStart = (co: MouseEvent | Touch) => {
         document.body.style.cursor = `url(${panIcon}), auto`;
 
-        this.setState({ startX: co.clientX, startY: co.clientY });
+        this.setState({ startX: co.clientX, startY: co.clientY, group: shortid.generate() });
     };
 
     handlePanMouseMove = (event: MouseEvent) => {
@@ -229,7 +232,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         this.setState({ startX: co.clientX, startY: co.clientY });
 
-        onPan(newCx, newCy, true);
+        onPan(newCx, newCy, true, this.state.group);
     };
 
     handlePanMouseUp = (event: MouseEvent) => {
@@ -249,7 +252,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handlePanComplete = (event: MouseEvent | TouchEvent) => {
         const { cx, cy, onPan } = this.props;
         if (onPan && cx !== undefined && cy !== undefined) {
-            onPan(cx, cy, true);
+            onPan(cx, cy, true, this.state.group);
         }
 
         document.body.style.cursor = this.originalBodyCursor;
@@ -277,7 +280,7 @@ class FieldController extends React.Component<Props, LocalState> {
     handleZoomStart = (co: { clientX: number; clientY: number }) => {
         document.body.style.cursor = `url(${zoomIcon}), auto`;
 
-        this.setState({ startX: co.clientX, startY: co.clientY });
+        this.setState({ startX: co.clientX, startY: co.clientY, group: shortid.generate() });
     };
 
     handleZoomMouseMove = (event: MouseEvent) => {
@@ -302,7 +305,7 @@ class FieldController extends React.Component<Props, LocalState> {
         let newZoom = Math.max(zoom + z / 30, 1);
         this.setState({ startX: co.clientX, startY: co.clientY });
 
-        onZoom(newZoom, true);
+        onZoom(newZoom, true, this.state.group);
     };
 
     handleZoomMouseUp = (event: MouseEvent) => {
@@ -349,7 +352,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         document.body.style.cursor = `url(${resizeIcon}), auto`;
 
-        this.setState({ startX: co.clientX, startY: co.clientY });
+        this.setState({ startX: co.clientX, startY: co.clientY, group: shortid.generate() });
     };
 
     handleResizeMouseMove = (event: MouseEvent) => {
@@ -382,7 +385,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         this.setState({ startX: co.clientX, startY: co.clientY });
 
-        onResize(newWidth, newHeight, true);
+        onResize(newWidth, newHeight, true, this.state.group);
     };
 
     handleResizeMouseUp = (event: MouseEvent) => {
@@ -404,7 +407,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         if (!isLocked) {
             const { width, height, onResize } = this.props;
-            onResize(width, height, false);
+            onResize(width, height, false, this.state.group);
         }
 
         document.body.style.cursor = this.originalBodyCursor;
@@ -443,7 +446,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         let originalAngle = angle + Math.atan2(startX - co.clientX, startY - co.clientY);
 
-        this.setState({ startX, startY, originalAngle });
+        this.setState({ startX, startY, originalAngle, group: shortid.generate() });
     };
 
     handleRotateMouseMove = (event: MouseEvent) => {
@@ -470,7 +473,7 @@ class FieldController extends React.Component<Props, LocalState> {
             newAngle = ((Math.round(((newAngle / Math.PI) * 180) / 5) * 5) / 180) * Math.PI;
         }
 
-        onRotate(newAngle, true);
+        onRotate(newAngle, true, this.state.group);
     };
 
     handleRotateMouseUp = (event: MouseEvent) => {
@@ -492,7 +495,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         if (!isLocked) {
             const { angle } = this.props;
-            this.props.onRotate(angle, false);
+            this.props.onRotate(angle, false, this.state.group);
         }
 
         document.body.style.cursor = this.originalBodyCursor;
