@@ -104,6 +104,7 @@ export interface FieldBaseInfo {
     locked?: boolean;
     name?: string;
     isOnBack?: boolean;
+    unclickable?: boolean;
 }
 
 export interface TextFieldInfo extends FieldBaseInfo {

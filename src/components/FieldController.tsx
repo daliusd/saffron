@@ -37,6 +37,7 @@ interface StateProps {
     isActive: boolean;
     isActiveField: boolean;
     isLocked: boolean;
+    isUnclickable: boolean;
     snappingDistance: number;
 }
 
@@ -506,7 +507,20 @@ class FieldController extends React.Component<Props, LocalState> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, zoom, cx, children, isActive, isActiveField, isLocked } = this.props;
+        const {
+            x,
+            y,
+            width,
+            height,
+            angle,
+            zoom,
+            cx,
+            children,
+            isActive,
+            isActiveField,
+            isLocked,
+            isUnclickable,
+        } = this.props;
 
         return (
             <div
@@ -523,6 +537,7 @@ class FieldController extends React.Component<Props, LocalState> {
                     height: height,
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
+                    pointerEvents: isUnclickable ? 'none' : 'initial',
                 }}
             >
                 {children}
@@ -589,12 +604,15 @@ const mapStateToProps = (state: State, props: OwnProps): StateProps => {
     const isActiveField = props.fieldId === state.cardset.present.activeFieldId;
     const isActive =
         props.cardId === state.cardset.present.activeCardId && props.fieldId === state.cardset.present.activeFieldId;
-    const isLocked = state.cardset.present.fields[props.cardId][props.fieldId].locked === true;
+    const fieldInfo = state.cardset.present.fields[props.cardId][props.fieldId];
+    const isLocked = fieldInfo.locked === true;
+    const isUnclickable = fieldInfo.unclickable === true;
 
     return {
         isActive,
         isActiveField,
         isLocked,
+        isUnclickable,
         snappingDistance: state.cardset.present.snappingDistance,
     };
 };

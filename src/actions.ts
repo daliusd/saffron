@@ -75,6 +75,7 @@ export const CARDSET_LOCK_ACTIVE_FIELD = 'CARDSET_LOCK_ACTIVE_FIELD';
 export const CARDSET_UNLOCK_ACTIVE_FIELD = 'CARDSET_UNLOCK_ACTIVE_FIELD';
 export const CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD = 'CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD';
 export const CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD = 'CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD';
+export const CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD = 'CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD';
 export const CARDSET_CHANGE_WIDTH = 'CARDSET_CHANGE_WIDTH';
 export const CARDSET_CHANGE_HEIGHT = 'CARDSET_CHANGE_HEIGHT';
 export const CARDSET_CHANGE_IS_TWO_SIDED = 'CARDSET_CHANGE_IS_TWO_SIDED';
@@ -373,6 +374,11 @@ export interface CardSetChangeCropForActiveField {
     crop: boolean;
 }
 
+export interface CardSetChangeUnclickableForActiveField {
+    type: typeof CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD;
+    unclickable: boolean;
+}
+
 export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
     width: number;
@@ -569,6 +575,7 @@ export type CardSetModifyAction =
     | CardSetUnlockActiveField
     | CardSetChangeFitForActiveField
     | CardSetChangeCropForActiveField
+    | CardSetChangeUnclickableForActiveField
     | CardSetChangeWidth
     | CardSetChangeHeight
     | CardSetChangeIsTwoSided
@@ -873,6 +880,15 @@ export const cardSetChangeCropForActiveField = (crop: boolean): CardSetChangeCro
     return {
         type: CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD,
         crop,
+    };
+};
+
+export const cardSetChangeUnclickableForActiveField = (
+    unclickable: boolean,
+): CardSetChangeUnclickableForActiveField => {
+    return {
+        type: CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
+        unclickable,
     };
 };
 

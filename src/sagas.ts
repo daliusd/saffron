@@ -114,6 +114,7 @@ import {
     CardSetSelectSuccessDataV3,
     CARDSET_UNDO,
     CARDSET_REDO,
+    CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
@@ -870,6 +871,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(CARDSET_UNLOCK_ACTIVE_FIELD, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_FIT_FOR_ACTIVE_FIELD, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_CROP_FOR_ACTIVE_FIELD, handleCardSetChange),
+        takeLatest(CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_WIDTH, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_HEIGHT, handleCardSetChange),
         takeLatest(CARDSET_CHANGE_IS_TWO_SIDED, handleCardSetChange),

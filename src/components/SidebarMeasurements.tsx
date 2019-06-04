@@ -13,6 +13,7 @@ import {
     cardSetLowerActiveFieldToBottom,
     cardSetRaiseActiveFieldToTop,
     cardSetUnlockActiveField,
+    cardSetChangeUnclickableForActiveField,
 } from '../actions';
 import style from './SidebarMeasurements.module.css';
 import shortid from 'shortid';
@@ -129,6 +130,13 @@ export class SidebarMeasurements extends Component<Props> {
         }
     };
 
+    handleChangeUnclickable = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { activeField, dispatch } = this.props;
+        if (activeField !== undefined) {
+            dispatch(cardSetChangeUnclickableForActiveField(event.target.checked));
+        }
+    };
+
     render() {
         const { activeCardId, activeField, visible } = this.props;
 
@@ -172,6 +180,20 @@ export class SidebarMeasurements extends Component<Props> {
                     >
                         <i className="material-icons">lock</i>
                     </button>
+                )}
+
+                {activeField !== undefined && (
+                    <div>
+                        <label>
+                            Unclickable field:{' '}
+                            <input
+                                type="checkbox"
+                                onChange={this.handleChangeUnclickable}
+                                className="form-control"
+                                checked={activeField.unclickable ? true : false}
+                            />
+                        </label>
+                    </div>
                 )}
 
                 {activeField !== undefined && (

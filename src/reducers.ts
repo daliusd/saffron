@@ -81,6 +81,7 @@ import {
     CARDSET_UNDO,
     CARDSET_REDO,
     Action,
+    CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -789,6 +790,28 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                         if (fieldInfo.type === 'image') {
                             fieldInfo.crop = action.crop;
                         }
+                        cardFields[fieldId] = fieldInfo;
+                    }
+                    fields[cardId] = cardFields;
+                }
+
+                return {
+                    ...state,
+                    fields,
+                };
+            }
+
+            return state;
+        }
+        case CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD: {
+            if (state.activeFieldId) {
+                let fields = { ...state.fields };
+                let fieldId = state.activeFieldId;
+                for (const cardId in fields) {
+                    let cardFields = { ...fields[cardId] };
+                    if (fieldId in cardFields) {
+                        let fieldInfo = { ...cardFields[fieldId] };
+                        fieldInfo.unclickable = action.unclickable;
                         cardFields[fieldId] = fieldInfo;
                     }
                     fields[cardId] = cardFields;
