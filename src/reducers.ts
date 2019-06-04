@@ -88,6 +88,7 @@ import {
     DEFAULT_FONT_SIZE,
     DEFAULT_FONT_VARIANT,
     DEFAULT_LINE_HEIGHT,
+    BLEED_WIDTH,
 } from './constants';
 import {
     CardSetsCollection,
@@ -424,8 +425,8 @@ function resizeFields(fields: FieldInfoByCardCollection, widthRatio: number, hei
         let cardFields = { ...fields[cardId] };
         for (const fieldId in cardFields) {
             let fieldInfo = { ...cardFields[fieldId] };
-            fieldInfo.x *= widthRatio;
-            fieldInfo.y *= heightRatio;
+            fieldInfo.x = (fieldInfo.x - BLEED_WIDTH) * widthRatio + BLEED_WIDTH;
+            fieldInfo.y = (fieldInfo.y - BLEED_WIDTH) * heightRatio + BLEED_WIDTH;
             fieldInfo.width *= widthRatio;
             fieldInfo.height *= heightRatio;
             if (fieldInfo.type === 'image') {
