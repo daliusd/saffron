@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import shortid from 'shortid';
-import undoable from 'redux-undo';
+import undoable, { groupByActionTypes } from 'redux-undo';
 
 import {
     CARDSET_ADD_IMAGE_FIELD,
@@ -1433,26 +1433,21 @@ const undoableCardset = undoable(cardset, {
     ignoreInitialState: true,
     undoType: CARDSET_UNDO,
     redoType: CARDSET_REDO,
-    filter: function filterActions(action: Action) {
+    groupBy: groupByActionTypes([
+        CARDSET_CHANGE_FIELD_SIZE,
+        CARDSET_CHANGE_FIELD_POSITION,
+        CARDSET_CHANGE_FIELD_ANGLE,
+        CARDSET_CHANGE_FIELD_ZOOM,
+        CARDSET_CHANGE_FIELD_PAN,
+    ]),
+    filter: (action: Action) => {
         if (!action.type.startsWith('CARDSET_')) {
             return false;
         }
 
-        if (
-            action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD ||
-            action.type === CARDSET_SELECT_REQUEST ||
-            action.type === CARDSET_SELECT_SUCCESS ||
-            ((action.type === CARDSET_CHANGE_FIELD_SIZE ||
-                action.type === CARDSET_CHANGE_FIELD_POSITION ||
-                action.type === CARDSET_CHANGE_FIELD_ANGLE ||
-                action.type === CARDSET_CHANGE_FIELD_ZOOM ||
-                action.type === CARDSET_CHANGE_FIELD_PAN) &&
-                action.cardId !== undefined)
-        ) {
-            console.log('no', action.type);
+        if (action.type === CARDSET_SELECT_REQUEST) {
             return false;
         }
-        console.log('yes', action.type);
         return true;
     },
 });
