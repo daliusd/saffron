@@ -466,7 +466,7 @@ test('handleCardSetCreateRequest', () => {
         call(authorizedPostRequest, '/api/cardsets', {
             name: 'test',
             gameId: '666',
-            data: JSON.stringify({ width: 30, height: 40 }),
+            data: JSON.stringify({ width: 30, height: 40, version: CURRENT_CARDSET_VERSION }),
         }),
     );
 
