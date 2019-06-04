@@ -35,7 +35,7 @@ interface OwnProps {
 
 interface StateProps {
     isActive: boolean;
-    isActivePlaceholder: boolean;
+    isActiveField: boolean;
     isLocked: boolean;
     snappingDistance: number;
 }
@@ -506,13 +506,13 @@ class FieldController extends React.Component<Props, LocalState> {
     // Rendering
 
     render() {
-        const { x, y, width, height, angle, zoom, cx, children, isActive, isActivePlaceholder, isLocked } = this.props;
+        const { x, y, width, height, angle, zoom, cx, children, isActive, isActiveField, isLocked } = this.props;
 
         return (
             <div
                 ref={this.cDiv}
                 onDragStart={this.handleBrowserDragStart}
-                className={`${style.fieldcontroller} ${isActivePlaceholder ? style.fieldcontrolleractivefield : ''} ${
+                className={`${style.fieldcontroller} ${isActiveField ? style.fieldcontrolleractivefield : ''} ${
                     isActive ? style.fieldcontrolleractive : ''
                 } ${isActive && this.state.activatedUsingTouch ? style.touchactivated : ''} `}
                 style={{
@@ -586,14 +586,14 @@ class FieldController extends React.Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const isActivePlaceholder = props.fieldId === state.cardset.present.activeFieldId;
+    const isActiveField = props.fieldId === state.cardset.present.activeFieldId;
     const isActive =
         props.cardId === state.cardset.present.activeCardId && props.fieldId === state.cardset.present.activeFieldId;
     const isLocked = state.cardset.present.fields[props.cardId][props.fieldId].locked === true;
 
     return {
         isActive,
-        isActivePlaceholder,
+        isActiveField,
         isLocked,
         snappingDistance: state.cardset.present.snappingDistance,
     };

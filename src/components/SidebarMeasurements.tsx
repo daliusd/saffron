@@ -27,7 +27,7 @@ interface StateProps {
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 export class SidebarMeasurements extends Component<Props> {
-    handlePrevPlaceholder = () => {
+    handlePrevField = () => {
         const { activeCardId, activeField, fieldsAllIds, dispatch } = this.props;
         if (fieldsAllIds.length === 0 || activeCardId === null) return;
 
@@ -40,7 +40,7 @@ export class SidebarMeasurements extends Component<Props> {
         dispatch(cardSetActiveCardAndField(activeCardId, (activeField && activeField.isOnBack) || false, prevField));
     };
 
-    handleNextPlaceholder = () => {
+    handleNextField = () => {
         const { activeCardId, activeField, fieldsAllIds, dispatch } = this.props;
         if (fieldsAllIds.length === 0 || activeCardId === null) return;
 
@@ -136,10 +136,10 @@ export class SidebarMeasurements extends Component<Props> {
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
                 {activeCardId !== undefined && (
                     <>
-                        <button onClick={this.handlePrevPlaceholder} title="Previous field">
+                        <button onClick={this.handlePrevField} title="Previous field">
                             <i className="material-icons">arrow_back</i>
                         </button>
-                        <button onClick={this.handleNextPlaceholder} title="Next field">
+                        <button onClick={this.handleNextField} title="Next field">
                             <i className="material-icons">arrow_forward</i>
                         </button>
                     </>
