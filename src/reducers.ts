@@ -418,6 +418,33 @@ export function cardsets(state: CardSetsState = DefaultCardSetsState, action: Ca
     }
 }
 
+function resizeFields(fields: FieldInfoByCardCollection, widthRatio: number, heightRatio: number) {
+    let newFields = { ...fields };
+    for (const cardId in newFields) {
+        let cardFields = { ...fields[cardId] };
+        for (const fieldId in cardFields) {
+            let fieldInfo = { ...cardFields[fieldId] };
+            fieldInfo.x *= widthRatio;
+            fieldInfo.y *= heightRatio;
+            fieldInfo.width *= widthRatio;
+            fieldInfo.height *= heightRatio;
+            if (fieldInfo.type === 'image') {
+                if (fieldInfo.cx) {
+                    fieldInfo.cx *= widthRatio;
+                }
+                if (fieldInfo.cy) {
+                    fieldInfo.cy *= heightRatio;
+                }
+            } else if (fieldInfo.type === 'text') {
+                fieldInfo.fontSize *= heightRatio;
+            }
+            cardFields[fieldId] = fieldInfo;
+        }
+        newFields[cardId] = cardFields;
+    }
+    return newFields;
+}
+
 export function cardset(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
     switch (action.type) {
         case CARDSET_SELECT_REQUEST:
@@ -784,10 +811,16 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 height = action.width * (state.height / state.width);
             }
 
+            let fields = state.fields;
+            if (action.resizeContent) {
+                fields = resizeFields(fields, action.width / state.width, height / state.height);
+            }
+
             return {
                 ...state,
                 width: action.width,
                 height,
+                fields,
             };
         }
         case CARDSET_CHANGE_HEIGHT: {
@@ -800,10 +833,16 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 width = action.height * (state.width / state.height);
             }
 
+            let fields = state.fields;
+            if (action.resizeContent) {
+                fields = resizeFields(fields, width / state.width, action.height / state.height);
+            }
+
             return {
                 ...state,
                 height: action.height,
                 width,
+                fields,
             };
         }
         case CARDSET_CHANGE_IS_TWO_SIDED: {

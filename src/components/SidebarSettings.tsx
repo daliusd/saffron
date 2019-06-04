@@ -24,21 +24,25 @@ type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 interface LocalState {
     maintainAspectRatio: boolean;
+    resizeContent: boolean;
 }
 
 export class SidebarSettings extends Component<Props, LocalState> {
     state: LocalState = {
         maintainAspectRatio: true,
+        resizeContent: false,
     };
 
     handleWidthChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeWidth(parseFloat(event.target.value), this.state.maintainAspectRatio));
+        const { maintainAspectRatio, resizeContent } = this.state;
+        dispatch(cardSetChangeWidth(parseFloat(event.target.value), maintainAspectRatio, resizeContent));
     };
 
     handleHeightChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { dispatch } = this.props;
-        dispatch(cardSetChangeHeight(parseFloat(event.target.value), this.state.maintainAspectRatio));
+        const { maintainAspectRatio, resizeContent } = this.state;
+        dispatch(cardSetChangeHeight(parseFloat(event.target.value), maintainAspectRatio, resizeContent));
     };
 
     handleIsTwoSidedChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +62,7 @@ export class SidebarSettings extends Component<Props, LocalState> {
 
     render() {
         const { width, height, isTwoSided, snappingDistance, visible, zoom } = this.props;
-        const { maintainAspectRatio } = this.state;
+        const { maintainAspectRatio, resizeContent } = this.state;
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
@@ -94,6 +98,20 @@ export class SidebarSettings extends Component<Props, LocalState> {
                             }}
                             className="form-control"
                             checked={maintainAspectRatio}
+                        />
+                    </label>
+                </div>
+
+                <div>
+                    <label>
+                        Resize content:{' '}
+                        <input
+                            type="checkbox"
+                            onChange={() => {
+                                this.setState({ resizeContent: !resizeContent });
+                            }}
+                            className="form-control"
+                            checked={resizeContent}
                         />
                     </label>
                 </div>

@@ -377,12 +377,14 @@ export interface CardSetChangeWidth {
     type: typeof CARDSET_CHANGE_WIDTH;
     width: number;
     maintainAspectRatio: boolean;
+    resizeContent: boolean;
 }
 
 export interface CardSetChangeHeight {
     type: typeof CARDSET_CHANGE_HEIGHT;
     height: number;
     maintainAspectRatio: boolean;
+    resizeContent: boolean;
 }
 
 export interface CardSetChangeIsTwoSided {
@@ -874,19 +876,29 @@ export const cardSetChangeCropForActiveField = (crop: boolean): CardSetChangeCro
     };
 };
 
-export const cardSetChangeWidth = (width: number, maintainAspectRatio: boolean): CardSetChangeWidth => {
+export const cardSetChangeWidth = (
+    width: number,
+    maintainAspectRatio: boolean,
+    resizeContent: boolean,
+): CardSetChangeWidth => {
     return {
         type: CARDSET_CHANGE_WIDTH,
         width,
         maintainAspectRatio,
+        resizeContent,
     };
 };
 
-export const cardSetChangeHeight = (height: number, maintainAspectRatio: boolean): CardSetChangeHeight => {
+export const cardSetChangeHeight = (
+    height: number,
+    maintainAspectRatio: boolean,
+    resizeContent: boolean,
+): CardSetChangeHeight => {
     return {
         type: CARDSET_CHANGE_HEIGHT,
         height,
         maintainAspectRatio,
+        resizeContent,
     };
 };
 
