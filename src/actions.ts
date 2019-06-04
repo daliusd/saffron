@@ -466,19 +466,19 @@ export interface CardSetChangeActiveTextFieldLineHeight {
 export interface CardSetChangeText {
     type: typeof CARDSET_CHANGE_TEXT;
     cardId: string;
-    placeholderId: string;
+    fieldId: string;
     textInfo: TextInfo;
 }
 export interface CardSetChangeImage {
     type: typeof CARDSET_CHANGE_IMAGE;
     cardId: string;
-    placeholderId: string;
+    fieldId: string;
     imageInfo: ImageInfo;
 }
 export interface CardSetChangeImageBase64 {
     type: typeof CARDSET_CHANGE_IMAGE_BASE64;
     cardId: string;
-    placeholderId: string;
+    fieldId: string;
     base64?: string;
 }
 export interface CardSetSetActiveCardAndField {
@@ -1036,33 +1036,33 @@ export const cardSetChangeActiveTextFieldLineHeight = (lineHeight: number): Card
     };
 };
 
-export const cardSetChangeText = (cardId: string, placeholderId: string, textInfo: TextInfo): CardSetChangeText => {
+export const cardSetChangeText = (cardId: string, fieldId: string, textInfo: TextInfo): CardSetChangeText => {
     return {
         type: CARDSET_CHANGE_TEXT,
         cardId,
-        placeholderId,
+        fieldId,
         textInfo,
     };
 };
 
-export const cardSetChangeImage = (cardId: string, placeholderId: string, imageInfo: ImageInfo): CardSetChangeImage => {
+export const cardSetChangeImage = (cardId: string, fieldId: string, imageInfo: ImageInfo): CardSetChangeImage => {
     return {
         type: CARDSET_CHANGE_IMAGE,
         cardId,
-        placeholderId,
+        fieldId,
         imageInfo,
     };
 };
 
 export const cardSetChangeImageBase64 = (
     cardId: string,
-    placeholderId: string,
+    fieldId: string,
     base64?: string,
 ): CardSetChangeImageBase64 => {
     return {
         type: CARDSET_CHANGE_IMAGE_BASE64,
         cardId,
-        placeholderId,
+        fieldId,
         base64,
     };
 };

@@ -136,10 +136,10 @@ export class SidebarMeasurements extends Component<Props> {
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
                 {activeCardId !== undefined && (
                     <>
-                        <button onClick={this.handlePrevPlaceholder} title="Previous placeholder">
+                        <button onClick={this.handlePrevPlaceholder} title="Previous field">
                             <i className="material-icons">arrow_back</i>
                         </button>
-                        <button onClick={this.handleNextPlaceholder} title="Next placeholder">
+                        <button onClick={this.handleNextPlaceholder} title="Next field">
                             <i className="material-icons">arrow_forward</i>
                         </button>
                     </>

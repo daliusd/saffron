@@ -15,6 +15,7 @@ import {
     IdsArray,
     SidebarOwnProps,
     FieldInfoByCardCollection,
+    FieldInfoCollection,
 } from '../types';
 import { FPLoadCallback, FPRevertLoadCallback, cardSetImportData, messageDisplay } from '../actions';
 import { State } from '../reducers';
@@ -118,8 +119,8 @@ export class SidebarImportExport extends Component<Props> {
 
             let written = { ...usedNames };
             for (const fieldId of fieldsAllIds) {
-                const placeholder = fields[cardId][fieldId];
-                const name = placeholder.name || placeholder.id;
+                const fieldIndo = fields[cardId][fieldId];
+                const name = fieldIndo.name || fieldIndo.id;
 
                 if (!written[name]) {
                     let fieldInfo = preparedFields[cardId][fieldId];
@@ -157,14 +158,16 @@ export class SidebarImportExport extends Component<Props> {
                 // eslint-disable-next-line
                 data = JSON.parse((e.target as any).result);
 
-                for (const cardId in data.images) {
-                    const loadedPlaceholders = data.images[cardId];
-                    for (const placeholderId in loadedPlaceholders) {
-                        let imageInfo = loadedPlaceholders[placeholderId];
-                        let isGlobal = imageInfo.global || false;
+                for (const cardId in data.fields) {
+                    const cardFields: FieldInfoCollection = data.fields[cardId];
+                    for (const fieldId in cardFields) {
+                        let fieldInfo = cardFields[fieldId];
+                        if (fieldInfo.type === 'image') {
+                            let isGlobal = fieldInfo.global || false;
 
-                        imageInfo.url = `/api/imagefiles/${imageInfo.url}${isGlobal ? '' : ending}`;
-                        delete imageInfo.global;
+                            fieldInfo.url = `/api/imagefiles/${fieldInfo.url}${isGlobal ? '' : ending}`;
+                            delete fieldInfo.global;
+                        }
                     }
                 }
             } else if (file.type === 'text/csv') {

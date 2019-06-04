@@ -728,7 +728,7 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
         const state: State = yield select();
 
         const cardFields = state.cardset.present.fields[action.cardId];
-        const imageInfo = cardFields[action.placeholderId];
+        const imageInfo = cardFields[action.fieldId];
         if (imageInfo.type === 'image' && imageInfo.url) {
             const imageResp = yield call(authorizedGetRequest, imageInfo.url);
 

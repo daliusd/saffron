@@ -10,7 +10,7 @@ import style from './ContentEditable.module.css';
 interface OwnProps {
     cardId: string;
     isOnBack: boolean;
-    placeholderId: string;
+    fieldId: string;
     align: string;
     color: string;
     fontFamily: string;
@@ -143,12 +143,12 @@ class ContentEditable extends Component<Props> {
     };
 
     handleComplete = (event: Event) => {
-        const { dispatch, cardId, isOnBack, placeholderId, isActive } = this.props;
+        const { dispatch, cardId, isOnBack, fieldId, isActive } = this.props;
         if (isActive) {
             event.stopPropagation();
         } else if (!this.wasMoved) {
             event.preventDefault();
-            dispatch(cardSetActiveCardAndField(cardId, isOnBack, placeholderId));
+            dispatch(cardSetActiveCardAndField(cardId, isOnBack, fieldId));
 
             if (!this.editDiv.current) return;
             this.editDiv.current.focus();
@@ -191,10 +191,10 @@ class ContentEditable extends Component<Props> {
             }
 
             this.timeout = setTimeout(() => {
-                const { dispatch, cardId, placeholderId } = this.props;
+                const { dispatch, cardId, fieldId } = this.props;
                 const textInfo: TextInfo = { value };
 
-                dispatch(cardSetChangeText(cardId, placeholderId, textInfo));
+                dispatch(cardSetChangeText(cardId, fieldId, textInfo));
             }, timeoutInMiliseconds);
         }
     };
@@ -246,13 +246,13 @@ class ContentEditable extends Component<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let fieldInfo = state.cardset.present.fields[props.cardId][props.placeholderId];
+    let fieldInfo = state.cardset.present.fields[props.cardId][props.fieldId];
     const textValue = fieldInfo.type === 'text' ? fieldInfo.value : '';
     return {
         textValue,
         isActive:
             props.cardId === state.cardset.present.activeCardId &&
-            props.placeholderId === state.cardset.present.activeFieldId,
+            props.fieldId === state.cardset.present.activeFieldId,
     };
 };
 

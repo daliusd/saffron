@@ -1270,7 +1270,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
         case CARDSET_CHANGE_TEXT: {
             let cardFields = { ...state.fields[action.cardId] };
 
-            const fieldInfo = cardFields[action.placeholderId];
+            const fieldInfo = cardFields[action.fieldId];
             const name = fieldInfo.name || fieldInfo.id;
 
             for (const fieldId in cardFields) {
@@ -1295,7 +1295,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
         case CARDSET_CHANGE_IMAGE: {
             let cardFields = { ...state.fields[action.cardId] };
 
-            const fieldInfo = cardFields[action.placeholderId];
+            const fieldInfo = cardFields[action.fieldId];
             const name = fieldInfo.name || fieldInfo.id;
 
             for (const fieldId in cardFields) {
@@ -1327,7 +1327,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
         case CARDSET_CHANGE_IMAGE_BASE64: {
             let cardFields = { ...state.fields[action.cardId] };
 
-            const fieldInfo = cardFields[action.placeholderId];
+            const fieldInfo = cardFields[action.fieldId];
             const name = fieldInfo.name || fieldInfo.id;
 
             for (const fieldId in cardFields) {

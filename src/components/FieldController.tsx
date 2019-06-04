@@ -13,7 +13,7 @@ import { rotateVec } from '../utils';
 
 interface OwnProps {
     cardId: string;
-    placeholderId: string;
+    fieldId: string;
     x: number;
     y: number;
     width: number;
@@ -512,11 +512,9 @@ class FieldController extends React.Component<Props, LocalState> {
             <div
                 ref={this.cDiv}
                 onDragStart={this.handleBrowserDragStart}
-                className={`${style.fieldcontroller} ${
-                    isActivePlaceholder ? style.fieldcontrolleractiveplaceholder : ''
-                } ${isActive ? style.fieldcontrolleractive : ''} ${
-                    isActive && this.state.activatedUsingTouch ? style.touchactivated : ''
-                } `}
+                className={`${style.fieldcontroller} ${isActivePlaceholder ? style.fieldcontrolleractivefield : ''} ${
+                    isActive ? style.fieldcontrolleractive : ''
+                } ${isActive && this.state.activatedUsingTouch ? style.touchactivated : ''} `}
                 style={{
                     position: 'absolute',
                     left: x,
@@ -588,11 +586,10 @@ class FieldController extends React.Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    const isActivePlaceholder = props.placeholderId === state.cardset.present.activeFieldId;
+    const isActivePlaceholder = props.fieldId === state.cardset.present.activeFieldId;
     const isActive =
-        props.cardId === state.cardset.present.activeCardId &&
-        props.placeholderId === state.cardset.present.activeFieldId;
-    const isLocked = state.cardset.present.fields[props.cardId][props.placeholderId].locked === true;
+        props.cardId === state.cardset.present.activeCardId && props.fieldId === state.cardset.present.activeFieldId;
+    const isLocked = state.cardset.present.fields[props.cardId][props.fieldId].locked === true;
 
     return {
         isActive,

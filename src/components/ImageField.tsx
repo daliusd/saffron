@@ -168,7 +168,7 @@ class ImageField extends PureComponent<Props, LocalState> {
         return (
             <FieldController
                 cardId={this.props.cardId}
-                placeholderId={imageFieldInfo.id}
+                fieldId={imageFieldInfo.id}
                 x={imageFieldInfo.x * ppmm}
                 y={imageFieldInfo.y * ppmm}
                 width={imageFieldInfo.width * ppmm}

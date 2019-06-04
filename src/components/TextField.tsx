@@ -54,7 +54,7 @@ class TextField extends PureComponent<Props> {
         return (
             <FieldController
                 cardId={this.props.cardId}
-                placeholderId={textFieldInfo.id}
+                fieldId={textFieldInfo.id}
                 x={textFieldInfo.x * ppmm}
                 y={textFieldInfo.y * ppmm}
                 width={textFieldInfo.width * ppmm}
@@ -91,7 +91,7 @@ class TextField extends PureComponent<Props> {
                 <ContentEditable
                     cardId={this.props.cardId}
                     isOnBack={this.props.isOnBack}
-                    placeholderId={textFieldInfo.id}
+                    fieldId={textFieldInfo.id}
                     align={textFieldInfo.align}
                     color={textFieldInfo.color}
                     fontFamily={textFieldInfo.fontFamily}
