@@ -88,6 +88,9 @@ class Card extends Component<Props, LocalState> {
                             onTouchStart={this.handleFieldDeselect}
                         >
                             {fieldsIds.map(id => {
+                                if (!(id in cardFields)) {
+                                    return null;
+                                }
                                 const p = cardFields[id];
                                 if (p.type === 'image') {
                                     return (
@@ -162,11 +165,13 @@ class Card extends Component<Props, LocalState> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let cardFields = state.cardset.present.fields[props.card.id];
+    let cardFields = state.cardset.present.fields[props.card.id] || {};
 
     return {
         cardFields,
-        fieldsIds: state.cardset.present.fieldsAllIds.filter(id => (cardFields[id].isOnBack || false) === props.isBack),
+        fieldsIds: state.cardset.present.fieldsAllIds.filter(
+            id => ((id in cardFields && cardFields[id].isOnBack) || false) === props.isBack,
+        ),
         width: state.cardset.present.width,
         height: state.cardset.present.height,
         isTwoSided: state.cardset.present.isTwoSided,

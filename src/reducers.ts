@@ -81,8 +81,6 @@ import {
     CARDSET_UNDO,
     CARDSET_REDO,
     Action,
-    INIT_REQUEST,
-    GAME_LIST_REQUEST,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -99,6 +97,7 @@ import {
     ImageArray,
     MessageType,
     FieldInfoByCardCollection,
+    FieldInfoCollection,
 } from './types';
 import { rotateVec } from './utils';
 
@@ -448,7 +447,24 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
             });
-        case CARDSET_CREATE_CARD:
+        case CARDSET_CREATE_CARD: {
+            let cardFields: FieldInfoCollection = {};
+            if (state.cardsAllIds.length > 0) {
+                cardFields = {
+                    ...state.fields[state.cardsAllIds[0]],
+                };
+
+                for (const fieldId of state.fieldsAllIds) {
+                    let fieldInfo = { ...cardFields[fieldId] };
+                    if (fieldInfo.type === 'text') {
+                        fieldInfo.value = '';
+                    } else if (fieldInfo.type === 'image') {
+                        delete fieldInfo.url;
+                        delete fieldInfo.base64;
+                    }
+                    cardFields[fieldId] = fieldInfo;
+                }
+            }
             return {
                 ...state,
                 cardsById: {
@@ -456,7 +472,12 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                     [action.card.id]: action.card,
                 },
                 cardsAllIds: state.cardsAllIds ? state.cardsAllIds.concat(action.card.id) : [action.card.id],
+                fields: {
+                    ...state.fields,
+                    [action.card.id]: cardFields,
+                },
             };
+        }
         case CARDSET_CLONE_CARD: {
             let newCard = { ...action.card, id: shortid.generate() };
 
@@ -1413,19 +1434,20 @@ const undoableCardset = undoable(cardset, {
     undoType: CARDSET_UNDO,
     redoType: CARDSET_REDO,
     filter: function filterActions(action: Action) {
+        if (!action.type.startsWith('CARDSET_')) {
+            return false;
+        }
+
         if (
-            action.type === INIT_REQUEST ||
-            action.type === MESSAGE_DISPLAY ||
-            action.type === MESSAGE_HIDE ||
-            action.type === LOGIN_SUCCESS ||
-            action.type === GAME_LIST_REQUEST ||
-            action.type === GAME_LIST_SUCCESS ||
-            action.type === GAME_SELECT_REQUEST ||
-            action.type === GAME_SELECT_SUCCESS ||
-            action.type === CARDSETS_SELECT_SUCCESS ||
             action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD ||
             action.type === CARDSET_SELECT_REQUEST ||
-            action.type === CARDSET_SELECT_SUCCESS
+            action.type === CARDSET_SELECT_SUCCESS ||
+            ((action.type === CARDSET_CHANGE_FIELD_SIZE ||
+                action.type === CARDSET_CHANGE_FIELD_POSITION ||
+                action.type === CARDSET_CHANGE_FIELD_ANGLE ||
+                action.type === CARDSET_CHANGE_FIELD_ZOOM ||
+                action.type === CARDSET_CHANGE_FIELD_PAN) &&
+                action.cardId !== undefined)
         ) {
             console.log('no', action.type);
             return false;
