@@ -116,6 +116,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleDragStart(event.changedTouches[0]);
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
@@ -136,6 +140,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleTouchMove = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleDragMove(event.changedTouches[0], event.ctrlKey);
     };
 
@@ -166,6 +174,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleComplete(event, true);
 
         document.removeEventListener('touchmove', this.handleTouchMove);
@@ -198,6 +210,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handlePanTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handlePanStart(event.changedTouches[0]);
 
         document.addEventListener('touchmove', this.handlePanTouchMove, { passive: false });
@@ -217,6 +233,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handlePanTouchMove = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handlePanMove(event.changedTouches[0]);
         event.preventDefault();
     };
@@ -245,6 +265,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handlePanTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handlePanComplete(event);
 
         document.removeEventListener('touchmove', this.handlePanTouchMove);
@@ -272,6 +296,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleZoomTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleZoomStart(event.changedTouches[0]);
 
         document.addEventListener('touchmove', this.handleZoomTouchMove, { passive: false });
@@ -291,6 +319,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleZoomTouchMove = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleZoomMove(event.changedTouches[0]);
         event.preventDefault();
     };
@@ -318,6 +350,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleZoomTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleZoomComplete(event);
 
         document.removeEventListener('touchmove', this.handleZoomTouchMove);
@@ -340,6 +376,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleResizeTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleResizeStart(event.changedTouches[0]);
 
         document.addEventListener('touchmove', this.handleResizeTouchMove, { passive: false });
@@ -363,6 +403,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleResizeTouchMove = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleResizeMove(event.changedTouches[0], event.ctrlKey);
         event.preventDefault();
     };
@@ -398,6 +442,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleResizeTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleResizeComplete(event);
 
         document.removeEventListener('touchmove', this.handleResizeTouchMove);
@@ -428,6 +476,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleRotateTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleRotateStart(event.changedTouches[0]);
 
         document.addEventListener('touchmove', this.handleRotateTouchMove, { passive: false });
@@ -457,6 +509,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleRotateTouchMove = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleRotateMove(event.changedTouches[0], event.ctrlKey);
         event.preventDefault();
     };
@@ -486,6 +542,10 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleRotateTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleRotateComplete(event);
 
         document.removeEventListener('touchmove', this.handleRotateTouchMove);

@@ -40,6 +40,8 @@ type Props = OwnProps & StateProps & DispatchProps;
 interface LocalState {
     dragIsOver: boolean;
     wasMoved: boolean;
+    x: number;
+    y: number;
 }
 
 class ImageField extends PureComponent<Props, LocalState> {
@@ -48,6 +50,8 @@ class ImageField extends PureComponent<Props, LocalState> {
         this.state = {
             dragIsOver: false,
             wasMoved: false,
+            x: 0,
+            y: 0,
         };
     }
 
@@ -92,7 +96,11 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     handleTouchStart = (event: React.TouchEvent) => {
-        this.setState({ wasMoved: false });
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
+        this.setState({ wasMoved: false, x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY });
         event.preventDefault();
     };
 
@@ -102,7 +110,14 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     handleTouchMove = (event: React.TouchEvent) => {
-        this.setState({ wasMoved: true });
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
+        const { x, y } = this.state;
+        if (Math.abs(event.changedTouches[0].clientX - x) > 3 || Math.abs(event.changedTouches[0].clientY - y) > 3) {
+            this.setState({ wasMoved: true });
+        }
         event.preventDefault();
     };
 
@@ -111,6 +126,10 @@ class ImageField extends PureComponent<Props, LocalState> {
     };
 
     handleTouchEnd = (event: React.TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleComplete(event);
     };
 

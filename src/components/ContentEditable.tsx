@@ -41,6 +41,8 @@ class ContentEditable extends Component<Props> {
     currentLineHeight: number;
     timeout: NodeJS.Timeout | null;
     wasMoved: boolean;
+    x: number;
+    y: number;
 
     constructor(props: Props) {
         super(props);
@@ -54,6 +56,8 @@ class ContentEditable extends Component<Props> {
         this.currentLineHeight = DEFAULT_LINE_HEIGHT;
         this.timeout = null;
         this.wasMoved = false;
+        this.x = 0;
+        this.y = 0;
     }
 
     componentDidMount() {
@@ -103,6 +107,12 @@ class ContentEditable extends Component<Props> {
     };
 
     handleTouchStart = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
+        this.x = event.changedTouches[0].clientX;
+        this.y = event.changedTouches[0].clientY;
         this.handleStart(event);
     };
 
@@ -121,7 +131,16 @@ class ContentEditable extends Component<Props> {
     };
 
     handleTouchMove = (event: TouchEvent) => {
-        this.handleMove(event);
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
+        if (
+            Math.abs(event.changedTouches[0].clientX - this.x) > 3 ||
+            Math.abs(event.changedTouches[0].clientY - this.y) > 3
+        ) {
+            this.handleMove(event);
+        }
     };
 
     handleMove = (event: Event) => {
@@ -139,6 +158,10 @@ class ContentEditable extends Component<Props> {
     };
 
     handleTouchEnd = (event: TouchEvent) => {
+        if (event.touches.length > 1) {
+            return; // Let's ignore zooms
+        }
+
         this.handleComplete(event);
     };
 
