@@ -290,6 +290,8 @@
 + Apply to all images on drag drop
 + touch two fingers fix
 + Move controls to z-index top if active
++ Clean-up on text paste
+
 - Rotate cards
 - Generate list with authors of icons
 
@@ -303,7 +305,6 @@
     like an option but it is not free.
 
 - Security
-- Clean-up on text paste
 - Prevent IE from accessing site
 - Expose undo/redo via UI
 

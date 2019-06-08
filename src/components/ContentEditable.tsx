@@ -230,6 +230,28 @@ class ContentEditable extends Component<Props> {
         this.updateContent(500);
     };
 
+    handlePaste = (event: React.ClipboardEvent) => {
+        function escapeHtml(unsafe: string) {
+            return unsafe
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        event.preventDefault();
+
+        let text = '';
+        text = event.clipboardData.getData('text/plain');
+
+        text = text
+            .split('\n')
+            .map((s: string) => `<div>${escapeHtml(s)}</div>`)
+            .join('');
+        document.execCommand('insertHTML', false, text);
+    };
+
     render() {
         const { color, align, fontFamily, fontVariant, fontSize, lineHeight } = this.props;
         const isItalic = fontVariant && fontVariant.indexOf('italic') !== -1;
@@ -249,6 +271,7 @@ class ContentEditable extends Component<Props> {
                 onFocus={this.onFocus}
                 onBlur={this.handleBlur}
                 onInput={this.handleInput}
+                onPaste={this.handlePaste}
                 style={{
                     width: '100%',
                     height: '100%',
