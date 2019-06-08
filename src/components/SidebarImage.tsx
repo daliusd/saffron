@@ -16,6 +16,7 @@ import {
     cardSetRemoveActiveField,
     cardSetUnlockActiveField,
     imageListRequest,
+    cardSetChangeApplyToAllCards,
 } from '../actions';
 import ColorButton from './ColorButton';
 import style from './SidebarImage.module.css';
@@ -28,19 +29,18 @@ interface StateProps {
     filter: string;
     images: ImageArray;
     cardsAllIds: IdsArray;
+    applyToAllCards: boolean;
 }
 
 type Props = StateProps & DispatchProps & SidebarOwnProps;
 
 interface LocalState {
     location: string;
-    applyToAllCards: boolean;
 }
 
 export class SidebarImage extends Component<Props, LocalState> {
     state = {
         location: 'all',
-        applyToAllCards: false,
     };
 
     handleAddImageClick = () => {
@@ -49,17 +49,10 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     changeImage = (ii: ImageInfo) => {
-        const { cardsAllIds, activeCardId, activeFieldInfo, dispatch } = this.props;
-        const { applyToAllCards } = this.state;
+        const { activeCardId, activeFieldInfo, dispatch } = this.props;
 
         if (activeFieldInfo) {
-            if (applyToAllCards) {
-                for (const cardId of cardsAllIds) {
-                    dispatch(cardSetChangeImage(cardId, activeFieldInfo.id, ii));
-                }
-            } else if (activeCardId) {
-                dispatch(cardSetChangeImage(activeCardId, activeFieldInfo.id, ii));
-            }
+            dispatch(cardSetChangeImage(activeCardId ? activeCardId : undefined, activeFieldInfo.id, ii));
         }
     };
 
@@ -90,13 +83,13 @@ export class SidebarImage extends Component<Props, LocalState> {
         dispatch(imageListRequest(filter, location));
     };
 
-    handleImageSelect = (imageName: string) => {
+    handleImageSelect = (imageName: string, width: number, height: number) => {
         const { activeFieldInfo } = this.props;
 
         if (activeFieldInfo !== undefined) {
             const color = activeFieldInfo && activeFieldInfo.color;
 
-            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, base64: undefined };
+            const ii: ImageInfo = { url: `/api/imagefiles/${imageName}`, color, width, height, base64: undefined };
             this.changeImage(ii);
         }
     };
@@ -155,7 +148,8 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     handleApplyToAllCardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({ applyToAllCards: event.target.checked });
+        const { dispatch } = this.props;
+        dispatch(cardSetChangeApplyToAllCards(event.target.checked));
     };
 
     handleChangeCrop = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,8 +160,8 @@ export class SidebarImage extends Component<Props, LocalState> {
     };
 
     render() {
-        const { activeFieldInfo, crop, filter, visible } = this.props;
-        const { location, applyToAllCards } = this.state;
+        const { activeFieldInfo, crop, filter, visible, applyToAllCards } = this.props;
+        const { location } = this.state;
 
         return (
             <div className={style.view} style={{ display: visible ? 'grid' : 'none' }}>
@@ -338,7 +332,7 @@ export class SidebarImage extends Component<Props, LocalState> {
                                 src={`/api/imagefiles/${im.name}`}
                                 data-width={im.width}
                                 data-height={im.height}
-                                onClick={() => this.handleImageSelect(im.name)}
+                                onClick={() => this.handleImageSelect(im.name, im.width, im.height)}
                                 alt={im.name}
                             />
                         );
@@ -365,6 +359,7 @@ const mapStateToProps = (state: State): StateProps => {
         images: state.images.images,
         filter: state.images.filter,
         cardsAllIds: state.cardset.present.cardsAllIds,
+        applyToAllCards: state.cardset.present.applyToAllCards,
     };
 };
 

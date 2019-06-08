@@ -730,26 +730,33 @@ export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaItera
         yield call(delay, 100);
         const state: State = yield select();
 
-        const cardFields = state.cardset.present.fields[action.cardId];
-        const imageInfo = cardFields[action.fieldId];
-        if (imageInfo.type === 'image' && imageInfo.url) {
-            const imageResp = yield call(authorizedGetRequest, imageInfo.url);
+        let cardsToFix =
+            state.cardset.present.applyToAllCards || action.cardId === undefined
+                ? state.cardset.present.cardsAllIds
+                : [action.cardId];
 
-            if (imageResp.headers['content-type'] === 'image/svg+xml') {
-                const name = imageInfo.name || imageInfo.id;
+        for (const cardId of cardsToFix) {
+            const cardFields = state.cardset.present.fields[cardId];
+            const imageInfo = cardFields[action.fieldId];
+            if (imageInfo.type === 'image' && imageInfo.url) {
+                const imageResp = yield call(authorizedGetRequest, imageInfo.url);
 
-                for (const fieldId in cardFields) {
-                    const fieldInfo = cardFields[fieldId];
+                if (imageResp.headers['content-type'] === 'image/svg+xml') {
+                    const name = imageInfo.name || imageInfo.id;
 
-                    if ((fieldInfo.name === name || fieldInfo.id === name) && fieldInfo.type === 'image') {
-                        if (fieldInfo.fit === 'stretch') {
-                            const svg = adjustSvg(imageResp.data, false, imageInfo.color);
-                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, svg));
-                        } else if (imageInfo.color) {
-                            const svg = adjustSvg(imageResp.data, true, imageInfo.color);
-                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, svg));
-                        } else {
-                            yield put(cardSetChangeImageBase64(action.cardId, fieldId, undefined));
+                    for (const fieldId in cardFields) {
+                        const fieldInfo = cardFields[fieldId];
+
+                        if ((fieldInfo.name === name || fieldInfo.id === name) && fieldInfo.type === 'image') {
+                            if (fieldInfo.fit === 'stretch') {
+                                const svg = adjustSvg(imageResp.data, false, imageInfo.color);
+                                yield put(cardSetChangeImageBase64(cardId, fieldId, svg));
+                            } else if (imageInfo.color) {
+                                const svg = adjustSvg(imageResp.data, true, imageInfo.color);
+                                yield put(cardSetChangeImageBase64(cardId, fieldId, svg));
+                            } else {
+                                yield put(cardSetChangeImageBase64(cardId, fieldId, undefined));
+                            }
                         }
                     }
                 }

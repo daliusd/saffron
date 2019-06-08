@@ -97,6 +97,7 @@ export const CARDSET_CHANGE_TEXT = 'CARDSET_CHANGE_TEXT';
 export const CARDSET_CHANGE_IMAGE = 'CARDSET_CHANGE_IMAGE';
 export const CARDSET_CHANGE_IMAGE_BASE64 = 'CARDSET_CHANGE_IMAGE_BASE64';
 export const CARDSET_SET_ACTIVE_CARD_AND_FIELD = 'CARDSET_SET_ACTIVE_CARD_AND_FIELD';
+export const CARDSET_CHANGE_APPLY_TO_ALLCARDS = 'CARDSET_CHANGE_APPLY_TO_ALLCARDS';
 export const CARDSET_SELECT_FAILURE = 'CARDSET_SELECT_FAILURE';
 export const CARDSET_SET_SIDEBAR_STATE = 'CARDSET_SET_SIDEBAR_STATE';
 export const CARDSET_SET_ZOOM = 'CARDSET_SET_ZOOM';
@@ -481,7 +482,7 @@ export interface CardSetChangeText {
 }
 export interface CardSetChangeImage {
     type: typeof CARDSET_CHANGE_IMAGE;
-    cardId: string;
+    cardId: string | undefined;
     fieldId: string;
     imageInfo: ImageInfo;
 }
@@ -496,6 +497,10 @@ export interface CardSetSetActiveCardAndField {
     cardId?: string;
     isBackActive: boolean;
     fieldId?: string;
+}
+export interface CardSetChangeApplyToAllCards {
+    type: typeof CARDSET_CHANGE_APPLY_TO_ALLCARDS;
+    applyToAllCards: boolean;
 }
 
 export enum SidebarState {
@@ -596,6 +601,7 @@ export type CardSetModifyAction =
     | CardSetChangeImage
     | CardSetChangeImageBase64
     | CardSetSetActiveCardAndField
+    | CardSetChangeApplyToAllCards
     | CardSetSetSidebarState
     | CardSetSetZoom
     | CardSetUploadImage
@@ -1077,7 +1083,11 @@ export const cardSetChangeText = (cardId: string, fieldId: string, textInfo: Tex
     };
 };
 
-export const cardSetChangeImage = (cardId: string, fieldId: string, imageInfo: ImageInfo): CardSetChangeImage => {
+export const cardSetChangeImage = (
+    cardId: string | undefined,
+    fieldId: string,
+    imageInfo: ImageInfo,
+): CardSetChangeImage => {
     return {
         type: CARDSET_CHANGE_IMAGE,
         cardId,
@@ -1109,6 +1119,13 @@ export const cardSetActiveCardAndField = (
         cardId,
         isBackActive,
         fieldId,
+    };
+};
+
+export const cardSetChangeApplyToAllCards = (applyToAllCards: boolean): CardSetChangeApplyToAllCards => {
+    return {
+        type: CARDSET_CHANGE_APPLY_TO_ALLCARDS,
+        applyToAllCards,
     };
 };
 

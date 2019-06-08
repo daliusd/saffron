@@ -82,6 +82,7 @@ import {
     CARDSET_REDO,
     Action,
     CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
+    CARDSET_CHANGE_APPLY_TO_ALLCARDS,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -185,6 +186,7 @@ export interface CardSetState {
     textSettings: TextSettings;
     activeSidebar: SidebarState | null;
     zoom: number;
+    applyToAllCards: boolean;
 }
 
 export const DefaultCardSetState: CardSetState = {
@@ -211,6 +213,7 @@ export const DefaultCardSetState: CardSetState = {
     },
     activeSidebar: null,
     zoom: 1,
+    applyToAllCards: false,
 };
 
 export interface ImageState {
@@ -1376,35 +1379,41 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             };
         }
         case CARDSET_CHANGE_IMAGE: {
-            let cardFields = { ...state.fields[action.cardId] };
+            let cardsToFix = state.applyToAllCards || action.cardId === undefined ? state.cardsAllIds : [action.cardId];
 
-            const fieldInfo = cardFields[action.fieldId];
-            const name = fieldInfo.name || fieldInfo.id;
+            let fields = { ...state.fields };
 
-            for (const fieldId in cardFields) {
-                const testFieldInfo = cardFields[fieldId];
+            for (const cardId of cardsToFix) {
+                let cardFields = { ...state.fields[cardId] };
 
-                if ((testFieldInfo.name === name || testFieldInfo.id === name) && testFieldInfo.type === 'image') {
-                    cardFields[fieldId] = {
-                        ...testFieldInfo,
-                        url: 'url' in action.imageInfo ? action.imageInfo.url : testFieldInfo.url,
-                        base64: 'base64' in action.imageInfo ? action.imageInfo.base64 : testFieldInfo.base64,
-                        color: 'color' in action.imageInfo ? action.imageInfo.color : testFieldInfo.color,
-                        imageWidth: 'width' in action.imageInfo ? action.imageInfo.width : testFieldInfo.imageWidth,
-                        imageHeight: 'height' in action.imageInfo ? action.imageInfo.height : testFieldInfo.imageHeight,
-                        cx: 0,
-                        cy: 0,
-                        zoom: 0,
-                    };
+                const fieldInfo = cardFields[action.fieldId];
+                const name = fieldInfo.name || fieldInfo.id;
+
+                for (const fieldId in cardFields) {
+                    const testFieldInfo = cardFields[fieldId];
+
+                    if ((testFieldInfo.name === name || testFieldInfo.id === name) && testFieldInfo.type === 'image') {
+                        cardFields[fieldId] = {
+                            ...testFieldInfo,
+                            url: 'url' in action.imageInfo ? action.imageInfo.url : testFieldInfo.url,
+                            base64: 'base64' in action.imageInfo ? action.imageInfo.base64 : testFieldInfo.base64,
+                            color: 'color' in action.imageInfo ? action.imageInfo.color : testFieldInfo.color,
+                            imageWidth: 'width' in action.imageInfo ? action.imageInfo.width : testFieldInfo.imageWidth,
+                            imageHeight:
+                                'height' in action.imageInfo ? action.imageInfo.height : testFieldInfo.imageHeight,
+                            cx: 0,
+                            cy: 0,
+                            zoom: 0,
+                        };
+                    }
                 }
+
+                fields[cardId] = cardFields;
             }
 
             return {
                 ...state,
-                fields: {
-                    ...state.fields,
-                    [action.cardId]: cardFields,
-                },
+                fields,
             };
         }
         case CARDSET_CHANGE_IMAGE_BASE64: {
@@ -1471,6 +1480,13 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 activeFieldId: action.fieldId,
                 textSettings,
                 activeSidebar,
+            };
+        }
+
+        case CARDSET_CHANGE_APPLY_TO_ALLCARDS: {
+            return {
+                ...state,
+                applyToAllCards: action.applyToAllCards,
             };
         }
 

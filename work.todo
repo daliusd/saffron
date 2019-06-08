@@ -286,6 +286,9 @@
 + Resize card with content
 + Make field non-clickable for convenience
 
+- Apply to all images on zoom / pan
++ Apply to all images on drag drop
+- Rotate cards
 - Generate list with authors of icons
 
 - Lower / Raise field one step
