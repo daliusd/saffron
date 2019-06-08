@@ -293,18 +293,15 @@
 + Clean-up on text paste
 + Prevent IE from accessing site
 
-- Rotate cards
-- Generate list with authors of icons
-
-- Lower / Raise field one step
-- Keyboard manipulation
-
-
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
 
+- Rotate cards
+- Generate list with authors of icons
+- Lower / Raise field one step
+- Keyboard manipulation
 - Security
 - Expose undo/redo via UI
 

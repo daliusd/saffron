@@ -12,6 +12,12 @@ export default class ChangelogPage extends Component {
                     <li>Keyboard shortcuts.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-06-08</h2>
+                <ul>
+                    <li>"Apply to all cards" work on pan and zoom as well.</li>
+                    <li>UX on mobile devices (e.g. phones) improved.</li>
+                    <li>Other minor fixes.</li>
+                </ul>
                 <h2>2019-06-04</h2>
                 <ul>
                     <li>Possibility to zoom in and pan imaged added.</li>
