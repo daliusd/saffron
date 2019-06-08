@@ -288,10 +288,11 @@
 
 + Apply to all images on zoom / pan
 + Apply to all images on drag drop
++ touch two fingers fix
 - Rotate cards
+- Move controls to z-index top if active
 - Generate list with authors of icons
 
-- touch two fingers fix
 - Lower / Raise field one step
 - Keyboard manipulation
 

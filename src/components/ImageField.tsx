@@ -90,9 +90,8 @@ class ImageField extends PureComponent<Props, LocalState> {
         dispatch(cardSetChangeFieldAngle(cardOnly ? cardId : undefined, imageFieldInfo.id, angle, group));
     };
 
-    handleMouseDown = (event: React.MouseEvent) => {
+    handleMouseDown = () => {
         this.setState({ wasMoved: false });
-        event.preventDefault();
     };
 
     handleTouchStart = (event: React.TouchEvent) => {
@@ -101,12 +100,10 @@ class ImageField extends PureComponent<Props, LocalState> {
         }
 
         this.setState({ wasMoved: false, x: event.changedTouches[0].clientX, y: event.changedTouches[0].clientY });
-        event.preventDefault();
     };
 
-    handleMouseMove = (event: React.MouseEvent) => {
+    handleMouseMove = () => {
         this.setState({ wasMoved: true });
-        event.preventDefault();
     };
 
     handleTouchMove = (event: React.TouchEvent) => {
@@ -118,11 +115,10 @@ class ImageField extends PureComponent<Props, LocalState> {
         if (Math.abs(event.changedTouches[0].clientX - x) > 3 || Math.abs(event.changedTouches[0].clientY - y) > 3) {
             this.setState({ wasMoved: true });
         }
-        event.preventDefault();
     };
 
-    handleMouseUp = (event: React.MouseEvent) => {
-        this.handleComplete(event);
+    handleMouseUp = () => {
+        this.handleComplete();
     };
 
     handleTouchEnd = (event: React.TouchEvent) => {
@@ -130,13 +126,12 @@ class ImageField extends PureComponent<Props, LocalState> {
             return; // Let's ignore zooms
         }
 
-        this.handleComplete(event);
+        this.handleComplete();
     };
 
-    handleComplete = (event: React.MouseEvent | React.TouchEvent) => {
+    handleComplete = () => {
         const { dispatch, cardId, isOnBack, imageFieldInfo } = this.props;
         if (!this.state.wasMoved) {
-            event.preventDefault();
             dispatch(cardSetActiveCardAndField(cardId, isOnBack, imageFieldInfo.id));
         }
     };

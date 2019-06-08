@@ -124,7 +124,6 @@ class FieldController extends React.Component<Props, LocalState> {
 
         document.addEventListener('touchmove', this.handleTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleTouchEnd, { passive: false });
-        event.preventDefault();
     };
 
     handleDragStart = (co: MouseEvent | Touch) => {
@@ -144,6 +143,7 @@ class FieldController extends React.Component<Props, LocalState> {
             return; // Let's ignore zooms
         }
 
+        event.preventDefault();
         this.handleDragMove(event.changedTouches[0], event.ctrlKey);
     };
 
@@ -195,8 +195,6 @@ class FieldController extends React.Component<Props, LocalState> {
         this.setState({ activatedUsingTouch: isTouchEvent });
 
         this.cDiv.current.style.cursor = 'grab';
-
-        event.preventDefault();
     };
 
     // Pan handling
@@ -219,6 +217,7 @@ class FieldController extends React.Component<Props, LocalState> {
         document.addEventListener('touchmove', this.handlePanTouchMove, { passive: false });
         document.addEventListener('touchend', this.handlePanTouchEnd, { passive: false });
         event.stopPropagation();
+        event.preventDefault();
     };
 
     handlePanStart = (co: MouseEvent | Touch) => {
@@ -305,6 +304,7 @@ class FieldController extends React.Component<Props, LocalState> {
         document.addEventListener('touchmove', this.handleZoomTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleZoomTouchEnd, { passive: false });
         event.stopPropagation();
+        event.preventDefault();
     };
 
     handleZoomStart = (co: { clientX: number; clientY: number }) => {
@@ -385,6 +385,7 @@ class FieldController extends React.Component<Props, LocalState> {
         document.addEventListener('touchmove', this.handleResizeTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleResizeTouchEnd, { passive: false });
         event.stopPropagation();
+        event.preventDefault();
     };
 
     handleResizeStart = (co: MouseEvent | Touch) => {
@@ -485,6 +486,7 @@ class FieldController extends React.Component<Props, LocalState> {
         document.addEventListener('touchmove', this.handleRotateTouchMove, { passive: false });
         document.addEventListener('touchend', this.handleRotateTouchEnd, { passive: false });
         event.stopPropagation();
+        event.preventDefault();
     };
 
     handleRotateStart = (co: { clientX: number; clientY: number }) => {
