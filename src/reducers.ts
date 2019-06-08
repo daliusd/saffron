@@ -920,7 +920,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
 
             let fields = { ...state.fields };
             let fieldId = action.fieldId;
-            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+            let cardsToFix = state.applyToAllCards || action.cardId === undefined ? state.cardsAllIds : [action.cardId];
 
             for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
@@ -963,7 +963,7 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             let fields = { ...state.fields };
             let fieldId = action.fieldId;
 
-            let cardsToFix = action.cardId ? [action.cardId] : state.cardsAllIds;
+            let cardsToFix = state.applyToAllCards || action.cardId === undefined ? state.cardsAllIds : [action.cardId];
 
             for (const cardId of cardsToFix) {
                 let cardFields = { ...fields[cardId] };
