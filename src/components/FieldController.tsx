@@ -601,8 +601,6 @@ class FieldController extends React.Component<Props, LocalState> {
                     cursor: 'grab',
                     transform: `rotate(${angle}rad)`,
                     pointerEvents: isUnclickable ? 'none' : 'initial',
-                    zIndex: isActive ? 1000 : 'auto',
-                    opacity: isActive ? 0.8 : 1,
                 }}
             >
                 {children}
