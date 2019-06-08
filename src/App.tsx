@@ -3,6 +3,7 @@ import './App.css';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { isIE } from 'react-device-detect';
 
 import { Dispatch, initRequest } from './actions';
 import { State } from './reducers';
@@ -28,6 +29,7 @@ export class App extends Component<Props> {
     }
 
     render() {
+        if (isIE) return <div> IE is not supported. Download Chrome/Opera/Firefox </div>;
         const { isAuthenticated } = this.props;
         return (
             <Router>

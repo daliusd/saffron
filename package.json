@@ -38,6 +38,7 @@
     "papaparse": "^4.6.3",
     "react": "^16.5.2",
     "react-color": "^2.17.0",
+    "react-device-detect": "^1.6.2",
     "react-dom": "^16.5.2",
     "react-filepond": "^7.0.1",
     "react-kawaii": "^0.11.0",
