@@ -289,8 +289,8 @@
 + Apply to all images on zoom / pan
 + Apply to all images on drag drop
 + touch two fingers fix
++ Move controls to z-index top if active
 - Rotate cards
-- Move controls to z-index top if active
 - Generate list with authors of icons
 
 - Lower / Raise field one step
