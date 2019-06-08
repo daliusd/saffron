@@ -14,6 +14,8 @@ import {
     cardSetRemoveActiveField,
     cardSetUnlockActiveField,
     cardSetChangeActiveTextFieldColor,
+    cardSetRaiseActiveField,
+    cardSetLowerActiveField,
 } from '../actions';
 import ColorButton from './ColorButton';
 import FontSelector from './FontSelector';
@@ -80,17 +82,25 @@ export class SidebarText extends Component<Props> {
         }
     };
 
-    handleRaiseToTop = () => {
+    handleRaise = (event: React.MouseEvent) => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetRaiseActiveFieldToTop());
+            if (event.ctrlKey) {
+                dispatch(cardSetRaiseActiveFieldToTop());
+            } else {
+                dispatch(cardSetRaiseActiveField());
+            }
         }
     };
 
-    handleLowerToBottom = () => {
+    handleLower = (event: React.MouseEvent) => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLowerActiveFieldToBottom());
+            if (event.ctrlKey) {
+                dispatch(cardSetLowerActiveFieldToBottom());
+            } else {
+                dispatch(cardSetLowerActiveField());
+            }
         }
     };
 
@@ -142,10 +152,10 @@ export class SidebarText extends Component<Props> {
                 </button>
                 {activeField !== undefined && (
                     <>
-                        <button onClick={this.handleRaiseToTop} title="Raise text to top">
+                        <button onClick={this.handleRaise} title="Raise text (with Ctrl - raise to top)">
                             <i className="material-icons">arrow_upward</i>
                         </button>
-                        <button onClick={this.handleLowerToBottom} title="Lower text to bottom">
+                        <button onClick={this.handleLower} title="Lower text (with Ctrl - lower to bottom)">
                             <i className="material-icons">arrow_downward</i>
                         </button>
                     </>

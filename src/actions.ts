@@ -69,7 +69,9 @@ export const CARDSET_ADD_TEXT_FIELD = 'CARDSET_ADD_TEXT_FIELD';
 export const CARDSET_ADD_IMAGE_FIELD = 'CARDSET_ADD_IMAGE_FIELD';
 export const CARDSET_CHANGE_ACTIVE_FIELD_NAME = 'CARDSET_CHANGE_ACTIVE_FIELD_NAME';
 export const CARDSET_REMOVE_ACTIVE_FIELD = 'CARDSET_REMOVE_ACTIVE_FIELD';
+export const CARDSET_RAISE_ACTIVE_FIELD = 'CARDSET_RAISE_ACTIVE_FIELD';
 export const CARDSET_RAISE_ACTIVE_FIELD_TO_TOP = 'CARDSET_RAISE_ACTIVE_FIELD_TO_TOP';
+export const CARDSET_LOWER_ACTIVE_FIELD = 'CARDSET_LOWER_ACTIVE';
 export const CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM = 'CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM';
 export const CARDSET_LOCK_ACTIVE_FIELD = 'CARDSET_LOCK_ACTIVE_FIELD';
 export const CARDSET_UNLOCK_ACTIVE_FIELD = 'CARDSET_UNLOCK_ACTIVE_FIELD';
@@ -354,8 +356,14 @@ export interface CardSetChangeActiveFieldName {
 export interface CardSetRemoveActiveField {
     type: typeof CARDSET_REMOVE_ACTIVE_FIELD;
 }
+export interface CardSetRaiseActiveField {
+    type: typeof CARDSET_RAISE_ACTIVE_FIELD;
+}
 export interface CardSetRaiseActiveFieldToTop {
     type: typeof CARDSET_RAISE_ACTIVE_FIELD_TO_TOP;
+}
+export interface CardSetLowerActiveField {
+    type: typeof CARDSET_LOWER_ACTIVE_FIELD;
 }
 export interface CardSetLowerActiveFieldToBottom {
     type: typeof CARDSET_LOWER_ACTIVE_FIELD_TO_BOTTOM;
@@ -574,7 +582,9 @@ export type CardSetModifyAction =
     | CardSetAddImageField
     | CardSetChangeActiveFieldName
     | CardSetRemoveActiveField
+    | CardSetRaiseActiveField
     | CardSetRaiseActiveFieldToTop
+    | CardSetLowerActiveField
     | CardSetLowerActiveFieldToBottom
     | CardSetLockActiveField
     | CardSetUnlockActiveField
@@ -851,9 +861,21 @@ export const cardSetRemoveActiveField = (): CardSetRemoveActiveField => {
     };
 };
 
+export const cardSetRaiseActiveField = (): CardSetRaiseActiveField => {
+    return {
+        type: CARDSET_RAISE_ACTIVE_FIELD,
+    };
+};
+
 export const cardSetRaiseActiveFieldToTop = (): CardSetRaiseActiveFieldToTop => {
     return {
         type: CARDSET_RAISE_ACTIVE_FIELD_TO_TOP,
+    };
+};
+
+export const cardSetLowerActiveField = (): CardSetLowerActiveField => {
+    return {
+        type: CARDSET_LOWER_ACTIVE_FIELD,
     };
 };
 

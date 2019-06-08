@@ -17,6 +17,8 @@ import {
     cardSetUnlockActiveField,
     imageListRequest,
     cardSetChangeApplyToAllCards,
+    cardSetRaiseActiveField,
+    cardSetLowerActiveField,
 } from '../actions';
 import ColorButton from './ColorButton';
 import style from './SidebarImage.module.css';
@@ -94,17 +96,25 @@ export class SidebarImage extends Component<Props, LocalState> {
         }
     };
 
-    handleRaiseToTop = () => {
+    handleRaise = (event: React.MouseEvent) => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetRaiseActiveFieldToTop());
+            if (event.ctrlKey) {
+                dispatch(cardSetRaiseActiveFieldToTop());
+            } else {
+                dispatch(cardSetRaiseActiveField());
+            }
         }
     };
 
-    handleLowerToBottom = () => {
+    handleLower = (event: React.MouseEvent) => {
         const { activeFieldInfo, dispatch } = this.props;
         if (activeFieldInfo !== undefined) {
-            dispatch(cardSetLowerActiveFieldToBottom());
+            if (event.ctrlKey) {
+                dispatch(cardSetLowerActiveFieldToBottom());
+            } else {
+                dispatch(cardSetLowerActiveField());
+            }
         }
     };
 
@@ -172,10 +182,10 @@ export class SidebarImage extends Component<Props, LocalState> {
 
                     {activeFieldInfo !== undefined && (
                         <>
-                            <button onClick={this.handleRaiseToTop} title="Raise image to top">
+                            <button onClick={this.handleRaise} title="Raise image (with Ctrl - raise to top)">
                                 <i className="material-icons">arrow_upward</i>
                             </button>
-                            <button onClick={this.handleLowerToBottom} title="Lower image to bottom">
+                            <button onClick={this.handleLower} title="Lower image (with Ctrl - lower to bottom)">
                                 <i className="material-icons">arrow_downward</i>
                             </button>
                         </>

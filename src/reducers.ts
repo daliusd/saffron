@@ -83,6 +83,8 @@ import {
     Action,
     CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
     CARDSET_CHANGE_APPLY_TO_ALLCARDS,
+    CARDSET_RAISE_ACTIVE_FIELD,
+    CARDSET_LOWER_ACTIVE_FIELD,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -682,6 +684,21 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             }
             return state;
         }
+        case CARDSET_RAISE_ACTIVE_FIELD: {
+            let fieldsAllIds = [...state.fieldsAllIds];
+
+            if (state.activeFieldId !== undefined) {
+                let index = fieldsAllIds.indexOf(state.activeFieldId);
+                if (index !== -1 && index < fieldsAllIds.length - 1) {
+                    fieldsAllIds.splice(index + 1, 0, fieldsAllIds.splice(index, 1)[0]);
+                }
+            }
+
+            return {
+                ...state,
+                fieldsAllIds,
+            };
+        }
         case CARDSET_RAISE_ACTIVE_FIELD_TO_TOP: {
             let fieldsAllIds = [...state.fieldsAllIds];
 
@@ -689,6 +706,21 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 let index = fieldsAllIds.indexOf(state.activeFieldId);
                 if (index !== -1) {
                     fieldsAllIds.push(fieldsAllIds.splice(index, 1)[0]);
+                }
+            }
+
+            return {
+                ...state,
+                fieldsAllIds,
+            };
+        }
+        case CARDSET_LOWER_ACTIVE_FIELD: {
+            let fieldsAllIds = [...state.fieldsAllIds];
+
+            if (state.activeFieldId !== undefined) {
+                let index = fieldsAllIds.indexOf(state.activeFieldId);
+                if (index > 0) {
+                    fieldsAllIds.splice(index - 1, 0, fieldsAllIds.splice(index, 1)[0]);
                 }
             }
 

@@ -10,7 +10,9 @@ import {
     cardSetChangeFieldSize,
     cardSetLockActiveField,
     cardSetChangeFieldPosition,
+    cardSetLowerActiveField,
     cardSetLowerActiveFieldToBottom,
+    cardSetRaiseActiveField,
     cardSetRaiseActiveFieldToTop,
     cardSetUnlockActiveField,
     cardSetChangeUnclickableForActiveField,
@@ -54,17 +56,25 @@ export class SidebarMeasurements extends Component<Props> {
         dispatch(cardSetActiveCardAndField(activeCardId, (activeField && activeField.isOnBack) || false, nextField));
     };
 
-    handleRaiseToTop = () => {
+    handleRaise = (event: React.MouseEvent) => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetRaiseActiveFieldToTop());
+            if (event.ctrlKey) {
+                dispatch(cardSetRaiseActiveFieldToTop());
+            } else {
+                dispatch(cardSetRaiseActiveField());
+            }
         }
     };
 
-    handleLowerToBottom = () => {
+    handleLower = (event: React.MouseEvent) => {
         const { activeField, dispatch } = this.props;
         if (activeField !== undefined) {
-            dispatch(cardSetLowerActiveFieldToBottom());
+            if (event.ctrlKey) {
+                dispatch(cardSetLowerActiveFieldToBottom());
+            } else {
+                dispatch(cardSetLowerActiveField());
+            }
         }
     };
 
@@ -155,10 +165,10 @@ export class SidebarMeasurements extends Component<Props> {
 
                 {activeField !== undefined && (
                     <>
-                        <button onClick={this.handleRaiseToTop} title="Raise to top">
+                        <button onClick={this.handleRaise} title="Raise text (with Ctrl - raise to top)">
                             <i className="material-icons">arrow_upward</i>
                         </button>
-                        <button onClick={this.handleLowerToBottom} title="Lower to bottom">
+                        <button onClick={this.handleLower} title="Lower text (with Ctrl - lower to bottom)">
                             <i className="material-icons">arrow_downward</i>
                         </button>
                     </>
