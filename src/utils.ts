@@ -30,8 +30,8 @@ export function rotateVec(x: number, y: number, a: number) {
 
 export function calculateImageDimensions(imageFieldInfo: ImageFieldInfo | ImageToDraw) {
     let calculatedImageWidth, calculatedImageHeight;
-    let imageWidth = imageFieldInfo.imageWidth || imageFieldInfo.width;
-    let imageHeight = imageFieldInfo.imageHeight || imageFieldInfo.height;
+    let imageWidth = imageFieldInfo.imageWidth || 1;
+    let imageHeight = imageFieldInfo.imageHeight || 1;
 
     if (!imageFieldInfo.fit || imageFieldInfo.fit === 'width') {
         calculatedImageWidth = imageFieldInfo.width;
