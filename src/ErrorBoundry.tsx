@@ -5,7 +5,7 @@ import { reportError } from './utils';
 
 window.addEventListener('error', function(evt: ErrorEvent) {
     let error = evt.error;
-    reportError(error.message, error.stack);
+    reportError(error);
 });
 
 interface Props {
@@ -22,12 +22,10 @@ export default class ErrorBoundary extends Component<Props, State> {
         this.state = { hasError: false };
     }
 
-    componentDidCatch(error: Error | null, info: object) {
+    componentDidCatch(error: Error | null) {
         this.setState({ hasError: true });
         if (error !== null) {
-            reportError(error.message, error.stack);
-        } else {
-            reportError(`No error: ${info}`, '');
+            reportError(error);
         }
     }
 

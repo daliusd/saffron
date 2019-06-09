@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { ImageFieldInfo, ImageToDraw } from './types';
+import StackTrace from 'stacktrace-js';
 
 export function downloadBlob(blobURL: string, filename: string, resolve?: () => void) {
     const tempLink = document.createElement('a');
@@ -50,8 +51,18 @@ export function calculateImageDimensions(imageFieldInfo: ImageFieldInfo | ImageT
     return { width: calculatedImageWidth, height: calculatedImageHeight };
 }
 
-export function reportError(message: string, stack: string | undefined) {
-    if (process.env.NODE_ENV === 'production') {
-        axios.post('/api/reports', { message, stack: stack || '' });
-    }
+export function reportError(error: Error) {
+    StackTrace.fromError(error).then(stackframes => {
+        var stringifiedStack = stackframes
+            .map(function(sf) {
+                return sf.toString();
+            })
+            .join('\n');
+
+        if (process.env.NODE_ENV === 'production') {
+            axios.post('/api/reports', { message: error.message, stack: stringifiedStack });
+        } else {
+            console.log(stringifiedStack);
+        }
+    });
 }
