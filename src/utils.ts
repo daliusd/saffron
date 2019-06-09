@@ -50,6 +50,8 @@ export function calculateImageDimensions(imageFieldInfo: ImageFieldInfo | ImageT
     return { width: calculatedImageWidth, height: calculatedImageHeight };
 }
 
-export function reportError(error: string) {
-    return axios.post('/api/reports', { error });
+export function reportError(message: string, stack: string | undefined) {
+    if (process.env.NODE_ENV === 'production') {
+        axios.post('/api/reports', { message, stack: stack || '' });
+    }
 }

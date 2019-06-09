@@ -4,10 +4,8 @@ import KawaiiMessage, { Character } from './components/KawaiiMessage';
 import { reportError } from './utils';
 
 window.addEventListener('error', function(evt: ErrorEvent) {
-    if (process.env.NODE_ENV === 'production') {
-        let error = evt.error;
-        reportError(`${error.message} ${error.stack}`);
-    }
+    let error = evt.error;
+    reportError(error.message, error.stack);
 });
 
 interface Props {
@@ -26,12 +24,10 @@ export default class ErrorBoundary extends Component<Props, State> {
 
     componentDidCatch(error: Error | null, info: object) {
         this.setState({ hasError: true });
-        if (process.env.NODE_ENV === 'production') {
-            if (error !== null) {
-                reportError(`${error.message} ${error.stack}`);
-            } else {
-                reportError(`No error: ${info}`);
-            }
+        if (error !== null) {
+            reportError(error.message, error.stack);
+        } else {
+            reportError(`No error: ${info}`, '');
         }
     }
 

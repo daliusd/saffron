@@ -142,9 +142,8 @@ export function* putError(e: Error): SagaIterator {
     yield put(messageDisplay('error', e.message));
     if (process.env.NODE_ENV === 'development') {
         yield call(console.log, e.stack);
-    } else {
-        yield call(reportError, e.stack || e.message);
     }
+    yield call(reportError, e.message, e.stack);
 }
 
 export function* putInfo(message: string): SagaIterator {
