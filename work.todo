@@ -293,13 +293,12 @@
 + Clean-up on text paste
 + Prevent IE from accessing site
 + Lower / Raise field one step
++ Parse exceptions
 
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
-
-- Parse exceptions
 
 - Rotate cards
 - Generate list with authors of icons
