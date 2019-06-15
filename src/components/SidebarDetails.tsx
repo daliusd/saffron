@@ -7,7 +7,6 @@ import { cardSetCloneCard, cardSetRemoveCard, cardSetUpdateCardCount } from '../
 import style from './SidebarDetails.module.css';
 
 interface StateProps {
-    isAuthenticated: boolean;
     activeCard: CardType | null;
 }
 
@@ -69,7 +68,6 @@ export class SidebarDetails extends Component<Props> {
 
 const mapStateToProps = (state: State): StateProps => {
     return {
-        isAuthenticated: state.auth.isAuthenticated,
         activeCard:
             state.cardset.present.activeCardId !== undefined
                 ? state.cardset.present.cardsById[state.cardset.present.activeCardId]

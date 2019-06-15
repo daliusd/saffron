@@ -9,7 +9,7 @@ import CardSet from './components/CardSet';
 interface Props {
     dispatch: Dispatch;
     match: { params: { id: string } };
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
 }
 
 export class CardSetPage extends Component<Props> {
@@ -22,8 +22,10 @@ export class CardSetPage extends Component<Props> {
         const { isAuthenticated } = this.props;
         if (isAuthenticated) {
             return <CardSet />;
-        } else {
+        } else if (isAuthenticated === false) {
             return <Redirect to="/login" />;
+        } else {
+            return null;
         }
     }
 }

@@ -9,7 +9,7 @@ import Login from './components/Login';
 
 interface Props {
     dispatch: Dispatch;
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
 }
 
 export class LoginPage extends Component<Props> {

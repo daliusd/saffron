@@ -8,7 +8,7 @@ describe('<Navbar />', () => {
         const wrapper = shallow(
             <Navbar isAuthenticated={false} dispatch={a => a} messages={[]} activeGame={null} activeCardSet={null} />,
         );
-        expect(wrapper.find('Link')).toHaveLength(5);
+        expect(wrapper.find('Link')).toHaveLength(6);
         expect(wrapper.find('Logout')).toHaveLength(0);
     });
 

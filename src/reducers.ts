@@ -119,12 +119,12 @@ export const DefaultMessageState: MessageState = {
 };
 
 export interface AuthState {
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
     user: string;
 }
 
 export const DefaultAuthState: AuthState = {
-    isAuthenticated: false,
+    isAuthenticated: undefined,
     user: '',
 };
 
@@ -277,7 +277,7 @@ export function auth(state: AuthState = DefaultAuthState, action: LoginAction): 
     switch (action.type) {
         case LOGIN_REQUEST:
             return Object.assign({}, state, {
-                isAuthenticated: false,
+                isAuthenticated: undefined,
                 user: action.creds.username,
             });
         case LOGIN_SUCCESS:

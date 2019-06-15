@@ -20,7 +20,7 @@ import style from './CardSets.module.css';
 
 interface Props {
     dispatch: Dispatch;
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
     activeGame: GameType | null;
     allIds: IdsArray;
     byId: CardSetsCollection;

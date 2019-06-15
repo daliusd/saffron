@@ -24,7 +24,6 @@ import ColorButton from './ColorButton';
 import style from './SidebarImage.module.css';
 
 interface StateProps {
-    isAuthenticated: boolean;
     activeFieldInfo?: FieldInfo;
     crop: boolean;
     activeCardId?: string;
@@ -362,7 +361,6 @@ const mapStateToProps = (state: State): StateProps => {
     const activeCardId = state.cardset.present.activeCardId;
 
     return {
-        isAuthenticated: state.auth.isAuthenticated,
         activeFieldInfo,
         crop: activeFieldInfo && activeFieldInfo.type === 'image' ? activeFieldInfo.crop || false : false,
         activeCardId,

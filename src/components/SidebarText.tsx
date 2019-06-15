@@ -22,7 +22,6 @@ import FontSelector from './FontSelector';
 import style from './SidebarText.module.css';
 
 interface StateProps {
-    isAuthenticated: boolean;
     activeField?: FieldInfo;
 }
 
@@ -228,7 +227,6 @@ const mapStateToProps = (state: State): StateProps => {
             : undefined;
 
     return {
-        isAuthenticated: state.auth.isAuthenticated,
         activeField,
     };
 };

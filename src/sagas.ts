@@ -186,14 +186,19 @@ export function* getToken(withErrorIfMissing: boolean, getFreshToken = false): S
 
     const refreshTokenValue = yield call(getRefreshTokenFromStorage);
     if (!refreshTokenValue) {
-        if (withErrorIfMissing) throw new UserError('User not logged in.');
+        yield put({ type: LOGOUT_REQUEST });
+        if (withErrorIfMissing) {
+            throw new UserError('User not logged in.');
+        }
         return null;
     }
 
     const refreshTokenValid = yield call(validateToken, refreshTokenValue);
     if (!refreshTokenValid) {
         yield put({ type: LOGOUT_REQUEST });
-        if (withErrorIfMissing) throw new UserError('User not logged in.');
+        if (withErrorIfMissing) {
+            throw new UserError('User not logged in.');
+        }
         return null;
     }
 

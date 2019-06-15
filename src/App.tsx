@@ -20,7 +20,7 @@ import SignUpPage from './SignUpPage';
 
 interface Props {
     dispatch: Dispatch;
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
 }
 
 export class App extends Component<Props> {

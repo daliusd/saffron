@@ -10,7 +10,7 @@ import KawaiiMessage, { Character } from './KawaiiMessage';
 
 interface Props {
     dispatch: Dispatch;
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
     allIds: IdsArray;
     byId: GamesCollection;
 }

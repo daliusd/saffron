@@ -162,7 +162,8 @@ test('getToken with_error_if_missing=false', () => {
     expect(gen.next(null).value).toEqual(call(getRefreshTokenFromStorage));
 
     clone = gen.clone();
-    next = clone.next(null);
+    expect(clone.next(null).value).toEqual(put({ type: LOGOUT_REQUEST }));
+    next = clone.next();
     expect(next.done).toBeTruthy();
     expect(next.value).toBeNull();
 
@@ -205,9 +206,8 @@ test('getToken with_error_if_missing=true', () => {
     expect(gen.next(null).value).toEqual(call(getRefreshTokenFromStorage));
 
     clone = gen.clone();
-    expect(() => {
-        clone.next(null);
-    }).toThrow();
+    expect(clone.next(null).value).toEqual(put({ type: 'LOGOUT_REQUEST' }));
+    expect(() => clone.next()).toThrow();
 
     const refreshTokenValue = 'refreshTokenValue';
     expect(gen.next(refreshTokenValue).value).toEqual(call(validateToken, refreshTokenValue));

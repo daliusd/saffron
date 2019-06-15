@@ -11,7 +11,7 @@ import Logout from './Logout';
 import style from './Navbar.module.css';
 
 interface OwnProps {
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
 }
 
 interface StateProps {
@@ -61,11 +61,11 @@ export class Navbar extends Component<Props> {
                     </h1>
                     <div>
                         <ul className={style.menu}>
+                            <li>
+                                <Link to="/">Main</Link>
+                            </li>
                             {isAuthenticated && (
                                 <>
-                                    <li>
-                                        <Link to="/">Main</Link>
-                                    </li>
                                     {activeGame && (
                                         <li>
                                             <Link to={`/game/${activeGame.id}`}>Game "{activeGame.name}"</Link>

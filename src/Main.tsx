@@ -6,7 +6,7 @@ import Games from './components/Games';
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
 
 interface Props {
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
 }
 
 export class Main extends Component<Props> {

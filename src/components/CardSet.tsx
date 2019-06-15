@@ -24,7 +24,7 @@ interface StateProps {
     width: number;
     height: number;
     isTwoSided: boolean;
-    isAuthenticated: boolean;
+    isAuthenticated?: boolean;
     cardsAllIds: string[];
     cardsById: CardsCollection;
     activity: number;
