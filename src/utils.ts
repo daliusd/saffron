@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { ImageFieldInfo, ImageToDraw } from './types';
 import StackTrace from 'stacktrace-js';
+
+import { ImageFieldInfo, ImageToDraw } from './types';
+import { store } from './store';
 
 export function downloadBlob(blobURL: string, filename: string, resolve?: () => void) {
     const tempLink = document.createElement('a');
@@ -66,7 +68,11 @@ export function reportError(error: Error) {
             .join('\n');
 
         if (process.env.NODE_ENV === 'production') {
-            axios.post('/api/reports', { message: error.message, stack: stringifiedStack });
+            let state = '';
+            if (store) {
+                state = JSON.stringify(store.getState());
+            }
+            axios.post('/api/reports', { message: error.message, stack: stringifiedStack, state });
         } else {
             console.log(stringifiedStack);
         }
