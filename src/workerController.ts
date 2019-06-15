@@ -38,7 +38,7 @@ export const generatePdfUsingWorker = (
                     downloadBlob(blobURL, 'card.pdf', resolve);
                 } else if (event.data.type === 'generateError') {
                     const error = event.data.error;
-                    reject({ message: 'PDF generation failed', stack: error.stack });
+                    reject({ message: 'PDF generation failed: ' + event.data.message, stack: error.stack });
                 }
             });
 
@@ -210,7 +210,7 @@ class PNGGenerator {
                 }
 
                 if (task && task.type === 'generateError' && task.error) {
-                    let error = Error('Failed to generate PNG');
+                    let error = Error('Failed to generate PNG: ' + task.error.message);
                     error.stack = task.error.stack;
                     throw error;
                 }

@@ -296,7 +296,7 @@
 + Parse exceptions
 
 + Fix Token Not Found - that's not real error
-- Check worker errors reporting
++ Check worker errors reporting
 - Add state to error
 - Add env to error
 
