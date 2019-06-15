@@ -278,11 +278,12 @@ export function auth(state: AuthState = DefaultAuthState, action: LoginAction): 
         case LOGIN_REQUEST:
             return Object.assign({}, state, {
                 isAuthenticated: undefined,
-                user: action.creds.username,
+                user: '',
             });
         case LOGIN_SUCCESS:
             return Object.assign({}, state, {
                 isAuthenticated: true,
+                user: action.username,
             });
         case LOGIN_FAILURE:
             return Object.assign({}, state, {
@@ -291,6 +292,7 @@ export function auth(state: AuthState = DefaultAuthState, action: LoginAction): 
         case LOGOUT_SUCCESS:
             return Object.assign({}, state, {
                 isAuthenticated: false,
+                user: '',
             });
         default:
             return state;

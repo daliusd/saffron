@@ -82,7 +82,15 @@ import {
     registerUser,
 } from './requests';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
-import { saveTokens, saveAccessToken, getTokenFromStorage, getRefreshTokenFromStorage, cleanTokens } from './storage';
+import {
+    saveTokens,
+    saveAccessToken,
+    getTokenFromStorage,
+    getRefreshTokenFromStorage,
+    cleanTokens,
+    saveUsername,
+    getUsernameFromStorage,
+} from './storage';
 
 test('putError', () => {
     putError(new Error('random error')).next();
@@ -121,7 +129,8 @@ test('handleLoginRequest', () => {
     expect(clone.next().value).toEqual(call(getTokens, creds));
     const data = { accessToken: 'test', refreshToken: 'testref' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
-    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
+    expect(clone.next().value).toEqual(call(saveUsername, creds.username));
+    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS, username: creds.username }));
     expect(clone.next().done).toBeTruthy();
 
     // Failure case
@@ -296,8 +305,9 @@ test('handleSignupRequest', () => {
 
     const data = { accessToken: 'test', refreshToken: 'testref' };
     expect(clone.next(data).value).toEqual(call(saveTokens, data));
+    expect(clone.next().value).toEqual(call(saveUsername, creds.username));
     expect(clone.next().value).toEqual(put({ type: SIGNUP_SUCCESS }));
-    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
+    expect(clone.next().value).toEqual(put({ type: LOGIN_SUCCESS, username: creds.username }));
     expect(clone.next().done).toBeTruthy();
 
     // Failure case
@@ -316,7 +326,8 @@ test('handleInitRequest', () => {
     let clone = gen.clone();
 
     const token = 'token';
-    expect(gen.next(token).value).toEqual(put({ type: LOGIN_SUCCESS }));
+    expect(gen.next(token).value).toEqual(call(getUsernameFromStorage));
+    expect(gen.next().value).toEqual(put({ type: LOGIN_SUCCESS }));
 
     expect(gen.next().done).toBeTruthy();
 

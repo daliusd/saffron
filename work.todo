@@ -297,8 +297,8 @@
 
 + Fix Token Not Found - that's not real error
 + Check worker errors reporting
-- Add state to error
-- Add env to error
++ Add state to error
++ Save username information to local storage
 
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/

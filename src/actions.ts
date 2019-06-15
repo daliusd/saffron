@@ -131,7 +131,7 @@ export interface LoginRequest {
 }
 export type LoginAction =
     | LoginRequest
-    | { type: typeof LOGIN_SUCCESS }
+    | { type: typeof LOGIN_SUCCESS; username: string }
     | { type: typeof LOGIN_FAILURE; message: string }
     | { type: typeof LOGOUT_REQUEST }
     | { type: typeof LOGOUT_FAILURE }

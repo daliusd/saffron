@@ -68,9 +68,9 @@ test('auth', () => {
         isAuthenticated: false,
     };
 
-    expect(auth(state, { type: LOGIN_REQUEST, creds })).toEqual({ isAuthenticated: undefined, user: username });
+    expect(auth(state, { type: LOGIN_REQUEST, creds })).toEqual({ isAuthenticated: undefined, user: '' });
 
-    expect(auth(state, { type: LOGIN_SUCCESS })).toEqual({ isAuthenticated: true, user: '' });
+    expect(auth(state, { type: LOGIN_SUCCESS, username })).toEqual({ isAuthenticated: true, user: username });
 
     let message = 'error message';
     expect(auth(state, { type: LOGIN_FAILURE, message })).toEqual({ isAuthenticated: false, user: '' });

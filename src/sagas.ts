@@ -133,7 +133,15 @@ import {
     registerUser,
 } from './requests';
 import { generatePdfUsingWorker, generatePngUsingWorker } from './workerController';
-import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
+import {
+    getTokenFromStorage,
+    getRefreshTokenFromStorage,
+    saveAccessToken,
+    saveTokens,
+    cleanTokens,
+    saveUsername,
+    getUsernameFromStorage,
+} from './storage';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
 import { reportError, UserError } from './utils';
 
@@ -213,7 +221,8 @@ export function* handleLoginRequest(action: LoginRequest): SagaIterator {
     try {
         const data = yield call(getTokens, action.creds);
         yield call(saveTokens, data);
-        yield put({ type: LOGIN_SUCCESS });
+        yield call(saveUsername, action.creds.username);
+        yield put({ type: LOGIN_SUCCESS, username: action.creds.username });
     } catch (e) {
         yield put({ type: LOGIN_FAILURE });
         yield call(putError, e);
@@ -267,8 +276,9 @@ export function* handleSignupRequest(action: SignUpRequest): SagaIterator {
     try {
         const data = yield call(registerUser, action.creds);
         yield call(saveTokens, data);
+        yield call(saveUsername, action.creds.username);
         yield put({ type: SIGNUP_SUCCESS });
-        yield put({ type: LOGIN_SUCCESS });
+        yield put({ type: LOGIN_SUCCESS, username: action.creds.username });
     } catch (e) {
         yield put({ type: SIGNUP_FAILURE });
         yield call(putError, e);
@@ -280,7 +290,8 @@ export function* handleInitRequest(): SagaIterator {
     try {
         let token = yield call(getToken, false);
         if (token) {
-            yield put({ type: LOGIN_SUCCESS });
+            const username = yield call(getUsernameFromStorage);
+            yield put({ type: LOGIN_SUCCESS, username });
         }
     } catch (e) {}
 }
