@@ -295,6 +295,11 @@
 + Lower / Raise field one step
 + Parse exceptions
 
++ Fix Token Not Found - that's not real error
+- Check worker errors reporting
+- Add state to error
+- Add env to error
+
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
     Where to get them. https://thenounproject.com/developers/ looks

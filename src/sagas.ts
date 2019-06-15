@@ -135,7 +135,7 @@ import {
 import { generatePdfUsingWorker, generatePngUsingWorker } from './workerController';
 import { getTokenFromStorage, getRefreshTokenFromStorage, saveAccessToken, saveTokens, cleanTokens } from './storage';
 import { loadFontsUsedInPlaceholders } from './fontLoader';
-import { reportError } from './utils';
+import { reportError, UserError } from './utils';
 
 // Messages
 export function* putError(e: Error): SagaIterator {
@@ -186,14 +186,14 @@ export function* getToken(withErrorIfMissing: boolean, getFreshToken = false): S
 
     const refreshTokenValue = yield call(getRefreshTokenFromStorage);
     if (!refreshTokenValue) {
-        if (withErrorIfMissing) throw new Error('Token not found.');
+        if (withErrorIfMissing) throw new UserError('User not logged in.');
         return null;
     }
 
     const refreshTokenValid = yield call(validateToken, refreshTokenValue);
     if (!refreshTokenValid) {
         yield put({ type: LOGOUT_REQUEST });
-        if (withErrorIfMissing) throw new Error('Token not found.');
+        if (withErrorIfMissing) throw new UserError('User not logged in.');
         return null;
     }
 

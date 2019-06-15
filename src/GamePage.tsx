@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { Dispatch, gameSelectRequest } from './actions';
 import { State } from './reducers';
@@ -18,7 +19,12 @@ export class GamePage extends Component<Props> {
     }
 
     render() {
-        return <CardSets />;
+        const { isAuthenticated } = this.props;
+        if (isAuthenticated) {
+            return <CardSets />;
+        } else {
+            return <Redirect to="/login" />;
+        }
     }
 }
 

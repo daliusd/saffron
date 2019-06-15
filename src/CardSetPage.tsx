@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 
 import { Dispatch, cardSetSelectRequest } from './actions';
 import { State } from './reducers';
@@ -18,7 +19,12 @@ export class CardSetPage extends Component<Props> {
     }
 
     render() {
-        return <CardSet />;
+        const { isAuthenticated } = this.props;
+        if (isAuthenticated) {
+            return <CardSet />;
+        } else {
+            return <Redirect to="/login" />;
+        }
     }
 }
 

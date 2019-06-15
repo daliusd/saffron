@@ -51,7 +51,13 @@ export function calculateImageDimensions(imageFieldInfo: ImageFieldInfo | ImageT
     return { width: calculatedImageWidth, height: calculatedImageHeight };
 }
 
+export class UserError extends Error {}
+
 export function reportError(error: Error) {
+    if (error instanceof UserError) {
+        return;
+    }
+
     StackTrace.fromError(error).then(stackframes => {
         var stringifiedStack = stackframes
             .map(function(sf) {
