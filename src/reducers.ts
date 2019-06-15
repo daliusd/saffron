@@ -125,7 +125,7 @@ export interface AuthState {
 
 export const DefaultAuthState: AuthState = {
     isAuthenticated: undefined,
-    user: '',
+    user: '', // XXX: user can manipulate this information by changing local storage. Do not trust this info.
 };
 
 export interface SignUpState {
