@@ -301,6 +301,7 @@
 + Save username information to local storage
 
 + Update main page with information what project can do
++ Update error field
 
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
@@ -309,7 +310,6 @@
 
 - Help page with links to tutorials
 - Question field in help field
-- Update error field
 
 - Rotate cards
 - Generate list with authors of icons

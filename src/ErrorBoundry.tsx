@@ -33,7 +33,8 @@ export default class ErrorBoundary extends Component<Props, State> {
         if (this.state.hasError) {
             return (
                 <KawaiiMessage character={Character.Browser} mood="ko">
-                    Something unexpected has happened. If you want this problem to be fixed write me to{' '}
+                    Something unexpected has happened. Error report is sent to me by e-mail and I will review it as soon
+                    as possible. Still feel free to contact me by e-mail{' '}
                     <a href="mailto:dalius@ffff.lt">dalius@ffff.lt</a>.
                 </KawaiiMessage>
             );
