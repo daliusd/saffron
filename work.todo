@@ -300,10 +300,16 @@
 + Add state to error
 + Save username information to local storage
 
++ Update main page with information what project can do
+
 - Blog entry about free graphics and etc.
     https://publicdomainvectors.org/
     Where to get them. https://thenounproject.com/developers/ looks
     like an option but it is not free.
+
+- Help page with links to tutorials
+- Question field in help field
+- Update error field
 
 - Rotate cards
 - Generate list with authors of icons

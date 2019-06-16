@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { State } from './reducers';
 import Games from './components/Games';
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
+import FeatureList from './components/FeatureList';
 
 interface Props {
     isAuthenticated?: boolean;
@@ -16,7 +17,8 @@ export class Main extends Component<Props> {
         } else {
             return (
                 <KawaiiMessage character={Character.Ghost}>
-                    Hey! Here you can create your own card game but you need to <a href="/login">Login</a> or{' '}
+                    <FeatureList />
+                    Here you can create your own card game but you need to <a href="/login">Login</a> or{' '}
                     <a href="/signup">Sign-up</a> first.
                 </KawaiiMessage>
             );

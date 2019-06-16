@@ -1,0 +1,9 @@
+.features div {
+    width: auto;
+}
+
+.features img {
+    width: 100%;
+    max-width: 600px;
+    border: 10px solid white;
+}

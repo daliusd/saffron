@@ -7,6 +7,7 @@ import { GamesCollection, IdsArray } from '../types';
 import { State } from '../reducers';
 import ConfirmedDelete from './ConfirmedDelete';
 import KawaiiMessage, { Character } from './KawaiiMessage';
+import FeatureList from './FeatureList';
 
 interface Props {
     dispatch: Dispatch;
@@ -64,11 +65,12 @@ export class Games extends Component<Props, LocalState> {
             isAuthenticated && (
                 <div>
                     <KawaiiMessage character={Character.Ghost}>
+                        <FeatureList />
                         {allIds.length === 0 && (
-                            <>Here you can create your games and see list of your games when you have some.</>
+                            <>Below you can create your games and see list of your games when you have some.</>
                         )}
                         {allIds.length > 0 && (
-                            <>Here you can see a list of your games or you can create even more games.</>
+                            <>Below you can see a list of your games or you can create even more games.</>
                         )}
                     </KawaiiMessage>
 
