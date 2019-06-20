@@ -12,6 +12,10 @@ export default class ChangelogPage extends Component {
                     <li>Keyboard shortcuts.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-06-20</h2>
+                <ul>
+                    <li>Bug fix release: PDF generation, import/export fixes.</li>
+                </ul>
                 <h2>2019-06-16</h2>
                 <ul>
                     <li>Bug fix release.</li>
