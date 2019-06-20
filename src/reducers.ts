@@ -577,6 +577,10 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             };
         }
         case CARDSET_ADD_TEXT_FIELD: {
+            if (state.cardsAllIds.length === 0) {
+                return state;
+            }
+
             let textSettings = { ...state.textSettings };
             const id = shortid.generate();
             let fields: FieldInfoByCardCollection = {};
@@ -610,6 +614,10 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
             };
         }
         case CARDSET_ADD_IMAGE_FIELD: {
+            if (state.cardsAllIds.length === 0) {
+                return state;
+            }
+
             const id = shortid.generate();
             let fields: FieldInfoByCardCollection = {};
             for (const cardId of state.cardsAllIds) {
