@@ -177,6 +177,9 @@ export class SidebarImportExport extends Component<Props> {
                 let newFields: FieldInfoByCardCollection = {};
 
                 for (const row of csvData.data) {
+                    if (row['card_count'] === undefined) {
+                        continue;
+                    }
                     const card: CardType = {
                         id: row['card_id'] || shortid.generate(),
                         count: row['card_count'] || 1,
@@ -216,6 +219,8 @@ export class SidebarImportExport extends Component<Props> {
                     cardsAllIds: newCardsAllIds,
                     cardsById: newCardsById,
                     fields: newFields,
+                    activeCardId: undefined,
+                    activeFieldId: undefined,
                 };
             }
 
