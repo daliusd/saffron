@@ -12,6 +12,11 @@ export default class ChangelogPage extends Component {
                     <li>Keyboard shortcuts.</li>
                     <li>Possibility to order your games for printing from various printing providers.</li>
                 </ul>
+                <h2>2019-06-22</h2>
+                <ul>
+                    <li>TIFF, WEBP and GIF support added.</li>
+                    <li>No need to keep upload sidebar open to upload images.</li>
+                </ul>
                 <h2>2019-06-20</h2>
                 <ul>
                     <li>Bug fix release: PDF generation, import/export fixes.</li>
@@ -34,21 +39,13 @@ export default class ChangelogPage extends Component {
                 </ul>
                 <h2>2019-05-26</h2>
                 <ul>
-                    <li>
-                        Text rendering fixes.
-                    </li>
-                    <li>
-                        Card Sets and Games list are sorted alphabetically now.
-                    </li>
-                    <li>
-                        Image handling improvements.
-                    </li>
+                    <li>Text rendering fixes.</li>
+                    <li>Card Sets and Games list are sorted alphabetically now.</li>
+                    <li>Image handling improvements.</li>
                 </ul>
                 <h2>2019-05-18</h2>
                 <ul>
-                    <li>
-                        PDF and PNG generation improvements.
-                    </li>
+                    <li>PDF and PNG generation improvements.</li>
                 </ul>
                 <h2>2019-05-17</h2>
                 <ul>
