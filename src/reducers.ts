@@ -459,6 +459,14 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
         case CARDSET_SELECT_REQUEST:
             return Object.assign({}, state, {
                 activity: state.activity | ACTIVITY_SELECTING,
+                isTwoSided: false,
+                cardsAllIds: [],
+                cardsById: {},
+                fields: {},
+                fieldsAllIds: [],
+                activeCardId: undefined,
+                activeFieldId: undefined,
+                isBackActive: false,
             });
         case CARDSET_SELECT_SUCCESS: {
             return {
