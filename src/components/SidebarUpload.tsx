@@ -74,7 +74,14 @@ export class SidebarUpload extends Component<Props> {
                         process: this.handleProcess,
                         revert: this.handleRevert,
                     }}
-                    acceptedFileTypes={['image/png', 'image/jpeg', 'image/svg+xml']}
+                    acceptedFileTypes={[
+                        'image/png',
+                        'image/jpeg',
+                        'image/svg+xml',
+                        'image/webp',
+                        'image/tiff',
+                        'image/gif',
+                    ]}
                     allowFileSizeValidation={true}
                     maxFileSize="500KB"
                 />
