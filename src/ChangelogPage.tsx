@@ -5,13 +5,6 @@ export default class ChangelogPage extends Component {
         return (
             <div>
                 <p>Here you can find list of future plans and what was implemented recently.</p>
-                <h2>Future plans</h2>
-                <ul>
-                    <li>Generating list of author's of icons if attribution is required.</li>
-                    <li>Card templates.</li>
-                    <li>Keyboard shortcuts.</li>
-                    <li>Possibility to order your games for printing from various printing providers.</li>
-                </ul>
                 <h2>2019-06-23</h2>
                 <ul>
                     <li>Security improved.</li>
