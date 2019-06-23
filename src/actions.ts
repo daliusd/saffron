@@ -62,6 +62,8 @@ export const CARDSET_LIST_RESET = 'CARDSET_LIST_RESET';
 export const CARDSET_SELECT_REQUEST = 'CARDSET_SELECT_REQUEST';
 export const CARDSET_SELECT_SUCCESS = 'CARDSET_SELECT_SUCCESS';
 export const CARDSET_CREATE_CARD = 'CARDSET_CREATE_CARD';
+export const CARDSET_ROTATE_CARDS_RIGHT = 'CARDSET_ROTATE_CARDS_RIGHT';
+export const CARDSET_ROTATE_CARDS_LEFT = 'CARDSET_ROTATE_CARDS_LEFT';
 export const CARDSET_CLONE_CARD = 'CARDSET_CLONE_CARD';
 export const CARDSET_REMOVE_CARD = 'CARDSET_REMOVE_CARD';
 export const CARDSET_UPDATE_CARD_COUNT = 'CARDSET_UPDATE_CARD_COUNT';
@@ -330,6 +332,12 @@ export interface CardSetCreateCard {
     type: typeof CARDSET_CREATE_CARD;
     card: CardType;
 }
+export interface CardSetRotateCardsRight {
+    type: typeof CARDSET_ROTATE_CARDS_RIGHT;
+}
+export interface CardSetRotateCardsLeft {
+    type: typeof CARDSET_ROTATE_CARDS_LEFT;
+}
 export interface CardSetCloneCard {
     type: typeof CARDSET_CLONE_CARD;
     card: CardType;
@@ -575,6 +583,8 @@ export type CardSetSelectAction = CardSetSelectRequest | CardSetSelectSuccess | 
 
 export type CardSetModifyAction =
     | CardSetCreateCard
+    | CardSetRotateCardsRight
+    | CardSetRotateCardsLeft
     | CardSetCloneCard
     | CardSetRemoveCard
     | CardSetUpdateCardCount
@@ -811,6 +821,18 @@ export const cardSetCreateCard = (card: CardType): CardSetCreateCard => {
     return {
         type: CARDSET_CREATE_CARD,
         card,
+    };
+};
+
+export const cardSetRotateCardsRight = (): CardSetRotateCardsRight => {
+    return {
+        type: CARDSET_ROTATE_CARDS_RIGHT,
+    };
+};
+
+export const cardSetRotateCardsLeft = (): CardSetRotateCardsLeft => {
+    return {
+        type: CARDSET_ROTATE_CARDS_LEFT,
     };
 };
 

@@ -117,6 +117,8 @@ import {
     CARDSET_UNDO,
     CARDSET_REDO,
     CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
+    CARDSET_ROTATE_CARDS_RIGHT,
+    CARDSET_ROTATE_CARDS_LEFT,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
@@ -879,6 +881,8 @@ export function* rootSaga(): SagaIterator {
         takeEvery(CARDSET_CHANGE_IMAGE, handleCardSetChangeImage),
 
         takeLatest(CARDSET_CREATE_CARD, handleCardSetChange),
+        takeLatest(CARDSET_ROTATE_CARDS_RIGHT, handleCardSetChange),
+        takeLatest(CARDSET_ROTATE_CARDS_LEFT, handleCardSetChange),
         takeLatest(CARDSET_CLONE_CARD, handleCardSetChange),
         takeLatest(CARDSET_REMOVE_CARD, handleCardSetChange),
         takeLatest(CARDSET_UPDATE_CARD_COUNT, handleCardSetChange),

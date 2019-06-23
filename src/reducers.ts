@@ -85,6 +85,8 @@ import {
     CARDSET_CHANGE_APPLY_TO_ALLCARDS,
     CARDSET_RAISE_ACTIVE_FIELD,
     CARDSET_LOWER_ACTIVE_FIELD,
+    CARDSET_ROTATE_CARDS_RIGHT,
+    CARDSET_ROTATE_CARDS_LEFT,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -520,6 +522,70 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                     ...state.fields,
                     [action.card.id]: cardFields,
                 },
+            };
+        }
+        case CARDSET_ROTATE_CARDS_RIGHT: {
+            let fields = { ...state.fields };
+            let width = state.height;
+            let height = state.width;
+
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                for (const fieldId in cardFields) {
+                    let fieldInfo = { ...cardFields[fieldId] };
+
+                    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
+                    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
+
+                    let newCx = width - cy;
+                    let newCy = cx;
+
+                    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
+                    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
+                    fieldInfo.angle += Math.PI / 2;
+
+                    cardFields[fieldId] = fieldInfo;
+                }
+
+                fields[cardId] = cardFields;
+            }
+            return {
+                ...state,
+                width,
+                height,
+                fields,
+            };
+        }
+        case CARDSET_ROTATE_CARDS_LEFT: {
+            let fields = { ...state.fields };
+            let width = state.height;
+            let height = state.width;
+
+            for (const cardId in fields) {
+                let cardFields = { ...fields[cardId] };
+                for (const fieldId in cardFields) {
+                    let fieldInfo = { ...cardFields[fieldId] };
+
+                    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
+                    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
+
+                    let newCx = cy;
+                    let newCy = height - cx;
+
+                    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
+                    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
+                    fieldInfo.angle -= Math.PI / 2;
+
+                    cardFields[fieldId] = fieldInfo;
+                }
+
+                fields[cardId] = cardFields;
+            }
+            return {
+                ...state,
+                width,
+                height,
+                fields,
             };
         }
         case CARDSET_CLONE_CARD: {
