@@ -16,6 +16,9 @@ export default class ChangelogPage extends Component {
                 <ul>
                     <li>Security improved.</li>
                     <li>Help page added.</li>
+                    <li>Option to rotate cards added.</li>
+                    <li>Possibility to get a list of game's attributions added.</li>
+                    <li>Undo/Redo exposed in UI (while I suggest using Ctrl+Z and Ctrl+Shift+Z/Ctrl+Y instead).</li>
                 </ul>
                 <h2>2019-06-22</h2>
                 <ul>
