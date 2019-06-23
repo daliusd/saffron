@@ -1681,7 +1681,11 @@ const undoableCardset = undoable(cardset, {
             return false;
         }
 
-        if (action.type === CARDSET_SELECT_REQUEST || action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD) {
+        if (
+            action.type === CARDSET_SELECT_REQUEST ||
+            action.type === CARDSET_SET_ACTIVE_CARD_AND_FIELD ||
+            action.type === CARDSET_SET_SIDEBAR_STATE
+        ) {
             return false;
         }
         return true;

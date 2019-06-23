@@ -9,6 +9,8 @@ import {
     cardSetUpdateCardCount,
     cardSetRotateCardsRight,
     cardSetRotateCardsLeft,
+    cardSetRedo,
+    cardSetUndo,
 } from '../actions';
 import style from './SidebarDetails.module.css';
 
@@ -50,41 +52,65 @@ export class SidebarDetails extends Component<Props> {
         }
     };
 
+    handleUndoClick = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetUndo());
+    };
+
+    handleRedoClick = () => {
+        const { dispatch } = this.props;
+        dispatch(cardSetRedo());
+    };
+
     render() {
         const { activeCard, visible } = this.props;
 
         return (
             <div className={style.view} style={{ display: visible ? 'initial' : 'none' }}>
-                <button onClick={this.handleRotateRightClick} title="Rotate cards right">
-                    <i className="material-icons">rotate_right</i>
-                </button>
+                <div>
+                    <button
+                        onClick={this.handleCloneCardClick}
+                        title="Clone card"
+                        className={activeCard === null ? style.disabled : ''}
+                    >
+                        <i className="material-icons">file_copy</i>
+                    </button>
 
-                <button onClick={this.handleRotateLeftClick} title="Rotate cards left">
-                    <i className="material-icons">rotate_left</i>
-                </button>
+                    <input
+                        type="number"
+                        value={activeCard !== null ? activeCard.count.toString() : 0}
+                        onChange={this.handleCountChange}
+                        title="Number of card's copies"
+                        className={activeCard === null ? style.disabled : ''}
+                    />
+                    <button
+                        onClick={this.handleRemoveCardClick}
+                        title="Remove card"
+                        className={activeCard === null ? style.disabled : ''}
+                    >
+                        <i className="material-icons">delete</i>
+                    </button>
+                </div>
 
-                <button
-                    onClick={this.handleCloneCardClick}
-                    title="Clone card"
-                    className={activeCard === null ? style.disabled : ''}
-                >
-                    <i className="material-icons">file_copy</i>
-                </button>
+                <div>
+                    <button onClick={this.handleUndoClick} title="Undo (Ctrl+Z)">
+                        <i className="material-icons">undo</i>
+                    </button>
 
-                <input
-                    type="number"
-                    value={activeCard !== null ? activeCard.count.toString() : 0}
-                    onChange={this.handleCountChange}
-                    title="Number of card's copies"
-                    className={activeCard === null ? style.disabled : ''}
-                />
-                <button
-                    onClick={this.handleRemoveCardClick}
-                    title="Remove card"
-                    className={activeCard === null ? style.disabled : ''}
-                >
-                    <i className="material-icons">delete</i>
-                </button>
+                    <button onClick={this.handleRedoClick} title="Redo (Ctrl+Shift+Z or Ctrl+Y)">
+                        <i className="material-icons">redo</i>
+                    </button>
+                </div>
+
+                <div>
+                    <button onClick={this.handleRotateRightClick} title="Rotate cards right">
+                        <i className="material-icons">rotate_right</i>
+                    </button>
+
+                    <button onClick={this.handleRotateLeftClick} title="Rotate cards left">
+                        <i className="material-icons">rotate_left</i>
+                    </button>
+                </div>
             </div>
         );
     }
