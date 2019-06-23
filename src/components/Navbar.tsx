@@ -84,6 +84,9 @@ export class Navbar extends Component<Props> {
                                 <Link to="/changelog">Changelog</Link>
                             </li>
                             <li>
+                                <Link to="/help">Help</Link>
+                            </li>
+                            <li>
                                 <Link to="/about">About</Link>
                             </li>
                             {isAuthenticated && (

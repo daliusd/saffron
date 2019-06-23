@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import React, { Component } from 'react';
 import style from './FeatureList.module.css';
 import screenshot from './screenshot.png';
@@ -40,6 +41,9 @@ export default class FeatureList extends Component {
                         Cards and others.
                     </li>
                 </ul>
+                <p>
+                    Check out <Link to="/help">Help</Link> for more details.
+                </p>
             </div>
         );
     }

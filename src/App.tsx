@@ -12,6 +12,7 @@ import CardSetPage from './CardSetPage';
 import ChangelogPage from './ChangelogPage';
 import ErrorBoundry from './ErrorBoundry';
 import GamePage from './GamePage';
+import HelpPage from './HelpPage';
 import LoginPage from './LoginPage';
 import Main from './Main';
 import Navbar from './components/Navbar';
@@ -43,6 +44,7 @@ export class App extends Component<Props> {
                             <Route exact path="/game/:id" component={GamePage} />
                             <Route exact path="/cardset/:id" component={CardSetPage} />
                             <Route exact path="/changelog" component={ChangelogPage} />
+                            <Route exact path="/help" component={HelpPage} />
                             <Route exact path="/about" component={AboutPage} />
                             <Route component={NotFoundPage} />
                         </Switch>
