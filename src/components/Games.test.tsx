@@ -1,5 +1,6 @@
 import { mount, shallow } from 'enzyme';
 import React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { Games } from './Games';
 
@@ -23,7 +24,11 @@ describe('<Games />', () => {
 
     it('simulates create click event', () => {
         const gameCreate = jest.fn();
-        const wrapper = mount(<Games dispatch={gameCreate} isAuthenticated={true} allIds={[]} byId={{}} />);
+        const wrapper = mount(
+            <Router>
+                <Games dispatch={gameCreate} isAuthenticated={true} allIds={[]} byId={{}} />
+            </Router>,
+        );
         wrapper.find('button').simulate('click');
         expect(gameCreate.mock.calls.length).toBe(1);
     });

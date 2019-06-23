@@ -55,7 +55,7 @@ describe('<CardSets />', () => {
                 isCreatingPng={false}
             />,
         );
-        expect(wrapper.find('button')).toHaveLength(2);
+        expect(wrapper.find('button')).toHaveLength(3);
     });
 
     it('simulates create click event', () => {

@@ -212,6 +212,7 @@ test('GAME_SELECT', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                attributions: [],
             },
             { type: GAME_SELECT_SUCCESS, id: '123' },
         ),
@@ -220,6 +221,7 @@ test('GAME_SELECT', () => {
         byId: {},
         allIds: [],
         active: '123',
+        attributions: [],
     });
 
     expect(
@@ -229,6 +231,7 @@ test('GAME_SELECT', () => {
                 byId: {},
                 allIds: [],
                 active: null,
+                attributions: [],
             },
             { type: GAME_SELECT_FAILURE },
         ),
@@ -237,6 +240,7 @@ test('GAME_SELECT', () => {
         byId: {},
         allIds: [],
         active: null,
+        attributions: [],
     });
 });
 
