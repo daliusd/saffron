@@ -67,6 +67,7 @@ import {
     GAME_CREATE_PDF_SUCCESS,
     GAME_CREATE_PNG_FAILURE,
     GAME_CREATE_PNG_REQUEST,
+    GAME_GET_ATTRIBUTIONS_REQUEST,
     GAME_CREATE_PNG_SUCCESS,
     GAME_CREATE_REQUEST,
     GAME_CREATE_SUCCESS,
@@ -119,6 +120,8 @@ import {
     CARDSET_CHANGE_UNCLICKABLE_FOR_ACTIVE_FIELD,
     CARDSET_ROTATE_CARDS_RIGHT,
     CARDSET_ROTATE_CARDS_LEFT,
+    GAME_GET_ATTRIBUTIONS_SUCCESS,
+    GAME_GET_ATTRIBUTIONS_FAILURE,
 } from './actions';
 import { CardSetType, CardSetsCollection, GameType, GamesCollection, FieldInfoByCardCollection } from './types';
 import { State } from './reducers';
@@ -134,7 +137,7 @@ import {
     refreshToken,
     registerUser,
 } from './requests';
-import { generatePdfUsingWorker, generatePngUsingWorker } from './workerController';
+import { generatePdfUsingWorker, generatePngUsingWorker, retrieveGameAttributions } from './workerController';
 import {
     getTokenFromStorage,
     getRefreshTokenFromStorage,
@@ -457,6 +460,31 @@ export function* handleGameCreatePngRequest(action: GameCreatePngRequest): SagaI
         });
     } catch (e) {
         yield put({ type: GAME_CREATE_PNG_FAILURE });
+        if (progressId !== null) yield call(hideProgress, progressId);
+        yield call(putError, e);
+    }
+}
+
+export function* handleGameGetAttributionsRequest(): SagaIterator {
+    let progressId = null;
+    try {
+        progressId = yield call(putProgress, 'Retrieving attributions');
+
+        const token = yield call(getToken, true, true);
+        const state: State = yield select();
+
+        let attributions = [];
+        if (state.games.active !== null) {
+            attributions = yield call(retrieveGameAttributions, token, state.games.active);
+        }
+        yield call(hideProgress, progressId);
+        yield call(putInfo, 'Attributions retrieved.');
+        yield put({
+            type: GAME_GET_ATTRIBUTIONS_SUCCESS,
+            attributions,
+        });
+    } catch (e) {
+        yield put({ type: GAME_GET_ATTRIBUTIONS_FAILURE });
         if (progressId !== null) yield call(hideProgress, progressId);
         yield call(putError, e);
     }
@@ -871,6 +899,7 @@ export function* rootSaga(): SagaIterator {
         takeLatest(GAME_SELECT_REQUEST, handleGameSelectRequest),
         takeLatest(GAME_CREATE_PDF_REQUEST, handleGameCreatePdfRequest),
         takeLatest(GAME_CREATE_PNG_REQUEST, handleGameCreatePngRequest),
+        takeLatest(GAME_GET_ATTRIBUTIONS_REQUEST, handleGameGetAttributionsRequest),
         takeLatest(CARDSET_CREATE_REQUEST, handleCardSetCreateRequest),
         takeLatest(CARDSET_DELETE_REQUEST, handleCardSetDeleteRequest),
         takeLatest(CARDSET_RENAME_REQUEST, handleCardSetRenameRequest),

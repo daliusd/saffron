@@ -276,3 +276,47 @@ export const generatePngUsingWorker = async (
     let url = window.URL.createObjectURL(blob);
     downloadBlob(url, 'cards.zip');
 };
+
+export const retrieveGameAttributions = async (accessToken: string, gameId: string): Promise<string[]> => {
+    let resp = await getRequest('/api/games/' + gameId, accessToken);
+    if (!resp) return [];
+
+    let attributions = new Set();
+
+    const cardsetsList = resp.data.cardsets;
+    for (const cardsetInfo of cardsetsList) {
+        const resp = await getRequest('/api/cardsets/' + cardsetInfo.id, accessToken);
+        if (!resp) {
+            continue;
+        }
+
+        const cardSetData: CardSetData = JSON.parse(resp.data.data);
+        for (const cardId in cardSetData.fields) {
+            const cardFields = cardSetData.fields[cardId];
+            for (const fieldId in cardFields) {
+                const fieldInfo = cardFields[fieldId];
+                if (fieldInfo.type === 'image' && fieldInfo.url !== undefined) {
+                    let name = fieldInfo.url.replace('/api/imagefiles/', '');
+
+                    const resp = await getRequest('/api/images/' + name, accessToken);
+                    if (!resp) {
+                        continue;
+                    }
+
+                    if (resp.data.metadata) {
+                        let meta = JSON.parse(resp.data.metadata);
+                        if (meta.source === 'noto-emoji') {
+                            attributions.add('Google Noto Emoji');
+                        } else if (meta.source === 'twemoji') {
+                            attributions.add('Twitter Emoji');
+                        } else if (meta.source === 'game-icons' && meta.attribution) {
+                            attributions.add(meta.attribution);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return Array.from(attributions);
+};

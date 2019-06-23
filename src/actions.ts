@@ -48,6 +48,9 @@ export const GAME_CREATE_PDF_FAILURE = 'GAME_CREATE_PDF_FAILURE';
 export const GAME_CREATE_PNG_REQUEST = 'GAME_CREATE_PNG_REQUEST';
 export const GAME_CREATE_PNG_SUCCESS = 'GAME_CREATE_PNG_SUCCESS';
 export const GAME_CREATE_PNG_FAILURE = 'GAME_CREATE_PNG_FAILURE';
+export const GAME_GET_ATTRIBUTIONS_REQUEST = 'GAME_GET_ATTRIBUTIONS_REQUEST';
+export const GAME_GET_ATTRIBUTIONS_SUCCESS = 'GAME_GET_ATTRIBUTIONS_SUCCESS';
+export const GAME_GET_ATTRIBUTIONS_FAILURE = 'GAME_GET_ATTRIBUTIONS_FAILURE';
 export const CARDSETS_SELECT_SUCCESS = 'CARDSETS_SELECT_SUCCESS';
 export const CARDSET_CREATE_REQUEST = 'CARDSET_CREATE_REQUEST';
 export const CARDSET_CREATE_SUCCESS = 'CARDSET_CREATE_SUCCESS';
@@ -221,6 +224,15 @@ export type GameCreatePngAction =
     | { type: typeof GAME_CREATE_PNG_SUCCESS }
     | { type: typeof GAME_CREATE_PNG_FAILURE };
 
+export interface GameGetAttributionsRequest {
+    type: typeof GAME_GET_ATTRIBUTIONS_REQUEST;
+}
+
+export type GameGetAttributionsAction =
+    | GameGetAttributionsRequest
+    | { type: typeof GAME_GET_ATTRIBUTIONS_SUCCESS; attributions: string[] }
+    | { type: typeof GAME_GET_ATTRIBUTIONS_FAILURE };
+
 export type GameAction =
     | GameCreateAction
     | GameDeleteAction
@@ -228,7 +240,8 @@ export type GameAction =
     | GameListAction
     | GameSelectAction
     | GameCreatePdfAction
-    | GameCreatePngAction;
+    | GameCreatePngAction
+    | GameGetAttributionsAction;
 
 export interface CardSetCreateRequest {
     type: typeof CARDSET_CREATE_REQUEST;
@@ -770,6 +783,12 @@ export const gameCreatePngRequest = (
         dpi,
         collectionType,
         collectionId,
+    };
+};
+
+export const gameGetAttributionsRequest = (): GameGetAttributionsRequest => {
+    return {
+        type: GAME_GET_ATTRIBUTIONS_REQUEST,
     };
 };
 

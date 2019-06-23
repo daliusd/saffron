@@ -87,6 +87,8 @@ import {
     CARDSET_LOWER_ACTIVE_FIELD,
     CARDSET_ROTATE_CARDS_RIGHT,
     CARDSET_ROTATE_CARDS_LEFT,
+    GAME_GET_ATTRIBUTIONS_SUCCESS,
+    GAME_GET_ATTRIBUTIONS_FAILURE,
 } from './actions';
 import {
     CURRENT_CARDSET_VERSION,
@@ -143,6 +145,7 @@ export interface GameState {
     allIds: IdsArray;
     activity: number;
     active: string | null;
+    attributions: string[];
 }
 
 export const DefaultGameState: GameState = {
@@ -150,6 +153,7 @@ export const DefaultGameState: GameState = {
     allIds: [],
     activity: 0,
     active: null,
+    attributions: [],
 };
 
 export interface TextSettings {
@@ -354,10 +358,12 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
                 active: action.id,
+                attributions: [],
             });
         case GAME_SELECT_FAILURE:
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_SELECTING,
+                attributions: [],
             });
         case GAME_CREATE_PDF_REQUEST:
             return Object.assign({}, state, {
@@ -383,6 +389,16 @@ export function games(state: GameState = DefaultGameState, action: GameAction): 
             return Object.assign({}, state, {
                 activity: state.activity & ~ACTIVITY_CREATING_PNG,
             });
+        case GAME_GET_ATTRIBUTIONS_SUCCESS:
+            return {
+                ...state,
+                attributions: action.attributions,
+            };
+        case GAME_GET_ATTRIBUTIONS_FAILURE:
+            return {
+                ...state,
+                attributions: [],
+            };
         default:
             return state;
     }

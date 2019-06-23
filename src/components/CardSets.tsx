@@ -10,6 +10,7 @@ import {
     gameRenameRequest,
     messageDisplay,
     gameCreatePngRequest,
+    gameGetAttributionsRequest,
 } from '../actions';
 import { State, ACTIVITY_CREATING_PNG } from '../reducers';
 import ConfirmedDelete from './ConfirmedDelete';
@@ -25,6 +26,7 @@ interface Props {
     allIds: IdsArray;
     byId: CardSetsCollection;
     isCreatingPng: boolean;
+    attributions: string[];
 }
 
 interface LocalState {
@@ -95,8 +97,16 @@ export class CardSets extends Component<Props, LocalState> {
         }
     };
 
+    handleGetAttributions = () => {
+        const { dispatch, activeGame } = this.props;
+
+        if (activeGame !== null) {
+            dispatch(gameGetAttributionsRequest());
+        }
+    };
+
     render() {
-        const { isAuthenticated, activeGame, allIds, byId, isCreatingPng } = this.props;
+        const { isAuthenticated, activeGame, allIds, byId, isCreatingPng, attributions } = this.props;
         const { dpi } = this.state;
 
         let cardsets = allIds.map(cardsetId => byId[cardsetId]);
@@ -183,6 +193,22 @@ export class CardSets extends Component<Props, LocalState> {
                             Generate PNG files
                         </button>
                     </div>
+
+                    <div className="form">
+                        Get attributions for images you have used. You don't need to do this if you have used your own
+                        images/art.
+                        <button onClick={this.handleGetAttributions}>Get attributions</button>
+                        {attributions && attributions.length > 0 && (
+                            <>
+                                Give attributions to:
+                                <ul>
+                                    {attributions.map(attribution => (
+                                        <li>{attribution}</li>
+                                    ))}
+                                </ul>
+                            </>
+                        )}
+                    </div>
                 </div>
             )
         );
@@ -197,6 +223,7 @@ const mapStateToProps = (state: State) => {
         allIds: state.cardsets.allIds,
         byId: state.cardsets.byId,
         isCreatingPng: (state.games.activity & ACTIVITY_CREATING_PNG) === ACTIVITY_CREATING_PNG,
+        attributions: state.games.attributions,
     };
 };
 
