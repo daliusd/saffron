@@ -203,7 +203,7 @@ export class CardSets extends Component<Props, LocalState> {
                                 Give attributions to:
                                 <ul>
                                     {attributions.map(attribution => (
-                                        <li>{attribution}</li>
+                                        <li key={attribution}>{attribution}</li>
                                     ))}
                                 </ul>
                             </>

@@ -277,6 +277,26 @@ export const generatePngUsingWorker = async (
     downloadBlob(url, 'cards.zip');
 };
 
+async function getImageAttribution(name: string, accessToken: string) {
+    const resp = await getRequest('/api/images/' + name, accessToken);
+    if (!resp) {
+        return undefined;
+    }
+
+    if (resp.data.metadata) {
+        let meta = JSON.parse(resp.data.metadata);
+        if (meta.source === 'noto-emoji') {
+            return 'Google Noto Emoji';
+        } else if (meta.source === 'twemoji') {
+            return 'Twitter Emoji';
+        } else if (meta.source === 'game-icons' && meta.attribution) {
+            return meta.attribution;
+        }
+    }
+
+    return undefined;
+}
+
 export const retrieveGameAttributions = async (accessToken: string, gameId: string): Promise<string[]> => {
     let resp = await getRequest('/api/games/' + gameId, accessToken);
     if (!resp) return [];
@@ -297,21 +317,24 @@ export const retrieveGameAttributions = async (accessToken: string, gameId: stri
                 const fieldInfo = cardFields[fieldId];
                 if (fieldInfo.type === 'image' && fieldInfo.url !== undefined) {
                     let name = fieldInfo.url.replace('/api/imagefiles/', '');
-
-                    const resp = await getRequest('/api/images/' + name, accessToken);
-                    if (!resp) {
-                        continue;
+                    let attribution = await getImageAttribution(name, accessToken);
+                    if (attribution) {
+                        attributions.add(attribution);
                     }
+                } else if (fieldInfo.type === 'text') {
+                    let start = fieldInfo.value.indexOf('/api/imagefiles/');
+                    while (start !== -1) {
+                        let end = fieldInfo.value.indexOf('"', start);
+                        let name = fieldInfo.value.slice(start, end).replace('/api/imagefiles/', '');
 
-                    if (resp.data.metadata) {
-                        let meta = JSON.parse(resp.data.metadata);
-                        if (meta.source === 'noto-emoji') {
-                            attributions.add('Google Noto Emoji');
-                        } else if (meta.source === 'twemoji') {
-                            attributions.add('Twitter Emoji');
-                        } else if (meta.source === 'game-icons' && meta.attribution) {
-                            attributions.add(meta.attribution);
+                        console.log(name);
+
+                        let attribution = await getImageAttribution(name, accessToken);
+                        if (attribution) {
+                            attributions.add(attribution);
                         }
+
+                        start = fieldInfo.value.indexOf('/api/imagefiles/', end);
                     }
                 }
             }
