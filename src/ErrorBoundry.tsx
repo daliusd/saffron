@@ -8,6 +8,10 @@ window.addEventListener('error', function(evt: ErrorEvent) {
     reportError(error);
 });
 
+window.addEventListener('unhandledrejection', function (event: PromiseRejectionEvent) {
+    reportError(new Error(event.reason));
+});
+
 interface Props {
     children: React.ReactNode;
 }
