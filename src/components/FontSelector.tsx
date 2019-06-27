@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import WebFont from 'webfontloader';
 
 import { DEFAULT_LINE_HEIGHT } from '../constants';
@@ -14,6 +14,8 @@ import {
 import { State } from '../reducers';
 import style from './FontSelector.module.css';
 import webfonts from './webfonts.json';
+import webfontsThumbs from './webfonts_thumbs.json';
+import { OptionProps } from 'react-select/lib/components/Option';
 
 interface WebFontsInfo {
     [propName: string]: {
@@ -25,6 +27,16 @@ interface FontOption {
     value: string;
     label: string;
 }
+
+const FontOptionComponent = (props: OptionProps<FontOption>) => {
+    // @ts-ignore
+    let value = props.value;
+    return !props.isDisabled && value ? (
+        <components.Option {...props}>
+            <img src={`data:image/png;base64, ${(webfontsThumbs as Record<string, string>)[value]}`} alt={value} />
+        </components.Option>
+    ) : null;
+};
 
 const options: FontOption[] = Object.keys(webfonts)
     .sort()
@@ -121,6 +133,9 @@ class FontSelector extends Component<Props> {
                     value={selectedFontFamily}
                     onChange={this.handleChange}
                     options={options}
+                    components={{
+                        Option: FontOptionComponent,
+                    }}
                 />
                 <Select
                     className={style.fontVariant}
