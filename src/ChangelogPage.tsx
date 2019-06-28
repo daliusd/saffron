@@ -5,6 +5,11 @@ export default class ChangelogPage extends Component {
         return (
             <div>
                 <p>Here you can find list of future plans and what was implemented recently.</p>
+                <h2>2019-06-28</h2>
+                <ul>
+                    <li>Show font name using itself in font selection dropdown.</li>
+                    <li>Bug fixes.</li>
+                </ul>
                 <h2>2019-06-23</h2>
                 <ul>
                     <li>Security improved.</li>
