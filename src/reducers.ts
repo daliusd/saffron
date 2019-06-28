@@ -107,6 +107,7 @@ import {
     MessageType,
     FieldInfoByCardCollection,
     FieldInfoCollection,
+    FieldInfo,
 } from './types';
 import { rotateVec } from './utils';
 
@@ -472,6 +473,30 @@ function resizeFields(fields: FieldInfoByCardCollection, widthRatio: number, hei
     return newFields;
 }
 
+function rotateRight(fieldInfo: FieldInfo, width: number) {
+    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
+    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
+
+    let newCx = width - cy;
+    let newCy = cx;
+
+    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
+    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
+    fieldInfo.angle += Math.PI / 2;
+}
+
+function rotateLeft(fieldInfo: FieldInfo, height: number) {
+    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
+    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
+
+    let newCx = cy;
+    let newCy = height - cx;
+
+    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
+    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
+    fieldInfo.angle -= Math.PI / 2;
+}
+
 export function cardset(state: CardSetState = DefaultCardSetState, action: CardSetAction): CardSetState {
     switch (action.type) {
         case CARDSET_SELECT_REQUEST:
@@ -549,16 +574,11 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 let cardFields = { ...fields[cardId] };
                 for (const fieldId in cardFields) {
                     let fieldInfo = { ...cardFields[fieldId] };
-
-                    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
-                    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
-
-                    let newCx = width - cy;
-                    let newCy = cx;
-
-                    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
-                    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
-                    fieldInfo.angle += Math.PI / 2;
+                    if (fieldInfo.isOnBack) {
+                        rotateLeft(fieldInfo, height);
+                    } else {
+                        rotateRight(fieldInfo, width);
+                    }
 
                     cardFields[fieldId] = fieldInfo;
                 }
@@ -581,16 +601,11 @@ export function cardset(state: CardSetState = DefaultCardSetState, action: CardS
                 let cardFields = { ...fields[cardId] };
                 for (const fieldId in cardFields) {
                     let fieldInfo = { ...cardFields[fieldId] };
-
-                    let cx = fieldInfo.x + fieldInfo.width / 2 - BLEED_WIDTH;
-                    let cy = fieldInfo.y + fieldInfo.height / 2 - BLEED_WIDTH;
-
-                    let newCx = cy;
-                    let newCy = height - cx;
-
-                    fieldInfo.x = newCx - fieldInfo.width / 2 + BLEED_WIDTH;
-                    fieldInfo.y = newCy - fieldInfo.height / 2 + BLEED_WIDTH;
-                    fieldInfo.angle -= Math.PI / 2;
+                    if (fieldInfo.isOnBack) {
+                        rotateRight(fieldInfo, width);
+                    } else {
+                        rotateLeft(fieldInfo, height);
+                    }
 
                     cardFields[fieldId] = fieldInfo;
                 }
