@@ -145,9 +145,7 @@ class ContentEditable extends Component<Props> {
 
     handleMove = (event: Event) => {
         const { isActive } = this.props;
-        if (isActive) {
-            event.stopPropagation();
-        } else {
+        if (!isActive) {
             this.wasMoved = true;
             event.preventDefault();
         }
@@ -167,9 +165,7 @@ class ContentEditable extends Component<Props> {
 
     handleComplete = (event: Event) => {
         const { dispatch, cardId, isOnBack, fieldId, isActive } = this.props;
-        if (isActive) {
-            event.stopPropagation();
-        } else if (!this.wasMoved) {
+        if (!isActive && !this.wasMoved) {
             event.preventDefault();
             dispatch(cardSetActiveCardAndField(cardId, isOnBack, fieldId));
 
