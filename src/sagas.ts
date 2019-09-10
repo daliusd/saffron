@@ -541,6 +541,9 @@ function loadImageInfo(url: string): Promise<{ width: number; height: number }> 
                     height: this.naturalHeight,
                 });
             });
+            img.addEventListener('error', function(err) {
+                reject(err);
+            });
             img.src = url;
         } catch (e) {
             reject(e);
@@ -632,14 +635,16 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
         for (const fieldId in processedData.fields[cardId]) {
             const fieldInfo = processedData.fields[cardId][fieldId];
             if (fieldInfo.type === 'image' && fieldInfo.url) {
-                let info = await loadImageInfo(fieldInfo.url);
-                if (info.width !== fieldInfo.imageWidth || info.height !== fieldInfo.imageHeight) {
-                    fieldInfo.imageWidth = info.width;
-                    fieldInfo.imageHeight = info.height;
-                    fieldInfo.cx = 0;
-                    fieldInfo.cy = 0;
-                    fieldInfo.zoom = 1;
-                }
+                try {
+                    let info = await loadImageInfo(fieldInfo.url);
+                    if (info.width !== fieldInfo.imageWidth || info.height !== fieldInfo.imageHeight) {
+                        fieldInfo.imageWidth = info.width;
+                        fieldInfo.imageHeight = info.height;
+                        fieldInfo.cx = 0;
+                        fieldInfo.cy = 0;
+                        fieldInfo.zoom = 1;
+                    }
+                } catch {}
             }
         }
     }
