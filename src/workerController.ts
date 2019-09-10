@@ -247,10 +247,12 @@ class PNGGenerator {
 
         let cardsetFolder = zip.folder(resp.data.name);
 
-        for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
-            await this.generateCard(cardSetData, cardId, cardIdx, dpi, false, cardsetFolder);
-            if (cardSetData.isTwoSided) {
-                await this.generateCard(cardSetData, cardId, cardIdx, dpi, true, cardsetFolder);
+        if (cardSetData.cardsAllIds) {
+            for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
+                await this.generateCard(cardSetData, cardId, cardIdx, dpi, false, cardsetFolder);
+                if (cardSetData.isTwoSided) {
+                    await this.generateCard(cardSetData, cardId, cardIdx, dpi, true, cardsetFolder);
+                }
             }
         }
     }
