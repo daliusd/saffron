@@ -321,6 +321,10 @@
 + Generate list with authors of icons
 + Expose undo/redo via UI
 
+- Password reset
+- Upload, Set Image on Card, Undo - wrong state. Let's think if we want to fix this.
+- Edit multiple text fields at once (on multiple cards)
+
 Future / Commercial ideas
 
 ? Separate visual and control layers
@@ -331,7 +335,9 @@ Future / Commercial ideas
 
 - Special visual effects (react-reveal)
 - Fonts improvements
-    - font images
+    + font images
     - custom fonts
     - ttfs
     - replace emojis with images
+
+- Work Shapes like tool
