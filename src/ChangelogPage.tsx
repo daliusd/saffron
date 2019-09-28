@@ -5,6 +5,10 @@ export default class ChangelogPage extends Component {
         return (
             <div>
                 <p>Here you can find list of future plans and what was implemented recently.</p>
+                <h2>2019-09-28</h2>
+                <ul>
+                    <li>CSV import improved.</li>
+                </ul>
                 <h2>2019-09-10</h2>
                 <ul>
                     <li>Bug fix release.</li>

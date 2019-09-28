@@ -177,7 +177,7 @@ export class SidebarImportExport extends Component<Props> {
                 let newFields: FieldInfoByCardCollection = {};
 
                 for (const row of csvData.data) {
-                    if (row['card_count'] === undefined) {
+                    if (Object.keys(row).length === 0) {
                         continue;
                     }
                     const card: CardType = {
