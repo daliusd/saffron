@@ -244,8 +244,8 @@ class FieldController extends React.Component<Props, LocalState> {
         const { cx, cy, angle, onPan } = this.props;
         if (!onPan || cx === undefined || cy === undefined) return;
 
-        let dx = co.clientX - this.state.startX;
-        let dy = co.clientY - this.state.startY;
+        const dx = co.clientX - this.state.startX;
+        const dy = co.clientY - this.state.startY;
         const { rx, ry } = rotateVec(dx, dy, -angle);
 
         const newCx = cx + rx;
@@ -280,7 +280,7 @@ class FieldController extends React.Component<Props, LocalState> {
             onPan(cx, cy, true, this.state.group);
         }
 
-        document.body.style.cursor = this.originalBodyCursor;
+        document.body.style.cursor = this.originalBodyCursor || '';
         event.preventDefault();
     };
 
@@ -334,9 +334,9 @@ class FieldController extends React.Component<Props, LocalState> {
         const dx = co.clientX - this.state.startX;
         const dy = co.clientY - this.state.startY;
 
-        let z = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+        const z = Math.abs(dx) > Math.abs(dy) ? dx : dy;
 
-        let newZoom = Math.max(zoom + z / 30, 1);
+        const newZoom = Math.max(zoom + z / 30, 1);
         this.setState({ startX: co.clientX, startY: co.clientY });
 
         onZoom(newZoom, true, this.state.group);
@@ -361,7 +361,7 @@ class FieldController extends React.Component<Props, LocalState> {
     };
 
     handleZoomComplete = (event: Event) => {
-        document.body.style.cursor = this.originalBodyCursor;
+        document.body.style.cursor = this.originalBodyCursor || '';
         event.preventDefault();
     };
 
@@ -461,7 +461,7 @@ class FieldController extends React.Component<Props, LocalState> {
             onResize(width, height, false, this.state.group);
         }
 
-        document.body.style.cursor = this.originalBodyCursor;
+        document.body.style.cursor = this.originalBodyCursor || '';
 
         event.preventDefault();
     };
@@ -497,10 +497,10 @@ class FieldController extends React.Component<Props, LocalState> {
         document.body.style.cursor = `url(${rotateIcon}), auto`;
 
         const rect = this.cDiv.current.getBoundingClientRect();
-        let startX = rect.left + this.cDiv.current.clientWidth / 2;
-        let startY = rect.top + this.cDiv.current.clientHeight / 2;
+        const startX = rect.left + this.cDiv.current.clientWidth / 2;
+        const startY = rect.top + this.cDiv.current.clientHeight / 2;
 
-        let originalAngle = angle + Math.atan2(startX - co.clientX, startY - co.clientY);
+        const originalAngle = angle + Math.atan2(startX - co.clientX, startY - co.clientY);
 
         this.setState({ startX, startY, originalAngle, group: shortid.generate() });
     };
@@ -526,7 +526,7 @@ class FieldController extends React.Component<Props, LocalState> {
 
         const { originalAngle, startX, startY } = this.state;
 
-        let curAngle = Math.atan2(startX - co.clientX, startY - co.clientY);
+        const curAngle = Math.atan2(startX - co.clientX, startY - co.clientY);
         let newAngle = originalAngle - curAngle;
 
         if (!disableSnapping) {
@@ -562,7 +562,7 @@ class FieldController extends React.Component<Props, LocalState> {
             this.props.onRotate(angle, false, this.state.group);
         }
 
-        document.body.style.cursor = this.originalBodyCursor;
+        document.body.style.cursor = this.originalBodyCursor || '';
 
         event.preventDefault();
     };

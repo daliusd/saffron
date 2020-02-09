@@ -35,6 +35,7 @@ export class SidebarText extends Component<Props> {
 
     handleSetTextAlignLeft = () => {
         const selection = window.getSelection();
+        if (!selection) return;
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
@@ -46,6 +47,7 @@ export class SidebarText extends Component<Props> {
 
     handleSetTextAlignCenter = () => {
         const selection = window.getSelection();
+        if (!selection) return;
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
@@ -57,6 +59,7 @@ export class SidebarText extends Component<Props> {
 
     handleSetTextAlignRight = () => {
         const selection = window.getSelection();
+        if (!selection) return;
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;
@@ -127,6 +130,7 @@ export class SidebarText extends Component<Props> {
 
     handleColorChange = (color: ColorResult) => {
         const selection = window.getSelection();
+        if (!selection) return;
         const range = selection.getRangeAt(0);
         if (selection.rangeCount === 1 && range.collapsed) {
             const { dispatch } = this.props;

@@ -1,7 +1,8 @@
 import { CancelToken } from 'axios';
 import { XmlDocument, XmlNode } from 'xmldoc';
 import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects';
-import { delay, SagaIterator } from 'redux-saga';
+import { SagaIterator } from 'redux-saga';
+import { delay } from 'redux-saga/effects';
 import jwtDecode from 'jwt-decode';
 import { ActionCreators } from 'redux-undo';
 
@@ -173,7 +174,7 @@ export function* hideProgress(messageId: string): SagaIterator {
 export function* handleMessageDisplay(action: MessageDisplay): SagaIterator {
     if (action.message.type === 'progress') return;
 
-    yield call(delay, 5000);
+    yield delay(5000);
     yield put({ type: MESSAGE_HIDE, messageId: action.message.id });
 }
 
@@ -293,7 +294,7 @@ export function* handleSignupRequest(action: SignUpRequest): SagaIterator {
 // Init
 export function* handleInitRequest(): SagaIterator {
     try {
-        let token = yield call(getToken, false);
+        const token = yield call(getToken, false);
         if (token) {
             const username = yield call(getUsernameFromStorage);
             yield put({ type: LOGIN_SUCCESS, username });
@@ -357,7 +358,7 @@ export function* handleGameDeleteRequest(action: GameDeleteRequest): SagaIterato
 
 export function* handleGameRenameRequest(action: GameRenameRequest): SagaIterator {
     try {
-        yield call(delay, 500);
+        yield delay(500);
         yield call(authorizedPutRequest, '/api/games/' + action.gameId, { name: action.newName });
     } catch (e) {
         yield call(putError, e);
@@ -523,7 +524,7 @@ export function* handleCardSetDeleteRequest(action: CardSetDeleteRequest): SagaI
 
 export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaIterator {
     try {
-        yield call(delay, 500);
+        yield delay(500);
         yield call(authorizedPutRequest, '/api/cardsets/' + action.cardSetId, { name: action.newName });
     } catch (e) {
         yield call(putError, e);
@@ -533,7 +534,7 @@ export function* handleCardSetRenameRequest(action: CardSetRenameRequest): SagaI
 function loadImageInfo(url: string): Promise<{ width: number; height: number }> {
     return new Promise((resolve, reject) => {
         try {
-            let img = new Image();
+            const img = new Image();
 
             img.addEventListener('load', function() {
                 resolve({
@@ -570,17 +571,17 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
     }
 
     if (processedData.version === 2) {
-        let fieldsAllIds = processedData.placeholdersAllIds;
-        let fields: FieldInfoByCardCollection = {};
+        const fieldsAllIds = processedData.placeholdersAllIds;
+        const fields: FieldInfoByCardCollection = {};
 
         for (const cardId of processedData.cardsAllIds) {
             fields[cardId] = {};
 
             for (const fieldId of fieldsAllIds) {
-                let placeholder = processedData.placeholders[fieldId];
+                const placeholder = processedData.placeholders[fieldId];
                 if (placeholder.type === 'image') {
                     if (cardId in processedData.images && fieldId in processedData.images[cardId]) {
-                        let imageInfo = processedData.images[cardId][fieldId];
+                        const imageInfo = processedData.images[cardId][fieldId];
                         fields[cardId][fieldId] = {
                             type: 'image',
                             ...placeholder,
@@ -636,7 +637,7 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
             const fieldInfo = processedData.fields[cardId][fieldId];
             if (fieldInfo.type === 'image' && fieldInfo.url) {
                 try {
-                    let info = await loadImageInfo(fieldInfo.url);
+                    const info = await loadImageInfo(fieldInfo.url);
                     if (info.width !== fieldInfo.imageWidth || info.height !== fieldInfo.imageHeight) {
                         fieldInfo.imageWidth = info.width;
                         fieldInfo.imageHeight = info.height;
@@ -655,8 +656,8 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
 export function* handleCardSetSelectRequest(action: CardSetSelectRequest): SagaIterator {
     try {
         const resp = yield call(authorizedGetRequest, '/api/cardsets/' + action.id);
-        let parsedData = JSON.parse(resp.data.data);
-        let processedData: CardSetSelectSuccessDataV3 = yield call(processData, parsedData);
+        const parsedData = JSON.parse(resp.data.data);
+        const processedData: CardSetSelectSuccessDataV3 = yield call(processData, parsedData);
 
         yield call(loadFontsUsedInPlaceholders, processedData);
         yield put({
@@ -720,7 +721,7 @@ export function* handleCardSetDeleteImage(action: CardSetDeleteImage): SagaItera
 
 function walkChildren(node: XmlNode, color: string) {
     if (node.type === 'element') {
-        for (let child of node.children) {
+        for (const child of node.children) {
             if (child.type === 'element')
                 if (child.name === 'path') {
                     child.attr['fill'] = color;
@@ -745,7 +746,7 @@ function adjustSvg(data: string, preserveAspectRatio: boolean, color?: string): 
 
 export function* handleCardSetFitChange(action: CardSetChangeFitForActiveField): SagaIterator {
     try {
-        yield call(delay, 100);
+        yield delay(100);
         const state: State = yield select();
 
         if (state.cardset.present.activeFieldId === undefined) {
@@ -776,10 +777,10 @@ export function* handleCardSetFitChange(action: CardSetChangeFitForActiveField):
 
 export function* handleCardSetChangeImage(action: CardSetChangeImage): SagaIterator {
     try {
-        yield call(delay, 100);
+        yield delay(100);
         const state: State = yield select();
 
-        let cardsToFix =
+        const cardsToFix =
             state.cardset.present.applyToAllCards || action.cardId === undefined
                 ? state.cardset.present.cardsAllIds
                 : [action.cardId];
@@ -836,7 +837,7 @@ export function* handleCardSetChange(): SagaIterator {
         preventWindowClose();
         progressId = yield call(putProgress, 'Saving Card Set');
 
-        yield call(delay, 1000);
+        yield delay(1000);
         const state: State = yield select();
 
         const cardsetId = state.cardsets.active;
@@ -871,7 +872,7 @@ export function* handleCardSetChange(): SagaIterator {
 // Images
 export function* handleImageListRequest(action: ImageListRequest): SagaIterator {
     try {
-        yield call(delay, 200);
+        yield delay(200);
         const state = yield select();
 
         const filter = encodeURIComponent(action.filter);

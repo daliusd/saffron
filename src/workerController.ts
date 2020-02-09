@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { downloadBlob, calculateImageDimensions } from './utils';
-import { delay } from 'redux-saga';
+import { delay } from 'redux-saga/effects';
 import { XmlDocument } from 'xmldoc';
 import JSZip from 'jszip';
 import { getRequest } from './requests';
@@ -24,7 +24,6 @@ export const generatePdfUsingWorker = (
     cutMarksInMarginArea: boolean,
     cutMarksOnFrontSideOnly: boolean,
 ) => {
-    // @ts-ignore
     if (!window.Worker) {
         throw new Error('We can not generate PDF because of browser you use. Try using different browser');
     }
@@ -77,12 +76,12 @@ function loadImage(url: string): Promise<HTMLImageElement> {
 
 function prepareImageToDrawSpace(context: CanvasRenderingContext2D, imageToDraw: ImageToDraw, ptpmm: number) {
     context.save();
-    let x = (imageToDraw.x + imageToDraw.width / 2) * ptpmm;
-    let y = (imageToDraw.y + imageToDraw.height / 2) * ptpmm;
+    const x = (imageToDraw.x + imageToDraw.width / 2) * ptpmm;
+    const y = (imageToDraw.y + imageToDraw.height / 2) * ptpmm;
     context.translate(x, y);
     context.rotate(imageToDraw.angle);
-    let ax = (-imageToDraw.width / 2) * ptpmm;
-    let ay = (-imageToDraw.height / 2) * ptpmm;
+    const ax = (-imageToDraw.width / 2) * ptpmm;
+    const ay = (-imageToDraw.height / 2) * ptpmm;
     context.translate(ax, ay);
     if (imageToDraw.crop) {
         context.rect(0, 0, imageToDraw.width * ptpmm, imageToDraw.height * ptpmm);
@@ -111,7 +110,6 @@ class PNGGenerator {
     worker: Worker;
 
     constructor() {
-        // @ts-ignore
         if (!window.Worker) {
             throw new Error('We can not generate PNG because of browser you use. Try using different browser');
         }
@@ -139,14 +137,14 @@ class PNGGenerator {
             isBack,
         });
 
-        let offscreenCanvas = document.createElement('canvas');
+        const offscreenCanvas = document.createElement('canvas');
 
         const calculatedWidth = Math.round(dpi * (cardSetData.width / 25.4 + 1 / 4));
         const calculatedHeight = Math.round(dpi * (cardSetData.height / 25.4 + 1 / 4));
 
         offscreenCanvas.width = calculatedWidth;
         offscreenCanvas.height = calculatedHeight;
-        var context = offscreenCanvas.getContext('2d');
+        const context = offscreenCanvas.getContext('2d');
         if (context === null) {
             throw new Error('We cannot generate PNG because of unknown reason. Try different browser.');
         }
@@ -159,7 +157,7 @@ class PNGGenerator {
 
         while (!stopped) {
             while (this.tasksQueue.length > 0) {
-                let task = this.tasksQueue.shift();
+                const task = this.tasksQueue.shift();
 
                 if (task && task.imageToDraw) {
                     const imageToDraw = task.imageToDraw;
@@ -169,7 +167,7 @@ class PNGGenerator {
                         if (imageToDraw.scale && imageToDraw.color) {
                             context.fillStyle = imageToDraw.color;
                             context.scale(imageToDraw.scale * ptpmm, imageToDraw.scale * ptpmm);
-                            var p = new Path2D(imageToDraw.data);
+                            const p = new Path2D(imageToDraw.data);
                             context.fill(p);
                         }
                         context.restore();
@@ -179,16 +177,16 @@ class PNGGenerator {
                         if (imageToDraw.cx !== undefined && imageToDraw.cy !== undefined) {
                             context.translate(imageToDraw.cx * ptpmm, imageToDraw.cy * ptpmm);
                         }
-                        let dim = calculateImageDimensions(imageToDraw);
+                        const dim = calculateImageDimensions(imageToDraw);
 
                         let image;
                         if (imageToDraw.type === ImageType.SVG) {
-                            let svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
+                            const svgData = fixWidthAndHeightInSvg(atob(imageToDraw.data));
                             image = await loadImage(SVG_B64_START + svgData);
                         } else {
-                            let resp = await axios.get(imageToDraw.data);
+                            const resp = await axios.get(imageToDraw.data);
                             if (resp.headers['content-type'] === 'image/svg+xml') {
-                                let svgData = fixWidthAndHeightInSvg(resp.data);
+                                const svgData = fixWidthAndHeightInSvg(resp.data);
                                 image = await loadImage(SVG_B64_START + svgData);
                             } else {
                                 image = await loadImage(imageToDraw.data);
@@ -210,7 +208,7 @@ class PNGGenerator {
                 }
 
                 if (task && task.type === 'generateError' && task.error) {
-                    let error = Error('Failed to generate PNG: ' + task.error.message);
+                    const error = Error('Failed to generate PNG: ' + task.error.message);
                     error.stack = task.error.stack;
                     throw error;
                 }
@@ -230,7 +228,7 @@ class PNGGenerator {
     }
 
     async generateGame(accessToken: string, gameId: string, dpi: number, zip: JSZip) {
-        let resp = await getRequest('/api/games/' + gameId, accessToken);
+        const resp = await getRequest('/api/games/' + gameId, accessToken);
         if (!resp) return;
 
         const cardsetsList = resp.data.cardsets;
@@ -243,9 +241,9 @@ class PNGGenerator {
         const resp = await getRequest('/api/cardsets/' + cardsetId, accessToken);
         if (!resp) return;
 
-        let cardSetData: CardSetData = JSON.parse(resp.data.data);
+        const cardSetData: CardSetData = JSON.parse(resp.data.data);
 
-        let cardsetFolder = zip.folder(resp.data.name);
+        const cardsetFolder = zip.folder(resp.data.name);
 
         if (cardSetData.cardsAllIds) {
             for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
@@ -266,7 +264,7 @@ export const generatePngUsingWorker = async (
 ) => {
     const pngGenerator = new PNGGenerator();
 
-    let zip = new JSZip();
+    const zip = new JSZip();
 
     if (collectionType === 'games') {
         await pngGenerator.generateGame(accessToken, collectionId, dpi, zip);
@@ -274,8 +272,8 @@ export const generatePngUsingWorker = async (
         await pngGenerator.generateCardset(accessToken, collectionId, dpi, zip);
     }
 
-    let blob = await zip.generateAsync({ type: 'blob' });
-    let url = window.URL.createObjectURL(blob);
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = window.URL.createObjectURL(blob);
     downloadBlob(url, 'cards.zip');
 };
 
@@ -286,7 +284,7 @@ async function getImageAttribution(name: string, accessToken: string) {
     }
 
     if (resp.data.metadata) {
-        let meta = JSON.parse(resp.data.metadata);
+        const meta = JSON.parse(resp.data.metadata);
         if (meta.source === 'noto-emoji') {
             return 'Google Noto Emoji';
         } else if (meta.source === 'twemoji') {
@@ -300,10 +298,10 @@ async function getImageAttribution(name: string, accessToken: string) {
 }
 
 export const retrieveGameAttributions = async (accessToken: string, gameId: string): Promise<string[]> => {
-    let resp = await getRequest('/api/games/' + gameId, accessToken);
+    const resp = await getRequest('/api/games/' + gameId, accessToken);
     if (!resp) return [];
 
-    let attributions = new Set();
+    const attributions = new Set<string>();
 
     const cardsetsList = resp.data.cardsets;
     for (const cardsetInfo of cardsetsList) {
@@ -318,20 +316,20 @@ export const retrieveGameAttributions = async (accessToken: string, gameId: stri
             for (const fieldId in cardFields) {
                 const fieldInfo = cardFields[fieldId];
                 if (fieldInfo.type === 'image' && fieldInfo.url !== undefined) {
-                    let name = fieldInfo.url.replace('/api/imagefiles/', '');
-                    let attribution = await getImageAttribution(name, accessToken);
+                    const name = fieldInfo.url.replace('/api/imagefiles/', '');
+                    const attribution = await getImageAttribution(name, accessToken);
                     if (attribution) {
                         attributions.add(attribution);
                     }
                 } else if (fieldInfo.type === 'text') {
                     let start = fieldInfo.value.indexOf('/api/imagefiles/');
                     while (start !== -1) {
-                        let end = fieldInfo.value.indexOf('"', start);
-                        let name = fieldInfo.value.slice(start, end).replace('/api/imagefiles/', '');
+                        const end = fieldInfo.value.indexOf('"', start);
+                        const name = fieldInfo.value.slice(start, end).replace('/api/imagefiles/', '');
 
                         console.log(name);
 
-                        let attribution = await getImageAttribution(name, accessToken);
+                        const attribution = await getImageAttribution(name, accessToken);
                         if (attribution) {
                             attributions.add(attribution);
                         }

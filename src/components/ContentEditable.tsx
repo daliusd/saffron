@@ -189,8 +189,10 @@ class ContentEditable extends Component<Props> {
         range.selectNodeContents(this.editDiv.current);
         range.collapse(false);
         const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
+        if (selection !== null) {
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
     };
 
     updateContent = (timeoutInMiliseconds: number) => {
@@ -288,7 +290,7 @@ class ContentEditable extends Component<Props> {
 }
 
 const mapStateToProps = (state: State, props: OwnProps): StateProps => {
-    let fieldInfo = state.cardset.present.fields[props.cardId][props.fieldId];
+    const fieldInfo = state.cardset.present.fields[props.cardId][props.fieldId];
     const textValue = fieldInfo.type === 'text' ? fieldInfo.value : '';
     return {
         textValue,

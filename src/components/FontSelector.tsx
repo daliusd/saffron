@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import Select, { components } from 'react-select';
+import Select, { components, ValueType } from 'react-select';
 import WebFont from 'webfontloader';
 
 import { DEFAULT_LINE_HEIGHT } from '../constants';
@@ -15,7 +15,7 @@ import { State } from '../reducers';
 import style from './FontSelector.module.css';
 import webfonts from './webfonts.json';
 import webfontsThumbs from './webfonts_thumbs.json';
-import { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select';
 
 interface WebFontsInfo {
     [propName: string]: {
@@ -29,8 +29,7 @@ interface FontOption {
 }
 
 const FontOptionComponent = (props: OptionProps<FontOption>) => {
-    // @ts-ignore
-    let value = props.value;
+    const value = (props.data as FontOption).value;
     return !props.isDisabled && value ? (
         <components.Option {...props}>
             <img src={`data:image/png;base64, ${(webfontsThumbs as Record<string, string>)[value]}`} alt={value} />
@@ -64,10 +63,10 @@ class FontSelector extends Component<Props> {
         return stringForLoad;
     };
 
-    handleChange = (selectedOption?: FontOption | FontOption[] | null) => {
-        if (!selectedOption) return;
+    handleChange = (value: ValueType<FontOption>) => {
+        if (!value) return;
 
-        const fontFamily = (selectedOption as FontOption).value;
+        const fontFamily = (value as FontOption).value;
 
         let fontVariant = this.props.activeFontVariant;
         const wf: WebFontsInfo = webfonts;
@@ -86,7 +85,7 @@ class FontSelector extends Component<Props> {
         });
     };
 
-    handleFontVariantChange = (selectedOption?: FontOption | FontOption[] | null) => {
+    handleFontVariantChange = (selectedOption: ValueType<FontOption>) => {
         if (!selectedOption) return;
 
         const value = (selectedOption as FontOption).value;
@@ -156,10 +155,10 @@ class FontSelector extends Component<Props> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-    let activeFont = state.cardset.present.textSettings.fontFamily;
-    let activeFontVariant = state.cardset.present.textSettings.fontVariant;
-    let activeFontSize = state.cardset.present.textSettings.fontSize;
-    let activeLineHeight = state.cardset.present.textSettings.lineHeight || DEFAULT_LINE_HEIGHT;
+    const activeFont = state.cardset.present.textSettings.fontFamily;
+    const activeFontVariant = state.cardset.present.textSettings.fontVariant;
+    const activeFontSize = state.cardset.present.textSettings.fontSize;
+    const activeLineHeight = state.cardset.present.textSettings.lineHeight || DEFAULT_LINE_HEIGHT;
 
     return {
         activeFont,

@@ -1,4 +1,4 @@
-import { connect, ConnectedComponentClass } from 'react-redux';
+import { connect, ConnectedComponent } from 'react-redux';
 import React, { Component } from 'react';
 
 import { DispatchProps, SidebarOwnProps } from '../types';
@@ -25,7 +25,7 @@ interface SidebarInfo {
     state: SidebarState;
     title: string;
     icon: string;
-    component: ConnectedComponentClass<typeof Component, SidebarOwnProps>;
+    component: ConnectedComponent<typeof Component, SidebarOwnProps>;
 }
 
 const SIDEBARS: SidebarInfo[] = [
