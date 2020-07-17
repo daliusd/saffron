@@ -19,53 +19,53 @@ export function handleAxiosError(error: AxiosError) {
 export function getTokens(creds: Credentials) {
     return axios
         .post('/api/tokens', creds)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
 
 export function refreshToken(refreshTokenValue: string) {
-    let config = {
+    const config = {
         headers: { Authorization: `Bearer ${refreshTokenValue}` },
     };
     return axios
         .post('/api/access_tokens', {}, config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data.accessToken;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
 
 export function deleteAccessToken(token: string) {
-    let config = {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .delete('/api/access_tokens', config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             if (error.response.status === 401) return {};
             handleAxiosError(error);
         });
 }
 
 export function deleteRefreshToken(token: string) {
-    let config = {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .delete('/api/refresh_tokens', config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             if (error.response.status === 401) return {};
             handleAxiosError(error);
         });
@@ -74,38 +74,38 @@ export function deleteRefreshToken(token: string) {
 export function registerUser(creds: Credentials) {
     return axios
         .post('/api/users', creds)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
 
 export function getRequest(url: string, token: string) {
-    let config = {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .get(url, config)
-        .then(resp => {
+        .then((resp) => {
             return resp;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
 
-export function postRequest(url: string, token: string, data: object) {
-    let config = {
+export function postRequest(url: string, token: string, data: any) {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .post(url, data, config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
@@ -118,7 +118,7 @@ export function postRequestFormDataCancelable(
     cancelToken: CancelToken,
     cancelCallback: () => void,
 ) {
-    let config = {
+    const config = {
         headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
@@ -129,10 +129,10 @@ export function postRequestFormDataCancelable(
 
     return axios
         .post(url, data, config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             if (axios.isCancel(error)) {
                 cancelCallback();
             } else {
@@ -141,30 +141,30 @@ export function postRequestFormDataCancelable(
         });
 }
 
-export function putRequest(url: string, token: string, data: object) {
-    let config = {
+export function putRequest(url: string, token: string, data: any) {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .put(url, data, config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }
 
 export function deleteRequest(url: string, token: string) {
-    let config = {
+    const config = {
         headers: { Authorization: `Bearer ${token}` },
     };
     return axios
         .delete(url, config)
-        .then(resp => {
+        .then((resp) => {
             return resp.data;
         })
-        .catch(error => {
+        .catch((error) => {
             handleAxiosError(error);
         });
 }

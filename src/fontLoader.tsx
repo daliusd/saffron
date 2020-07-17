@@ -13,7 +13,7 @@ export const loadFontsUsedInPlaceholders = (data: CardSetSelectSuccessDataV3) =>
         return;
     }
 
-    let fontsToLoad: Set<string> = new Set();
+    const fontsToLoad: Set<string> = new Set();
     fontsToLoad.add(DEFAULT_FONT);
     for (const fieldId of data.fieldsAllIds) {
         const field = data.fields[data.cardsAllIds[0]][fieldId];

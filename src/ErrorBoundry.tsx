@@ -4,7 +4,7 @@ import KawaiiMessage, { Character } from './components/KawaiiMessage';
 import { reportError } from './utils';
 
 window.addEventListener('error', function(evt: ErrorEvent) {
-    let error = evt.error;
+    const error = evt.error;
     reportError(error);
 });
 

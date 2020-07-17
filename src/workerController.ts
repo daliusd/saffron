@@ -31,7 +31,7 @@ export const generatePdfUsingWorker = (
     return new Promise((resolve, reject) => {
         try {
             const worker = new Worker('/js/worker.js');
-            worker.addEventListener('message', event => {
+            worker.addEventListener('message', (event) => {
                 if (event.data.type === 'generatePdf') {
                     const blobURL = event.data.url;
                     downloadBlob(blobURL, 'card.pdf', resolve);
@@ -115,7 +115,7 @@ class PNGGenerator {
         }
 
         this.worker = new Worker('/js/worker.js');
-        this.worker.addEventListener('message', event => {
+        this.worker.addEventListener('message', (event) => {
             if (event.data.type === 'generateCard' || event.data.type === 'generateError') {
                 this.tasksQueue.push(event.data);
             }
@@ -245,7 +245,7 @@ class PNGGenerator {
 
         const cardsetFolder = zip.folder(resp.data.name);
 
-        if (cardSetData.cardsAllIds) {
+        if (cardSetData.cardsAllIds && cardsetFolder) {
             for (const [cardIdx, cardId] of cardSetData.cardsAllIds.entries()) {
                 await this.generateCard(cardSetData, cardId, cardIdx, dpi, false, cardsetFolder);
                 if (cardSetData.isTwoSided) {

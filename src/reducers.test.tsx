@@ -59,11 +59,11 @@ test('message', () => {
 });
 
 test('auth', () => {
-    let username = 'test_user';
-    let password = 'test_pass';
-    let creds = { username, password };
+    const username = 'test_user';
+    const password = 'test_pass';
+    const creds = { username, password };
 
-    let state: AuthState = {
+    const state: AuthState = {
         user: '',
         isAuthenticated: false,
     };
@@ -72,18 +72,18 @@ test('auth', () => {
 
     expect(auth(state, { type: LOGIN_SUCCESS, username })).toEqual({ isAuthenticated: true, user: username });
 
-    let message = 'error message';
+    const message = 'error message';
     expect(auth(state, { type: LOGIN_FAILURE, message })).toEqual({ isAuthenticated: false, user: '' });
 
     expect(auth(state, { type: LOGOUT_SUCCESS })).toEqual({ isAuthenticated: false, user: '' });
 });
 
 test('signup', () => {
-    let username = 'test_user';
-    let password = 'test_pass';
-    let creds = { username, password };
+    const username = 'test_user';
+    const password = 'test_pass';
+    const creds = { username, password };
 
-    let state: SignUpState = {
+    const state: SignUpState = {
         signingup: false,
     };
 
@@ -138,8 +138,8 @@ test('GAME_LIST', () => {
         ),
     ).toEqual({ activity: 0, byId: {}, allIds: [], active: null });
 
-    let byId: GamesCollection = { '1': { id: '1', name: 'test' } };
-    let allIds: IdsArray = ['1'];
+    const byId: GamesCollection = { '1': { id: '1', name: 'test' } };
+    const allIds: IdsArray = ['1'];
     expect(
         games(
             {
@@ -292,8 +292,8 @@ test('CARDSET_LIST', () => {
         ...DefaultCardSetsState,
     });
 
-    let byId: CardSetsCollection = { '1': { id: '1', name: 'test' } };
-    let allIds: IdsArray = ['1'];
+    const byId: CardSetsCollection = { '1': { id: '1', name: 'test' } };
+    const allIds: IdsArray = ['1'];
 
     expect(
         cardsets(

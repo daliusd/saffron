@@ -308,7 +308,7 @@ export function* authorizedGetRequest(url: string): SagaIterator {
     return yield call(getRequest, url, token);
 }
 
-export function* authorizedPostRequest(url: string, data: object): SagaIterator {
+export function* authorizedPostRequest(url: string, data: any): SagaIterator {
     const token = yield call(getToken, true);
     return yield call(postRequest, url, token, data);
 }
@@ -329,7 +329,7 @@ export function* authorizedPostFormDataRequest(
     return yield call(postRequestFormDataCancelable, url, token, data, progressCallback, cancelToken, cancelCallback);
 }
 
-export function* authorizedPutRequest(url: string, data: object): SagaIterator {
+export function* authorizedPutRequest(url: string, data: any): SagaIterator {
     const token = yield call(getToken, true);
     return yield call(putRequest, url, token, data);
 }
@@ -536,13 +536,13 @@ function loadImageInfo(url: string): Promise<{ width: number; height: number }> 
         try {
             const img = new Image();
 
-            img.addEventListener('load', function() {
+            img.addEventListener('load', function () {
                 resolve({
                     width: this.naturalWidth,
                     height: this.naturalHeight,
                 });
             });
-            img.addEventListener('error', function(err) {
+            img.addEventListener('error', function (err) {
                 reject(err);
             });
             img.src = url;
@@ -583,8 +583,8 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
                     if (cardId in processedData.images && fieldId in processedData.images[cardId]) {
                         const imageInfo = processedData.images[cardId][fieldId];
                         fields[cardId][fieldId] = {
-                            type: 'image',
                             ...placeholder,
+                            type: 'image',
                             url: imageInfo && imageInfo.url,
                             global: imageInfo && imageInfo.global,
                             base64: imageInfo && imageInfo.base64,
@@ -594,21 +594,21 @@ export async function processData(data: CardSetSelectSuccessData): Promise<CardS
                         };
                     } else {
                         fields[cardId][fieldId] = {
-                            type: 'image',
                             ...placeholder,
+                            type: 'image',
                         };
                     }
                 } else if (placeholder.type === 'text') {
                     if (cardId in processedData.texts && fieldId in processedData.texts[cardId]) {
                         fields[cardId][fieldId] = {
-                            type: 'text',
                             ...placeholder,
+                            type: 'text',
                             ...processedData.texts[cardId][fieldId],
                         };
                     } else {
                         fields[cardId][fieldId] = {
-                            type: 'text',
                             ...placeholder,
+                            type: 'text',
                             value: '',
                         };
                     }

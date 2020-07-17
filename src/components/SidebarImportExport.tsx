@@ -44,12 +44,12 @@ export class SidebarImportExport extends Component<Props> {
 
         const ending = '_' + md5(activeGame);
 
-        let preparedImages: FieldInfoByCardCollection = {};
+        const preparedImages: FieldInfoByCardCollection = {};
 
         for (const cardId in fields) {
-            let fieldsByCard = { ...fields[cardId] };
+            const fieldsByCard = { ...fields[cardId] };
             for (const fieldId in fieldsByCard) {
-                let imageInfo = { ...fieldsByCard[fieldId] };
+                const imageInfo = { ...fieldsByCard[fieldId] };
                 if (imageInfo.type === 'image') {
                     let url = imageInfo.url || '';
                     if (url.endsWith(ending)) {
@@ -83,9 +83,9 @@ export class SidebarImportExport extends Component<Props> {
             fieldsAllIds,
         };
 
-        let json = JSON.stringify(data, null, 4);
-        let blob = new Blob([json], { type: 'octet/stream' });
-        let url = window.URL.createObjectURL(blob);
+        const json = JSON.stringify(data, null, 4);
+        const blob = new Blob([json], { type: 'octet/stream' });
+        const url = window.URL.createObjectURL(blob);
         downloadBlob(url, 'cardset.json');
     };
 
@@ -94,9 +94,9 @@ export class SidebarImportExport extends Component<Props> {
 
         const preparedFields = this.prepareImagePaths(fields);
 
-        let csvData: (string | number)[][] = [];
-        let header = ['card_id', 'card_count'];
-        let usedNames: { [key: string]: boolean } = {};
+        const csvData: (string | number)[][] = [];
+        const header = ['card_id', 'card_count'];
+        const usedNames: { [key: string]: boolean } = {};
         for (const plId of fieldsAllIds) {
             const fieldInfo = fields[cardsAllIds[0]][plId];
             const name = fieldInfo.name || fieldInfo.id;
@@ -111,17 +111,17 @@ export class SidebarImportExport extends Component<Props> {
         csvData.push(header);
 
         for (const cardId of cardsAllIds) {
-            let card = cardsById[cardId];
+            const card = cardsById[cardId];
 
-            let dataRow: (string | number)[] = [cardId, card.count];
+            const dataRow: (string | number)[] = [cardId, card.count];
 
-            let written = { ...usedNames };
+            const written = { ...usedNames };
             for (const fieldId of fieldsAllIds) {
                 const fieldIndo = fields[cardId][fieldId];
                 const name = fieldIndo.name || fieldIndo.id;
 
                 if (!written[name]) {
-                    let fieldInfo = preparedFields[cardId][fieldId];
+                    const fieldInfo = preparedFields[cardId][fieldId];
                     if (fieldInfo.type === 'text') {
                         dataRow.push(fieldInfo.value);
                     } else if (fieldInfo.type === 'image') {
@@ -134,9 +134,9 @@ export class SidebarImportExport extends Component<Props> {
             csvData.push(dataRow);
         }
 
-        let csv = Papa.unparse(csvData);
-        let blob = new Blob([csv], { type: 'octet/stream' });
-        let url = window.URL.createObjectURL(blob);
+        const csv = Papa.unparse(csvData);
+        const blob = new Blob([csv], { type: 'octet/stream' });
+        const url = window.URL.createObjectURL(blob);
         downloadBlob(url, 'cardset.csv');
     };
 
@@ -144,9 +144,9 @@ export class SidebarImportExport extends Component<Props> {
         const { dispatch, activeGame, fields, fieldsAllIds, cardsById, cardsAllIds } = this.props;
         if (activeGame === null) return;
 
-        var reader = new FileReader();
+        const reader = new FileReader();
         reader.readAsText(file, 'UTF-8');
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             if (e.target === null) return;
 
             let data = null;
@@ -159,9 +159,9 @@ export class SidebarImportExport extends Component<Props> {
                 for (const cardId in data.fields) {
                     const cardFields: FieldInfoCollection = data.fields[cardId];
                     for (const fieldId in cardFields) {
-                        let fieldInfo = cardFields[fieldId];
+                        const fieldInfo = cardFields[fieldId];
                         if (fieldInfo.type === 'image') {
-                            let isGlobal = fieldInfo.global || false;
+                            const isGlobal = fieldInfo.global || false;
 
                             fieldInfo.url = `/api/imagefiles/${fieldInfo.url}${isGlobal ? '' : ending}`;
                             delete fieldInfo.global;
@@ -172,17 +172,18 @@ export class SidebarImportExport extends Component<Props> {
                 // eslint-disable-next-line
                 const csvData = Papa.parse((e.target as any).result, { header: true });
 
-                let newCardsAllIds: IdsArray = [];
-                let newCardsById: CardsCollection = {};
-                let newFields: FieldInfoByCardCollection = {};
+                const newCardsAllIds: IdsArray = [];
+                const newCardsById: CardsCollection = {};
+                const newFields: FieldInfoByCardCollection = {};
 
-                for (const row of csvData.data) {
+                for (const rowParsed of csvData.data) {
+                    const row = rowParsed as Record<string, string>;
                     if (Object.keys(row).length === 0) {
                         continue;
                     }
                     const card: CardType = {
                         id: row['card_id'] || shortid.generate(),
-                        count: row['card_count'] || 1,
+                        count: parseInt(row['card_count'], 10) || 1,
                     };
 
                     newFields[card.id] = {
@@ -228,7 +229,7 @@ export class SidebarImportExport extends Component<Props> {
                 dispatch(cardSetImportData(data));
             }
         };
-        reader.onerror = function() {
+        reader.onerror = function () {
             dispatch(messageDisplay('error', 'Problem during import.'));
         };
 
