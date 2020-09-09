@@ -22,7 +22,7 @@ export default class AboutPage extends Component {
                 </ul>
                 <p>
                     If tutorials do not answer your question then feel free to contact me by e-mail{' '}
-                    <a href="mailto:dalius@ffff.lt">dalius@ffff.lt</a>, on{' '}
+                    <a href="mailto:dalius.dobravolskas@gmail.com">dalius.dobravolskas@gmail.com</a>, on{' '}
                     <a href="https://twitter.com/DaliusD_">twitter</a> or{' '}
                     <a href="https://www.reddit.com/user/daliusd_/">reddit</a>.
                 </p>

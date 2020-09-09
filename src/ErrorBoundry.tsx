@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import KawaiiMessage, { Character } from './components/KawaiiMessage';
 import { reportError } from './utils';
 
-window.addEventListener('error', function(evt: ErrorEvent) {
+window.addEventListener('error', function (evt: ErrorEvent) {
     const error = evt.error;
     reportError(error);
 });
@@ -39,7 +39,7 @@ export default class ErrorBoundary extends Component<Props, State> {
                 <KawaiiMessage character={Character.Browser} mood="ko">
                     Something unexpected has happened. Error report is sent to me by e-mail and I will review it as soon
                     as possible. Still feel free to contact me by e-mail{' '}
-                    <a href="mailto:dalius@ffff.lt">dalius@ffff.lt</a>.
+                    <a href="mailto:dalius.dobravolskas@gmail.com">dalius.dobravolskas@gmail.com</a>.
                 </KawaiiMessage>
             );
         }
